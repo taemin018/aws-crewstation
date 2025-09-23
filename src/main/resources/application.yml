@@ -1,0 +1,48 @@
+server:
+  port: 10000
+  servlet:
+    session:
+      tracking-modes: cookie
+      timeout: 10m
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/app?serverTimezone=Asia/Seoul
+    username: crewstation
+    password: 1234
+  session:
+    redis:
+      repository-type: indexed
+      flush-mode: immediate
+    data:
+      redis:
+        host: localhost
+        port: 6379
+    cache:
+      type: redis
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 5MB
+      max-file-size: 5MB
+      max-request-size: 15MB
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gtaemin254@gmail.com
+    password: csly lxto vgxw iuhl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/*/*.xml
+  type-handlers-package: com.example.crewstation.config.mybatis.handler
+  type-aliases-package: com.example.crewstation.domain;com.example.back.dto;
