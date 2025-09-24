@@ -143,33 +143,11 @@ const thumbAddBtn = thumbnailContainer.querySelector(".write-content-img-add-btn
 
 let hasCover = false;
 let currentCoverThumb = null; // 현재 대표 썸네일 기억
-thumbAddBtn.style.display = "none"; // 처음엔 작은 + 숨김
+thumbAddBtn.style.display = "none";
 
-// 전체 이미지 개수 (대표는 썸네일 중 하나이므로 썸네일만 카운트)
-function getTotalImageCount() {
-  return document.querySelectorAll(".write-content-thumbnail").length;
-}
-
-// + 버튼 보임/숨김 갱신
-function updateThumbAddBtn() {
-  const count = getTotalImageCount();
-
-  if (count === 0) {
-    // ✅ 모든 이미지가 없을 때는 작은 + 숨김
-    thumbAddBtn.style.display = "none";
-    return;
-  }
-
-  if (count >= 8) {
-    thumbAddBtn.style.display = "none";
-  } else {
-    thumbAddBtn.style.display = "flex";
-  }
-}
-
-// 대표 이미지 설정
-function setAsCover(src, fromThumb) {
-  // 대표 미리보기 갱신
+// 대표 이미지/썸네일 공통 세팅 함수
+function setAsCover(src, fromThumb = null) {
+  // 대표 미리보기
   coverAdd.style.display = "none";
   coverPreview.innerHTML = `
     <div class="write-content-cover-img">
@@ -185,15 +163,19 @@ function setAsCover(src, fromThumb) {
     </div>
   `;
 
-  // 썸네일 라벨 갱신
+  // 기존 라벨 제거 후 새 라벨 추가
   thumbnailContainer.querySelectorAll(".cover-img-label").forEach(label => label.remove());
   if (fromThumb) {
+    // 클릭한 썸네일에 대표 라벨만 붙여줌
     fromThumb.insertAdjacentHTML("beforeend", `<div class="cover-img-label">대표</div>`);
-    currentCoverThumb = fromThumb;
+    currentCoverThumb = fromThumb; // 대표 썸네일 기억
+  } else {
+    // 대표 신규 생성 시 썸네일 등록
+    currentCoverThumb = createThumbnail(src, true);
   }
 
   hasCover = true;
-  updateThumbAddBtn();
+  thumbAddBtn.style.display = "flex";
 
   // 대표 삭제 버튼 이벤트
   coverPreview.querySelector(".write-content-img-delete-btn").addEventListener("click", () => {
@@ -212,19 +194,21 @@ function setAsCover(src, fromThumb) {
       const nextSrc = nextThumb.querySelector("img").src;
       setAsCover(nextSrc, nextThumb);
     } else {
-      coverAdd.style.display = "flex";   // 커버 큰 + 다시 보이기
+      coverAdd.style.display = "flex";
       hasCover = false;
+      thumbAddBtn.style.display = "none";
     }
-
-    updateThumbAddBtn(); // 작은 + 버튼 상태 갱신
   }, { once: true });
 }
 
 // 썸네일 생성
-function createThumbnail(src, isFirst = false) {
+function createThumbnail(src, isCover = false) {
   const thumbDiv = document.createElement("div");
   thumbDiv.classList.add("write-content-thumbnail");
-  thumbDiv.innerHTML = `<img class="write-content-thumbnail-img" src="${src}">`;
+  thumbDiv.innerHTML = `
+    <img class="write-content-thumbnail-img" src="${src}">
+    ${isCover ? '<div class="cover-img-label">대표</div>' : ""}
+  `;
 
   // 클릭 시 대표 승격
   thumbDiv.addEventListener("click", () => {
@@ -232,35 +216,30 @@ function createThumbnail(src, isFirst = false) {
   });
 
   thumbnailContainer.insertBefore(thumbDiv, thumbAddBtn);
-
-  // 첫 썸네일이면 자동 대표 설정
-  if (isFirst && !hasCover) {
-    setAsCover(src, thumbDiv);
-  }
-
-  updateThumbAddBtn();
   return thumbDiv;
 }
 
-// 대표 이미지 업로드 (첫 번째 파일은 자동 대표)
+// 대표 이미지 업로드 (네모칸 전체 + 버튼 공통)
 if (coverInput && coverAdd) {
-  coverAdd.addEventListener("click", () => coverInput.click());
+  coverAdd.addEventListener("click", () => {
+    coverInput.click();
+  });
 
   coverInput.addEventListener("change", (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
-    // 업로드 전에 전체 개수 체크
-    if (getTotalImageCount() + files.length > 8) {
-      alert("이미지는 대표 포함 최대 8장까지 등록할 수 있습니다.");
-      e.target.value = "";
-      return;
-    }
-
     files.forEach((file, idx) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        createThumbnail(ev.target.result, idx === 0);
+        const src = ev.target.result;
+        if (idx === 0) {
+          // 첫 번째 이미지는 대표
+          setAsCover(src);
+        } else {
+          // 나머지는 썸네일
+          createThumbnail(src, false);
+        }
       };
       reader.readAsDataURL(file);
     });
@@ -273,27 +252,38 @@ if (coverInput && coverAdd) {
 if (thumbnailInput) {
   thumbnailInput.addEventListener("change", (e) => {
     const files = Array.from(e.target.files);
-    if (!files.length) return;
+    const thumbnails = thumbnailContainer.querySelectorAll(".write-content-thumbnail").length;
+    const totalCount = thumbnails + files.length; // 대표 포함
 
-    // 업로드 전에 전체 개수 체크
-    if (getTotalImageCount() + files.length > 8) {
-      alert("이미지는 최대 8장까지 등록할 수 있습니다.");
-      e.target.value = "";
+    if (totalCount > 8) {
+      alert("이미지는 대표 포함 최대 8장까지 등록할 수 있습니다.");
       return;
     }
 
-    files.forEach((file) => {
+    files.forEach(file => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        createThumbnail(ev.target.result, false);
+        const currentCount = thumbnailContainer.querySelectorAll(".write-content-thumbnail").length;
+        if (currentCount < 7) {
+          createThumbnail(ev.target.result, false);
+        } else if (currentCount === 7) {
+          const thumbDiv = document.createElement("div");
+          thumbDiv.classList.add("write-content-thumbnail");
+          thumbDiv.innerHTML = `<img class="write-content-thumbnail-img" src="${ev.target.result}">`;
+
+          // 클릭 시 대표 승격
+          thumbDiv.addEventListener("click", () => {
+            setAsCover(ev.target.result, thumbDiv);
+          });
+
+          thumbnailContainer.replaceChild(thumbDiv, thumbAddBtn);
+          thumbAddBtn.style.display = "none";
+        }
       };
       reader.readAsDataURL(file);
     });
-
-    e.target.value = ""; // 같은 파일 다시 업로드 가능
   });
 }
-
 
   // === 폼 유효성 검사 ===
   if (form) {
