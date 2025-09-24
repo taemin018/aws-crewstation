@@ -17,13 +17,17 @@ import org.springframework.stereotype.Component;
 @EqualsAndHashCode(of="id")
 public class PurchaseDTO{
     private Long postId;
+    private String postTitle;
     private int purchaseProductPrice;
     private int purchaseLimitTime;
     private int purchaseProductCount;
     private String purchaseCountry;
-    private DeliveryMethod deliveryMethod;
+    private DeliveryMethod purchaseDeliveryMethod;
     private String filePath;
     private String fileName;
+    private String memberName;
+    private String limitDateTime;
+    private int chemistryScore;
     private String createdDatetime;
     private String updatedDatetime;
 }

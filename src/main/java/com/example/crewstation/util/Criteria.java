@@ -25,12 +25,12 @@ public class Criteria {
         pageCount = 10;
         count = rowCount + 1;
         this.page = Math.max(1, page);
-        endPage = (int)(Math.ceil(page / (double)pageCount) * pageCount);
+        endPage = (int)(Math.ceil(this.page / (double)pageCount) * pageCount);
         startPage = endPage - pageCount + 1;
         realEnd = (int)(Math.ceil(total / (double)rowCount));
         endPage = Math.min(realEnd, endPage);
         endPage = Math.max(1, endPage);
-        offset = (page - 1) * rowCount;
+        offset = (this.page - 1) * rowCount;
         hasNextPage = endPage < realEnd;
         hasPreviousPage = startPage > 1;
     }
