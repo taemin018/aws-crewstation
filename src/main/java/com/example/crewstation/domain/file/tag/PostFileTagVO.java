@@ -1,4 +1,4 @@
-package com.example.crewstation.domain.post.file.tag;
+package com.example.crewstation.domain.file.tag;
 
 import com.example.crewstation.audit.Period;
 import lombok.EqualsAndHashCode;

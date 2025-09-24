@@ -1,4 +1,4 @@
-package com.example.crewstation.domain.post.section.file;
+package com.example.crewstation.domain.file.section;
 
 
 import com.example.crewstation.audit.Period;

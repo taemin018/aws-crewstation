@@ -1,4 +1,4 @@
-package com.example.crewstation.dto.post.section.file;
+package com.example.crewstation.dto.file.section;
 
 
 import com.example.crewstation.audit.Period;

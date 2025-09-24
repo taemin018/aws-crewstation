@@ -1,4 +1,4 @@
-package com.example.crewstation.dto.post.file.tag;
+package com.example.crewstation.dto.file.tag;
 
 import com.example.crewstation.common.enumeration.Status;
 import lombok.EqualsAndHashCode;
