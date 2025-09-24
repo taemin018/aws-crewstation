@@ -1,0 +1,10 @@
+create table tbl_post_section_file
+(
+    file_id         bigint generated always as identity primary key,
+    post_section_id bigint not null,
+    image_type      image_type default 'sub',
+    constraint fk_post_section_file_post_section foreign key (post_section_id)
+        references tbl_banner (id),
+    constraint fk_post_section_file_file foreign key (file_id)
+        references tbl_file (id)
+);
