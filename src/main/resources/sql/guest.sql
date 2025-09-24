@@ -10,3 +10,6 @@ create table tbl_guest
     constraint fk_guest_member foreign key (member_id)
         references tbl_member (id)
 );
+
+
+select * from tbl_guest;

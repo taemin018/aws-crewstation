@@ -135,7 +135,7 @@ from tbl_report tr
 
 
 
-create view  view_report_reply_report as
+create view view_report_reply_report as
 (
 select id,
        report_content,
