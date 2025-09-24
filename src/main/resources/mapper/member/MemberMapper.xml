@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crewstation.mapper.member.MemberMapper">
+    <insert id="insert">
+        insert into tbl_member (member_name, member_phone, member_email, member_social_url, member_birth, member_gender, member_mbti, member_password)
+        values (#{memberName}, #{memberPhone}, #{memberEmail}, #{memberSocialUrl}, #{memberBirth}, #{memberGender}, #{memberMbti}, #{memberPassword})
+    </insert>
+
+</mapper>
