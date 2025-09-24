@@ -51,3 +51,12 @@ function startCountdown() {
   
   document.addEventListener("DOMContentLoaded", startCountdown);
 
+let page =1;
+let keyword = "호주";
+
+
+const showList = async (page=1,keyword="") =>{
+  purchases = await purchaseService.getPurchases(purchaseLayout.showPurchases,page,keyword);
+}
+
+showList(page,keyword);

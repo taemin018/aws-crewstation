@@ -1,9 +1,18 @@
 package com.example.crewstation.mapper.purchase;
 
+import com.example.crewstation.dto.purchase.PurchaseDTO;
+import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.Search;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface PurchaseMapper {
 
-//    public List<>
+//  검색결과에 따른 기프트 목록 보여주기
+    public List<PurchaseDTO> selectAllByKeyWord(@Param("criteria") Criteria criteria, @Param("search") Search search);
+//  검색 결과에 따른 기프트 수 보여주기
+    public int selectCountAllByKeyWord(@Param("search") Search search);
 }

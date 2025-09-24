@@ -77,9 +77,9 @@ html {
     flex: 0 0 auto;
 }
 
-div.sticky-container{
-    height: 51px;
-}
+/*div.sticky-container{*/
+/*    height: 51px;*/
+/*}*/
 
 div.sticky-wrap{
     background: #FFFFFF;
