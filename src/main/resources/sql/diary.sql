@@ -1,6 +1,6 @@
 create table tbl_diary
 (
-    post_id               bigint generated always as identity primary key,
+    post_id               bigint primary key,
     diary_secret          secret default 'public',
     diary_like_count      int    default 0,
     diary_reply_count     int    default 0,

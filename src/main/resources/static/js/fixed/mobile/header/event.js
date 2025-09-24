@@ -83,12 +83,15 @@ menuBtns.forEach((menuBtn) => {
             // 크루 버튼 클릭시
             crewBtn.style.height = "172px"; // 소카테고리 보여주기
             diaryBtn.style.height = "0px"; // 다이어리 소카테고리는 닫아주기
+
         } else if (menuBtn.classList.contains("diary")) {
             // 다이어리 버튼 클릭 시
             diaryBtn.style.height = "129px"; // 다이어리 소카테고리 보여주기
+
             crewBtn.style.height = "0px"; // 크루 소카테고리 닫아주기
         } else {
             // 그 외 버튼
+            document.querySelector("div.product-list-wrapper").style.marginTop= "50px";
             crewBtn.style.height = "0px"; // 보이는 크루 소카부분들 다 닫아주기
             clickCheck.removeAttribute("style"); // 선택된 영역 없애주기 (배경색 다시 흰색으로)
             modalDown.classList.remove("open"); // 모달 닫아주기 소카 있는 부분은 소카 눌러야 닫기 밑에서 해결
@@ -147,9 +150,11 @@ detailBtns.forEach((detailBtn) => {
             subHeader = subCategories[0];
             subCategories[0].style.top = "51px"; // 모달 밖 크루 소카 보여주기
             subCategories[1].style.top = "-41px"; // 모달 밖 다이어리 소카 닫아주기
+            document.querySelector("div.product-list-wrapper").style.marginTop= "90px";
         } else if (category === "diary") {
             // 다이어리 클릭 시
             subHeader = subCategories[1];
+            document.querySelector("div.product-list-wrapper").style.marginTop= "90px";
             subCategories[0].style.top = "-41px"; // 모달 밖 크루 소카 닫아주기
             subCategories[1].style.top = "51px"; // 모달 밖 다이어리 소카 보여주기
         }
