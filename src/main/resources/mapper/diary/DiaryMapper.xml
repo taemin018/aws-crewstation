@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crewstation.mapper.diary.DiaryMapper">
+    <select id="selectDiaryList">
+        select
+            vpd.id as id,
+            vpd.post_title as title,
+            vpd.created_datetime as createdDatetime,
+            vpd.updated_datetime as updatedDatetime,
+            vpd.diary_like_count as diaryLikeCount,
+            vpd.diary_reply_count as diaryReplyCount,
+            m.member_name as memberName,
+            c.crew_name as crewName,
+            f.file_path as filePath,
+            f.file_name as fileName
+        from view_post_diary vpd
+                 join tbl_member m on vpd.member_id = m.id
+                 left join tbl_crew_diary cd on vpd.id = cd.diary_id
+                 left join tbl_crew c on cd.crew_id = c.id
+                 left join tbl_file f on f.post_id = vpd.id
+        where vpd.diary_secret = 'public'
+        order by vpd.created_datetime desc
+    </select>
+</mapper>

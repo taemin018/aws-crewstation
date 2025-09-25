@@ -1,16 +1,17 @@
-package com.example.crewstation.domain.diary;
+package com.example.crewstation.dto.diary;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.stereotype.Component;
 
+@Component
 @Getter
+@Setter
 @ToString
-@NoArgsConstructor
-public class DiaryVO {
+@EqualsAndHashCode(of="id")
+public class DiaryDTO {
     private String postId;
     private String diarySecret;
     private String diaryLikeContent;
     private int diaryReplyContent;
     private String diaryCountryPathId;
-}
+} 
