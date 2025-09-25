@@ -46,3 +46,14 @@ mybatis:
   mapper-locations: classpath*:/mapper/*/*.xml
   type-handlers-package: com.example.crewstation.config.mybatis.handler
   type-aliases-package: com.example.crewstation.domain;com.example.crewstation.dto;
+
+# openssl rand -base64 32
+jwt:
+  secret: Xb/i9pIPkBh91ltvBCkwxJ7WsqR2HlECdRmwt+3kIxg=
+
+aws:
+  access-key:
+  secret-key:
+  s3:
+    bucket-name:
+  region: ap-northeast-2s
