@@ -18,4 +18,7 @@ public class CrewDTO {
     private int crewMemberCount;
     private String createdDatetime;
     private String updatedDatetime;
+    private String fileId;
+    private String fileName;
+    private String filePath;
 }
