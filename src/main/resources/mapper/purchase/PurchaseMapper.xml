@@ -42,4 +42,9 @@
         join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
         <include refid="giftSearch"/>
     </select>
+
+    <select id="selectByPostId">
+        select *
+        from view_post_purchase vpp
+    </select>
 </mapper>
