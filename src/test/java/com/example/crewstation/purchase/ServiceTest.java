@@ -24,4 +24,9 @@ public class ServiceTest {
         log.info("{}",criteria.toString());
         log.info("testGetPurchases {}", purchaseService.getPurchases(search));
     }
+
+    @Test
+    public void testGetPurchase(){
+        purchaseService.getPurchase(3L);
+    }
 }

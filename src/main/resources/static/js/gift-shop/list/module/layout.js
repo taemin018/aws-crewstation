@@ -8,6 +8,7 @@ const purchaseLayout = (() => {
         purchases.forEach((purchase) => {
                 text += `
             <article class="product-card-wrapper">
+                <a href="/gifts/${purchase.postId}">
                 <div class="product-image-container">
                     <div class="product-limit-time-wrapper" data-endtime="${purchase.limitDateTime}">
                     </div>
@@ -36,6 +37,7 @@ const purchaseLayout = (() => {
                     </div>
 
                 </div>
+                </a>
             </article>
             `
             })
