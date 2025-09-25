@@ -19,5 +19,8 @@ create table tbl_member
     updated_datetime    timestamp       default now()
 );
 
+
+select * from tbl_member;
+
 alter table tbl_member
     add column  chemistry_score int default 70;
