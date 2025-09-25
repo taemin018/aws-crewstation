@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../static/css/font.css">
-    <link rel="shortcut icon" href="../../static/images/crew-station-favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../static/css/ask/ask.css">
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="shortcut icon" href="/static/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/ask/ask.css">
 </head>
 <body>
     <div class="notice-list">
@@ -25,7 +25,9 @@
     <div class="css-title1">
         <div class="css-title2">
             <div class="css-title3">
-                <input class="title-input" type="text" placeholder="제목을 입력해주세요." maxlength="60" value="">
+                <form action="/ask/register" method="post">
+                    <input class="title-input" type="text" placeholder="제목을 입력해주세요." maxlength="60" value="">
+                </form>
                 <div class="indicator">0 /60
                 </div>
             </div>
