@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.back.mapper.crew.CrewMapper">
+<select id="getCrews">
+    select id, crew_name, crew_description, crew_member_count, created_datetime, updated_datetime
+    from tbl_crew
+    where id = #{id}
+</select>
+</mapper>
