@@ -14,4 +14,4 @@ public class DiaryDTO {
     private String diaryLikeContent;
     private int diaryReplyContent;
     private String diaryCountryPathId;
-}
+} 
