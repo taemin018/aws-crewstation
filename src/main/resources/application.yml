@@ -65,5 +65,5 @@ aws:
   access-key:
   secret-key:
   s3:
-    bucket-name:
+    bucket-name: gb-crew-station
   region: ap-northeast-2
