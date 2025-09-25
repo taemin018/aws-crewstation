@@ -183,7 +183,6 @@ div.login-part-btn{
     display: flex;
     border: 1px solid #dbdbdb;
     border-radius: 10px 10px 0 0;
-    margin-bottom: 10px;
 }
 
 div.login-part-btn button{
@@ -196,7 +195,7 @@ div.login-part-btn button{
 }
 
 div.login-part-btn button:first-child{
-    border-right: 1px solid black;
+    border-right: 1px solid #dbdbdb;
     border-top-left-radius: 10px;
 }
 
@@ -205,7 +204,8 @@ div.login-part-btn button:last-child{
 }
 
 div.login-part-btn button.active{
-    color : #647FBC;
+    color : #FFFFFF;
+    background: #647FBC;
 }
 
 input:hover{

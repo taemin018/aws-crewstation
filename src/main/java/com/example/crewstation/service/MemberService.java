@@ -23,7 +23,6 @@ public interface MemberService {
                 .memberMbti(memberDTO.getMemberMbti())
                 .memberPassword(memberDTO.getMemberPassword())
                 .memberStatus(memberDTO.getMemberStatus())
-                .memberStatus(memberDTO.getMemberStatus())
                 .memberProvider(memberDTO.getMemberProvider())
                 .kakaoImgUrl(memberDTO.getKakaoImgUrl())
                 .memberSocialEmail(memberDTO.getMemberSocialEmail())
