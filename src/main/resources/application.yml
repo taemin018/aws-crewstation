@@ -51,6 +51,7 @@ mybatis:
   type-handlers-package: com.example.crewstation.config.mybatis.handler
   type-aliases-package: com.example.crewstation.domain;com.example.crewstation.dto;
 
+# openssl rand -base64 32
 jwt:
   secret: Xb/i9pIPkBh91ltvBCkwxJ7WsqR2HlECdRmwt+3kIxg=
 
