@@ -29,5 +29,8 @@ public class DaoTest {
         log.info("findAllByKeyWord {}", purchaseDAO.findCountAllByKeyWord(search));
 
     }
-
+    @Test
+    public void testFindByPostId(){
+        log.info("testFindByPostId {}", purchaseDAO.findByPostId(3L));
+    }
 }

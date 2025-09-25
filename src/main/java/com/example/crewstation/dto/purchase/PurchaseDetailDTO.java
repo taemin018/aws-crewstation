@@ -1,21 +1,20 @@
 package com.example.crewstation.dto.purchase;
 
-
-import com.example.crewstation.audit.Period;
 import com.example.crewstation.common.enumeration.DeliveryMethod;
-import lombok.EqualsAndHashCode;
+import com.example.crewstation.dto.post.section.SectionDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(of="postId")
-public class PurchaseDTO{
+public class PurchaseDetailDTO {
+    private Long id;
     private Long postId;
     private String postTitle;
     private int purchaseProductPrice;
@@ -30,4 +29,7 @@ public class PurchaseDTO{
     private int chemistryScore;
     private String createdDatetime;
     private String updatedDatetime;
+    private String fileOriginName;
+    private String address;
+    private List<SectionDTO> sections;
 }

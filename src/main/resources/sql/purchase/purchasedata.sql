@@ -103,6 +103,92 @@ from tbl_post p
          join tbl_purchase tp on p.id = tp.post_id
 WHERE p.created_datetime + (tp.purchase_limit_time || 'hour')::interval > NOW();
 ;
-select p.created_datetime + (tp.purchase_limit_time || 'hour')::interval,now()
+select p.created_datetime + (tp.purchase_limit_time || 'hour')::interval, now()
 from tbl_post p
          join tbl_purchase tp on p.id = tp.post_id
+
+
+
+insert into tbl_file(file_origin_name, file_path, file_name,file_size)
+values ('1qweasd123cs.png', '2025/09/25/1qweasd123cs.png', '1qweasd123cs.png',1000),
+       ('ansnaxxc.png', '2025/09/25/ansnaxxc.png', 'ansnaxxc.png',1000);
+
+
+insert into tbl_post_section (post_content, post_id)
+values ('multi',1),('multi',1),('multi',1)
+
+select * from tbl_member;
+
+insert into tbl_address(address_zip_code, address_detail, address, member_id)
+values (06226,'서울특별시 강남구 역삼동 771','서울특별시 강남구 역삼로 234 (역삼동)',2);
+
+
+EXPLAIN ANALYZE
+select vpp.post_title,
+       vpp.purchase_country,
+       vpp.purchase_delivery_method,
+       vpp.purchase_limit_time,
+       vpp.purchase_product_count,
+       vpp.purchase_product_price,
+       vpp.purchase_delivery_method,
+       vpp.created_datetime,
+       vpp.updated_datetime,
+       tm.id,
+       tm.chemistry_score,
+       tm.member_name,
+       tm.social_img_url,
+       vfmf.id as file_id,
+       vfmf.file_name,
+       vfmf.file_origin_name,
+       vfmf.file_path,
+       ta.address
+from tbl_member tm
+         left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
+         join view_post_purchase vpp on tm.id = vpp.member_id and vpp.id = 1
+                 join tbl_address ta on tm.id = ta.member_id;
+
+
+
+EXPLAIN ANALYZE
+select *
+ from tbl_member tm
+        left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
+        join view_post_purchase vpp on tm.id = vpp.member_id
+        join tbl_address ta on tm.id = ta.member_id;
+
+
+EXPLAIN ANALYZE
+select vpp.id as post_id,
+       vpp.post_title,
+       vpp.purchase_country,
+       vpp.purchase_delivery_method,
+       vpp.purchase_limit_time,
+       vpp.purchase_product_count,
+       vpp.purchase_product_price,
+       vpp.purchase_delivery_method,
+       vpp.created_datetime,
+       vpp.updated_datetime,
+       vfps.file_path,
+       vfps.file_name,
+       tm.member_name,
+       tm.chemistry_score
+from tbl_member tm join
+     view_post_purchase vpp on tm.id = vpp.member_id
+                   join tbl_post_section tps on vpp.id = tps.post_id and vpp.post_status = 'active'
+                   join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
+-- where vpp.created_datetime + (vpp.purchase_limit_time || 'hour')::interval > now()
+--   and (
+    where vpp.purchase_country like '%' || 'test' || '%'
+        or vpp.post_title like '%' || 'test' || '%'
+--     )
+limit 5 offset 0;
+
+create extension if not exists pg_trgm;/* (최초 1번만)*/
+create index idx_member_name_trgm
+    on tbl_post
+    using gin (post_title gin_trgm_ops);
+
+create index idx_member_test_trgm
+    on tbl_purchase
+        using gin (purchase_country gin_trgm_ops);
+
