@@ -45,4 +45,4 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:/mapper/*/*.xml
   type-handlers-package: com.example.crewstation.config.mybatis.handler
-  type-aliases-package: com.example.crewstation.domain;com.example.back.dto;
+  type-aliases-package: com.example.crewstation.domain;com.example.crewstation.dto;
