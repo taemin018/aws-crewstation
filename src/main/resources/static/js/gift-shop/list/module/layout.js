@@ -13,7 +13,7 @@ const purchaseLayout = (() => {
                     </div>
                     <div class="product-image-wrapper">
                         <div class="product-image-hover">
-                            <img src="https://prs.ohousecdn.com/apne2/any/uploads/commerce/store/deal/v1-400472465334400.jpg?w=256&amp;h=256&amp;c=c&amp;q=50" srcset="https://prs.ohousecdn.com/apne2/any/uploads/commerce/store/deal/v1-400472465334400.jpg?w=384&amp;h=384&amp;c=c&amp;q=50 1.5x,https://prs.ohousecdn.com/apne2/any/uploads/commerce/store/deal/v1-400472465334400.jpg?w=512&amp;h=512&amp;c=c&amp;q=50 2x,https://prs.ohousecdn.com/apne2/any/uploads/commerce/store/deal/v1-400472465334400.jpg?w=768&amp;h=768&amp;c=c&amp;q=50 3x" alt="상품-썸네일-이미지" class="product-image">
+                            <img src="${purchase.filePath}" alt="상품-썸네일-이미지" class="product-image">
                         </div>
                     </div>
                 </div>

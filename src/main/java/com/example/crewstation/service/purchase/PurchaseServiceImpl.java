@@ -3,6 +3,7 @@ package com.example.crewstation.service.purchase;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
+import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.Search;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -17,6 +19,7 @@ import java.util.List;
 @Slf4j
 public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseDAO purchaseDAO;
+    private final S3Service s3Service;
 
     @Override
     public PurchaseCriteriaDTO getPurchases(Search search) {
@@ -25,6 +28,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         Criteria criteria = new Criteria(page, purchaseDAO.findCountAllByKeyWord(search));
         List<PurchaseDTO> purchases = purchaseDAO.findAllByKeyWord(criteria, search);
         purchases.forEach(purchase -> {
+            purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
             purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
         });
         criteria.setHasMore(purchases.size() > criteria.getRowCount());

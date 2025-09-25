@@ -58,7 +58,7 @@ public class DateUtils {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS");
         LocalDateTime dt = LocalDateTime.parse(date, inputFormatter);
 
-        // 3시간 더하기
+        // 24시간 더하기
         LocalDateTime dtAdded = dt.plusHours(limit);
 
         // 출력 포맷 (ISO8601 스타일)

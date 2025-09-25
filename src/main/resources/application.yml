@@ -10,6 +10,10 @@ server:
       timeout: 10m
 
 spring:
+  security:
+    user:
+      name: user
+      password: 1234
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/app?serverTimezone=Asia/Seoul
@@ -28,7 +32,6 @@ spring:
   profiles:
     active: local
     include: oauth
-
   servlet:
     multipart:
       enabled: true
@@ -51,10 +54,16 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  mapper-locations: classpath*:/mapper/*/*.xml
+  mapper-locations: classpath*:/mapper/**/*.xml
   type-handlers-package: com.example.crewstation.config.mybatis.handler
   type-aliases-package: com.example.crewstation.domain;com.example.back.dto;
 
   # openssl rand -base64 32
 jwt:
   secret: Xb/i9pIPkBh91ltvBCkwxJ7WsqR2HlECdRmwt+3kIxg=
+aws:
+  access-key:
+  secret-key:
+  s3:
+    bucket-name: gb-crew-station
+  region: ap-northeast-2
