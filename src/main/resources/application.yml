@@ -2,7 +2,11 @@ server:
   port: 10000
   servlet:
     session:
-      tracking-modes: cookie
+      tracking-modes: COOKIE
+      cookie:
+        http-only: true
+        secure: false
+        same-site: lax
       timeout: 10m
 
 spring:
@@ -25,6 +29,9 @@ spring:
       port: 6379
   cache:
     type: redis
+  profiles:
+    active: local
+    include: oauth
   servlet:
     multipart:
       enabled: true
@@ -49,12 +56,11 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:/mapper/**/*.xml
   type-handlers-package: com.example.crewstation.config.mybatis.handler
-  type-aliases-package: com.example.crewstation.domain;com.example.crewstation.dto;
+  type-aliases-package: com.example.crewstation.domain;com.example.back.dto;
 
-# openssl rand -base64 32
+  # openssl rand -base64 32
 jwt:
   secret: Xb/i9pIPkBh91ltvBCkwxJ7WsqR2HlECdRmwt+3kIxg=
-
 aws:
   access-key:
   secret-key:
