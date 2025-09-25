@@ -13,9 +13,9 @@ const purchaseService = (() => {
             console.log(result);
             if (response.ok) {
                 console.log("기프트 목록 잘 나옴")
-                setTimeout(() => {
-                    callback(result);
-                }, 1000)
+                setTimeout(  () => {
+                     callback(result);
+                }, 500)
             } else {
                 const errorText = await response.text();
                 console.log(response.status);
