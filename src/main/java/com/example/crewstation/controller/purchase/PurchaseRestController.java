@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class PurchaseRestController {
     private final PurchaseService purchaseService;
 
-    @PostMapping
-    public ResponseEntity<PurchaseCriteriaDTO> getPurchases(@RequestBody Search search) {
+    @GetMapping
+    public ResponseEntity<PurchaseCriteriaDTO> getPurchases(@RequestParam int page,@RequestParam String keyword) {
+        Search search = new Search();
+        search.setPage(page);
+        search.setKeyword(keyword);
         PurchaseCriteriaDTO purchases = purchaseService.getPurchases(search);
         return ResponseEntity.ok().body(purchases);
     }

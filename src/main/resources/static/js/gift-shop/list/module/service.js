@@ -2,13 +2,7 @@ const purchaseService = (() => {
     const getPurchases = async (callback, page = 1, keyword = "") => {
         console.log(page)
         try {
-            const response = await fetch(`/api/gifts`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({page: page, keyword: keyword})
-            })
+            const response = await fetch(`/api/gifts?page=${page}&keyword=${keyword}`)
             const result = await response.json();
             console.log(result);
             if (response.ok) {
