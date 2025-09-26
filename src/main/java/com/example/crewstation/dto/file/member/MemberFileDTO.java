@@ -15,7 +15,8 @@ public class MemberFileDTO {
     private String fileOriginalName;
     private String filePath;
     private String fileName;
-    private String memberId;
+    private String fileSize;
+    private Long memberId;
     private String createdDatetime;
     private String updatedDatetime;
 

@@ -76,17 +76,21 @@ const phoneText = document.querySelector(".error-text-phone");
 const phoneTextSpan = document.querySelector(".error-text-phone span");
 
 memberPhone.addEventListener("keyup", (e) => {
-    const phone = memberPhone.value.replace(/[^0-9]/g, ""); // 숫자만 추출
+    const phone = memberPhone.value.replace(/[^0-9]/g, "");
     memberPhone.value = phone; // 자동으로 숫자만 입력되게 정리
 
-    const phoneRegex = /^010\d{8}$/; // 010으로 시작 + 11자리 숫자
+    const phoneRegex = /^010\d{8}$/;
 
     if (!phoneRegex.test(phone)) {
         phoneText.style.display = "block";
         phoneTextSpan.innerText = "번호를 다시 확인해 주세요.";
+
+        memberPhone.classList.add("error");
     } else {
-        phoneText.style.display = "none"; // 성공하면 숨김
+        phoneText.style.display = "none";
         phoneTextSpan.innerText = "";
+
+        memberPhone.classList.remove("error");
     }
 });
 
