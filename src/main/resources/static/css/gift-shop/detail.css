@@ -1082,7 +1082,7 @@ button {
 }
 
 /* 모달 기본 */
-.modal-container {
+.modal-container-report{
     max-height: 78%;
     margin: 0;
     vertical-align: middle;
@@ -1098,7 +1098,7 @@ button {
 
 /* 모바일 대응 */
 @media (max-width: 480px) {
-    .modal-container {
+    .modal-container-report {
         width: 95%;
         max-width: none;
         border-radius: 6px;

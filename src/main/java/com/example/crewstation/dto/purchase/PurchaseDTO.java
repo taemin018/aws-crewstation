@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class PurchaseDTO{
     private Long postId;
     private String postTitle;
-    private int purchaseProductPrice;
+    private String purchaseProductPrice;
     private int purchaseLimitTime;
     private int purchaseProductCount;
     private String purchaseCountry;
