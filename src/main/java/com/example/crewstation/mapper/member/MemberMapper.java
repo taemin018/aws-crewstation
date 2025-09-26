@@ -11,6 +11,10 @@ public interface MemberMapper {
     //    회원가입
     public void insert(MemberVO memberVO);
 
+    //    이메일 중복 검사
+    public boolean selectEmail(String memberEmail);
+
+
     public void insertSns(MemberVO memberVO);
     //    로그인
     public Optional<MemberDTO> selectForLogin(MemberDTO memberDTO);

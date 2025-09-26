@@ -1,7 +1,7 @@
 package com.example.crewstation.service;
 
 import com.example.crewstation.auth.OAuth2Attribute;
-import com.example.crewstation.repository.MemberDAO;
+import com.example.crewstation.repository.member.MemberDAO;
 import com.example.crewstation.dto.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

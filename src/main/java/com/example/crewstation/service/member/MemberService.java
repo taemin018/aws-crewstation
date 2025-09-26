@@ -1,14 +1,17 @@
-package com.example.crewstation.service;
+package com.example.crewstation.service.member;
 
+import com.example.crewstation.domain.member.AddressVO;
 import com.example.crewstation.domain.member.MemberVO;
+import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
 //    회원가입
-    public void join(MemberDTO memberDTO);
+    public void join(MemberDTO memberDTO, MultipartFile multipartFile, AddressDTO addressDTO);
 
-
-//    로그인
+//    이메일 중복 검사
+    public boolean checkEmail(String memberEmail);
 
 
     default MemberVO toVO(MemberDTO memberDTO) {
@@ -30,6 +33,17 @@ public interface MemberService {
                 .memberRole(memberDTO.getMemberRole())
                 .createdDatetime(memberDTO.getCreatedDatetime())
                 .updatedDatetime(memberDTO.getUpdatedDatetime())
+                .build();
+    }
+
+    default AddressVO toVO(AddressDTO addressDTO) {
+        return AddressVO.builder()
+                .id(addressDTO.getId())
+                .address(addressDTO.getAddress())
+                .addressDetail(addressDTO.getAddressDetail())
+                .addressZipCode(addressDTO.getAddressZipCode())
+                .createdDatetime(addressDTO.getCreatedDatetime())
+                .updatedDatetime(addressDTO.getUpdatedDatetime())
                 .build();
     }
 }
