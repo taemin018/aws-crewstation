@@ -20,4 +20,7 @@ public interface PurchaseMapper {
 
 //  기프트 상세 보기
     public Optional<PurchaseDetailDTO> selectByPostId(Long postId);
+
+//  조회 수 증가
+    public void updateReadCount(Long postId);
 }

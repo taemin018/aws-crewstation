@@ -44,4 +44,9 @@ public class MapperTest {
         assertThat(purchaseDetailDTO).isPresent();
 //        log.info("testSelectByPostId {}", );
     }
+    @Test
+    public void testUpdateReadCount(){
+        purchaseMapper.updateReadCount(1L);
+
+    }
 }
