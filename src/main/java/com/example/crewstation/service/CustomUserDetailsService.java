@@ -2,7 +2,7 @@ package com.example.crewstation.service;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.member.MemberDTO;
-import com.example.crewstation.repository.MemberDAO;
+import com.example.crewstation.repository.member.MemberDAO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

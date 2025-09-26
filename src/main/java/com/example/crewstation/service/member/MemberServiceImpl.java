@@ -3,6 +3,7 @@ package com.example.crewstation.service.member;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.repository.member.AddressDAO;
+import com.example.crewstation.repository.member.MemberDAO;
 import com.example.crewstation.repository.member.MemberFileDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
