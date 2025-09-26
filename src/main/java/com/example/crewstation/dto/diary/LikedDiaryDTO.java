@@ -1,4 +1,4 @@
-package com.example.crewstation.dto.purchase;
+package com.example.crewstation.dto.diary;
 
 
 import com.example.crewstation.audit.Period;
@@ -14,20 +14,13 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(of="postId")
-public class PurchaseDTO{
+@EqualsAndHashCode(of="id")
+public class LikedDiaryDTO {
     private Long postId;
     private String postTitle;
-    private int purchaseProductPrice;
-    private int purchaseLimitTime;
-    private int purchaseProductCount;
-    private String purchaseCountry;
-    private DeliveryMethod purchaseDeliveryMethod;
     private String filePath;
     private String fileName;
     private String memberName;
-    private String limitDateTime;
-    private int chemistryScore;
     private String createdDatetime;
     private String updatedDatetime;
 }

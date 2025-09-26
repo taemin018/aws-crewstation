@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.file.post.purchase.FilePurchaseMapper">
-<!--    <select id="selectMainFileByPostId">-->
-<!--        select *-->
-<!--        from view_post_purchase vpp-->
-<!--                 join tbl_post_section tps on vpp.id = tps.post_id and vpp.post_status = 'active' and -->
-<!--        join view_file_post_section_file fpsf on fpsf.post_section_id = tps.id and fpsf.image_type = 'main'-->
-<!--    </select>-->
+    <select id="selectMainFileByPostId">
+    </select>
 </mapper>

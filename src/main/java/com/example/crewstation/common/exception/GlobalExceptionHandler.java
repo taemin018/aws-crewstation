@@ -10,4 +10,8 @@ public class GlobalExceptionHandler {
     public RedirectView handleMemberLoginFailException(MemberLoginFailException e) {
         return new RedirectView("/member/login");
     }
+    @ExceptionHandler(PurchaseNotFoundException.class)
+    public RedirectView handlePurchaseNotFoundException(PurchaseNotFoundException e) {
+        return new RedirectView("/gifts");
+    }
 }

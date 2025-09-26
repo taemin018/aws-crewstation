@@ -1,6 +1,7 @@
 package com.example.crewstation.repository.purchase;
 
 import com.example.crewstation.dto.purchase.PurchaseDTO;
+import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
@@ -10,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -24,6 +26,10 @@ public class PurchaseDAO {
     //  검색 결과에 따른 기프트 수 보여주기
     public int findCountAllByKeyWord(Search search) {
         return purchaseMapper.selectCountAllByKeyWord(search);
+    }
+    //  기프트 상세 보기
+    public Optional<PurchaseDetailDTO> findByPostId(Long postId){
+        return purchaseMapper.selectByPostId(postId);
     }
 
 }
