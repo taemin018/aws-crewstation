@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -17,7 +19,6 @@ import org.springframework.web.servlet.view.RedirectView;
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
-    private final AddressService addressService;
 
 //    web 회원가입
     @GetMapping("join")
@@ -28,11 +29,8 @@ public class MemberController {
     }
 
     @PostMapping("join")
-    public RedirectView join(MemberDTO memberDTO) {
-//        memberService.join(memberDTO);
-//        AddressDTO addressDTO = memberDTO.getAddressDTO();
-//        addressDTO.setMemberId( memberDTO.getId());
-//        addressService.join(addressDTO);
+    public RedirectView join(MemberDTO memberDTO, @RequestParam("file")MultipartFile multipartFile) {
+        memberService.join(memberDTO, multipartFile);
 
         return new RedirectView("/");
     }

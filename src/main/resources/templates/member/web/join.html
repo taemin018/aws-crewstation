@@ -16,7 +16,7 @@
                     <img src="/images/crew-station-favicon.png"  width="147" height="100">
                 </a>
                 <h1 class="join-title">회원가입</h1>
-                <form action="member/web/join" method="post" id="signupForm" th:object="${memberDTO}">
+                <form action="/member/web/join" method="post" id="signupForm" th:object="${memberDTO}" enctype="multipart/form-data">
                     <div class="modify">
                         <label for="profile" class="modify-label">
                             <img class="profile-img" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c">
@@ -25,7 +25,7 @@
                                     <path fill-rule="evenodd" d="M2 2.86h1.67l.569-1.091a.5.5 0 0 1 .443-.269h2.587a.5.5 0 0 1 .44.262l.593 1.098H10a1 1 0 0 1 1 1v5.173a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3.86a1 1 0 0 1 1-1M7.166 6.3a1.18 1.18 0 1 1-2.36 0 1.18 1.18 0 0 1 2.36 0m1 0a2.18 2.18 0 1 1-4.36 0 2.18 2.18 0 0 1 4.36 0" clip-rule="evenodd"></path>
                                 </svg>
                             </div>
-                            <input type="file" class="img-input" id="profile" th:field="*{memberName}">
+                            <input type="file" class="img-input" id="profile" name="file">
                         </label>
                     </div>
                     <div class="form-section">

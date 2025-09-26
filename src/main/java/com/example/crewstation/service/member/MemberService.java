@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
 //    회원가입
-    public void join(MemberDTO memberDTO, MultipartFile multipartFile, AddressDTO addressDTO);
+    public void join(MemberDTO memberDTO, MultipartFile multipartFile);
 
 //    이메일 중복 검사
     public boolean checkEmail(String memberEmail);
