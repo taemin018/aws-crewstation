@@ -2,13 +2,25 @@ package com.example.crewstation.mapper.diary;
 
 import com.example.crewstation.domain.diary.DiaryVO;
 import com.example.crewstation.dto.diary.DiaryDTO;
+import com.example.crewstation.dto.diary.LikedDiaryDTO;
+import com.example.crewstation.util.Criteria;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
 public interface DiaryMapper {
 
-//    다이러리 목록 (메인)
-    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO);
+    //    다이러리 목록 (메인)
+    public List<DiaryVO> selectDiaryList(DiaryDTO diaryDTO);
+
+    //  해당 회원이 좋아요 한 다이어리 목록(마이페이지)
+    public List<LikedDiaryDTO> findDiariesLikedByMemberId(
+            @Param("memberId") Long memberId,
+            @Param("criteria") Criteria criteria
+    );
+
+    // 특정 회원이 좋아요한 일기 수 조회
+    public int countDiariesLikedByMemberId(@Param("memberId") Long memberId);
 }

@@ -3,6 +3,7 @@ package com.example.crewstation.mapper.member;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
@@ -21,4 +22,5 @@ public interface MemberMapper {
     //    이메일로 조회
     public Optional<MemberDTO> selectMemberByMemberEmail(String memberEmail);
     public Optional<MemberDTO> selectMemberBySnsEmail(String snsEmail);
+
 }
