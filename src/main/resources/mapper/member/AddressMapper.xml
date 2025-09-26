@@ -3,7 +3,7 @@
 <mapper namespace="com.example.crewstation.mapper.member.AddressMapper">
     <insert id="insert">
         insert into tbl_address (address_zip_code, address_detail, address, member_id)
-        values (#{address_zip_code}, #{address_detail}, #{address}, #{member_id})
+        values (#{addressZipCode}, #{addressDetail}, #{address}, #{memberId})
     </insert>
 
 </mapper>

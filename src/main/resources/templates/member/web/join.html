@@ -145,12 +145,12 @@
                         <div class="address-wrap form-wrap">
                             <div class="input-group address-input">
                                 <span class="address-input-local form-input-local">
-                                    <input type="text" name="memberZipCode" class="form-control essential address memberZipCode" size="1" placeholder="우편번호" readonly th:field="*{addressDTO.addressZipCode}">
+                                    <input type="text" name="addressZipCode" class="form-control essential address memberZipCode" size="1" placeholder="우편번호" readonly th:field="*{addressDTO.addressZipCode}">
                                     <button type="button" class="phone-certification" id="addressBtn">주소찾기</button>
                                     <br>
-                                    <input type="text" name="memberAddress" class="form-control essential memberAddress" size="1" placeholder="주소" readonly th:field="*{addressDTO.address}">
+                                    <input type="text" name="addressDetail" class="form-control essential memberAddress" size="1" placeholder="주소" readonly th:field="*{addressDTO.address}">
                                     <br>
-                                    <input type="text" name="memberAddressDetail" class="form-control essential memberAddressDetail" size="1" placeholder="상세주소" th:field="*{addressDTO.addressDetail}">
+                                    <input type="text" name="address" class="form-control essential memberAddressDetail" size="1" placeholder="상세주소" th:field="*{addressDTO.addressDetail}">
                                 </span>
                             </div>
                             <div class="error-text-wrap error-text-phone">
