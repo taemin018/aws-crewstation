@@ -24,10 +24,10 @@ public class PurchaseController {
         return "gift-shop/list";
     }
     @GetMapping("{postId}")
-    public void detail(@PathVariable Long postId, Model model){
+    public String detail(@PathVariable Long postId, Model model){
         Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
 
         model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
-//        return "gift-shop/detail";
+        return "gift-shop/detail";
     }
 }

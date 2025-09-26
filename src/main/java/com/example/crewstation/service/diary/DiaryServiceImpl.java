@@ -1,5 +1,6 @@
 package com.example.crewstation.service.diary;
 
+import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
 import com.example.crewstation.repository.diary.DiaryDAO;
 import com.example.crewstation.util.Criteria;
@@ -15,6 +16,11 @@ import java.util.List;
 public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryDAO diaryDAO;
+
+    @Override
+    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO) {
+        return diaryDAO.selectDiaryList(diaryDTO);
+    }
 
     @Override
     public List<LikedDiaryDTO> getDiariesLikedByMemberId(Long memberId, Criteria criteria) {

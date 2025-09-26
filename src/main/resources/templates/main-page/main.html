@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crew Station</title>
-    <link rel="stylesheet" href="../../static/css/font.css">
-    <link rel="stylesheet" href="../../static/css/main-page/main.css">
-    <link rel="shortcut icon" href="../../static/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/static/css/main-page/main.css">
+    <link rel="shortcut icon" href="/static/images/crew-station-favicon.png" type="image/x-icon">
 </head>
 <body>
+<header th:replace="~{fixed/header.html :: header}"></header>
     <div class="page">
         <div class="page-container">
             <div class="layout">
@@ -20,8 +21,8 @@
                                 <div class="banner-item-wrap">
                                     <div class="banner-group">
                                         <div class="banner-slide">
-                                            <div><img src="../../static/images/banner1.jpg" alt=""></div>
-                                            <div><img src="../../static/images/banner2.jpg" alt=""></div>
+                                            <div><img src="/static/images/banner1.jpg" alt=""></div>
+                                            <div><img src="/static/images/banner2.jpg" alt=""></div>
                                             <div><img src="../../static/images/banner3.jpg" alt=""></div>
                                             <div><img src="../../static/images/banner4.jpg" alt=""></div>
                                             <div><img src="../../static/images/banner5.jpg" alt=""></div>
@@ -1061,5 +1062,5 @@
     </div>
     
 </body>
-<script src="../../static/js/main-page/main/event.js"></script>
+<script src="/js/main-page/main/event.js"></script>
 </html>

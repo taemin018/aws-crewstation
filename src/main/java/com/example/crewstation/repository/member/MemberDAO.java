@@ -1,4 +1,4 @@
-package com.example.crewstation.repository;
+package com.example.crewstation.repository.member;
 
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
@@ -19,8 +19,9 @@ public class MemberDAO {
         memberMapper.insert(memberVO);
     }
 
-    public void saveSns(MemberVO memberVO){
-        memberMapper.insertSns(memberVO);
+//  이메일 중복 검사
+    public boolean checkEmail(String memberEmail){
+        return memberMapper.selectEmail(memberEmail);
     }
 
     //    로그인

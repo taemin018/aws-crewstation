@@ -33,4 +33,10 @@ public class DaoTest {
     public void testFindByPostId(){
         log.info("testFindByPostId {}", purchaseDAO.findByPostId(3L));
     }
+
+    @Test
+    public void testIncreaseReadCount(){
+        purchaseDAO.increaseReadCount(1L);
+
+    }
 }
