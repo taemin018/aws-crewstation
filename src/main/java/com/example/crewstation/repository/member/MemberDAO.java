@@ -19,7 +19,7 @@ public class MemberDAO {
         memberMapper.insert(memberVO);
     }
 
-    //  이메일 중복 검사
+//  이메일 중복 검사
     public boolean checkEmail(String memberEmail){
         return memberMapper.selectEmail(memberEmail);
     }
