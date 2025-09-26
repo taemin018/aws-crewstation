@@ -34,7 +34,7 @@ dependencies {
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation platform("software.amazon.awssdk:bom:2.32.16")
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation "software.amazon.awssdk:s3"

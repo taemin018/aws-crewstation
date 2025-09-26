@@ -1,12 +1,16 @@
 package com.example.crewstation.service.purchase;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
+import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
+import com.example.crewstation.dto.report.ReportDTO;
+import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
+import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.repository.section.SectionDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
@@ -30,6 +34,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseDAO purchaseDAO;
     private final S3Service s3Service;
     private final SectionDAO sectionDAO;
+    private final PostDAO postDAO;
+    private final ReportDAO reportDAO;
 
     @Override
     @LogReturnStatus
@@ -71,5 +77,16 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setSections(sections);
         });
         return purchaseDetail;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @LogReturnStatus
+    public void report(ReportDTO reportDTO) {
+        boolean isExist = postDAO.isActivePost(reportDTO.getPostId());
+        if(!isExist){
+            throw new PostNotActiveException("이미 삭제된 상품입니다.");
+        }
+        reportDAO.saveReport(reportDTO);
     }
 }

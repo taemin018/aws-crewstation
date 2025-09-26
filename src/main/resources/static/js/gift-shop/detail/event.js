@@ -180,6 +180,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const confirmReportModal = document.getElementById("confirmReportModal");
+    const confirmReportYes = document.getElementById("confirmReportYes");
+    const confirmReportNo = document.getElementById("confirmReportNo");
+    const reportBtn = document.getElementById("reportBtn");
+    reportBtn.addEventListener("click", (e) => {
+
+        confirmReportYes.addEventListener("click", () => {
+            confirmReportModal.style.display = "none";
+            document.getElementById("reportModal").style.display = "none";
+            alert("요청이 전송되었습니다. 임시 주문번호는 입력하신 휴대폰 번호로 발송됩니다.");
+        });
+
+        confirmReportNo.addEventListener("click", () => {
+            confirmReportModal.style.display = "none";
+        });
+    })
+
     // 툴팁 관련
     const chemInfoBtn = document.querySelector(".openChemistryInfo");
     const chemTooltip = document.querySelector(".chemistryTooltip");
@@ -247,21 +264,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dots.forEach((dot, i) => {
         dot.addEventListener("click", () => {
-            goTo(i+1);
+            goTo(i + 1);
             resetAutoSlide();
         });
     });
 
     thumbnails.forEach((thumb, i) => {
         thumb.addEventListener("click", () => {
-            goTo(i+1);
+            goTo(i + 1);
             resetAutoSlide();
         });
     });
     if (total !== 1) {
         goTo(1);
         startAutoSlide();
-    }else{
+    } else {
         carouselList.style.transform = `translateX(0)`;
     }
 });

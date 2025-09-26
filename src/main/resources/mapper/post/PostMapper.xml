@@ -5,4 +5,10 @@
         insert into tbl_post_report (report_id, post_id)
         values (#{reportId},#{postId})
     </insert>
+
+    <select id="existsActivePost">
+        select count(id) > 0
+        from tbl_post
+        where post_status ='active' and id=#{postId}
+    </select>
 </mapper>
