@@ -15,7 +15,7 @@ public class DiaryDTO {
     private int diaryReplyContent;
     private String diaryCountryPathId;
     private String postTitle;
-    private int diaryLikeCount;
-    private int diaryReplyCount;
     private Long diaryId;
+    private String filePath;
+    private Long memberId;
 }
