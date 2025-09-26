@@ -9,9 +9,13 @@ import org.springframework.stereotype.Component;
 @ToString
 @EqualsAndHashCode(of="id")
 public class DiaryDTO {
-    private String postId;
+    private Long postId;
     private String diarySecret;
     private String diaryLikeContent;
     private int diaryReplyContent;
     private String diaryCountryPathId;
-} 
+    private String postTitle;
+    private int diaryLikeCount;
+    private int diaryReplyCount;
+    private Long diaryId;
+}
