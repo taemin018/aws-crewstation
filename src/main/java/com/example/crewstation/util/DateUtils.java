@@ -54,8 +54,8 @@ public class DateUtils {
     }
 
     public static String calcLimitDateTime(String date,int limit){
-        // 입력 포맷 (마이크로초 5자리 처리)
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS");
+        // 입력 포맷 (마이크로초 6자리 처리)
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dt = LocalDateTime.parse(date, inputFormatter);
 
         // 24시간 더하기

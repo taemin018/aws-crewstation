@@ -247,14 +247,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dots.forEach((dot, i) => {
         dot.addEventListener("click", () => {
-            goTo(i);
+            goTo(i+1);
             resetAutoSlide();
         });
     });
 
     thumbnails.forEach((thumb, i) => {
         thumb.addEventListener("click", () => {
-            goTo(i);
+            goTo(i+1);
             resetAutoSlide();
         });
     });
