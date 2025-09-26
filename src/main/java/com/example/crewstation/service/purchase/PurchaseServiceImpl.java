@@ -56,9 +56,15 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Cacheable(value = "purchases", key="'purchases_' + #postId")
     @LogReturnStatus
     public Optional<PurchaseDetailDTO> getPurchase(Long postId) {
+        purchaseDAO.increaseReadCount(postId);
         Optional<PurchaseDetailDTO> purchaseDetail = purchaseDAO.findByPostId(postId);
         List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
+        sections.forEach(section -> {
+            section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
+        });
         purchaseDetail.ifPresent(purchase -> {
+            purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
+            purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
             purchase.setSections(sections);
         });
         return purchaseDetail;

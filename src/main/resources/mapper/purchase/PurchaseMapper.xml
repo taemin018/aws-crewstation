@@ -64,6 +64,12 @@
                  left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
                  join view_post_purchase vpp on tm.id = vpp.member_id and vpp.id = #{postId}
                  join tbl_address ta on tm.id = ta.member_id
-
+        where vpp.post_status = 'active'
     </select>
+
+    <update id="updateReadCount">
+        update tbl_post
+        set post_read_count = post_read_count + 1
+        where id = #{postId}
+    </update>
 </mapper>

@@ -27,6 +27,6 @@ public class ServiceTest {
 
     @Test
     public void testGetPurchase(){
-        purchaseService.getPurchase(3L);
+        purchaseService.getPurchase(2L);
     }
 }
