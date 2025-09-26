@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.back.mapper.crew.CrewMapper">
+<mapper namespace="com.example.crewstation.mapper.crew.CrewMapper">
 <select id="getCrews">
-    select tcm.id as id,
-           tcm.crew_role as crewRole,
-           tcm.crew_id as crewId,
-           tcm.member_id as memberId,
-           tcm.created_datetime as createdDatetime,
-           tcm.updated_datetime as updatedDatetime,
-           vfcf.file_origin_name as fileOriginName,
-           vfcf.file_path as filePath,
-           vfcf.file_name as fileName,
-           vfcf.file_id as fileId
-    from  tbl_crew_member tcm
+    select
+            tc.id as id,
+            tc.crew_name as crewName,
+            tc.crew_description as crewDescription,
+            tc.crew_member_count as crewMemberCount,
+            tcm.crew_role as crewRole,
+            tc.created_datetime as createdDatetime,
+            tc.updated_datetime as updatedDatetime,
+            tcm.member_id as memberId,
+            vfcf.file_origin_name as fileOriginName,
+            vfcf.file_path as filePath,
+            vfcf.file_name as fileName,
+            vfcf.file_id as fileId
+    from  tbl_crew tc
+        left join tbl_crew_member tcm
+            on tc.id = tcm.crew_id
         left join view_file_crew_file vfcf
-            on tcm.id = vfcf.crew_id
-    where tcm.id = #{crewId}
+            on tc.id = vfcf.crew_id
+    ORDER BY tc.id DESC
 </select>
 </mapper>
