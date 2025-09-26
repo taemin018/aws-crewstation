@@ -1,6 +1,5 @@
 package com.example.crewstation.service;
 
-import com.example.crewstation.common.exception.MemberLoginFailException;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.repository.MemberDAO;
 import lombok.RequiredArgsConstructor;

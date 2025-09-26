@@ -21,4 +21,52 @@
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
     </select>
+
+    <select id="findDiariesLikedByMemberId" resultType="com.example.crewstation.dto.diary.LikedDiaryDTO">
+        SELECT d.post_id AS postId,
+               p.post_title,
+               m.id            AS memberId,
+               m.member_name   AS memberName,
+               m.social_img_url AS memberProfileImage,
+
+               f.file_path AS mainImage,
+
+               (SELECT ps.post_content
+                FROM tbl_post_section ps
+                WHERE ps.post_id = p.id
+                ORDER BY ps.id ASC
+                LIMIT 1) AS content,
+
+               d.diary_like_count,
+               d.diary_reply_count,
+
+               1 AS liked
+        FROM tbl_like l
+                 JOIN tbl_post p ON l.post_id = p.id
+                 JOIN tbl_diary d ON d.post_id = p.id
+                 JOIN tbl_member m ON p.member_id = m.id
+                 LEFT JOIN (
+            SELECT ps.post_id, COALESCE(main.file_id, sub.first_file_id) AS first_file_id
+            FROM tbl_post_section ps
+                     LEFT JOIN (
+                SELECT psf.post_section_id, MIN(f.id) AS file_id
+                FROM tbl_post_section_file psf
+                         JOIN tbl_file f ON psf.file_id = f.id
+                WHERE psf.image_type = 'main'
+                GROUP BY psf.post_section_id
+            ) main ON ps.id = main.post_section_id
+                     LEFT JOIN (
+                SELECT psf.post_section_id, MIN(f.id) AS first_file_id
+                FROM tbl_post_section_file psf
+                         JOIN tbl_file f ON psf.file_id = f.id
+                WHERE psf.image_type = 'sub'
+                GROUP BY psf.post_section_id
+            ) sub ON ps.id = sub.post_section_id
+        ) sec_file ON p.id = sec_file.post_id
+                 LEFT JOIN tbl_file f ON sec_file.first_file_id = f.id
+        WHERE l.member_id = #{memberId}
+        ORDER BY l.id DESC
+        limit #{criteria.rowCount} offset #{criteria.offset}
+    </select>
+
 </mapper>

@@ -35,4 +35,5 @@ public class MemberDAO {
     public Optional<MemberDTO> findBySnsEmail(String snsEmail){
         return memberMapper.selectMemberBySnsEmail(snsEmail);
     }
+
 }
