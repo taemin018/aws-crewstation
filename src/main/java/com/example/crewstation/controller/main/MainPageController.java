@@ -23,9 +23,9 @@ public class MainPageController {
     public String getMainPage(CrewDTO crewDTO,
                               DiaryDTO diaryDTO,
                               Model model) {
-        model.addAttribute(crewService.getCrews(crewDTO));
-        model.addAttribute(diaryService.selectDiaryList(diaryDTO));
+        model.addAttribute("crewDTO", crewDTO);
+        model.addAttribute("diaryDTO", diaryDTO);
 
-        return "main/main";
+        return "main-page/main";
     }
 }
