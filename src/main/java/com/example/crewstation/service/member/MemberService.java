@@ -1,4 +1,4 @@
-package com.example.crewstation.service;
+package com.example.crewstation.service.member;
 
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
