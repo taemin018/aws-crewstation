@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString(callSuper = true)
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "postId",callSuper = false)
 public class PurchaseVO extends Period {
     private Long postId;
     private int purchaseProductPrice;

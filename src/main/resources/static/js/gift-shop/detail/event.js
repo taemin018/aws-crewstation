@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 모달 관련 (공통)
     function setupModal(modalId, openSelector, closeSelector, onClose) {
+        console.log(openSelector);
+        console.log("선택햇습니다.")
         const modal = document.getElementById(modalId);
         const openBtns = document.querySelectorAll(openSelector);
         const closeBtn = modal ? modal.querySelector(closeSelector) : null;
@@ -66,15 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 신고하기 제출
-    const submitReportBtn = document.querySelector(".report-button-send");
-    const reportModal = document.getElementById("reportModal");
-    if (submitReportBtn && reportModal) {
-        submitReportBtn.addEventListener("click", () => {
-            reportModal.classList.remove("active");
-            selectFirstReportRadio();
-            alert("신고가 접수되었습니다.");
-        });
-    }
+    // const submitReportBtn = document.querySelector(".report-button-send");
+    // const reportModal = document.getElementById("reportModal");
+    // if (submitReportBtn && reportModal) {
+    //     submitReportBtn.addEventListener("click", () => {
+    //         reportModal.classList.remove("active");
+    //         selectFirstReportRadio();
+    //         alert("신고가 접수되었습니다.");
+    //     });
+    // }
 
     // 신고하기 첫번째 라디오 버튼 기본 선택
     function selectFirstReportRadio() {
@@ -180,6 +182,34 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const confirmReportModal = document.getElementById("confirmReportModal");
+    const confirmReportYes = document.getElementById("confirmReportYes");
+    const confirmReportNo = document.getElementById("confirmReportNo");
+    const reportBtn = document.getElementById("reportBtn");
+    reportBtn.addEventListener("click", (e) => {
+        confirmReportModal.style.display = "block";
+    })
+
+    confirmReportYes.addEventListener("click", async (e) => {
+        const reportContent = document.querySelector("input[name='reason']:checked").value;
+        console.log(reportContent);
+        const memberId = document.getElementById("memberId").value;
+        const postId = document.getElementById("postId").dataset.post;
+        const {message,status} = await purchaseDetailService.report({reportContent : reportContent,memberId:memberId,postId:postId})
+        console.log(message)
+        console.log(status)
+        confirmReportModal.style.display = "none";
+        document.getElementById("reportModal").style.display = "none";
+        toastModal(message);
+        if(status !== 200){
+            location.href = "/gifts"
+        }
+    });
+
+    confirmReportNo.addEventListener("click", () => {
+        confirmReportModal.style.display = "none";
+    });
+
     // 툴팁 관련
     const chemInfoBtn = document.querySelector(".openChemistryInfo");
     const chemTooltip = document.querySelector(".chemistryTooltip");
@@ -247,21 +277,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dots.forEach((dot, i) => {
         dot.addEventListener("click", () => {
-            goTo(i+1);
+            goTo(i + 1);
             resetAutoSlide();
         });
     });
 
     thumbnails.forEach((thumb, i) => {
         thumb.addEventListener("click", () => {
-            goTo(i+1);
+            goTo(i + 1);
             resetAutoSlide();
         });
     });
     if (total !== 1) {
         goTo(1);
         startAutoSlide();
-    }else{
+    } else {
         carouselList.style.transform = `translateX(0)`;
     }
 });
@@ -320,10 +350,12 @@ function startCountdown() {
 // 공유하기 버튼 클릭 이벤트
 const shareButton = document.querySelector(".product-detail-header-share-btn-wrapper");
 const toast = document.querySelector(".toast");
+const toastText = document.querySelector("p.toast-text");
 
-shareButton.addEventListener("click", (e) => {
+function toastModal(text){
     toast.style.display = "block";
     toast.classList.remove("hide");
+    toastText.textContent = text;
     toast.classList.add("show");
     setTimeout(() => {
         toast.classList.remove("show");
@@ -332,6 +364,9 @@ shareButton.addEventListener("click", (e) => {
             toast.style.display = "none";
         }, 500);
     }, 3000);
+}
+shareButton.addEventListener("click", (e) => {
+    toastModal("클립보드에 복사되었습니다.");
     clip();
 });
 
@@ -348,3 +383,8 @@ function clip() {
 
 
 document.addEventListener("DOMContentLoaded", startCountdown);
+
+purchaseDetailService.info((member)=>{
+    console.log("회원정보 받아오기")
+    document.getElementById("memberId").value =member.id;
+})

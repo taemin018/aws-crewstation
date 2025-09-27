@@ -7,4 +7,6 @@ import org.apache.ibatis.annotations.Param;
 public interface PostMapper {
 //    게시글 신고 추가해주기
     public void insertPostReport(@Param("reportId")Long reportId ,@Param("postId") Long postId);
+//    게시글 존재 여부 확인
+    public boolean existsActivePost(Long postId);
 }

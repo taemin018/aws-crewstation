@@ -18,6 +18,7 @@ public class ReportDTO {
     private String reportContent;
     private ProcessStatus processStatus;
     private Long memberId;
+    private Long postId;
     private String createdDatetime;
     private String updatedDatetime;
 }

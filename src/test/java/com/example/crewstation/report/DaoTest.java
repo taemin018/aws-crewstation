@@ -1,6 +1,8 @@
 package com.example.crewstation.report;
 
+import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
+import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
 import lombok.extern.slf4j.Slf4j;
@@ -11,31 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Slf4j
 public class DaoTest {
-    @Autowired
-    private PurchaseDAO purchaseDAO;
+   @Autowired
+    private ReportDAO reportDAO;
 
-    @Test
-    public void testFindAllByKeyWord() {
-        Search search = new Search();
-        search.setKeyword("호주");
-        Criteria criteria = new Criteria(1,2);
-        log.info("findAllByKeyWord {}", purchaseDAO.findAllByKeyWord(criteria, search));
-    }
-    @Test
-    public void testFindCountAllByKeyWord() {
-        Search search = new Search();
-        search.setKeyword("호주");
-        log.info("findAllByKeyWord {}", purchaseDAO.findCountAllByKeyWord(search));
-
-    }
-    @Test
-    public void testFindByPostId(){
-        log.info("testFindByPostId {}", purchaseDAO.findByPostId(3L));
-    }
-
-    @Test
-    public void testIncreaseReadCount(){
-        purchaseDAO.increaseReadCount(1L);
-
-    }
+   @Test
+    public void testSaveReport(){
+       ReportDTO reportDTO = new ReportDTO();
+       reportDTO.setReportContent("임시입니다.");
+       reportDTO.setMemberId(2L);
+       reportDAO.saveReport(reportDTO);
+   }
 }

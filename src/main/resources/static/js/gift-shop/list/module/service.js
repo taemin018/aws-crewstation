@@ -1,4 +1,4 @@
-const purchaseService = (() => {
+const purchaseListService = (() => {
     const getPurchases = async (callback, page = 1, keyword = "") => {
         console.log(page)
         try {

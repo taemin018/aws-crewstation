@@ -1,4 +1,4 @@
-const purchaseLayout = (() => {
+const purchaseListLayout = (() => {
     const showPurchases = async (result) => {
         let text = ``;
 
@@ -8,7 +8,7 @@ const purchaseLayout = (() => {
         purchases.forEach((purchase) => {
                 text += `
             <article class="product-card-wrapper">
-                <a href="/gifts/${purchase.postId}">
+                <a href="/gifts/${purchase.postId}" class="purchase-link">
                 <div class="product-image-container">
                     <div class="product-limit-time-wrapper" data-endtime="${purchase.limitDateTime}">
                     </div>
@@ -23,7 +23,7 @@ const purchaseLayout = (() => {
                       <div class="product-content-nickname">${purchase.memberName}</div>
                       <span class="manner-wrap">
                         <img class="product-detail-header-manner-img" src="/images/manner.png" width="14" height="14" alt="케미지수 아이콘">
-                        <a class="product-detail-header-manner">${purchase.chemistryScore}케미지수</a>
+                        <span class="product-detail-header-manner">${purchase.chemistryScore}케미지수</span>
                       </span>
                     </div>
                     <div class="product-content-name">${purchase.postTitle}</div>

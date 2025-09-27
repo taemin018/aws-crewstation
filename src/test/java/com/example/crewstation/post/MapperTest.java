@@ -26,4 +26,9 @@ public class MapperTest {
         Long postId = 1L;
         postMapper.insertPostReport(reportId,postId);
     }
+
+    @Test
+    public void testExistsActivePost() {
+        log.info("exists active post {}",postMapper.existsActivePost(1L));
+    }
 }
