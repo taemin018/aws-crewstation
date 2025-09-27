@@ -31,5 +31,8 @@ public class PurchaseDAO {
     public Optional<PurchaseDetailDTO> findByPostId(Long postId){
         return purchaseMapper.selectByPostId(postId);
     }
+    public void increaseReadCount(Long postId) {
+        purchaseMapper.updateReadCount(postId);
+    }
 
 }

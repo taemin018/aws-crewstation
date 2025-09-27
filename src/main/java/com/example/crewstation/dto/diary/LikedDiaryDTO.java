@@ -18,9 +18,12 @@ import org.springframework.stereotype.Component;
 public class LikedDiaryDTO {
     private Long postId;
     private String postTitle;
-    private String filePath;
-    private String fileName;
+    private String content;
+    private Long memberId;
     private String memberName;
-    private String createdDatetime;
-    private String updatedDatetime;
+    private String memberProfileImage;
+    private String mainImage;
+    private int diaryLikeCount;
+    private int diaryReplyCount;
+    private boolean liked;
 }

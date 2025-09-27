@@ -7,7 +7,7 @@ nav {
     unicode-bidi: isolate;
 }
 
-ol,ul {
+ol, ul {
     list-style: none;
 }
 
@@ -23,7 +23,7 @@ ol,ul {
     box-sizing: border-box;
     margin-right: -15px;
     margin-left: -15px;
-    justify-content: center;  
+    justify-content: center;
     align-items: flex-start;
 }
 
@@ -36,56 +36,66 @@ ol,ul {
     padding-right: 0px;
     flex: 0 0 100%;
     max-width: 100%;
-    justify-content: center; 
-    align-items: center;    
-  }
+    justify-content: center;
+    align-items: center;
+}
 
 .cover-image-container {
     width: 100%;
-    max-width: 800px;   
-    margin: 0 auto;     
-    text-align: center; 
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .carousel-wrap {
-  position: relative;
-  overflow: hidden;   
-  display: flex;
-  justify-content: center;
-  width: 100%; 
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .carousel-list-wrap {
-  width: 100%;            
-  max-width: 100%;        
-  margin: 0;              
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
 }
 
 .carousel-list {
     display: flex;
-    flex-wrap: nowrap;    
+    flex-wrap: nowrap;
     align-items: stretch;
     min-height: 100%;
+    width: 396px;
+    height: 396px;
     transition: transform 0.5s ease;
+    transform: translateX(-100%);
 }
 
+.carousel-list-entry-image:has(.carousel-list-entry-image.one-image){
+    transform: translateX(0%);
+}
+
+
 .carousel-list-entry {
-  position: relative;
-  flex: 0 0 auto;
-  width: 100%;
-  background-color: #fff;  
-  padding-bottom: 0;       
-  display: flex;           
-  justify-content: center; 
-  align-items: center;
+    position: relative;
+    flex: 0 0 auto;
+    width: 396px;
+    height: 396px;
+    background-color: #fff;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .carousel-list-entry-image {
-  display: block;
-  max-width: 100%;   
-  height: auto;      
-  object-fit: contain;
-  margin: 0 auto;    
+    display: block;
+    max-width: 100%;
+    width: 396px;
+    height: 396px;
+    object-fit: contain;
+    margin: 0 auto;
 }
 
 .product-limit-timer-pc {
@@ -133,11 +143,11 @@ ol,ul {
 .product-cover-image-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;                
-    justify-content: center; 
-    margin: 0; 
-    padding: 0; 
-    list-style: none; 
+    gap: 8px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .product-cover-image-item {
@@ -161,8 +171,8 @@ ol,ul {
 .product-cover-image-list .image {
     position: absolute;
     width: 100%;
-    height: 100%;        
-    object-fit: cover;   
+    height: 100%;
+    object-fit: cover;
     top: 0;
     left: 0;
     transition: transform .2s, border .2s;
@@ -176,7 +186,7 @@ ol,ul {
 
 .carousel-paginator {
     position: absolute;
-    bottom: 10px;      
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -199,13 +209,13 @@ ol,ul {
 
 .carousel-paginator-page {
     display: block;
-    width: 8px;             
+    width: 8px;
     height: 8px;
     border-radius: 50%;
     margin: 0 4px;
     background-color: hsla(0, 0%, 100%, .7);
     transition: background-color .15s;
-    box-shadow: 0 0 4px rgba(0,0,0,.3);
+    box-shadow: 0 0 4px rgba(0, 0, 0, .3);
 }
 
 .carousel-paginator-page.tiny,
@@ -254,9 +264,9 @@ ol,ul {
 }
 
 .product-detail-header-title-seller-name-wrap {
-    display: flex;           
-    align-items: center;    
-    gap: 6px;              
+    display: flex;
+    align-items: center;
+    gap: 6px;
     margin: 19px 0 4px;
     font-size: 14px;
     font-weight: 400;
@@ -272,8 +282,8 @@ ol,ul {
 
 .product-detail-header-title-name-wrap {
     display: flex;
-    align-items: center;  
-    justify-content: space-between; 
+    align-items: center;
+    justify-content: space-between;
 }
 
 .product-detail-header-title-name {
@@ -311,8 +321,8 @@ ol,ul {
 }
 
 .product-detail-header-manner-img {
-    margin-left: 0;   
-    margin-right: 2px; 
+    margin-left: 0;
+    margin-right: 2px;
     vertical-align: middle;
 }
 
@@ -320,7 +330,7 @@ ol,ul {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-left: auto; 
+    margin-left: auto;
 }
 
 .product-detail-information-icon {
@@ -335,8 +345,8 @@ ol,ul {
 .manner-wrap {
     display: flex;
     align-items: center;
-    position: relative; 
-    gap: 4px;          
+    position: relative;
+    gap: 4px;
 }
 
 .product-detail-header-manner {
@@ -354,14 +364,14 @@ ol,ul {
 }
 
 .badge-list-container {
-  margin-left: auto; 
-  background: #647FBC;
-  color: #fff;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: nowrap;
+    margin-left: auto;
+    background: #647FBC;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
 }
 
 .product-stock-wrapper {
@@ -408,7 +418,7 @@ ol,ul {
 .product-shipping-label {
     margin-right: 8px;
     color: #828c94;
-  }
+}
 
 .product-shipping-info-wrapper {
     display: flex;
@@ -434,7 +444,7 @@ ol,ul {
     justify-content: space-between;
     -webkit-box-align: center;
     align-items: center;
-    padding: 16px 16px 16px 0px; 
+    padding: 16px 16px 16px 0px;
     border-bottom: 1px solid #ededed;
 }
 
@@ -466,9 +476,9 @@ ol,ul {
 .product-seller-profile-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;  
-    border-radius: 50%; 
-  }
+    object-fit: cover;
+    border-radius: 50%;
+}
 
 .product-seller-name {
     display: flex;
@@ -515,7 +525,7 @@ ol,ul {
 .product-selling-navigation-item.active {
     border-left: none;
     color: #0aa5ff;
-    border-bottom: 3px solid#647FBC;
+    border-bottom: 3px solid #647FBC;
     z-index: 1;
 }
 
@@ -602,15 +612,15 @@ ol,ul {
     position: relative;
     overflow: hidden;
     max-height: none;
-    min-height: 1000px;
+    min-height: 300px;
 }
 
 .product-selling-description-notice-image {
     display: block;
-    max-width: 600px; 
-    width: 95%;       
-    height: 95%;    
-    margin: 0 auto;   
+    max-width: 600px;
+    width: 95%;
+    height: 95%;
+    margin: 0 auto;
 }
 
 .product-selling-description-content {
@@ -620,42 +630,42 @@ ol,ul {
 }
 
 .product-selling-description-fixed-image {
-  display: block;
-  width: 100%;        
-  max-width: 600px;  
-  height: auto;       
-  margin: 0 auto;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
 .product-another-suggestion {
-  margin: 30px 0 12px;     
-  padding: 5px 0px;
+    margin: 30px 0 12px;
+    padding: 5px 0px;
 }
 
 .suggestion-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .suggestion-title::before {
-  content: "✨";
-  font-size: 14px;
+    content: "✨";
+    font-size: 14px;
 }
 
 .product-selling-section {
-  margin-bottom: 0px;  
+    margin-bottom: 0px;
 }
 
 .product-selling-description {
-  padding-bottom: 100px; 
+    padding-bottom: 100px;
 }
 
 .product-selling-section-header {
@@ -688,7 +698,7 @@ ol,ul {
 }
 
 button {
-    color:#647FBC;
+    color: #647FBC;
     transition: opacity .1s;
     font: inherit;
     margin: 0;
@@ -781,7 +791,7 @@ button {
     cursor: pointer;
     border-radius: 4px;
     color: rgb(255, 255, 255);
-    border: 1px solid  #647FBC;
+    border: 1px solid #647FBC;
     font-size: 16px;
     line-height: 20px;
     font-weight: 700;
@@ -792,190 +802,193 @@ button {
 
 /* 정보 입력 모달 */
 .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-    }
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
 
-    .modal.active {
+.modal.active {
     display: flex;
-    }
+}
 
-    .modal-content {
-      background: #fff;
-      width: 400px;
-      margin: 10% auto;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      text-align: center;
-    }
+.modal-content {
+    background: #fff;
+    width: 400px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
 
-    .modal-content h2 {
-      margin-bottom: 20px;
-    }
+.modal-content h2 {
+    margin-bottom: 20px;
+}
 
-    .modal-content input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
 
-    .close {
-      float: right;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
- .form-group {
-  position: relative;      
-  margin-bottom: 16px;
+.form-group {
+    position: relative;
+    margin-bottom: 16px;
 }
 
 /* 라벨 왼쪽 정렬 */
 .form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0px;
-  text-align: left;       
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0px;
+    text-align: left;
 }
 
 /* 인풋 */
 .form-group input {
-  width: 100%;
-  padding: 10px 40px 10px 12px; 
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
 .required-dot {
-  color: red;
-  margin-left: 2px;
-  font-size: 14px;
+    color: red;
+    margin-left: 2px;
+    font-size: 14px;
 }
 
-  #addressInput {
-  pointer-events: none; 
+#addressInput {
+    pointer-events: none;
 }
 
 .confirm-btn {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
 }
 
 .confirm-btn.yes {
-  background-color: #647FBC;
-  color: #fff;
+    background-color: #647FBC;
+    color: #fff;
 }
 
 .confirm-btn.no {
-  background-color: #ddd;
-  color: #333;
+    background-color: #ddd;
+    color: #333;
 }
 
 .product-detail-container {
-  max-width: 1256px;  
-  margin: 0 auto;     
-  padding: 0 20px;    
-  box-sizing: border-box;
+    max-width: 1256px;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 @media (max-width: 767px) {
-  .product-detail-container {
-    max-width: 100%;
-    padding: 0 12px;   
-  }
+    .product-detail-container {
+        max-width: 100%;
+        padding: 0 12px;
+    }
 }
 
 @media (min-width: 768px) {
-  .product-detail-container {
-    max-width: 1256px;
-    padding: 0 20px;  
-  }
+    .product-detail-container {
+        max-width: 1256px;
+        padding: 0 20px;
+    }
 }
 
-  /* 검색 버튼 */
- .search-btn {
-  position: absolute;
-  top: 50%;
-  right: 10px;      
-  border: none;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* 검색 버튼 */
+.search-btn {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 아이콘 크기 조절 */
 .search-btn svg {
-  width: 18px;
-  height: 18px;
-  fill: #666;
+    width: 18px;
+    height: 18px;
+    fill: #666;
 }
 
- /* 툴팁 박스 */
+/* 툴팁 박스 */
 .tooltip-box {
-  display: none;
-  position: absolute;
-  bottom: 36px;               
-  left: 0;                    
-  min-width: 240px;           
-  max-width: 360px;           
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 13px;
-  color: #333;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  z-index: 1000;
-  text-align: left;
-  line-height: 1.5;
+    display: none;
+    position: absolute;
+    bottom: 36px;
+    left: 0;
+    min-width: 240px;
+    max-width: 360px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    text-align: left;
+    line-height: 1.5;
 
-  white-space: normal;      
-  word-break: break-word;
+    white-space: normal;
+    word-break: break-word;
 }
 
 /* 꼬리 (말풍선 형태) */
 .tooltip-box::before,
 .tooltip-box::after {
-  content: "";
-  position: absolute;
-  top: 100%;   
-  left: 24px; 
-  border-style: solid;
-  border-width: 10px 9px 0 9px; 
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 24px;
+    border-style: solid;
+    border-width: 10px 9px 0 9px;
 }
 
 .tooltip-box::before {
-  border-color: #ddd transparent transparent transparent; /* 테두리 */
+    border-color: #ddd transparent transparent transparent; /* 테두리 */
 }
 
 .tooltip-box::after {
-  margin-top: -1px; /* 테두리랑 겹쳐서 말풍선 효과 */
-  border-color: #fff transparent transparent transparent; /* 배경 */
+    margin-top: -1px; /* 테두리랑 겹쳐서 말풍선 효과 */
+    border-color: #fff transparent transparent transparent; /* 배경 */
 }
 
 /* 툴팁 텍스트 */
 .tooltip-box p {
-  margin: 4px 0 0;
-  line-height: 1.5;
+    margin: 4px 0 0;
+    line-height: 1.5;
 }
 
 /* 토스트 */
@@ -1026,26 +1039,26 @@ button {
 /* 신고하기 */
 
 .gift-shop-post-report-btn-wrapper {
-  margin-left: auto;  
-  display: flex;      
-  justify-content: flex-end;
-  align-items: center;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .gift-shop-post-report-btn {
-  font-size: 13px;          
-  font-weight: 500;         
-  color: #666;              
-  background: none;         
-  padding: 4px 10px;        
-  cursor: pointer;          
-  transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    background: none;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .gift-shop-post-report-btn:hover {
-  color: #333;              
-  border-color: #aaa;       
-  background-color: #f9f9f9;
+    color: #333;
+    border-color: #aaa;
+    background-color: #f9f9f9;
 }
 
 /* 신고하기 모달 */
@@ -1069,45 +1082,45 @@ button {
 }
 
 /* 모달 기본 */
-.modal-container {
-  max-height: 78%;
-  margin: 0;
-  vertical-align: middle;
-  border-radius: 8px;
-  display: inline-flex;
-  flex-direction: column;
-  color: rgb(47, 52, 56);
-  background-color: #fff;
-  max-width: 400px;
-  width: 90%;      
-  box-sizing: border-box;
+.modal-container-report{
+    max-height: 78%;
+    margin: 0;
+    vertical-align: middle;
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    color: rgb(47, 52, 56);
+    background-color: #fff;
+    max-width: 400px;
+    width: 90%;
+    box-sizing: border-box;
 }
 
 /* 모바일 대응 */
 @media (max-width: 480px) {
-  .modal-container {
-    width: 95%;      
-    max-width: none;  
-    border-radius: 6px;
-  }
+    .modal-container-report {
+        width: 95%;
+        max-width: none;
+        border-radius: 6px;
+    }
 
-  .modal-title {
-    font-size: 18px;
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-  }
+    .modal-title {
+        font-size: 18px;
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+    }
 
-  .modal-body {
-    font-size: 14px;
-    line-height: 20px;
-    padding: 0 12px;
-  }
+    .modal-body {
+        font-size: 14px;
+        line-height: 20px;
+        padding: 0 12px;
+    }
 
-  .report-button-send {
-    font-size: 14px;
-    height: 45px;
-  }
+    .report-button-send {
+        font-size: 14px;
+        height: 45px;
+    }
 }
 
 .modal-header {
@@ -1286,6 +1299,9 @@ button {
     background-color: #566da5;
 }
 
+body#giftDetail {
+    display: block;
+}
 
 
 

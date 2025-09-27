@@ -11,6 +11,7 @@ import com.example.crewstation.repository.section.SectionDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
+import com.example.crewstation.util.PriceUtils;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         Criteria criteria = new Criteria(page, purchaseDAO.findCountAllByKeyWord(search));
         List<PurchaseDTO> purchases = purchaseDAO.findAllByKeyWord(criteria, search);
         purchases.forEach(purchase -> {
+            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPurchaseProductPrice()));
             purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
             purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
         });
@@ -56,9 +58,16 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Cacheable(value = "purchases", key="'purchases_' + #postId")
     @LogReturnStatus
     public Optional<PurchaseDetailDTO> getPurchase(Long postId) {
+        purchaseDAO.increaseReadCount(postId);
         Optional<PurchaseDetailDTO> purchaseDetail = purchaseDAO.findByPostId(postId);
         List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
+        sections.forEach(section -> {
+            section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
+        });
         purchaseDetail.ifPresent(purchase -> {
+            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPurchaseProductPrice()));
+            purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
+            purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
             purchase.setSections(sections);
         });
         return purchaseDetail;
