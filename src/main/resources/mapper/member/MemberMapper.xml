@@ -10,9 +10,11 @@
         from tbl_member
         where member_email = #{memberEmail}
     </select>
+<!--  내가 추가한 부분 -->
     <select id="selectMemberByMemberEmail">
         select *
         from tbl_member
         where member_email = #{memberEmail} and member_status = 'active'
     </select>
+    <!--  내가 추가한 부분 -->
 </mapper>
