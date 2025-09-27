@@ -1,9 +1,7 @@
 package com.example.crewstation.config;
 
 import com.example.crewstation.auth.*;
-import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.service.CustomOAuth2UserService;
-import com.example.crewstation.auth.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 // 클라이언트 -> 로그인 요청, AuthController
 // AuthController -> 인증 요청, AuthenticationManager
@@ -55,28 +52,21 @@ public class SecurityConfig {
 //                상태 없음: 서버가 클라이언트의 상태를 저장하지 않는 경우
 //                JWT 기반 인증은 무상태(stateless) 인증 방식
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                //                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(
+//                                "/api/auth/**",
+//                                "/member/join",
+//                                "/member/login",
+//                                "/css/**",
+//                                "/js/**",
+//                                "/images/**").permitAll()
+//                        .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
+//                        .anyRequest().authenticated()
+//                ) 강사님 코드
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
-                        .anyRequest().authenticated()
-                )
-                // ExceptionHandling 설정(인증, 인가) 추가
-                .exceptionHandling(exceptions ->
-                        exceptions.authenticationEntryPoint(jwtAuthenticationHandler)
-                                .accessDeniedHandler(jwtAuthorizationHandler)
-                )
-                .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler)
-                        .failureHandler(oAuth2FailureHandler)
-                )
-//                스프링 시큐리티 필터 체인에서 특정 필터 앞에 내가 만든 필터를 삽입
-//                UsernamePasswordAuthenticationFilter.class(아이디, 비밀번호 form 로그인) 이전에
-//                jwtAuthenticationFilter를 먼저 실행
-//                form 로그인 인증 전에 토큰 인증을 먼저 처리해서 SecurityContext에 인증 정보를 채우기 위해
-//                이로 인해 form 로그인 없이 JWT 토큰으로 인증이 가능
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll()   // 임시 모든 요청 허용
+//                )   // 임시 모든 요청 허용
+        );
 
         return http.build();
     }
