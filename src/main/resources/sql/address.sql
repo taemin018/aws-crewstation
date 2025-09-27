@@ -10,3 +10,9 @@ create table tbl_address
     constraint fk_address_member foreign key (member_id)
         references tbl_member (id)
 );
+
+
+select * from tbl_address;
+
+delete from tbl_address
+where id = 11;

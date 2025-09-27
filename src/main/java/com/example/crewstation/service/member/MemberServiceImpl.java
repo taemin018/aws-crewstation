@@ -1,8 +1,10 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.member.AddressDAO;
 import com.example.crewstation.repository.member.MemberDAO;
 import com.example.crewstation.repository.member.MemberFileDAO;
@@ -24,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberDAO memberDAO;
     private final MemberFileDAO memberFileDAO;
     private final AddressDAO addressDAO;
+    private final FileDAO fileDAO;
     private final PasswordEncoder passwordEncoder;
     private final S3Service s3Service;
 
@@ -32,30 +35,46 @@ public class MemberServiceImpl implements MemberService {
     public void join(MemberDTO memberDTO, MultipartFile multipartFile) {
         memberDTO.setMemberPassword(passwordEncoder.encode(memberDTO.getMemberPassword()));
 
+        memberDAO.save(toVO(memberDTO));
+
+        Long memberId = memberDTO.getId();
         AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setMemberId( memberDTO.getId());
+
+
+        log.info("memberId: {}",memberId);
+
+        addressDTO.setMemberId(memberId);
+        addressDTO.setAddressDetail(memberDTO.getAddressDTO().getAddressDetail());
+        addressDTO.setAddress(memberDTO.getAddressDTO().getAddress());
+        addressDTO.setAddressZipCode(memberDTO.getAddressDTO().getAddressZipCode());
 
         addressDAO.save(toVO(addressDTO));
 
         if(multipartFile.getOriginalFilename().equals("")){
             return;
         }
+        FileDTO fileDTO = new FileDTO();
         MemberFileDTO memberFileDTO = new MemberFileDTO();
         try {
             String s3Key = s3Service.uploadPostFile(multipartFile, getPath());
 
-            memberFileDTO.setMemberId(memberDTO.getId());
-            memberFileDTO.setFileOriginalName(multipartFile.getOriginalFilename());
-            memberFileDTO.setFilePath(s3Key);
-            memberFileDTO.setFileSize(memberFileDTO.getFileSize());
 
-            memberFileDAO.save(memberFileDTO);
+            fileDTO.setFileOriginName(multipartFile.getOriginalFilename());
+            fileDTO.setFilePath(s3Key);
+            fileDTO.setFileSize(String.valueOf(multipartFile.getSize()));
+
+            fileDAO.save(toVO(fileDTO));
+
+            memberFileDTO.setMemberId(memberDTO.getId());
+            memberFileDTO.setFileId(fileDTO.getId());
+
+            memberFileDAO.save(toVO(memberFileDTO));
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        memberDAO.save(toVO(memberDTO));
+
     }
 
     @Override

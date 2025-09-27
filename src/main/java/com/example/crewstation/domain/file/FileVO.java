@@ -9,10 +9,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString(callSuper = true)
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class FileVO extends Period {
     private Long id;
-    private String fileOriginalName;
+    private String fileOriginName;
     private String filePath;
     private String fileName;
     private String fileSize;
