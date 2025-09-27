@@ -61,7 +61,7 @@ let checkMore = true;
 let checkScroll = true;
 const showList = async (page = 1, keyword = "", index = 0) => {
     console.log("시작")
-    purchases = await purchaseService.getPurchases(purchaseLayout.showPurchases, page, keyword);
+    purchases = await purchaseListService.getPurchases(purchaseListLayout.showPurchases, page, keyword);
     console.log("종료")
     let lastIndex = purchases.purchaseDTOs.length;
     console.log("시작해보자")
@@ -101,7 +101,7 @@ window.addEventListener("scroll", async (e) => {
             timers.forEach(timer=>{
                 clearInterval(Number(timer.dataset.timeout));
             })
-            purchases = await purchaseService.getPurchases(purchaseLayout.showPurchases, ++page, keyword);
+            purchases = await purchaseListService.getPurchases(purchaseListLayout.showPurchases, ++page, keyword);
             checkMore = purchases.criteria.hasMore;
             let lastIndex = purchases.purchaseDTOs.length;
             console.log("시작해보자")

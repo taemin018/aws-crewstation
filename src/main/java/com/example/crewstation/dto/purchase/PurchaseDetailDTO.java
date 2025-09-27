@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @ToString
 public class PurchaseDetailDTO {
-    private Long id;
+    private Long memberId;
     private Long postId;
     private String postTitle;
     private int postReadCount;

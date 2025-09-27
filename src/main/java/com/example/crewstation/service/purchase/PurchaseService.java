@@ -16,6 +16,5 @@ public interface PurchaseService {
 // 기프트 상품 상세 내용 가져오기
     public Optional<PurchaseDetailDTO> getPurchase(Long postId);
 
-//  신고하기
-    public void report(ReportDTO reportDTO);
+
 }

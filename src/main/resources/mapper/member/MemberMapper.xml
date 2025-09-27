@@ -10,4 +10,9 @@
         from tbl_member
         where member_email = #{memberEmail}
     </select>
+    <select id="selectMemberByMemberEmail">
+        select *
+        from tbl_member
+        where member_email = #{memberEmail} and member_status = 'active'
+    </select>
 </mapper>

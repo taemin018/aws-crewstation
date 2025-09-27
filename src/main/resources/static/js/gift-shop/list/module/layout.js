@@ -1,4 +1,4 @@
-const purchaseLayout = (() => {
+const purchaseListLayout = (() => {
     const showPurchases = async (result) => {
         let text = ``;
 

@@ -13,9 +13,9 @@
 </head>
 <body id="giftDetail">
 <header th:replace="~{fixed/mobile/header.html :: header}"></header>
-<div class="product-detail-container product-list-wrapper">
+<div class="product-detail-container product-list-wrapper" >
     <div class="product-detail-overview">
-        <div class="product-detail-overview-row">
+        <div class="product-detail-overview-row" th:attr="data-post=${purchase.postId}" id="postId">
             <div class="cover-image-wrap">
                 <div class="cover-image-container">
                     <div class="carousel-wrap">
@@ -282,100 +282,99 @@
 
                     <!-- 신고하기 모달 -->
                     <div class="report-modal" id="reportModal">
-                        <form id="reportForm" name="reportForm">
-                            <div class="modal-container-report">
-                                <div class="modal-header">
-                                    <span class="modal-title">신고 사유를 선택해주세요</span>
-                                    <button class="close-button">
-                                        <span class="close-button-span"></span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <ul class="report-content-container">
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button active">
-                                                    <input type="radio" name="reason" class="radio" checked>
-                                                </div>
-                                                <span class="content">주제에 맞지 않아요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">가짜/불법 상품이에요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">허위 정보가 있어요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">욕설·비방이 포함돼요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">이 글로 도배가 돼있어요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">사기 거래가 의심돼요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">금지된 품목이에요</span>
-                                            </label>
-                                        </li>
-                                        <li class="report-content">
-                                            <label class="content-label">
-                                                <div class="radio-button">
-                                                    <input type="radio" name="reason" class="radio">
-                                                </div>
-                                                <span class="content">개인정보를 노출하고 있어요</span>
-                                            </label>
-                                        </li>
-                                        <!-- /신고 사유 -->
-                                    </ul>
-                                </div>
-                                <div class="modal-button">
-                                    <div class="modal-button-wrap">
-                                        <button type="button" class="report-button-send" id="reportBtn">신고하기</button>
-                                    </div>
-
-                                </div>
+                        <input type="hidden" id="memberId"/>
+                        <div class="modal-container-report">
+                            <div class="modal-header">
+                                <span class="modal-title">신고 사유를 선택해주세요</span>
+                                <button class="close-button">
+                                    <span class="close-button-span"></span>
+                                </button>
                             </div>
-                        </form>
+                            <div class="modal-body">
+                                <ul class="report-content-container">
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button active">
+                                                <input type="radio" name="reason" class="radio" checked value="주제에 맞지 않아요">
+                                            </div>
+                                            <span class="content">주제에 맞지 않아요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="가짜/불법 상품이에요">
+                                            </div>
+                                            <span class="content">가짜/불법 상품이에요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="허위 정보가 있어요">
+                                            </div>
+                                            <span class="content">허위 정보가 있어요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="욕설·비방이 포함돼요">
+                                            </div>
+                                            <span class="content">욕설·비방이 포함돼요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="이 글로 도배가 돼있어요">
+                                            </div>
+                                            <span class="content">이 글로 도배가 돼있어요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="사기 거래가 의심돼요">
+                                            </div>
+                                            <span class="content">사기 거래가 의심돼요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="금지된 품목이에요">
+                                            </div>
+                                            <span class="content">금지된 품목이에요</span>
+                                        </label>
+                                    </li>
+                                    <li class="report-content">
+                                        <label class="content-label">
+                                            <div class="radio-button">
+                                                <input type="radio" name="reason" class="radio" value="개인정보를 노출하고 있어요">
+                                            </div>
+                                            <span class="content">개인정보를 노출하고 있어요</span>
+                                        </label>
+                                    </li>
+                                    <!-- /신고 사유 -->
+                                </ul>
+                            </div>
+                            <div class="modal-button">
+                                <div class="modal-button-wrap">
+                                    <button type="button" class="report-button-send" id="reportBtn">신고하기</button>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <div id="confirmReportModal" class="modal">
                         <div class="modal-content">
-                            <h3>신고 요청 확인</h3>
-                            <p>
+                            <h3 style="font-size: 25px;">신고 요청 확인</h3>
+                            <p style="margin-top: 12px; font-size: 20px">
                                 정말 신고하시겠습니까?
                             </p>
-                            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                                <button type="submit" id="confirmReportYes" class="confirm-btn yes" form="reportForm">확인
+                            <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                                <button type="button" id="confirmReportYes" class="confirm-btn yes">확인
                                 </button>
                                 <button id="confirmReportNo" class="confirm-btn no">취소</button>
                             </div>
@@ -395,6 +394,8 @@
 </div>
 <footer th:replace="~{fixed/mobile/footer.html :: footer}"></footer>
 </body>
+<script src="/js/gift-shop/detail/module/service.js"></script>
+<script src="/js/gift-shop/detail/module/layout.js"></script>
 <script src="/js/gift-shop/detail/event.js"></script>
 <script src="/js/fixed/mobile/footer/event.js"></script>
 <script src="/js/fixed/mobile/header/event.js"></script>

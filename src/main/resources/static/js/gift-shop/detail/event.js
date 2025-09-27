@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 모달 관련 (공통)
     function setupModal(modalId, openSelector, closeSelector, onClose) {
+        console.log(openSelector);
+        console.log("선택햇습니다.")
         const modal = document.getElementById(modalId);
         const openBtns = document.querySelectorAll(openSelector);
         const closeBtn = modal ? modal.querySelector(closeSelector) : null;
@@ -66,15 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 신고하기 제출
-    const submitReportBtn = document.querySelector(".report-button-send");
-    const reportModal = document.getElementById("reportModal");
-    if (submitReportBtn && reportModal) {
-        submitReportBtn.addEventListener("click", () => {
-            reportModal.classList.remove("active");
-            selectFirstReportRadio();
-            alert("신고가 접수되었습니다.");
-        });
-    }
+    // const submitReportBtn = document.querySelector(".report-button-send");
+    // const reportModal = document.getElementById("reportModal");
+    // if (submitReportBtn && reportModal) {
+    //     submitReportBtn.addEventListener("click", () => {
+    //         reportModal.classList.remove("active");
+    //         selectFirstReportRadio();
+    //         alert("신고가 접수되었습니다.");
+    //     });
+    // }
 
     // 신고하기 첫번째 라디오 버튼 기본 선택
     function selectFirstReportRadio() {
@@ -185,17 +187,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmReportNo = document.getElementById("confirmReportNo");
     const reportBtn = document.getElementById("reportBtn");
     reportBtn.addEventListener("click", (e) => {
-
-        confirmReportYes.addEventListener("click", () => {
-            confirmReportModal.style.display = "none";
-            document.getElementById("reportModal").style.display = "none";
-            alert("요청이 전송되었습니다. 임시 주문번호는 입력하신 휴대폰 번호로 발송됩니다.");
-        });
-
-        confirmReportNo.addEventListener("click", () => {
-            confirmReportModal.style.display = "none";
-        });
+        confirmReportModal.style.display = "block";
     })
+
+    confirmReportYes.addEventListener("click", async (e) => {
+        const reportContent = document.querySelector("input[name='reason']:checked").value;
+        console.log(reportContent);
+        const memberId = document.getElementById("memberId").value;
+        const postId = document.getElementById("postId").dataset.post;
+        const {message,status} = await purchaseDetailService.report({reportContent : reportContent,memberId:memberId,postId:postId})
+        console.log(message)
+        console.log(status)
+        confirmReportModal.style.display = "none";
+        document.getElementById("reportModal").style.display = "none";
+        alert(message);
+        if(status !== 200){
+            location.href = "/gifts"
+        }
+    });
+
+    confirmReportNo.addEventListener("click", () => {
+        confirmReportModal.style.display = "none";
+    });
 
     // 툴팁 관련
     const chemInfoBtn = document.querySelector(".openChemistryInfo");
@@ -365,3 +378,8 @@ function clip() {
 
 
 document.addEventListener("DOMContentLoaded", startCountdown);
+
+purchaseDetailService.info((member)=>{
+    console.log("회원정보 받아오기")
+    document.getElementById("memberId").value =member.id;
+})

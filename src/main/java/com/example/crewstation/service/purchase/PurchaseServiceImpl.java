@@ -34,8 +34,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseDAO purchaseDAO;
     private final S3Service s3Service;
     private final SectionDAO sectionDAO;
-    private final PostDAO postDAO;
-    private final ReportDAO reportDAO;
+
 
     @Override
     @LogReturnStatus
@@ -71,6 +70,8 @@ public class PurchaseServiceImpl implements PurchaseService {
             section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
         });
         purchaseDetail.ifPresent(purchase -> {
+            log.info("::::::{}",purchase.getPostId());
+            log.info("::::::{}",purchase.getMemberId());
             purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPurchaseProductPrice()));
             purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
             purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
@@ -79,14 +80,5 @@ public class PurchaseServiceImpl implements PurchaseService {
         return purchaseDetail;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    @LogReturnStatus
-    public void report(ReportDTO reportDTO) {
-        boolean isExist = postDAO.isActivePost(reportDTO.getPostId());
-        if(!isExist){
-            throw new PostNotActiveException("이미 삭제된 상품입니다.");
-        }
-        reportDAO.saveReport(reportDTO);
-    }
+
 }
