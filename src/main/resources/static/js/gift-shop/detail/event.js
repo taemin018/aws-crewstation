@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(status)
         confirmReportModal.style.display = "none";
         document.getElementById("reportModal").style.display = "none";
-        alert(message);
+        toastModal(message);
         if(status !== 200){
             location.href = "/gifts"
         }
@@ -350,10 +350,12 @@ function startCountdown() {
 // 공유하기 버튼 클릭 이벤트
 const shareButton = document.querySelector(".product-detail-header-share-btn-wrapper");
 const toast = document.querySelector(".toast");
+const toastText = document.querySelector("p.toast-text");
 
-shareButton.addEventListener("click", (e) => {
+function toastModal(text){
     toast.style.display = "block";
     toast.classList.remove("hide");
+    toastText.textContent = text;
     toast.classList.add("show");
     setTimeout(() => {
         toast.classList.remove("show");
@@ -362,6 +364,9 @@ shareButton.addEventListener("click", (e) => {
             toast.style.display = "none";
         }, 500);
     }, 3000);
+}
+shareButton.addEventListener("click", (e) => {
+    toastModal("클립보드에 복사되었습니다.");
     clip();
 });
 
