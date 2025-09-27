@@ -1,8 +1,9 @@
 package com.example.crewstation.dto.file.member;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,24 +12,8 @@ import org.springframework.stereotype.Component;
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 public class MemberFileDTO {
-    private Long id;
-    private String fileOriginalName;
-    private String filePath;
-    private String fileName;
-    private String fileSize;
+    private Long FileId;
     private Long memberId;
-    private String createdDatetime;
-    private String updatedDatetime;
 
-    @Override
-    public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            // this 객체를 JSON 문자열로 변환
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return super.toString();
-        }
-    }
+
 }

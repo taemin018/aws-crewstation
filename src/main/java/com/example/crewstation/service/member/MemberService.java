@@ -1,7 +1,11 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.domain.file.FileVO;
+import com.example.crewstation.domain.file.member.MemberFileVO;
 import com.example.crewstation.domain.member.AddressVO;
 import com.example.crewstation.domain.member.MemberVO;
+import com.example.crewstation.dto.file.FileDTO;
+import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +48,25 @@ public interface MemberService {
                 .addressZipCode(addressDTO.getAddressZipCode())
                 .createdDatetime(addressDTO.getCreatedDatetime())
                 .updatedDatetime(addressDTO.getUpdatedDatetime())
+                .build();
+    }
+
+    default FileVO toVO(FileDTO fileDTO) {
+        return FileVO.builder()
+                .id(fileDTO.getId())
+                .fileOriginName(fileDTO.getFileOriginName())
+                .fileName(fileDTO.getFileName())
+                .filePath(fileDTO.getFilePath())
+                .fileSize(fileDTO.getFileSize())
+                .createdDatetime(fileDTO.getCreatedDatetime())
+                .updatedDatetime(fileDTO.getUpdatedDatetime())
+                .build();
+    }
+
+    default MemberFileVO toVO(MemberFileDTO memberfileDTO) {
+        return MemberFileVO.builder()
+                .fileId(memberfileDTO.getFileId())
+                .memberId(memberfileDTO.getMemberId())
                 .build();
     }
 }

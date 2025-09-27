@@ -4,6 +4,7 @@ import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.common.enumeration.Status;
+import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,7 @@ public class MemberDTO {
     private String updatedDatetime;
     private AddressDTO addressDTO;
     private MemberFileDTO memberFileDTO;
+    private FileDTO fileDTO;
 
     public MemberRole getMemberRole() {
         return memberRole != null ? memberRole : MemberRole.MEMBER;

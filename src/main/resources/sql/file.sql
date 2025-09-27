@@ -14,3 +14,5 @@ alter table tbl_file
     add column file_size varchar(255);
 
 alter table tbl_file alter column file_size set not null;
+
+select * from tbl_file;
