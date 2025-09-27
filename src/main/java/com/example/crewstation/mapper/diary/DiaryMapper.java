@@ -13,7 +13,7 @@ import java.util.List;
 public interface DiaryMapper {
 
     //    다이러리 목록 (메인)
-    public List<DiaryVO> selectDiaryList(DiaryDTO diaryDTO);
+    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO);
 
     //  해당 회원이 좋아요 한 다이어리 목록(마이페이지)
     public List<LikedDiaryDTO> findDiariesLikedByMemberId(
