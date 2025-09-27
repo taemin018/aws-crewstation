@@ -42,7 +42,8 @@
     </select>
 
     <select id="selectByPostId">
-        select vpp.post_title,
+        select vpp.id as post_id,
+            vpp.post_title,
                vpp.purchase_country,
                vpp.purchase_delivery_method,
                vpp.purchase_limit_time,
@@ -51,7 +52,7 @@
                vpp.purchase_delivery_method,
                vpp.created_datetime,
                vpp.updated_datetime,
-               tm.id,
+               tm.id as member_id,
                tm.chemistry_score,
                tm.member_name,
                tm.social_img_url,

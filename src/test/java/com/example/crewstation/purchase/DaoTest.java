@@ -8,12 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
 @Slf4j
 public class DaoTest {
     @Autowired
     private PurchaseDAO purchaseDAO;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void testFindAllByKeyWord() {
@@ -21,6 +24,8 @@ public class DaoTest {
         search.setKeyword("호주");
         Criteria criteria = new Criteria(1,2);
         log.info("findAllByKeyWord {}", purchaseDAO.findAllByKeyWord(criteria, search));
+        log.info("asd {}",passwordEncoder.encode("1234"));
+
     }
     @Test
     public void testFindCountAllByKeyWord() {

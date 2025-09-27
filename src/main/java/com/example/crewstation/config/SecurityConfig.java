@@ -4,7 +4,6 @@ package com.example.crewstation.config;
 import com.example.crewstation.auth.*;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.service.CustomOAuth2UserService;
-import com.example.crewstation.auth.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

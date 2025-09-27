@@ -1,12 +1,16 @@
 package com.example.crewstation.service.purchase;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
+import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
+import com.example.crewstation.dto.report.ReportDTO;
+import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
+import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.repository.section.SectionDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
@@ -30,6 +34,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseDAO purchaseDAO;
     private final S3Service s3Service;
     private final SectionDAO sectionDAO;
+
 
     @Override
     @LogReturnStatus
@@ -65,6 +70,8 @@ public class PurchaseServiceImpl implements PurchaseService {
             section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
         });
         purchaseDetail.ifPresent(purchase -> {
+            log.info("::::::{}",purchase.getPostId());
+            log.info("::::::{}",purchase.getMemberId());
             purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPurchaseProductPrice()));
             purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
             purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
@@ -72,4 +79,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         });
         return purchaseDetail;
     }
+
+
 }
