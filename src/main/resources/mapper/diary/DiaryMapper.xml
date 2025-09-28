@@ -92,10 +92,4 @@
         limit #{criteria.rowCount} offset #{criteria.offset}
     </select>
 
-    <select id="countDiariesLikedByMemberId" parameterType="long" resultType="int">
-        SELECT COUNT(*)
-        FROM tbl_like l
-        WHERE l.member_id = #{memberId}
-    </select>
-
 </mapper>

@@ -9,9 +9,9 @@ const likeLayout = (() => {
                     <div class="card-item-writer-content">
                         <div class="card-item-writer-header">
                             <a class="card-writer-link">
-                                <img src="${diary.memberProfileImage || '/images/crew-station-icon-profile.png'}" 
+                                <img src="${diary.writerProfileUrl || '/images/crew-station-icon-profile.png'}" 
                                      alt="" class="card-writer-img">
-                                <span class="writer-name">${diary.memberName}</span>
+                                <span class="writer-name">${diary.writerName}</span>
                             </a>
                         </div>
                     </div>
@@ -25,14 +25,14 @@ const likeLayout = (() => {
                             </span>
                         </div>
                     </div>
-                    ${diary.mainImage ? `
+                    ${diary.imageUrl ? `
                     <div class="card-collection-item-img">
                         <div class="card-item-img">
-                            <img src="${diary.mainImage}" alt="" class="image">
+                            <img src="${diary.imageUrl}" alt="" class="image">
                         </div>
                     </div>` : ""}
                     <div class="card-item-action-list">
-                        <button class="card-item-action-btn like-btn" data-id="${diary.postId}">
+                        <button class="card-item-action-btn like-btn" data-id="${diary.id}">
                             <svg class="icon icon--stroke" aria-label="좋아요" width="24" height="24" 
                                 fill="currentColor" stroke="currentColor" stroke-width="2" 
                                 viewBox="0 0 24 24">
@@ -41,9 +41,9 @@ const likeLayout = (() => {
                                 12.9.96 7.93 1.54 2.48 8.28.3 12.1 
                                 4.7c3.8-4.4 10.55-2.22 11.13 3.25z"></path>
                             </svg>
-                            <span class="count">${diary.diaryLikeCount}</span>
+                            <span class="count">${diary.likeCount}</span>
                         </button>
-                        <button class="card-item-action-btn comment-btn" data-id="${diary.postId}">
+                        <button class="card-item-action-btn comment-btn" data-id="${diary.id}">
                             <svg class="icon icon-stroke" aria-label="댓글 달기" width="24" height="24" 
                                 viewBox="0 0 24 24">
                                 <path fill="currentColor" fill-rule="nonzero" 
@@ -52,7 +52,7 @@ const likeLayout = (() => {
                                 5.058 1 10c0 4.348 3.31 7.68 8.804 
                                 8.368l.531.066L12 21.764l1.665-3.33z"></path>
                             </svg>
-                            <span class="count">${diary.diaryReplyCount}</span>
+                            <span class="count">${diary.commentCount}</span>
                         </button>
                     </div>
                 </div>
@@ -61,29 +61,17 @@ const likeLayout = (() => {
         `;
     };
 
-    // 전체 리스트 렌더링 (첫 페이지)
+    // 전체 리스트 렌더링
     const renderDiaryList = (container, diaries) => {
         if (!diaries || diaries.length === 0) {
             container.innerHTML = `<p class="empty-message">좋아요한 일기가 없습니다.</p>`;
             return;
         }
-        container.innerHTML = `
-            <div class="diary-card-feed">
-                ${diaries.map(renderDiaryCard).join("")}
-            </div>
-        `;
-    };
-
-    // 추가 리스트 렌더링 (무한스크롤용)
-    const appendDiaryList = (container, diaries) => {
-        if (!diaries || diaries.length === 0) return;
-        const feed = container.querySelector(".diary-card-feed");
-        feed.insertAdjacentHTML("beforeend", diaries.map(renderDiaryCard).join(""));
+        container.innerHTML = diaries.map(renderDiaryCard).join("");
     };
 
     return {
-        renderDiaryList: renderDiaryList,
-        appendDiaryList: appendDiaryList
+        renderDiaryList: renderDiaryList
     };
 
 })();

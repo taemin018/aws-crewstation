@@ -1,388 +1,46 @@
+select * from tbl_member;
+select * from tbl_diary;
+select * from tbl_like;
+select * from tbl_post_section;
+select * from tbl_file;
+select * from tbl_post_section_file;
 
--- 1. 기존 데이터 초기화
-TRUNCATE TABLE
-    tbl_post_section_file,
-    tbl_file,
-    tbl_post_section,
-    tbl_like,
-    tbl_diary,
-    tbl_diary_country_path,
-    tbl_post,
-    tbl_country,
-    tbl_member
-    RESTART IDENTITY CASCADE;
+-- 1. 회원 (일기 작성자 & 좋아요 누르는 사람)
+INSERT INTO tbl_member (member_name, member_email, member_password, social_img_url)
+VALUES ('Alice', 'alice@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Alice');
 
--- 2. 회원
-INSERT INTO tbl_member (member_name, member_email, member_password, social_img_url) VALUES
-    ('Alice', 'alice@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Alice'),
-    ('Bob', 'bob@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Bob'),
-    ('Charlie', 'charlie@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Charlie'),
-    ('David', 'david@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=David'),
-    ('Emma', 'emma@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Emma'),
-    ('Frank', 'frank@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Frank');
+-- 2. 게시글 (Alice가 작성한 다이어리 글)
+INSERT INTO tbl_post (post_title, member_id)
+VALUES ('My First Diary', 1);
 
--- 3. 나라
-INSERT INTO tbl_country (country_name) VALUES
-   ('Korea'), ('Japan'), ('USA'), ('France'), ('Italy');
+INSERT INTO tbl_country (country_name)
+VALUES ('Korea');
 
--- 4. 일기 더미 데이터 (30개)
-
--- 1
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 1', 2);
 INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-01','2025-01-10',2,1);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (1,'public',1,0,1);
-INSERT INTO tbl_like (post_id, member_id) VALUES (1,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 1',1);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (1,1,'main');
+VALUES ('2025-01-01', '2025-01-31', 1, 1);
 
--- 2
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 2', 3);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-02','2025-01-11',3,2);
+-- 3. 일기 (게시글과 1:1 연결)
+-- diary_country_path_id는 FK 제약조건 있으니, 테스트용으로 미리 존재하는 id=1 이 있다고 가정
 INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (2,'public',1,0,2);
-INSERT INTO tbl_like (post_id, member_id) VALUES (2,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 2',2);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (2,2,'main');
+VALUES (1, 'public', 5, 2, 1);
 
--- 3
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 3', 4);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-03','2025-01-12',4,3);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (3,'public',1,0,3);
-INSERT INTO tbl_like (post_id, member_id) VALUES (3,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 3',3);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (3,3,'main');
+-- 4. 좋아요 (Alice 본인이 자기 글 좋아요 누른 상황)
+INSERT INTO tbl_like (post_id, member_id)
+VALUES (1, 1);
 
--- 4
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 4', 5);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-04','2025-01-13',5,4);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (4,'public',1,0,4);
-INSERT INTO tbl_like (post_id, member_id) VALUES (4,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 4',4);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (4,4,'main');
+-- 5. 게시글 섹션 (본문 작성)
+INSERT INTO tbl_post_section (post_content, post_id)
+VALUES ('This is my first diary content', 1);
 
--- 5
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 5', 6);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-05','2025-01-14',6,5);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (5,'public',1,0,5);
-INSERT INTO tbl_like (post_id, member_id) VALUES (5,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 5',5);
+-- 6. 파일 (대표 이미지)
 INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (5,5,'main');
+VALUES (
+             'diary1.png',
+             '/images/diary1.png',
+             'diary1_20240926.png',
+             '2048'
+         );
 
--- 6
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 6', 2);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-06','2025-01-15',2,1);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (6,'public',1,0,6);
-INSERT INTO tbl_like (post_id, member_id) VALUES (6,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 6',6);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (6,6,'main');
-
--- 7
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 7', 3);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-07','2025-01-16',3,2);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (7,'public',1,0,7);
-INSERT INTO tbl_like (post_id, member_id) VALUES (7,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 7',7);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (7,7,'main');
-
--- 8
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 8', 4);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-08','2025-01-17',4,3);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (8,'public',1,0,8);
-INSERT INTO tbl_like (post_id, member_id) VALUES (8,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 8',8);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (8,8,'main');
-
--- 9
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 9', 5);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-09','2025-01-18',5,4);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (9,'public',1,0,9);
-INSERT INTO tbl_like (post_id, member_id) VALUES (9,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 9',9);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (9,9,'main');
-
--- 10
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 10', 6);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-10','2025-01-19',6,5);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (10,'public',1,0,10);
-INSERT INTO tbl_like (post_id, member_id) VALUES (10,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 10',10);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (10,10,'main');
-
--- 11
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 11', 2);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-11','2025-01-20',2,1);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (11,'public',1,0,11);
-INSERT INTO tbl_like (post_id, member_id) VALUES (11,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 11',11);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (11,11,'main');
-
--- 12
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 12', 3);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-12','2025-01-21',3,2);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (12,'public',1,0,12);
-INSERT INTO tbl_like (post_id, member_id) VALUES (12,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 12',12);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (12,12,'main');
-
--- 13
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 13', 4);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-13','2025-01-22',4,3);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (13,'public',1,0,13);
-INSERT INTO tbl_like (post_id, member_id) VALUES (13,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 13',13);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (13,13,'main');
-
--- 14
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 14', 5);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-14','2025-01-23',5,4);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (14,'public',1,0,14);
-INSERT INTO tbl_like (post_id, member_id) VALUES (14,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 14',14);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (14,14,'main');
-
--- 15
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 15', 6);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-15','2025-01-24',6,5);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (15,'public',1,0,15);
-INSERT INTO tbl_like (post_id, member_id) VALUES (15,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 15',15);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (15,15,'main');
-
--- 16
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 16', 2);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-16','2025-01-25',2,1);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (16,'public',1,0,16);
-INSERT INTO tbl_like (post_id, member_id) VALUES (16,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 16',16);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (16,16,'main');
-
--- 17
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 17', 3);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-17','2025-01-26',3,2);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (17,'public',1,0,17);
-INSERT INTO tbl_like (post_id, member_id) VALUES (17,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 17',17);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (17,17,'main');
-
--- 18
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 18', 4);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-18','2025-01-27',4,3);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (18,'public',1,0,18);
-INSERT INTO tbl_like (post_id, member_id) VALUES (18,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 18',18);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (18,18,'main');
-
--- 19
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 19', 5);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-19','2025-01-28',5,4);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (19,'public',1,0,19);
-INSERT INTO tbl_like (post_id, member_id) VALUES (19,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 19',19);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (19,19,'main');
-
--- 20
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 20', 6);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-20','2025-01-29',6,5);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (20,'public',1,0,20);
-INSERT INTO tbl_like (post_id, member_id) VALUES (20,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 20',20);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (20,20,'main');
-
--- 21
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 21', 2);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-21','2025-01-30',2,1);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (21,'public',1,0,21);
-INSERT INTO tbl_like (post_id, member_id) VALUES (21,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 21',21);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (21,21,'main');
-
--- 22
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 22', 3);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-22','2025-01-31',3,2);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (22,'public',1,0,22);
-INSERT INTO tbl_like (post_id, member_id) VALUES (22,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 22',22);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (22,22,'main');
-
--- 23
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 23', 4);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-23','2025-01-32',4,3);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (23,'public',1,0,23);
-INSERT INTO tbl_like (post_id, member_id) VALUES (23,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 23',23);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (23,23,'main');
-
--- 24
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 24', 5);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-24','2025-01-33',5,4);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (24,'public',1,0,24);
-INSERT INTO tbl_like (post_id, member_id) VALUES (24,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 24',24);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (24,24,'main');
-
--- 25
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 25', 6);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-25','2025-01-34',6,5);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (25,'public',1,0,25);
-INSERT INTO tbl_like (post_id, member_id) VALUES (25,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 25',25);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (25,25,'main');
-
--- 26
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 26', 2);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-26','2025-01-35',2,1);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (26,'public',1,0,26);
-INSERT INTO tbl_like (post_id, member_id) VALUES (26,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 26',26);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (26,26,'main');
-
--- 27
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 27', 3);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-27','2025-01-36',3,2);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (27,'public',1,0,27);
-INSERT INTO tbl_like (post_id, member_id) VALUES (27,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 27',27);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (27,27,'main');
-
--- 28
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 28', 4);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-28','2025-01-37',4,3);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (28,'public',1,0,28);
-INSERT INTO tbl_like (post_id, member_id) VALUES (28,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 28',28);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (28,28,'main');
-
--- 29
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 29', 5);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-29','2025-01-38',5,4);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (29,'public',1,0,29);
-INSERT INTO tbl_like (post_id, member_id) VALUES (29,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 29',29);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (29,29,'main');
-
--- 30
-INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 30', 6);
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-30','2025-01-39',6,5);
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (30,'public',1,0,30);
-INSERT INTO tbl_like (post_id, member_id) VALUES (30,1);
-INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 30',30);
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
-INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (30,30,'main');
+-- 7. 섹션-파일 연결 (대표 이미지 = main)
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type)
+VALUES (1, 1, 'main');
