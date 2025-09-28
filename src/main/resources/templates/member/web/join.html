@@ -43,18 +43,18 @@
                     </div>
 
                     <div class="form-section">
-                        <label class="form-label member-gender-label essential" th:field="*{memberGender}">성별</label>
+                        <label class="form-label member-gender-label essential">성별</label>
                         <div class="gender-wrap form-wrap">
                             <div class="input-group gender-input">
                                 <label for="male" class="gender-label">
                                     <div class="gender-male">
-                                        <input type="radio" name="gender" class="gender-radio  essential" value="male" id="male">
+                                        <input type="radio" th:field="*{memberGender}" name="gender" class="gender-radio  essential" value="male" id="male">
                                     </div>
                                     <span class="gender-title">남성</span>
                                 </label>
                                 <label for="female" class="gender-label">
                                     <div class="gender-female">
-                                        <input type="radio" name="gender" class="gender-radio  essential" value="female" id="female">
+                                        <input type="radio" th:field="*{memberGender}" name="gender" class="gender-radio  essential" value="female" id="female">
                                     </div>
                                     <span class="gender-title">여성</span>
                                 </label>
@@ -176,6 +176,9 @@
                                 <span class="mbti-input-local form-input-local">
                                     <input type="text" name="memberMbti" class="form-control mbti" size="1" placeholder="mbti" th:field="*{memberMbti}">
                                 </span>
+                            </div>
+                            <div class="error-text-wrap error-text-mbti">
+                                <span>필수 입력 항목입니다.</span>
                             </div>
                         </div>
                     </div>

@@ -46,6 +46,7 @@ public interface MemberService {
                 .address(addressDTO.getAddress())
                 .addressDetail(addressDTO.getAddressDetail())
                 .addressZipCode(addressDTO.getAddressZipCode())
+                .memberId(addressDTO.getMemberId())
                 .createdDatetime(addressDTO.getCreatedDatetime())
                 .updatedDatetime(addressDTO.getUpdatedDatetime())
                 .build();

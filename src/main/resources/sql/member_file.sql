@@ -9,3 +9,6 @@ create table tbl_member_file
 );
 
 select * from tbl_member_file;
+
+delete from tbl_member_file
+where file_id = 15;
