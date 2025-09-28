@@ -1,8 +1,9 @@
+
 package com.example.crewstation.config;
 
 import com.example.crewstation.auth.*;
 import com.example.crewstation.common.enumeration.MemberRole;
-//import com.example.crewstation.service.CustomOAuth2UserService;
+import com.example.crewstation.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +38,9 @@ public class SecurityConfig {
     private final JwtAuthenticationHandler jwtAuthenticationHandler;
     private final JwtAuthorizationHandler jwtAuthorizationHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-//    private final CustomOAuth2UserService oAuth2UserService;
-//    private final OAuth2SuccessHandler oAuth2SuccessHandler;
-//    private final OAuth2FailureHandler oAuth2FailureHandler;
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -65,18 +66,32 @@ public class SecurityConfig {
                         exceptions.authenticationEntryPoint(jwtAuthenticationHandler)
                                 .accessDeniedHandler(jwtAuthorizationHandler)
                 )
-//                .oauth2Login(oauth -> oauth
-//                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-//                        .successHandler(oAuth2SuccessHandler)
-//                        .failureHandler(oAuth2FailureHandler)
-//                )
-                //                스프링 시큐리티 필터 체인에서 특정 필터 앞에 내가 만든 필터를 삽입
-                //                UsernamePasswordAuthenticationFilter.class(아이디, 비밀번호 form 로그인) 이전에
-                //                jwtAuthenticationFilter를 먼저 실행
-                //                form 로그인 인증 전에 토큰 인증을 먼저 처리해서 SecurityContext에 인증 정보를 채우기 위해
-                //                이로 인해 form 로그인 없이 JWT 토큰으로 인증이 가능
+                .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(oAuth2FailureHandler)
+                )
+    //                스프링 시큐리티 필터 체인에서 특정 필터 앞에 내가 만든 필터를 삽입
+    //                UsernamePasswordAuthenticationFilter.class(아이디, 비밀번호 form 로그인) 이전에
+    //                jwtAuthenticationFilter를 먼저 실행
+    //                form 로그인 인증 전에 토큰 인증을 먼저 처리해서 SecurityContext에 인증 정보를 채우기 위해
+    //                이로 인해 form 로그인 없이 JWT 토큰으로 인증이 가능
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+//
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+//        회원가입 시 비밀번호를 저장할 때, 이 PasswordEncoder로 암호화해서 저장하고,
+//        로그인 시에도 입력 비밀번호를 같은 방식으로 암호화해서 DB에 저장된 해시와 비교
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+//        인증 성공 시 Authentication 객체를 만들어 반환
+        return configuration.getAuthenticationManager();
     }
 }
