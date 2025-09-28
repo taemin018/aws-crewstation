@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -23,14 +25,15 @@ public class DiaryRestController {
                                                @RequestParam(defaultValue = "1") int page,
                                                @RequestParam(defaultValue = "10") int size) {
         Criteria criteria = new Criteria(page, size);
-
+        criteria.setRowCount(size);
         log.info("memberId={}, page={}, size={}", memberId, page, size);
         return diaryService.getDiariesLikedByMemberId(memberId, criteria);
     }
 
     // 좋아요한 일기 총 개수 반환
     @GetMapping("/liked/{memberId}/count")
-    public int getLikedDiaryCount(@PathVariable Long memberId) {
-        return diaryService.getCountDiariesLikedByMemberId(memberId);
+    public Map<String, Integer> getLikedDiaryCount(@PathVariable Long memberId) {
+        int count = diaryService.getCountDiariesLikedByMemberId(memberId);
+        return Collections.singletonMap("count", count);
     }
 }

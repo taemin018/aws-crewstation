@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 public class DiaryController {
 
-    // 마이페이지 → 내가 좋아요한 일기 목록 화면
+    // 마이페이지 -> 내가 좋아요한 일기 목록 화면
     @GetMapping("/mypage/my-activities/liked")
     public String loadLikedDiariesPage() {
         log.info("마이페이지 - 좋아요한 일기 화면 요청");
