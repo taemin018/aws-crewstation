@@ -1,12 +1,15 @@
 @import "https://assets.ohou.se/design-system/bbf3fca1e650ee6d.css";@import "https://assets.ohou.se/fonts/pretendard/v1.3.8/pretendardvariable-dynamic-subset.css";@font-face {
-                        font-family: OhouseIcon;
-                        src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot);
-                        src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot#iefix) format("embedded-opentype"),url(https://assets.ohou.se/design-system/d8923b386a66fd50.woff2) format("woff2"),url(https://assets.ohou.se/design-system/9e79341d6a2fe0d2.woff) format("woff"),url(https://assets.ohou.se/design-system/5355f736e6a7bc5b.ttf) format("truetype"),url(https://assets.ohou.se/design-system/3ba7913eab100858.svg#OhouseIcon) format("svg");
-                    }
+    font-family: OhouseIcon;
+    src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot);
+    src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot#iefix) format("embedded-opentype"),url(https://assets.ohou.se/design-system/d8923b386a66fd50.woff2) format("woff2"),url(https://assets.ohou.se/design-system/9e79341d6a2fe0d2.woff) format("woff"),url(https://assets.ohou.se/design-system/5355f736e6a7bc5b.ttf) format("truetype"),url(https://assets.ohou.se/design-system/3ba7913eab100858.svg#OhouseIcon) format("svg");
+}
 a {
     color: inherit;
     text-decoration: none;
 }
+
+input:focus {outline: none;}
+textarea:focus {outline: none;}
 
 button, input, select, textarea {
     font-size: inherit;
@@ -221,7 +224,7 @@ button.gender{
     font-weight: 700;
     background: none;
     border: 1px solid #647ebc60;
-    
+
     width: 180px;
     height: 50px;
 }
@@ -241,13 +244,17 @@ button.gender.active{
     color: white;
 }
 
+button.submit-btn:disabled{
+    opacity: 0.6;
+}
+
 button.submit-btn{
     width: 100%;
     font-size: 17px;
     line-height: 26px;
     padding: 11px 10px;
-    background-color: #647ebcca;
-    border-color: #647ebcca;
+    background-color: #647FBC;
+    border-color: #647FBC;
     color: #fff;
     user-select: none;
     display: inline-block;
@@ -276,7 +283,6 @@ p.login-mv-btn a{
     display: inline-block;
     padding-left: 10px;
 }
-
 label.form-label.essential::after{
     position: absolute;
     content: "*";
@@ -324,8 +330,8 @@ div.gender-male::before{
     width: 8px;
     height: 8px;
     transform: scale(0);
-    transition: transform 0.4s 
-cubic-bezier(0.5, 2, 0.5, 0.5);
+    transition: transform 0.4s
+    cubic-bezier(0.5, 2, 0.5, 0.5);
     background-color: rgb(255, 255, 255);
 }
 
@@ -360,8 +366,8 @@ div.gender-female::before {
     width: 8px;
     height: 8px;
     transform: scale(0);
-    transition: transform 0.4s 
-cubic-bezier(0.5, 2, 0.5, 0.5);
+    transition: transform 0.4s
+    cubic-bezier(0.5, 2, 0.5, 0.5);
     background-color: rgb(255, 255, 255);
 }
 
@@ -389,4 +395,56 @@ label.gender-label.active div.gender-female, label.gender-label.active div.gende
 
 label.gender-label.active div.gender-female::before, label.gender-label.active div.gender-male::before {
     transform: scale(1);
+}
+
+/* 이미지 첨부 */
+
+
+.modify {
+    margin: 0px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.modify-label {
+    position: relative;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.modify-label > img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 50%;
+    border: 0;
+}
+
+.photo-icon {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: black;
+    width: 24px;
+    height: 24px;
+    border: 2px solid white;
+    box-sizing: content-box;
+}
+
+.img-input {
+    display: none;
+}
+
+.input-title {
+    width: 100%;
+    padding: 0px;
 }
