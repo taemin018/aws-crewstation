@@ -28,4 +28,4 @@ alter table tbl_member
 ALTER TABLE tbl_member RENAME COLUMN kakao_img_url TO social_img_url;
 
 delete from tbl_member
-where id = 7;
+where id = 46;

@@ -330,10 +330,78 @@ const getAddressWindow = () => {
     }).open();
 }
 
+// MBTI 유효성 검사
+const mbtiInput = document.querySelector("input.mbti");
+const mbtiError = document.querySelector(".error-text-mbti");
+const mbtiErrorSpan = document.querySelector(".error-text-mbti span");
+const mbtiRegex = /^(?:[EI][SN][TF][JP])$/i;
+
+mbtiInput.addEventListener("keyup", () => {
+    const value = mbtiInput.value.trim().toUpperCase(); // 대문자로 변환
+
+    if (!mbtiRegex.test(value)) {
+        mbtiError.style.display = "block";
+        mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
+        mbtiInput.classList.add("error");
+    } else {
+        mbtiError.style.display = "none";
+        mbtiErrorSpan.textContent = "";
+        mbtiInput.classList.remove("error");
+        mbtiInput.value = value; // 대문자로 유지
+    }
+});
+
+
+// 유효성 검사 다 체크
+
+function validateForm() {
+
+    // 성별 선택 검사
+    const genderChecked = document.querySelectorAll(".gender-radio:checked").length > 0;
+    if (!genderChecked) return false;
+
+    // 이메일 형식/중복 검사
+    if (document.querySelector(".error-text-email").style.display === "block") {
+        return false;
+    }
+
+    // 휴대폰 검사
+    if (document.querySelector(".error-text-phone").style.display === "block") {
+        return false;
+    }
+
+    // 비밀번호 검사
+    if (document.querySelector(".error-text-password").style.display === "block" ||
+        document.querySelector(".error-text-password-check").style.display === "block") {
+        return false;
+    }
+
+    // 생년월일 검사
+    if (document.querySelector(".error-text-birth").style.display === "block") {
+        return false;
+    }
+
+    // 주소(우편번호 + 기본 주소) 검사
+    const zip = document.querySelector(".memberZipCode").value.trim();
+    const addr = document.querySelector(".memberAddress").value.trim();
+    if (zip === "" || addr === "") {
+        return false;
+    }
+
+    if (mbtiError.style.display === "block") {
+        return false;
+    }
+
+    return true;
+}
+
 // 회원가입
 
 const submitBtn = document.querySelector(".submit-btn");
 
-submitBtn.addEventListener("click", (e) => {
-    
-})
+submitBtn.disabled = true;
+
+document.addEventListener("keyup", () => {
+    submitBtn.disabled = !validateForm();
+    console.log(submitBtn.disabled)
+});

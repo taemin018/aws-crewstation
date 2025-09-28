@@ -4,17 +4,21 @@ import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
+import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
 @Slf4j
 public class MemberMapperTests {
     @Autowired
     MemberMapper memberMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void joinTest(){
@@ -37,5 +41,18 @@ public class MemberMapperTests {
         boolean check =  memberMapper.selectEmail("test@gmail.com");
 
         log.info(String.valueOf(check));
+    }
+
+    @Test
+    public void loginTest(){
+        MemberDTO memberDTO = new  MemberDTO();
+
+        memberDTO.setMemberEmail("test@gmail.com");
+        String password =  passwordEncoder.encode("1234qwer");
+        memberDTO.setMemberPassword(password);
+        log.info(password);
+
+        memberMapper.selectForLogin(memberDTO);
+        log.info(String.valueOf(memberMapper.selectForLogin(memberDTO)));
     }
 }
