@@ -21,7 +21,7 @@ public class MemberMapperTests {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    public void joinTest(){
+    public void joinTest() {
         MemberVO memberVO = MemberVO.builder()
                 .memberName("test")
                 .memberPhone("01012341234")
@@ -37,18 +37,23 @@ public class MemberMapperTests {
     }
 
     @Test
-    public void emailTest(){
-        boolean check =  memberMapper.selectEmail("test@gmail.com");
+    public void emailTest() {
+        boolean check = memberMapper.selectEmail("test@gmail.com");
 
         log.info(String.valueOf(check));
     }
 
     @Test
-    public void loginTest(){
-        MemberDTO memberDTO = new  MemberDTO();
+    public void testInsertGuest() {
+        MemberDTO memberDTO = new MemberDTO();
+        memberMapper.insertGuest(memberDTO);
+    }
+
+    public void loginTest() {
+        MemberDTO memberDTO = new MemberDTO();
 
         memberDTO.setMemberEmail("test@gmail.com");
-        String password =  passwordEncoder.encode("1234qwer");
+        String password = passwordEncoder.encode("1234qwer");
         memberDTO.setMemberPassword(password);
         log.info(password);
 

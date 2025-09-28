@@ -42,7 +42,7 @@ public class PurchaseRestController {
     public ResponseEntity<MemberDTO> getPurchase(HttpServletRequest request) {
         String token = jwtTokenProvider.parseTokenFromHeader(request);
         if (token == null) {
-            throw new RuntimeException("토큰이 없습니다.");
+            throw   new RuntimeException("토큰이 없습니다.");
         }
         // 블랙리스트 체크 추가
         if (jwtTokenProvider.isTokenBlackList(token)) {

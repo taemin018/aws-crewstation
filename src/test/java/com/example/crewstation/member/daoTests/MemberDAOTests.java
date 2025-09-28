@@ -4,11 +4,13 @@ import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
+import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.repository.member.MemberDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
@@ -31,5 +33,12 @@ public class MemberDAOTests {
 
         memberDAO.save(memberVO);
 
+    }
+
+    @Test
+    @Transactional
+    public void testSaveGuest(){
+        MemberDTO memberDTO = new MemberDTO();
+        memberDAO.saveGuest(memberDTO);
     }
 }

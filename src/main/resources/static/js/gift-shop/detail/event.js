@@ -1,3 +1,8 @@
+purchaseDetailService.info((member) => {
+    console.log("회원정보 받아오기")
+    document.getElementById("memberId").value = member.id;
+})
+
 document.addEventListener("DOMContentLoaded", () => {
     // 슬라이드 관련
     const carouselList = document.querySelector(".carousel-list");
@@ -7,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 모달 관련 (공통)
     function setupModal(modalId, openSelector, closeSelector, onClose) {
+
         console.log(openSelector);
         console.log("선택햇습니다.")
         const modal = document.getElementById(modalId);
@@ -20,7 +26,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 열기 버튼들
         openBtns.forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+            btn.addEventListener("click", async (e) => {
+                console.log(modalId);
+                if (modalId === "myModal") {
+                    console.log("판매 요청 들어왔고");
+                    const memberId = document.getElementById("memberId").value;
+                    const postId = document.getElementById("postId").dataset.post;
+                    if (memberId) {
+                        console.log("회원 유저야")
+                        console.log(123)
+                        const {message, status} = await purchaseDetailService.requestToSell({
+                            purchaseId: postId,
+                            memberId: memberId
+                        })
+                        toastModal(message);
+                        return;
+                    }
+                }
                 e.stopPropagation();
                 modal.classList.add("active");
             });
@@ -144,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            confirmModal.style.display = "block";
+            confirmModal.style.display = "flex";
         });
 
         // 숫자만 입력되게 제약 추가
@@ -164,10 +186,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (confirmYes) {
-            confirmYes.addEventListener("click", () => {
+            confirmYes.addEventListener("click", async () => {
+                const form = document.getElementById("requestForm");
+                const formData = new FormData(form);
+                const {message, status} = await purchaseDetailService.requestToSell({
+                    purchaseId: document.getElementById("postId").dataset.post,
+                    memberPhone: formData.get("phone"),
+                    address: formData.get("addressInput"),
+                    addressZipCode: formData.get("zipCode"),
+                    addressDetail: formData.get("addressDetail")
+                })
+                console.log("message + ::::::", message)
                 confirmModal.style.display = "none";
                 document.getElementById("myModal").style.display = "none";
-                alert("요청이 전송되었습니다. 임시 주문번호는 입력하신 휴대폰 번호로 발송됩니다.");
+                if(status === 200){
+                    alert("요청이 전송되었습니다. 임시 주문번호는 입력하신 휴대폰 번호로 발송됩니다.");
+                }else{
+                    toastModal(message);
+                }
+
             });
         }
 
@@ -187,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmReportNo = document.getElementById("confirmReportNo");
     const reportBtn = document.getElementById("reportBtn");
     reportBtn.addEventListener("click", (e) => {
-        confirmReportModal.style.display = "block";
+        confirmReportModal.style.display = "flex";
     })
 
     confirmReportYes.addEventListener("click", async (e) => {
@@ -195,13 +232,17 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(reportContent);
         const memberId = document.getElementById("memberId").value;
         const postId = document.getElementById("postId").dataset.post;
-        const {message,status} = await purchaseDetailService.report({reportContent : reportContent,memberId:memberId,postId:postId})
+        const {message, status} = await purchaseDetailService.report({
+            reportContent: reportContent,
+            memberId: memberId,
+            postId: postId
+        })
         console.log(message)
         console.log(status)
         confirmReportModal.style.display = "none";
         document.getElementById("reportModal").style.display = "none";
         toastModal(message);
-        if(status !== 200){
+        if (status !== 404) {
             location.href = "/gifts"
         }
     });
@@ -229,9 +270,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 주소 검색 버튼 클릭 이벤트
-    document.getElementById("searchAddressBtn").addEventListener("click", function () {
-        alert("주소 검색 API 연동 예정");
+    document.querySelector("#addressInput").addEventListener("click", (e) => {
+
+        console.log(123)
+        getAddressWindow();
     });
+
+    const getAddressWindow = () => {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                let roadAddr = data.roadAddress; // 도로명 주소 변수
+                let addr = "";
+                let extraRoadAddr = ''; // 참고 항목 변수
+
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if (extraRoadAddr !== '') {
+                    extraRoadAddr = '(' + extraRoadAddr + ')';
+                }
+
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.querySelector("#zipCode").value = data.zonecode;
+                document.querySelector("#addressInput").value = addr;
+
+                // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                if (roadAddr !== '') {
+                    document.querySelector("#detailAddress").value = extraRoadAddr;
+                } else {
+                    document.querySelector("#detailAddress").value = '';
+                }
+            }
+        }).open();
+    }
 
     // 슬라이드 로직
     let count = 1;
@@ -352,7 +440,7 @@ const shareButton = document.querySelector(".product-detail-header-share-btn-wra
 const toast = document.querySelector(".toast");
 const toastText = document.querySelector("p.toast-text");
 
-function toastModal(text){
+function toastModal(text) {
     toast.style.display = "block";
     toast.classList.remove("hide");
     toastText.textContent = text;
@@ -365,6 +453,7 @@ function toastModal(text){
         }, 500);
     }, 3000);
 }
+
 shareButton.addEventListener("click", (e) => {
     toastModal("클립보드에 복사되었습니다.");
     clip();
@@ -383,8 +472,3 @@ function clip() {
 
 
 document.addEventListener("DOMContentLoaded", startCountdown);
-
-purchaseDetailService.info((member)=>{
-    console.log("회원정보 받아오기")
-    document.getElementById("memberId").value =member.id;
-})

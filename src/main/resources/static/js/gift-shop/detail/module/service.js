@@ -13,7 +13,7 @@ const purchaseDetailService = (() => {
         }
     }
     const report = async (report) => {
-        let status =null;
+        let status = null;
         let message = null;
         let result = null;
         const response = await fetch("/api/post/report", {
@@ -23,13 +23,37 @@ const purchaseDetailService = (() => {
                 'Content-Type': 'application/json'
             }
         });
-        if(!response.ok){
-            result = await response.json();
-            message = result.message;
-        }else{
-            message = await  response.text();
+        if (response.ok) {
+            console.log("기프트 존재")
+        } else if (response.status === 404) {
+            console.log("기프트 없음")
+        } else {
+            const error = await response.text()
+            console.log(error);
         }
-        return {message : message , status : response.status}
+        message = await response.text();
+        return {message: message, status: response.status}
     }
-    return {info: info,report:report}
+
+    const requestToSell = async (request) => {
+        let message = null;
+        const response = await fetch("/api/payment/", {
+            method: 'POST',
+            body: JSON.stringify(request),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            console.log("기프트 존재")
+        } else if (response.status === 404) {
+            console.log("기프트 없음")
+        } else {
+            console.log("에러 발생");
+        }
+        message = await response.text();
+        console.log(message)
+        return {message: message, status: response.status}
+    }
+    return {info: info, report: report, requestToSell: requestToSell}
 })();

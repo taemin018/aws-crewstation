@@ -37,4 +37,8 @@ public class MemberDAO {
         return memberMapper.selectMemberBySnsEmail(snsEmail);
     }
 
+    //  게스트 추가
+    public void saveGuest(MemberDTO memberDTO){
+        memberMapper.insertGuest(memberDTO);
+    }
 }

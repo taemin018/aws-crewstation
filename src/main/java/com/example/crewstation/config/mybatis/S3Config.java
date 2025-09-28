@@ -18,6 +18,8 @@ public class S3Config {
     @Value("${aws.region}")
     private String region;
 
+
+
     @Bean
 //    파일 업로드, 다운로드, 목록 등에 사용
 //    반드시 우리 서버를 거쳐야 함.

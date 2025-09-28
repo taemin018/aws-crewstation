@@ -13,3 +13,12 @@ alter table tbl_payment
 
 alter table tbl_payment
       add constraint fk_payment_payment_status foreign key (payment_status_id) references tbl_payment_status(id);
+
+
+ALTER TABLE tbl_payment DROP COLUMN member_id;
+
+ALTER TABLE tbl_payment DROP CONSTRAINT fk_payment_member;
+
+
+
+

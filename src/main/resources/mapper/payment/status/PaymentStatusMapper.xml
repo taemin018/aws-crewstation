@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.payment.status.PaymentStatusMapper">
-    <insert id="insert">
-        insert into tbl_payment_status (purchase_id)
-        values (#{purchaseId});
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_payment_status (purchase_id,member_id)
+        values (#{purchaseId},#{memberId});
     </insert>
 </mapper>

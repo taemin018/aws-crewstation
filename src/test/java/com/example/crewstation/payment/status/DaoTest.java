@@ -1,5 +1,6 @@
 package com.example.crewstation.payment.status;
 
+import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
 import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.repository.post.PostDAO;
@@ -18,7 +19,10 @@ public class DaoTest {
     @Test
     @Transactional
     public void testInsert() {
-        paymentStatusDAO.save(1L);
+        PaymentStatusDTO paymentStatusDTO = new PaymentStatusDTO();
+        paymentStatusDTO.setPurchaseId(1L);
+        paymentStatusDTO.setMemberId(1L);
+        paymentStatusDAO.save(paymentStatusDTO);
     }
 
 }

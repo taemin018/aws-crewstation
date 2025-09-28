@@ -230,8 +230,8 @@
                             <form id="requestForm" name="requestForm">
                                 <!-- 배송지 입력 -->
                                 <div class="form-group">
-                                    <label for="addressInput">주소<span class="required-dot">*</span></label>
-                                    <input type="text" id="addressInput" style="padding-right: 45px;" readonly>
+                                    <label for="addressInput">도로명 주소<span class="required-dot">*</span></label>
+                                    <input type="text" name="addressInput" id="addressInput" style="padding-right: 45px;" readonly>
                                     <button type="button" class="search-btn" id="searchAddressBtn">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <path d="M10,2A8,8,0,1,0,18,10a8,8,0,0,0-8-8Zm0,14A6,6,0,1,1,16,10,6,6,0,0,1,10,16Z"/>
@@ -239,38 +239,37 @@
                                         </svg>
                                     </button>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="detailAddress">상세주소<span class="required-dot">*</span></label>
-                                    <input type="text" id="detailAddress">
-                                </div>
-
                                 <div class="form-group">
                                     <label for="zipCode">우편번호 <span class="required-dot">*</span></label>
-                                    <input type="text" id="zipCode" inputmode="numeric" pattern="[0-9]*" maxlength="5">
+                                    <input type="text" name="zipCode" id="zipCode" inputmode="numeric" pattern="[0-9]*" maxlength="5" readonly>
                                 </div>
+                                <div class="form-group">
+                                    <label for="detailAddress">상세주소<span class="required-dot">*</span></label>
+                                    <input type="text" id="detailAddress" name="addressDetail">
+                                </div>
+
 
                                 <div class="form-group">
                                     <label for="phone">핸드폰 번호 (숫자만 입력하세요.) <span class="required-dot">*</span></label>
                                     <input
                                             type="tel"
                                             id="phone"
+                                            name="phone"
                                             inputmode="numeric"
                                             pattern="[0-9]*"
                                             maxlength="11">
                                 </div>
 
-                                <button type="button" class="product-buying-btn">요청하기</button>
+                                <button type="submit" class="product-buying-btn">요청하기</button>
                             </form>
                         </div>
                     </div>
 
                     <div id="confirmModal" class="modal">
                         <div class="modal-content">
-                            <h3>구매 요청 확인</h3>
-                            <p>
-                                입력하신 정보로 판매자에게 요청 수락 알림이 전송됩니다.<br>
-                                정말로 요청하시겠습니까?
+                            <h3 style="font-size: 25px">구매 요청 확인</h3>
+                            <p style="margin-top: 12px; font-size: 20px;line-height: normal;">
+                                입력하신 정보로 판매자에게<br>요청 수락 알림이 전송됩니다.<br>정말로 요청하시겠습니까?
                             </p>
                             <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
                                 <button type="submit" id="confirmYes" class="confirm-btn yes" form="requestForm">확인
@@ -394,6 +393,7 @@
 </div>
 <footer th:replace="~{fixed/mobile/footer.html :: footer}"></footer>
 </body>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="/js/gift-shop/detail/module/service.js"></script>
 <script src="/js/gift-shop/detail/module/layout.js"></script>
 <script src="/js/gift-shop/detail/event.js"></script>
