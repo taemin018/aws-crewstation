@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crewstation.mapper.accompany.AccompanyMapper">
+    <select id="getAccompanies">
+        select
+            a.post_id             as postId,
+            a.accompany_status    as accompanyStatus,
+            a.accompany_age_range as accompanyAgeRange,
+            p.post_title          as postTitle,
+            min(v.country_start_date) as startDate,
+            max(v.country_end_date)   as endDate,
+            string_agg(distinct v.country_name, ', ') as countries,
+            m.member_name         as memberName,
+            m.social_img_url      as socialImgUrl,
+            max(f.file_path)      as filePath,
+            max(f.file_name)      as fileName
+        from tbl_accompany a
+                 join tbl_post p on p.id = a.post_id
+                 left join view_post_accompany_accompany_path_country v
+                           on v.post_id = a.post_id
+                 left join tbl_member m
+                           on m.id = p.member_id
+                 left join tbl_post_section ps
+                           on ps.post_id = p.id
+                 left join view_file_post_section_file f
+                           on f.post_section_id = ps.id
+        group by a.post_id, a.accompany_status, a.accompany_age_range,
+                 p.post_title, m.member_name, m.social_img_url
+        limit #{limit}
+    </select>
+</mapper>

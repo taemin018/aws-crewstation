@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crewstation.mapper.banner.BannerMapper">
+<select id="getBanners">
+    select b.id as id,
+           b.banner_order as bannerOrder,
+           b.created_datetime as createdDatetime,
+           b.updated_datetime as updatedDatetime,
+           v.file_id as fileId,
+           v.file_origin_name as fileOriginName,
+           v.file_path as filePath,
+           v.file_name as fileName
+
+    from tbl_banner b
+             left join (
+        select *
+        from (
+                 select
+                     file_id,
+                     banner_id,
+                     file_origin_name,
+                     file_path,
+                     file_name,
+                     created_datetime,
+                     updated_datetime,
+                     row_number() over (partition by banner_id order by created_datetime asc) as rn
+                 from view_file_banner_file
+             ) t
+        where t.rn = 1
+    ) as v
+    on v.banner_id = b.id
+    order by b.banner_order asc, b.created_datetime desc
+
+</select>
+
+</mapper>
