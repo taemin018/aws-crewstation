@@ -3,6 +3,6 @@
 <mapper namespace="com.example.crewstation.mapper.payment.status.PaymentStatusMapper">
     <insert id="insert">
         insert into tbl_payment_status (purchase_id)
-        values (#{purchaseId});
+        values (#{purchaseId},#{memeberId});
     </insert>
 </mapper>

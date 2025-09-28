@@ -13,7 +13,7 @@ public class PaymentStatusDAO {
     private final PaymentStatusMapper paymentStatusMapper;
 
     //    판매 요청 신청
-    public void save(Long purchaseId) {
-        paymentStatusMapper.insert(purchaseId);
+    public void save(Long purchaseId,Long memberId) {
+        paymentStatusMapper.insert(purchaseId,memberId);
     }
 }

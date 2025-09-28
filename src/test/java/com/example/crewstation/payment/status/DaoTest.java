@@ -18,7 +18,7 @@ public class DaoTest {
     @Test
     @Transactional
     public void testInsert() {
-        paymentStatusDAO.save(1L);
+        paymentStatusDAO.save(1L,1L);
     }
 
 }

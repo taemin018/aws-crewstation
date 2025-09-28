@@ -18,6 +18,6 @@ public class MapperTest {
     @Test
 //    @Transactional
     public void testInsert() {
-        paymentStatusMapper.insert(1L);
+        paymentStatusMapper.insert(1L,1L);
     }
 }
