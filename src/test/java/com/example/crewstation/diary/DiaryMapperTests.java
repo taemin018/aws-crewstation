@@ -7,6 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+
 @SpringBootTest
 @Slf4j
 public class DiaryMapperTests {
@@ -18,9 +23,14 @@ public class DiaryMapperTests {
 
     @Test
     public void selectDiaryListTest() {
-        diaryMapper.selectDiaryList(diaryDTO);
-        diaryDTO.setPostId(1L);
-        log.info("selectDiaryListTest diaryDTO={}", diaryDTO);
+        List<DiaryDTO> diaries = diaryMapper.selectDiaryList(new DiaryDTO());
 
+        for (DiaryDTO diary : diaries) {
+            log.info("diary={}", diary);
+            assertNotNull(diary.getPostId());
+            assertNotNull(diary.getPostTitle());
+
+
+        }
     }
 }

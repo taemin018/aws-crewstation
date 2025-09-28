@@ -18,7 +18,6 @@ public class Criteria {
     private boolean hasPreviousPage;
     private boolean hasMore;
     private int count;
-    private Long currentMemberId;
 
     public Criteria(int page, int total) {
         rowCount = 10;

@@ -9,25 +9,87 @@
             vpd.updated_datetime as updatedDatetime,
             vpd.diary_like_count as diaryLikeCount,
             vpd.diary_reply_count as diaryReplyCount,
+
             vfmf.file_origin_name as fileOriginName,
             vfmf.file_name as fileName,
             vfmf.file_path as filePath,
             vfmf.member_id as memberId,
+
             cd.crew_id as crewId,
             cd.diary_id as diaryId,
+
             vfpsf.file_id as fileId,
             vfpsf.post_section_id as postSectionId,
+
             tl.post_id as postId,
             tc.crew_name as crewName
 
         from view_post_diary vpd
-                join view_file_member_file vfmf on vpd.id = vfmf.member_id
-                join view_file_post_section_file vfpsf on vpd.id = vfpsf.post_section_id
-                join tbl_crew_diary cd on vpd.id = cd.diary_id
-                join tbl_like tl on vpd.id = tl.post_id
-                join tbl_crew tc on vpd.id = tc.id
+                 join view_file_member_file vfmf
+                      on vpd.member_id = vfmf.member_id
+                 join view_file_post_section_file vfpsf
+                      on vfpsf.post_section_id in (
+                          select tps.id from tbl_post_section tps
+                                        where tps.post_id = vpd.id
+                      )
+
+                 join tbl_crew_diary cd
+                      on vpd.id = cd.diary_id
+                 join tbl_like tl
+                      on vpd.id = tl.post_id
+                 join tbl_crew tc
+                      on tc.id = cd.crew_id
 
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
     </select>
+
+
+    <select id="findDiariesLikedByMemberId" resultType="com.example.crewstation.dto.diary.LikedDiaryDTO">
+        SELECT d.post_id AS postId,
+               p.post_title,
+               m.id            AS memberId,
+               m.member_name   AS memberName,
+               m.social_img_url AS memberProfileImage,
+
+               f.file_path AS mainImage,
+
+               (SELECT ps.post_content
+                FROM tbl_post_section ps
+                WHERE ps.post_id = p.id
+                ORDER BY ps.id ASC
+                LIMIT 1) AS content,
+
+               d.diary_like_count,
+               d.diary_reply_count,
+
+               1 AS liked
+        FROM tbl_like l
+                 JOIN tbl_post p ON l.post_id = p.id
+                 JOIN tbl_diary d ON d.post_id = p.id
+                 JOIN tbl_member m ON p.member_id = m.id
+                 LEFT JOIN (
+            SELECT ps.post_id, COALESCE(main.file_id, sub.first_file_id) AS first_file_id
+            FROM tbl_post_section ps
+                     LEFT JOIN (
+                SELECT psf.post_section_id, MIN(f.id) AS file_id
+                FROM tbl_post_section_file psf
+                         JOIN tbl_file f ON psf.file_id = f.id
+                WHERE psf.image_type = 'main'
+                GROUP BY psf.post_section_id
+            ) main ON ps.id = main.post_section_id
+                     LEFT JOIN (
+                SELECT psf.post_section_id, MIN(f.id) AS first_file_id
+                FROM tbl_post_section_file psf
+                         JOIN tbl_file f ON psf.file_id = f.id
+                WHERE psf.image_type = 'sub'
+                GROUP BY psf.post_section_id
+            ) sub ON ps.id = sub.post_section_id
+        ) sec_file ON p.id = sec_file.post_id
+                 LEFT JOIN tbl_file f ON sec_file.first_file_id = f.id
+        WHERE l.member_id = #{memberId}
+        ORDER BY l.id DESC
+        limit #{criteria.rowCount} offset #{criteria.offset}
+    </select>
+
 </mapper>
