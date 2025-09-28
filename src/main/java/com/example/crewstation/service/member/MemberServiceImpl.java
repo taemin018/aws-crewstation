@@ -1,5 +1,7 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.domain.file.FileVO;
+import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +38,11 @@ public class MemberServiceImpl implements MemberService {
     public void join(MemberDTO memberDTO, MultipartFile multipartFile) {
         memberDTO.setMemberPassword(passwordEncoder.encode(memberDTO.getMemberPassword()));
 
-        memberDAO.save(toVO(memberDTO));
+        MemberVO vo = toVO(memberDTO);
+        memberDAO.save(vo);
 
-        Long memberId = memberDTO.getId();
+        Long memberId = vo.getId();
+
         AddressDTO addressDTO = new AddressDTO();
 
 
@@ -58,15 +63,26 @@ public class MemberServiceImpl implements MemberService {
         try {
             String s3Key = s3Service.uploadPostFile(multipartFile, getPath());
 
+            String originalFileName = multipartFile.getOriginalFilename();
+            String extension = "";
+
+            if(originalFileName != null && originalFileName.contains(".")){
+                extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            }
+
 
             fileDTO.setFileOriginName(multipartFile.getOriginalFilename());
             fileDTO.setFilePath(s3Key);
             fileDTO.setFileSize(String.valueOf(multipartFile.getSize()));
+            fileDTO.setFileName(UUID.randomUUID() + extension);
 
-            fileDAO.save(toVO(fileDTO));
+            FileVO filevo = toVO(fileDTO);
+            fileDAO.save(filevo);
 
-            memberFileDTO.setMemberId(memberDTO.getId());
-            memberFileDTO.setFileId(fileDTO.getId());
+            Long fileId = filevo.getId();
+
+            memberFileDTO.setMemberId(memberId);
+            memberFileDTO.setFileId(fileId);
 
             memberFileDAO.save(toVO(memberFileDTO));
 

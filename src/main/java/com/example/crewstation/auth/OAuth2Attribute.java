@@ -48,7 +48,7 @@ public class OAuth2Attribute {
                 .build();
     }
 
-//    Kakaoㅋ
+//    Kakao
     private static OAuth2Attribute ofKakao(String provider, String attributeKey, Map<String, Object> attributes){
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
