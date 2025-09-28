@@ -1,19 +1,25 @@
 package com.example.crewstation.dto.payment.status;
 
 import com.example.crewstation.common.enumeration.PaymentPhase;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.stereotype.Component;
 
-@SuperBuilder
-@ToString(callSuper = true)
+@Component
 @Getter
-@EqualsAndHashCode(of = "id",callSuper = false)
+@Setter
+@ToString
+@EqualsAndHashCode(of="id")
 public class PaymentStatusDTO {
     private Long id;
     private Long paymentId;
     private Long purchaseId;
+    private Long memberId;
+    private String memberPhone;
+    private String addressZipCode;
+    private String addressDetail;
+    private String address;
+    private String guestOrderNumber;
     private PaymentPhase paymentPhase;
     private String createdDatetime;
     private String updatedDatetime;

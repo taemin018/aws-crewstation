@@ -4,6 +4,7 @@ import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
+import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -37,5 +38,11 @@ public class MemberMapperTests {
         boolean check =  memberMapper.selectEmail("test@gmail.com");
 
         log.info(String.valueOf(check));
+    }
+
+    @Test
+    public void testInsertGuest(){
+        MemberDTO memberDTO = new MemberDTO();
+        memberMapper.insertGuest(memberDTO);
     }
 }

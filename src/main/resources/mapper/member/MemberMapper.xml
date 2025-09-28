@@ -16,5 +16,10 @@
         from tbl_member
         where member_email = #{memberEmail} and member_status = 'active'
     </select>
-    <!--  내가 추가한 부분 -->
+
+<!-- 게스트 관련 부분 -->
+    <insert id="insertGuest" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_member (member_name)
+        values ('guest')
+    </insert>
 </mapper>

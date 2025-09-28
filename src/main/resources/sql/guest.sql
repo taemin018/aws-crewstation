@@ -13,3 +13,9 @@ create table tbl_guest
 
 
 select * from tbl_guest;
+
+
+alter table tbl_guest
+    add column  created_datetime timestamp       default now();
+alter table tbl_guest
+    add column  updated_datetime timestamp       default now();

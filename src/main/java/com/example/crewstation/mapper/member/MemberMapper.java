@@ -23,4 +23,6 @@ public interface MemberMapper {
     public Optional<MemberDTO> selectMemberByMemberEmail(String memberEmail);
     public Optional<MemberDTO> selectMemberBySnsEmail(String snsEmail);
 
+//  게스트 추가
+    public void insertGuest(MemberDTO memberDTO);
 }
