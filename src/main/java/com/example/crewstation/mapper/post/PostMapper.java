@@ -1,5 +1,7 @@
 package com.example.crewstation.mapper.post;
 
+import com.example.crewstation.dto.post.PostDTO;
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,4 +11,7 @@ public interface PostMapper {
     public void insertPostReport(@Param("reportId")Long reportId ,@Param("postId") Long postId);
 //    게시글 존재 여부 확인
     public boolean existsActivePost(Long postId);
+
+//    게시글 작성
+    public void insert(PurchaseDTO purchaseDTO);
 }

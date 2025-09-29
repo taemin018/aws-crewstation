@@ -8,3 +8,6 @@ create table tbl_post_section_file
     constraint fk_post_section_file_file foreign key (file_id)
         references tbl_file (id)
 );
+
+insert into tbl_post_section(post_content, post_id)
+values ('test',14);

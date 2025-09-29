@@ -17,4 +17,6 @@ public class PostSectionFileDTO {
     private Long fileId;
     private Long postSectionId;
     private Type imageType;
+    private String createDatetime;
+    private String updateDatetime;
 }

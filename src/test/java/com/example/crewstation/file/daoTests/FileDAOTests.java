@@ -1,8 +1,9 @@
-package com.example.crewstation.file.mapperTests;
+package com.example.crewstation.file.daoTests;
 
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.mapper.file.FileMapper;
+import com.example.crewstation.repository.file.FileDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
-public class FileMapperTests {
+public class FileDAOTests {
     @Autowired
-    private FileMapper fileMapper;
+    private FileDAO fileDAO;
 
     @Test
+    @Transactional
     public void testInsertFile() {
         FileVO fileVO = FileVO.builder()
                 .fileSize("12MB")
@@ -23,19 +25,19 @@ public class FileMapperTests {
                 .fileOriginName("test")
                 .fileName("test")
                 .build();
-        fileMapper.insertFile(fileVO);
+        fileDAO.save(fileVO);
     }
 
     @Test
     @Transactional
-    public void testInsert(){
+    public void testSaveFile(){
         FileDTO fileDTO = new FileDTO();
         fileDTO.setFileName("test");
         fileDTO.setFileSize("12MB");
         fileDTO.setFileOriginName("test");
         fileDTO.setFilePath("../../test");
 
-        fileMapper.insert(fileDTO);
+        fileDAO.saveFile(fileDTO);
         log.info("fileDTO {}",fileDTO.getId());
     }
 }
