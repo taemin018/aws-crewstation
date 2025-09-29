@@ -1,8 +1,10 @@
 package com.example.crewstation.controller.purchase;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.auth.JwtTokenProvider;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.service.purchase.PurchaseService;
 import jakarta.servlet.http.Cookie;
@@ -19,11 +21,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,5 +75,21 @@ public class PurchaseController {
         return "gift-shop/detail";
     }
 
+    @GetMapping("write")
+    public String goWriteForm(PurchaseDTO purchaseDTO,Model model) {
+        model.addAttribute("purchase", purchaseDTO);
+        return "gift-shop/write";
+    }
+
+    @PostMapping("write")
+    public void write(PurchaseDTO purchaseDTO, Model model,
+//                      @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                      @RequestParam("files") List<MultipartFile> files) {
+        log.info("purchaseDTO {}", purchaseDTO);
+        log.info("files {}", files.size());
+//        purchaseDTO.setMemberId(customUserDetails.getId());
+
+//        return "gif";
+    }
 
 }

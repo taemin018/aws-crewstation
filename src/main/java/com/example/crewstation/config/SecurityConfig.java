@@ -79,4 +79,17 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+//        회원가입 시 비밀번호를 저장할 때, 이 PasswordEncoder로 암호화해서 저장하고,
+//        로그인 시에도 입력 비밀번호를 같은 방식으로 암호화해서 DB에 저장된 해시와 비교
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+//        인증 성공 시 Authentication 객체를 만들어 반환
+        return configuration.getAuthenticationManager();
+    }
 }

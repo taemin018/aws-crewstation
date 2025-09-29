@@ -471,6 +471,11 @@
 .write-content-thumbnail-container.show-add-btn .write-content-img-add-btn {
   display: flex; /* flex로 해서 썸네일 그리드랑 맞추기 */
 }
-  
 
-  
+
+textarea#purchaseContent{
+  border: none;
+  width: 94%;
+  min-height: 200px;
+  padding: 10px;
+}

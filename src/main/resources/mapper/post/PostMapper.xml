@@ -11,4 +11,9 @@
         from tbl_post
         where post_status ='active' and id=#{postId}
     </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into tbl_post(post_title)
+        values (#{postTitle})
+    </insert>
 </mapper>
