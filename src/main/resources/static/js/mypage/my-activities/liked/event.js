@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (page === 1) {
             likeLayout.renderDiaryList(diaryFeed, diaries);
-            size = 10; // 두 번째 페이지부터는 10개씩 로드
+            size = 8; // 두 번째 페이지부터는 10개씩 로드
         } else {
             likeLayout.appendDiaryList(diaryFeed, diaries);
         }
