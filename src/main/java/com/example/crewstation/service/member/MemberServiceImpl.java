@@ -1,5 +1,7 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.common.exception.MemberLoginFailException;
+import com.example.crewstation.common.exception.MemberNotFoundException;
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
@@ -13,6 +15,7 @@ import com.example.crewstation.repository.member.MemberFileDAO;
 import com.example.crewstation.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,10 +101,23 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.checkEmail(memberEmail);
     }
 
+    @Override
+    public MemberDTO login(MemberDTO memberDTO) {
+        log.info("memberDTO: {}", memberDTO);
+        return memberDAO.findForLogin(memberDTO).orElseThrow(MemberLoginFailException::new);
+    }
+
     public String getPath() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return today.format(formatter);
+    }
+
+    @Override
+    @Cacheable(value="member", key="#memberEmail")
+    public MemberDTO getMember(String memberEmail, String provider) {
+        return (provider == null ? memberDAO.findByMemberEmail(memberEmail)
+                : memberDAO.findBySnsEmail(memberEmail)).orElseThrow(MemberNotFoundException::new);
     }
 
 }

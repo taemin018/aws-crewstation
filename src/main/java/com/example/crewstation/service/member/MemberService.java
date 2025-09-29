@@ -17,6 +17,12 @@ public interface MemberService {
 //    이메일 중복 검사
     public boolean checkEmail(String memberEmail);
 
+//    로그인
+    public MemberDTO login(MemberDTO memberDTO);
+
+//    회원 정보 조회
+    public MemberDTO getMember(String memberEmail, String provider);
+
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

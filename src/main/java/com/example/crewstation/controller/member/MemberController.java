@@ -39,8 +39,6 @@ public class MemberController {
         return "member/web/login";
     }
 
-
-
     //    mobile 회원가입
     @GetMapping("mobile/join")
     public String mobileJoin(MemberDTO memberDTO, Model model) {
@@ -56,11 +54,6 @@ public class MemberController {
         return new RedirectView("/member/mobile/login");
     }
 
-    //    mobile 로그인
-    @GetMapping("mobile/login")
-    public String mobileLogin(MemberDTO memberDTO, Model model) {
-        model.addAttribute("memberDTO", memberDTO);
-        return "member/mobile/login";
-    }
+
 
 }

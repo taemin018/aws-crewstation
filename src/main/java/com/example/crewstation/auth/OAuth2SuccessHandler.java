@@ -31,8 +31,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if(isExist){
             jwtTokenProvider.createAccessToken(email, provider);
             jwtTokenProvider.createRefreshToken(email, provider);
+            log.info("-----------------------in---------------------");
 
-            path = "/post/list/1";
+            path = "/";
         }else{
             Cookie memberEmailCookie = new Cookie("memberEmail", email);
             memberEmailCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
