@@ -2,7 +2,7 @@ package com.example.crewstation.service.member;
 
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.file.member.MemberFileVO;
-import com.example.crewstation.domain.member.AddressVO;
+import com.example.crewstation.domain.address.AddressVO;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
@@ -23,6 +23,10 @@ public interface MemberService {
 //    회원 정보 조회
     public MemberDTO getMember(String memberEmail, String provider);
 
+// sns 가입
+    public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
+
+
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()
@@ -37,7 +41,7 @@ public interface MemberService {
                 .memberPassword(memberDTO.getMemberPassword())
                 .memberStatus(memberDTO.getMemberStatus())
                 .memberProvider(memberDTO.getMemberProvider())
-                .kakaoImgUrl(memberDTO.getKakaoImgUrl())
+                .socialImgUrl(memberDTO.getSocialImgUrl())
                 .memberSocialEmail(memberDTO.getMemberSocialEmail())
                 .memberDescription(memberDTO.getMemberDescription())
                 .memberRole(memberDTO.getMemberRole())

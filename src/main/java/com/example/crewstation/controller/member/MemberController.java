@@ -1,5 +1,8 @@
 package com.example.crewstation.controller.member;
 
+import com.example.crewstation.auth.JwtTokenProvider;
+import com.example.crewstation.common.enumeration.MemberProvider;
+import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.dto.guest.GuestDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.service.guest.GuestService;
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class MemberController {
     private final MemberService memberService;
     private final GuestService guestService;
+    private final JwtTokenProvider jwtTokenProvider;
 
 //    web 회원가입
     @GetMapping("web/join")
@@ -84,4 +88,32 @@ public class MemberController {
         return new RedirectView("/member/mobile/login");
     }
 
+//    web sns 회원가입
+    @GetMapping("web/sns/join")
+    public String snsJoin(@CookieValue(value = "memberSocialEmail", required = false) String memberSocialEmail,
+                          @CookieValue(value = "profile", required = false) String socialProfile,
+                          @CookieValue(value = "name", required = false) String memberName,
+                          MemberDTO memberDTO, Model model) {
+        memberDTO.setMemberSocialEmail(memberSocialEmail);
+        memberDTO.setSocialImgUrl(socialProfile);
+        memberDTO.setMemberName(memberName);
+
+        model.addAttribute("memberDTO", memberDTO);
+
+        return "member/web/sns/join";
+    }
+
+    @PostMapping("web/sns/join")
+    public RedirectView join(@CookieValue(value = "role", required = false) String role,
+                             @CookieValue(value = "provider", required = false) String provider, MemberDTO memberDTO,
+                             @RequestParam("file")MultipartFile multipartFile) {
+        memberDTO.setMemberRole(role.equals("ROLE_MEMBER") ? MemberRole.MEMBER : MemberRole.ADMIN);
+        memberDTO.setMemberProvider(MemberProvider.valueOf(provider.toUpperCase()));
+        memberService.joinSns(memberDTO, multipartFile);
+
+        jwtTokenProvider.createAccessToken(memberDTO.getMemberSocialEmail(), provider);
+        jwtTokenProvider.createRefreshToken(memberDTO.getMemberSocialEmail(), provider);
+
+        return new RedirectView("/");
+    }
 }

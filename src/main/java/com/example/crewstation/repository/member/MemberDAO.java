@@ -33,6 +33,13 @@ public class MemberDAO {
     public Optional<MemberDTO> findByMemberEmail(String memberEmail){
         return memberMapper.selectMemberByMemberEmail(memberEmail);
     }
+
+//    sns 회원가입
+    public void saveSns(MemberVO memberVO){
+    memberMapper.insertSns(memberVO);
+}
+
+//    sns 회원 조회
     public Optional<MemberDTO> findBySnsEmail(String snsEmail){
         return memberMapper.selectMemberBySnsEmail(snsEmail);
     }

@@ -22,7 +22,7 @@ public class JwtAuthenticationHandler implements AuthenticationEntryPoint {
 
         }else{
 //            일반 웹 요청인 경우
-            response.sendRedirect("/member/login");
+            response.sendRedirect("/member/web/login");
         }
     }
 }

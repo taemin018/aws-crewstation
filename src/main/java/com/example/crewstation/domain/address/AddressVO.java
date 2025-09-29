@@ -1,4 +1,4 @@
-package com.example.crewstation.domain.member;
+package com.example.crewstation.domain.address;
 
 import com.example.crewstation.audit.Period;
 import lombok.EqualsAndHashCode;
