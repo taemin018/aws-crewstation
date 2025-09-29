@@ -20,30 +20,30 @@
                         <button class="normal active">일반</button>
                         <button class="guest">게스트</button>
                     </div>
-                    <form class="member-login" name="member">
+                    <form class="member-login" name="member" th:object="${memberDTO}">
                         <div class="member-email-input-wrap input-wrap">
-                            <input type="email" class="member-email" name="memberEmail" placeholder="이메일"/>
+                            <input type="email" th:field="*{memberEmail}" class="member-email" name="memberEmail" placeholder="이메일"/>
                         </div>
                         <div class="member-password-input-wrap input-wrap">
-                            <input type="password" class="member-password" name="memberPassword" placeholder="비밀번호"/>
+                            <input type="password" th:field="*{memberPassword}" class="member-password" name="memberPassword" placeholder="비밀번호"/>
                         </div>
-                        <button class="login-member-btn login-btn">로그인</button>
+                        <button class="login-member-btn login-btn" type="button">로그인</button>
                         <section class="login-option-action">
                             <a class="password-find">비밀번호 찾기</a>
-                            <a class="join">회원가입</a>
+                            <a class="join" th:href="@{/member/web/join}">회원가입</a>
                         </section>
                     </form>
-                    <form class="guest-login" name="guest" style="display: none;">
+                    <form action="/member/web/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
                         <div class="guest-id-input-wrap input-wrap">
-                            <input type="text" class="guest-id" name="guestId" placeholder="임시 아이디"/>
+                            <input type="text" class="guest-id" name="guestOrderNumber" placeholder="임시 아이디" th:field="*{guestOrderNumber}"/>
                         </div>
                         <div class="guest-phone-input-wrap input-wrap">
-                            <input type="text" class="guest-phone" name="guestPhone" placeholder="휴대전화"/>
+                            <input type="text" class="guest-phone" name="guestPhone" placeholder="휴대전화" th:field="*{guestPhone}"/>
                         </div>
                         <button class="login-guest-btn login-btn">로그인</button>
                         <section class="login-option-action">
                             <a class="password-find">비밀번호 찾기</a>
-                            <a class="join">회원가입</a>
+                            <a class="join" th:href="@{/member/web/join}">회원가입</a>
                         </section>
                     </form>
                     <section class="social-login-wrap">
@@ -61,12 +61,13 @@
             </div>
             <footer class="login-footer">
                 © &nbsp;
-                <a href="/">bucketplace, Co., Ltd.</a>  
+                <a href="/">bucketplace, Co., Ltd.</a>
                 . All Rights Reserved
             </footer>
         </main>
-        
+
     </div>
 </body>
+<script src="/js/member/mobile/login/module/service.js"></script>
 <script src="/js/member/mobile/login/event.js"></script>
 </html>

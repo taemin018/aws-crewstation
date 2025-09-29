@@ -1,4 +1,4 @@
-package com.example.crewstation.service;
+package com.example.crewstation.service.member;
 
 import com.example.crewstation.auth.OAuth2Attribute;
 import com.example.crewstation.repository.member.MemberDAO;

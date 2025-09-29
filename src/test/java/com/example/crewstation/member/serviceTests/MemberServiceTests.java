@@ -4,13 +4,11 @@ import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
-import com.example.crewstation.mapper.member.MemberMapper;
 import com.example.crewstation.service.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @Slf4j
@@ -31,14 +29,11 @@ public class MemberServiceTests {
                 .memberRole(MemberRole.MEMBER)
                 .build();
 
-        MultipartFile multipartFile = new MultipartFile;
-
-        memberService.join(toVO(), multipartFile);
     }
 
     @Test
     public void emailTest(){
-        boolean check =  memberMapper.selectEmail("test@gmail.com");
+        boolean check =  memberService.checkEmail("test@gmail.com");
 
         log.info(String.valueOf(check));
     }

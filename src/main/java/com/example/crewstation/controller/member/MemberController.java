@@ -1,6 +1,8 @@
 package com.example.crewstation.controller.member;
 
+import com.example.crewstation.dto.guest.GuestDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.service.guest.GuestService;
 import com.example.crewstation.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
+    private final GuestService guestService;
 
 //    web 회원가입
     @GetMapping("web/join")
@@ -34,8 +37,9 @@ public class MemberController {
 
     //    web 로그인
     @GetMapping("web/login")
-    public String login(MemberDTO memberDTO, Model model) {
+    public String login(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
+        model.addAttribute("guestDTO", guestDTO);
         return "member/web/login";
     }
 
@@ -54,6 +58,30 @@ public class MemberController {
         return new RedirectView("/member/mobile/login");
     }
 
+    //    web 로그인
+    @GetMapping("mobile/login")
+    public String mobileLogin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
+        model.addAttribute("memberDTO", memberDTO);
+        model.addAttribute("guestDTO", guestDTO);
+        return "member/mobile/login";
+    }
 
+// guest
+
+    @PostMapping("web/login")
+    public RedirectView login(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
+        guestService.login(guestDTO);
+        log.info(guestService.login(guestDTO).toString());
+
+        return new RedirectView("/guest/purchase-detail");
+    }
+
+    @PostMapping("mobile/login")
+    public RedirectView mobileLogin(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
+        guestService.login(guestDTO);
+
+
+        return new RedirectView("/member/mobile/login");
+    }
 
 }

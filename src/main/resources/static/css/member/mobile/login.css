@@ -1,8 +1,8 @@
 @import "https://assets.ohou.se/design-system/bbf3fca1e650ee6d.css";@import "https://assets.ohou.se/fonts/pretendard/v1.3.8/pretendardvariable-dynamic-subset.css";@font-face {
-                        font-family: OhouseIcon;
-                        src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot);
-                        src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot#iefix) format("embedded-opentype"),url(https://assets.ohou.se/design-system/d8923b386a66fd50.woff2) format("woff2"),url(https://assets.ohou.se/design-system/9e79341d6a2fe0d2.woff) format("woff"),url(https://assets.ohou.se/design-system/5355f736e6a7bc5b.ttf) format("truetype"),url(https://assets.ohou.se/design-system/3ba7913eab100858.svg#OhouseIcon) format("svg");
-                    }
+    font-family: OhouseIcon;
+    src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot);
+    src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot#iefix) format("embedded-opentype"),url(https://assets.ohou.se/design-system/d8923b386a66fd50.woff2) format("woff2"),url(https://assets.ohou.se/design-system/9e79341d6a2fe0d2.woff) format("woff"),url(https://assets.ohou.se/design-system/5355f736e6a7bc5b.ttf) format("truetype"),url(https://assets.ohou.se/design-system/3ba7913eab100858.svg#OhouseIcon) format("svg");
+}
 a {
     color: inherit;
     text-decoration: none;
@@ -12,6 +12,9 @@ button, input, select, textarea {
     font-size: inherit;
 }
 
+input:focus {outline: none;}
+
+textarea:focus {outline: none;}
 
 input, select, textarea {
     font-family: inherit;
@@ -135,7 +138,7 @@ input.member-email,input.guest-id{
 }
 
 input.member-password,input.guest-phone{
-        position: relative;
+    position: relative;
     display: block;
     width: 100%;
     border-radius: 0 0 4px 4px;
@@ -183,29 +186,29 @@ div.login-part-btn{
     display: flex;
     border: 1px solid #dbdbdb;
     border-radius: 10px 10px 0 0;
-    margin-bottom: 10px;
 }
 
 div.login-part-btn button{
-        width: 50%;
-        background-color: white;
-        border: none;
-        font-size: 20px;
-        font-weight: 700;
-        /* border-right: 1px solid; */
+    width: 50%;
+    background-color: white;
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+    /* border-right: 1px solid; */
 }
 
 div.login-part-btn button:first-child{
-    border-right: 1px solid black;
+    border-right: 1px solid #dbdbdb;
     border-top-left-radius: 10px;
 }
 
 div.login-part-btn button:last-child{
-        border-top-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 div.login-part-btn button.active{
-    color : #647FBC;
+    color : #FFFFFF;
+    background: #647FBC;
 }
 
 input:hover{

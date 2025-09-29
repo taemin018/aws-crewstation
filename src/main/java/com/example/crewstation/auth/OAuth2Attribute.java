@@ -42,6 +42,7 @@ public class OAuth2Attribute {
         log.info(attributes.toString());
         return OAuth2Attribute.builder()
                 .email((String)attributes.get("email"))
+                .profile((String)attributes.get("profile"))
                 .provider(provider)
                 .attributes(attributes)
                 .attributeKey(attributeKey)
@@ -51,13 +52,13 @@ public class OAuth2Attribute {
 //    Kakao
     private static OAuth2Attribute ofKakao(String provider, String attributeKey, Map<String, Object> attributes){
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
-
+        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile_image");
         log.info(kakaoAccount.toString());
         log.info(kakaoProfile.toString());
 
         return OAuth2Attribute.builder()
                 .email((String) kakaoAccount.get("email"))
+                .profile((String)kakaoProfile.get("profile"))
                 .provider(provider)
                 .attributes(kakaoAccount)
                 .attributeKey(attributeKey)
@@ -71,6 +72,8 @@ public class OAuth2Attribute {
 
         return OAuth2Attribute.builder()
                 .email((String) response.get("email"))
+                .profile((String)response.get("profile"))
+                .name((String)response.get("name"))
                 .attributes(response)
                 .provider(provider)
                 .attributeKey(attributeKey)
@@ -82,6 +85,8 @@ public class OAuth2Attribute {
         map.put("id", attributeKey);
         map.put("key", attributeKey);
         map.put("email", email);
+        map.put("profile", profile);
+        map.put("name", name );
         map.put("provider", provider);
 
         return map;

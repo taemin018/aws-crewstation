@@ -30,20 +30,20 @@
                         <button class="login-member-btn login-btn" type="button">로그인</button>
                         <section class="login-option-action">
                             <a class="password-find">비밀번호 찾기</a>
-                            <a class="join">회원가입</a>
+                            <a class="join" th:href="@{/member/web/join}">회원가입</a>
                         </section>
                     </form>
-                    <form class="guest-login" name="guest" style="display: none;">
+                    <form action="/member/web/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
                         <div class="guest-id-input-wrap input-wrap">
-                            <input type="text" class="guest-id" name="guestId" placeholder="임시 아이디"/>
+                            <input type="text" class="guest-id" name="guestOrderNumber" placeholder="임시 아이디" th:field="*{guestOrderNumber}"/>
                         </div>
                         <div class="guest-phone-input-wrap input-wrap">
-                            <input type="text" class="guest-phone" name="guestPhone" placeholder="휴대전화"/>
+                            <input type="text" class="guest-phone" name="guestPhone" placeholder="휴대전화" th:field="*{guestPhone}"/>
                         </div>
-                        <button class="login-guest-btn login-btn" type="button">로그인</button>
+                        <button class="login-guest-btn login-btn">로그인</button>
                         <section class="login-option-action">
                             <a class="password-find">비밀번호 찾기</a>
-                            <a class="join">회원가입</a>
+                            <a class="join" th:href="@{/member/web/join}">회원가입</a>
                         </section>
                     </form>
                     <section class="social-login-wrap">

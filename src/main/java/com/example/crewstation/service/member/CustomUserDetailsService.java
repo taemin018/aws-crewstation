@@ -1,4 +1,4 @@
-package com.example.crewstation.service;
+package com.example.crewstation.service.member;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.member.MemberDTO;
