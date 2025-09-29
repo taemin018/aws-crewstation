@@ -20,6 +20,7 @@ public interface MemberService {
 //    이메일 중복 검사
     public boolean checkEmail(String memberEmail);
 
+<<<<<<< HEAD
 //    로그인
     public MemberDTO login(MemberDTO memberDTO);
 
@@ -29,7 +30,8 @@ public interface MemberService {
 // sns 가입
     public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
 
-    public Optional<MemberProfileDTO> getMember(Long memberId);
+    public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
+
 
 
     default MemberVO toVO(MemberDTO memberDTO) {

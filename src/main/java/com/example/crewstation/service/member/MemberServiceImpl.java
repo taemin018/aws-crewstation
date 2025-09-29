@@ -114,6 +114,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+<<<<<<< HEAD
     @Cacheable(value="member", key="#memberEmail")
     public MemberDTO getMember(String memberEmail, String provider) {
         return (provider == null ? memberDAO.findByMemberEmail(memberEmail)
@@ -178,6 +179,10 @@ public class MemberServiceImpl implements MemberService {
 
 
         memberDAO.saveSns(toVO(memberDTO));
+
+        
+    public Optional<MemberProfileDTO> getMemberProfile (Long memberId) {
+        return memberDAO.selectProfileById(memberId);
     }
 
 }
