@@ -2,31 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.gift.GiftMapper">
     <select id="getGift">
-        select
-            vpp.id as postId,
-            vpp.post_title as postTitle,
-            vpp.purchase_country as purchaseCountry,
-            vpp.purchase_delivery_method as purchaseDeliveryMethod,
-            vpp.purchase_limit_time as purchaseLimitTime,
-            vpp.purchase_product_count as purchaseProductCount,
-            vpp.purchase_product_price as purchaseProductPrice,
-            vpp.created_datetime as createdDatetime,
-            vpp.updated_datetime as updatedDatetime,
-            vfps.file_path as filePath,
-            vfps.file_name as fileName,
-            tm.member_name as memberName,
-            tm.chemistry_score as chemistryScore
+        select vpp.id as post_id,
+        vpp.post_title as postTitle,
+        vpp.member_id as memberId,
+        vpp.purchase_country as purchaseCountry,
+        vpp.purchase_delivery_method as purchaseDeliveryMethod,
+        vpp.purchase_limit_time as purchaseLimitTime,
+        vpp.purchase_product_count as purchaseProductCount,
+        vpp.purchase_product_price as purchaseProductPrice,
+        vpp.purchase_delivery_method as purchaseDeliveryMethod,
+        vpp.created_datetime as createdDatetime,
+        vpp.updated_datetime as updatedDatetime,
+
+        vfps.file_path as filePath,
+        vfps.file_name as fileName,
+
+        tm.member_name as memberName,
+        tm.chemistry_score as chemistryScore,
+        tm.social_img_url as socialImgUrl
+
         from tbl_member tm
-                 join view_post_purchase vpp
-                     on tm.id = vpp.member_id
-                 join tbl_post_section tps
-                     on vpp.id = tps.post_id
-                                                  and vpp.post_status = 'active'
-                 join view_file_post_section_file vfps
-                     on tps.id = vfps.post_section_id
-                            and vfps.image_type = 'main'
-        where vpp.created_datetime + (vpp.purchase_limit_time * interval '1 hour') > now()
-        order by vpp.created_datetime desc
-        limit #{limit}
+        join view_post_purchase vpp
+            on tm.id = vpp.member_id
+        join tbl_post_section tps
+            on vpp.id = tps.post_id
+                   and vpp.post_status = 'active'
+        join view_file_post_section_file vfps
+            on tps.id = vfps.post_section_id
+                   and vfps.image_type = 'main'
+        limit 4;
     </select>
 </mapper>

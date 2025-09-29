@@ -16,6 +16,6 @@ public interface DiaryService {
     int getCountDiariesLikedByMemberId(Long memberId);
 
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO);
+    public List<DiaryDTO> selectDiaryList();
 
 }

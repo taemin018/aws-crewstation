@@ -10,36 +10,34 @@
             vpd.diary_like_count as diaryLikeCount,
             vpd.diary_reply_count as diaryReplyCount,
 
+            m.member_name as memberName,
+            m.member_description as memberDescription,
+
             vfmf.file_origin_name as fileOriginName,
             vfmf.file_name as fileName,
             vfmf.file_path as filePath,
-            vfmf.member_id as memberId,
 
             cd.crew_id as crewId,
-            cd.diary_id as diaryId,
 
+            tc.crew_name as crewName,
+            ps.post_content as postContent,
+            ps.post_id as postId,
             vfpsf.file_id as fileId,
-            vfpsf.post_section_id as postSectionId,
-
-            tl.post_id as postId,
-            tc.crew_name as crewName
+            vfpsf.post_section_id as postSectionId
 
         from view_post_diary vpd
-                 join view_file_member_file vfmf
-                      on vpd.member_id = vfmf.member_id
-                 join view_file_post_section_file vfpsf
-                      on vfpsf.post_section_id in (
-                          select tps.id from tbl_post_section tps
-                                        where tps.post_id = vpd.id
-                      )
-
-                 join tbl_crew_diary cd
-                      on vpd.id = cd.diary_id
-                 join tbl_like tl
-                      on vpd.id = tl.post_id
-                 join tbl_crew tc
-                      on tc.id = cd.crew_id
-
+                 join tbl_member m
+                      on vpd.member_id = m.id
+                left join view_file_member_file vfmf
+                      on vfmf.member_id = m.id
+                join tbl_crew_diary cd
+                      on vpd.id = cd.crew_id
+                join tbl_crew tc
+                      on vpd.id = tc.id
+                join tbl_post_section ps
+                      on vpd.id = ps.id
+                left join view_file_post_section_file vfpsf
+                      on vpd.id = vfpsf.file_id
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
     </select>

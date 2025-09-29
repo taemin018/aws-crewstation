@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CrewService {
 //    크루 목록
-    public List<CrewDTO> getCrews(CrewDTO crewDTO);
+    public List<CrewDTO> getCrews();
 
 
 }
