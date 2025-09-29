@@ -244,17 +244,13 @@ button.gender.active{
     color: white;
 }
 
-button.submit-btn:disabled{
-    opacity: 0.6;
-}
-
 button.submit-btn{
     width: 100%;
     font-size: 17px;
     line-height: 26px;
     padding: 11px 10px;
-    background-color: #647FBC;
-    border-color: #647FBC;
+    background-color: #647ebcca;
+    border-color: #647ebcca;
     color: #fff;
     user-select: none;
     display: inline-block;

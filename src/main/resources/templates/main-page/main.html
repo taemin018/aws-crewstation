@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crew Station</title>
     <link rel="stylesheet" href="/css/font.css">
-    <link rel="stylesheet" href="/css/main-page/main.css">
-    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/main-page/main.css">
+    <link rel="shortcut icon" href="/static/images/crew-station-favicon.png" type="image/x-icon">
 </head>
 <body>
 <header th:replace="~{fixed/header.html :: header}"></header>
@@ -21,16 +21,11 @@
                                 <div class="banner-item-wrap">
                                     <div class="banner-group">
                                         <div class="banner-slide">
-                                            <div th:each="banner : ${banners}">
-                                                <div>
-                                                    <img th:src="${banner.imagePath}" src="/static/images/banner1.jpg" alt="">
-                                                </div>
-                                            </div>
-                                                <div><img src="/static/images/banner2.jpg" alt=""></div>
-                                                <div><img src="../../static/images/banner3.jpg" alt=""></div>
-                                                <div><img src="../../static/images/banner4.jpg" alt=""></div>
-                                                <div><img src="../../static/images/banner5.jpg" alt=""></div>
-
+                                            <div><img src="/static/images/banner1.jpg" alt=""></div>
+                                            <div><img src="/static/images/banner2.jpg" alt=""></div>
+                                            <div><img src="../../static/images/banner3.jpg" alt=""></div>
+                                            <div><img src="../../static/images/banner4.jpg" alt=""></div>
+                                            <div><img src="../../static/images/banner5.jpg" alt=""></div>
                                         </div>
                                     </div>
                                     <div class="banner-arrow-wrap">
@@ -45,7 +40,7 @@
                                             </button>
                                         </div>
                                         <span class="banner-page">
-                                            <span class="banner-count" th:text="${'1 / ' + #lists.size(banners)}">
+                                            <span class="banner-count">
                                                 1 / 5
                                             </span>
                                         </span>
@@ -70,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="crew-more-btn">
-                                <button class="more btn" type="button" onclick="location.href='/crews'">
+                                <button class="more btn" type="button" onclick="location.href=/crews">
                                     더보기
                                 </button>
                             </div>
@@ -82,7 +77,7 @@
                                 <div class="crew-list-group">
                                     <ul class="crew-items">
                                         <!-- 써야하는 부분 -->
-                                         <li class="crew-item-card" th:each="crew : ${crews}">
+                                         <li class="crew-item-card" th:each="crew : ${crewDTO}">
                                             <div class="crew-item-wrap">
                                                 <div class="crew-img-wrap">
                                                     <img src="https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=256&amp;h=342&amp;c=c" srcset="https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=384&amp;h=513&amp;c=c 1.5x,https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=512&amp;h=684&amp;c=c 2x,https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=768&amp;h=1026&amp;c=c 3x"
@@ -299,7 +294,7 @@
                     <!-- 추천 크루 종료 부분 -->
 
                     <!-- 다이어리 시작 부분 -->
-                    <div class="diary-container" th:each="diary : ${diaries}">
+                    <div class="diary-container" th:each="diary : ${diaryDTO}">
                         <div class="diary-header">
                             <div class="diary-title-wrap">
                                 <a href="/diaries">
@@ -309,7 +304,7 @@
                                 </a>
                             </div>
                             <div class="diary-more-btn">
-                                <button type="button" class="more btn" onclick="location.href='/diaries'">
+                                <button type="button" class="more btn" onclick="location.herf=/diaries">
                                     더보기
                                 </button>
                             </div>
@@ -600,38 +595,35 @@
                         <div>
                             <div class="together-list-container">
                                 
-                                <div class="together-item-wrap" th:each="accompany : ${accompanies}">
+                                <div class="together-item-wrap">
                                     
                                     <div class="together-img-wrap">
                                         <div class="together-text-wrap">
-                                        <p th:text="${accompany.postTitle}">낯선 곳에서 익숙함을 찾다</p>
+                                        <p>낯선 곳에서 익숙함을 찾다</p>
                                     </div>
-                                        <div class="together-category"
-                                        th:classappend="${accompany.accompanyStatus == 'SHORT'} ? ' short' : ' long'"
-                                        th:text="${accompany.accompanyStatus == 'SHORT'} ? '숏 크루' : '롱 크루'">
-                                        </div>
-                                        <img th:src="${accompany.filePath}" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/projects/cover_images/170391967052616401.jpeg?w=360&h=240&c=c" alt="" srcset="">
+                                        <div class="together-category short">숏 크루</div>
+                                        <img src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/projects/cover_images/170391967052616401.jpeg?w=360&h=240&c=c" alt="" srcset="">
                                         <div class="together-profile-wrap">
                                                         <div class="together-detail-text-wrap">
                                                             <div class="together-profile-block">
-                                                                <img th:src="${accompany.socialImgUrl}" src="https://prs.ohousecdn.com/apne2/home/profileImageUrl/v1-311723141476416.jpg?w=72" alt="">
+                                                                <img src="https://prs.ohousecdn.com/apne2/home/profileImageUrl/v1-311723141476416.jpg?w=72" alt="">
                                                             </div>
-                                                            <span class="together-name" th:text="${accompany.memberName}">
+                                                            <span class="together-name">
                                                                 크루 이름
                                                             </span>
                                                         </div>
                                                     </div>
                                     </div>
                                     <div class="together-date">
-                                            <span th:text="${accompany.startDate}" >25.08.15</span>
-                                            <span th:text="${accompany.endDate}" >25.08.19</span>
+                                            <span>25.08.15</span>
+                                            <span>25.08.19</span>
                                     </div>
                                     <div class="trip-path-wrap">
                                         <div class="trip-path">
                                             <div class="marker-circle last"></div>
-                                            <div class="marker" th:each="country: ${#strings.arraySplit(accompany.countries, ',')}">
+                                            <div class="marker">
                                                 <div class="marker-circle first"></div>
-                                                <div class="marker-country" th:text="${country}">프랑스</div>
+                                                <div class="marker-country">프랑스</div>
                                             </div>
                                             <div class="marker">    
                                                 <div class="marker-circle"></div>
@@ -793,7 +785,7 @@
                                 </a>
                             </div>
                             <div class="gift-more-btn">
-                                <button type="button" class="more btn" onclick="location.href='/gifts'">
+                                <button type="button" class="more btn" onclick="location.herf=/gifts">
                                     더보기
                                 </button>
                             </div>
