@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
@@ -21,6 +22,7 @@ public class MemberMapperTests {
     private PasswordEncoder passwordEncoder;
 
     @Test
+    @Transactional
     public void joinTest() {
         MemberVO memberVO = MemberVO.builder()
                 .memberName("test")
@@ -49,15 +51,29 @@ public class MemberMapperTests {
         memberMapper.insertGuest(memberDTO);
     }
 
-    public void loginTest() {
+    @Test
+    @Transactional
+    public void snsJoinTest() {
+        MemberVO memberVO = MemberVO.builder()
+                .memberName("test123")
+                .memberPhone("test123")
+                .memberSocialEmail("test123")
+                .memberBirth("test123")
+                .memberGender(Gender.MALE)
+                .memberProvider(MemberProvider.KAKAO)
+                .memberRole(MemberRole.MEMBER)
+                .build();
+
+        memberMapper.insertSns(memberVO);
+    }
+
+    @Test
+    @Transactional
+    public void snsSelectTest() {
         MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberSocialEmail("test123");
 
-        memberDTO.setMemberEmail("test@gmail.com");
-        String password = passwordEncoder.encode("1234qwer");
-        memberDTO.setMemberPassword(password);
-        log.info(password);
-
-        memberMapper.selectForLogin(memberDTO);
-        log.info(String.valueOf(memberMapper.selectForLogin(memberDTO)));
+        memberMapper.selectMemberBySnsEmail("test123");
+        log.info(String.valueOf(memberMapper.selectMemberBySnsEmail("test123")));
     }
 }

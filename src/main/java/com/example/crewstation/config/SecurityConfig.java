@@ -6,7 +6,7 @@ import com.example.crewstation.auth.JwtAuthenticationFilter;
 import com.example.crewstation.auth.JwtAuthenticationHandler;
 import com.example.crewstation.auth.JwtAuthorizationHandler;
 import com.example.crewstation.common.enumeration.MemberRole;
-//import com.example.crewstation.service.CustomOAuth2UserService;
+import com.example.crewstation.service.member.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
