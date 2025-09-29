@@ -1,6 +1,7 @@
 package com.example.crewstation.repository.file;
 
 import com.example.crewstation.domain.file.FileVO;
+import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.mapper.file.FileMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,10 @@ public class FileDAO {
     //    회원가입 시 프로필
     public void save(FileVO FileVO) {
         fileMapper.insertFile(FileVO);
+    }
+
+    public void saveFile(FileDTO fileDTO) {
+        fileMapper.insert(fileDTO);
     }
 
 }

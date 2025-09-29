@@ -1,5 +1,6 @@
 package com.example.crewstation.post;
 
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.post.PostMapper;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -30,5 +32,15 @@ public class MapperTest {
     @Test
     public void testExistsActivePost() {
         log.info("exists active post {}",postMapper.existsActivePost(1L));
+    }
+
+    @Test
+    @Transactional
+    public void testInsertPost(){
+        PurchaseDTO purchaseDTO = new PurchaseDTO();
+        purchaseDTO.setMemberId(1L);
+        purchaseDTO.setPostTitle("post title");
+        postMapper.insert(purchaseDTO);
+        log.info("purchaseDTO postId:{}", purchaseDTO.getPostId());
     }
 }
