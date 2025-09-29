@@ -10,41 +10,39 @@
             vpd.diary_like_count as diaryLikeCount,
             vpd.diary_reply_count as diaryReplyCount,
 
+            m.member_name as memberName,
+            m.member_description as memberDescription,
+
             vfmf.file_origin_name as fileOriginName,
             vfmf.file_name as fileName,
             vfmf.file_path as filePath,
-            vfmf.member_id as memberId,
 
             cd.crew_id as crewId,
-            cd.diary_id as diaryId,
 
+            tc.crew_name as crewName,
+            ps.post_content as postContent,
+            ps.post_id as postId,
             vfpsf.file_id as fileId,
-            vfpsf.post_section_id as postSectionId,
-
-            tl.post_id as postId,
-            tc.crew_name as crewName
+            vfpsf.post_section_id as postSectionId
 
         from view_post_diary vpd
-                 join view_file_member_file vfmf
-                      on vpd.member_id = vfmf.member_id
-                 join view_file_post_section_file vfpsf
-                      on vfpsf.post_section_id in (
-                          select tps.id from tbl_post_section tps
-                                        where tps.post_id = vpd.id
-                      )
-
-                 join tbl_crew_diary cd
-                      on vpd.id = cd.diary_id
-                 join tbl_like tl
-                      on vpd.id = tl.post_id
-                 join tbl_crew tc
-                      on tc.id = cd.crew_id
-
+                 join tbl_member m
+                      on vpd.member_id = m.id
+                left join view_file_member_file vfmf
+                      on vfmf.member_id = m.id
+                join tbl_crew_diary cd
+                      on vpd.id = cd.crew_id
+                join tbl_crew tc
+                      on vpd.id = tc.id
+                join tbl_post_section ps
+                      on vpd.id = ps.id
+                left join view_file_post_section_file vfpsf
+                      on vpd.id = vfpsf.file_id
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
     </select>
 
-
+    <!-- 내가 좋아요 한 일기 -->
     <select id="findDiariesLikedByMemberId" resultType="com.example.crewstation.dto.diary.LikedDiaryDTO">
         SELECT d.post_id AS postId,
                p.post_title,
@@ -89,7 +87,45 @@
                  LEFT JOIN tbl_file f ON sec_file.first_file_id = f.id
         WHERE l.member_id = #{memberId}
         ORDER BY l.id DESC
-        limit #{criteria.rowCount} offset #{criteria.offset}
+        LIMIT #{criteria.size} OFFSET #{criteria.offset}
+    </select>
+
+    <!-- 내가 좋아요 한 일기 개수 -->
+    <select id="countDiariesLikedByMemberId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_like
+        WHERE member_id = #{memberId}
+    </select>
+
+
+    <!-- 내가 댓글 단 일기 조회 -->
+    <select id="selectReplyDiariesByMemberId" resultType="com.example.crewstation.dto.diary.ReplyDiaryDTO">
+        SELECT
+            p.id                   AS postId,
+            p.post_title           AS postTitle,
+            ps.post_content        AS content,
+            f.file_path            AS mainImage,
+            r.reply_content        AS replyContent,
+            r.created_datetime     AS createdDatetime
+        FROM tbl_reply r
+                 JOIN tbl_diary d ON r.diary_id = d.post_id
+                 JOIN tbl_post p  ON d.post_id = p.id
+                 LEFT JOIN tbl_post_section ps
+                           ON p.id = ps.post_id
+                 LEFT JOIN tbl_post_section_file psf
+                           ON ps.id = psf.post_section_id
+                               AND psf.image_type = 'main'
+                 LEFT JOIN tbl_file f
+                           ON psf.file_id = f.id
+        WHERE r.member_id = #{memberId}
+        ORDER BY r.created_datetime DESC
+        LIMIT #{criteria.size} OFFSET #{criteria.offset}
+    </select>
+
+    <select id="countReplyDiariesByMemberId" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_reply r
+        WHERE r.member_id = #{memberId}
     </select>
 
 </mapper>

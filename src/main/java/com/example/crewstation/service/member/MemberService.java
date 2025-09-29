@@ -8,7 +8,10 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 public interface MemberService {
 //    회원가입
@@ -26,6 +29,7 @@ public interface MemberService {
 // sns 가입
     public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
 
+    public Optional<MemberProfileDTO> getMember(Long memberId);
 
 
     default MemberVO toVO(MemberDTO memberDTO) {
@@ -81,3 +85,4 @@ public interface MemberService {
                 .build();
     }
 }
+

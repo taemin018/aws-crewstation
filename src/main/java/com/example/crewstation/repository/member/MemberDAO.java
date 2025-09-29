@@ -2,6 +2,7 @@ package com.example.crewstation.repository.member;
 
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,4 +49,9 @@ public class MemberDAO {
     public void saveGuest(MemberDTO memberDTO){
         memberMapper.insertGuest(memberDTO);
     }
+
+    public Optional<MemberProfileDTO> findById(Long memberId) {
+        return memberMapper.selectProfileById(memberId);
+    }
+
 }

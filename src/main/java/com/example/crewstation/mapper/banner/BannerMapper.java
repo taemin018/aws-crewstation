@@ -9,5 +9,5 @@ import java.util.List;
 public interface BannerMapper {
 
 //    배너 리스트 조회
-    public List<BannerDTO> getBanners(BannerDTO bannerDTO);
+    public List<BannerDTO> getBanners();
 }

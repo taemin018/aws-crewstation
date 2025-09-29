@@ -59,7 +59,7 @@
                 <div class="profile-wrap">
                     <a href="">
                         <img class="profile-img" src="/images/crew-station-icon-profile.png">
-                        <span class="profile-name">CREW_STATION</span>
+                        <span class="profile-name"></span>
                     </a>
                 </div>
             </div>
@@ -67,16 +67,16 @@
                 <div style="position: relative;">
                     <div class="nav-wrap">
                         <nav>
-                            <button class="nav-button">
+                            <a href="/my-activities/reply" class="nav-button">
                                 <div class="p-wrap">
                                     <p class="tag-name">댓글(26)</p>
                                 </div>
-                            </button>
-                            <button class="nav-button active">
+                            </a>
+                            <a href="/my-activities/like" class="nav-button active">
                                 <div class="p-wrap">
-                                    <p class="tag-name">좋아요(16)</p>
+                                    <p class="tag-name">좋아요(0)</p>
                                 </div>
-                            </button>
+                            </a>
                         </nav>
                         <hr class="nav-hr">
                     </div>
@@ -85,6 +85,11 @@
             </div>
         </main>
     </div>
+
+     <div id="loading" style="display:none;">
+         <div class="spinner"></div>
+     </div>
+
     <div class="toast hide" style="display: none;">
         <div class="toast-wrap">
             <p class="toast-text">클립보드에 복사되었습니다.</p>

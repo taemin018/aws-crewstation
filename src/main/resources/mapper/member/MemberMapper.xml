@@ -28,7 +28,6 @@
         from tbl_member
         where member_email = #{memberEmail} and member_password = #{memberPassword} and member_status = 'active'
     </select>
-
 <!--  social  -->
     <insert id="insertSns">
         insert into tbl_member (member_name, member_phone, member_social_url, member_gender, member_birth, member_mbti, member_provider, social_img_url, member_social_email)
@@ -39,5 +38,15 @@
         select id, member_name, member_phone, member_social_url, member_birth, member_gender, member_mbti, member_provider, social_img_url, member_social_email, member_description, chemistry_score
         from tbl_member
         where member_social_email = #{memberSocialEmail} and member_status = 'active'
+
+    <!-- 멤버 프로필 조회용 -->
+    <select id="selectProfileById" parameterType="long"
+            resultType="com.example.crewstation.dto.member.MemberProfileDTO">
+        SELECT id   AS memberId,
+               member_name AS memberName,
+               social_img_url AS socialImgUrl
+        FROM tbl_member
+        WHERE id = #{memberId}
+
     </select>
 </mapper>

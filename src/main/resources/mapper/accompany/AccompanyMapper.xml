@@ -9,7 +9,6 @@
             p.post_title          as postTitle,
             min(v.country_start_date) as startDate,
             max(v.country_end_date)   as endDate,
-            string_agg(distinct v.country_name, ', ') as countries,
             m.member_name         as memberName,
             m.social_img_url      as socialImgUrl,
             max(f.file_path)      as filePath,
@@ -26,6 +25,5 @@
                            on f.post_section_id = ps.id
         group by a.post_id, a.accompany_status, a.accompany_age_range,
                  p.post_title, m.member_name, m.social_img_url
-        limit #{limit}
     </select>
 </mapper>

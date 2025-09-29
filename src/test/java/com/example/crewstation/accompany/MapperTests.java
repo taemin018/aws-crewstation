@@ -7,21 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 @SpringBootTest
 @Slf4j
 public class MapperTests {
     @Autowired
     AccompanyMapper accompanyMapper;
+    @Autowired
+    private AccompanyDTO accompanyDTO;
 
     @Test
     public void getAccompaniesTest() {
-        List<AccompanyDTO> accompanies = accompanyMapper.getAccompanies(4);
+        accompanyMapper.getAccompanies();
+        accompanyDTO.setPostId(1L);
+        log.info("accompanyDTO={}", accompanyDTO);
 
-        for (AccompanyDTO accompany : accompanies) {
-            log.info("accompany = {}", accompany);
         }
     }
 
-}
+
