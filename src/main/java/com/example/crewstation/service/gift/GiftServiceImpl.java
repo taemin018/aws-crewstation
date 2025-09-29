@@ -24,7 +24,7 @@ public class GiftServiceImpl implements GiftService {
     public List<GiftDTO> getGift(int limit) {
         giftDAO.getMainGifts(limit);
 
-        GiftDTO giftDTO = giftDAO.getMainGifts(limit)
+//        GiftDTO giftDTO = giftDAO.getMainGifts(limit)
 
         return giftDAO.getMainGifts(limit);
     }

@@ -1,11 +1,13 @@
 package com.example.crewstation.controller.member;
 
-import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/member/**")
@@ -23,11 +25,5 @@ public class MembersApiController {
 
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<MemberProfileDTO> getMember(@PathVariable Long memberId) {
-        return memberService.getMember(memberId)
-                .map(ResponseEntity::ok)      // 값이 있으면 200ok
-                .orElse(ResponseEntity.notFound().build()); // 없으면 404
-    }
 
 }
