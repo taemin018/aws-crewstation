@@ -6,8 +6,12 @@ import com.example.crewstation.repository.diary.DiaryDAO;
 import com.example.crewstation.util.Criteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,8 +22,13 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryDAO diaryDAO;
 
     @Override
-    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO) {
-        return diaryDAO.selectDiaryList(diaryDTO);
+    @Transactional(rollbackFor = Exception.class)
+    @Cacheable(value = "posts", key="'post_' + #id")
+    public List<DiaryDTO> selectDiaryList() {
+        DiaryDTO diaryDTO = new DiaryDTO();
+        diaryDAO.selectDiaryList();
+
+        return diaryDAO.selectDiaryList();
     }
 
     @Override
