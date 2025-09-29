@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -30,7 +31,8 @@ public class DiaryRestController {
 
     // 좋아요한 일기 총 개수 반환
     @GetMapping("/liked/{memberId}/count")
-    public int getLikedDiaryCount(@PathVariable Long memberId) {
-        return diaryService.getCountDiariesLikedByMemberId(memberId);
+    public Map<String, Integer> getLikedDiaryCount(@PathVariable Long memberId) {
+        int count = diaryService.getCountDiariesLikedByMemberId(memberId);
+        return Map.of("count", count);
     }
 }

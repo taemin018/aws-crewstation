@@ -8,7 +8,10 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 public interface MemberService {
 //    회원가입
@@ -17,6 +20,7 @@ public interface MemberService {
 //    이메일 중복 검사
     public boolean checkEmail(String memberEmail);
 
+    public Optional<MemberProfileDTO> getMember(Long memberId);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

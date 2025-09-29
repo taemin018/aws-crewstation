@@ -28,4 +28,14 @@
         from tbl_member
         where member_email = #{memberEmail} and member_password = #{memberPassword} and member_status = 'active'
     </select>
+
+    <!-- 멤버 프로필 조회용 -->
+    <select id="selectProfileById" parameterType="long"
+            resultType="com.example.crewstation.dto.member.MemberProfileDTO">
+        SELECT id   AS memberId,
+               member_name AS memberName,
+               social_img_url AS socialImgUrl
+        FROM tbl_member
+        WHERE id = #{memberId}
+    </select>
 </mapper>

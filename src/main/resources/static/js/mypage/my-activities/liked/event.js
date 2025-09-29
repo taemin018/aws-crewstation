@@ -1,56 +1,97 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const diaryFeed = document.querySelector("#liked-diary-list");
     const tagNames = document.querySelectorAll(".tag-name");
-    const memberId = 1;
+    const profileWrap = document.querySelector(".profile-wrap");
+
+    const memberId = 1; // 로그인 사용자 (임시)
+    const PROFILE_EDIT_URL = "/mypage/mypage/modify";
 
     let page = 1;
-    let size = 12;
-    let isLoading = false;
-    let hasMore = true;
+    let checkScroll = true; // ✅ 스크롤 가능 여부 플래그
+    let diariesCriteria = null;
 
     if (!diaryFeed) {
         console.error("좋아요 일기 컨테이너(#liked-diary-list)를 찾을 수 없습니다.");
         return;
     }
 
-    // ===== 초기 로드 =====
-    loadDiaries();
+    // ===== 프로필 링크 고정 =====
+    if (profileWrap) {
+        const a = profileWrap.querySelector("a");
+        if (a) a.href = PROFILE_EDIT_URL;
+    }
 
-    // ===== 좋아요 개수 갱신 =====
-    likeService.getLikedDiaryCount(memberId, (count) => {
-        if (tagNames.length > 1) {
-            tagNames[1].textContent = `좋아요(${count})`;
+    // ===== 프로필 불러오기 =====
+    try {
+        const member = await memberService.getProfile(memberId);
+        if (member && profileWrap) {
+            const imgEl = profileWrap.querySelector(".profile-img");
+            const nameEl = profileWrap.querySelector(".profile-name");
+
+            if (imgEl) {
+                imgEl.src = member.profileImage || "/images/crew-station-icon-profile.png";
+            }
+            if (nameEl) {
+                nameEl.textContent = member.memberName || "";
+            }
         }
-    });
+    } catch (e) {
+        console.error("프로필 불러오기 실패:", e);
+    }
 
     // ===== 함수: 일기 불러오기 =====
-    async function loadDiaries() {
-        if (isLoading || !hasMore) return;
-        isLoading = true;
+    const showList = async (page = 1) => {
+        const loading = document.getElementById("loading");
+        if (loading) loading.style.display = "block";
 
-        const diaries = await likeService.getLikedDiaries(memberId, (data) => data, page, size);
+        const diaries = await likeService.getLikedDiaries(memberId, (data) => data, page, 8);
 
         if (page === 1) {
             likeLayout.renderDiaryList(diaryFeed, diaries);
-            size = 8; // 두 번째 페이지부터는 10개씩 로드
         } else {
             likeLayout.appendDiaryList(diaryFeed, diaries);
         }
 
-        if (!diaries || diaries.length < size) {
-            hasMore = false; // 데이터 없음
-        } else {
-            page++;
-        }
+        setTimeout(() => {
+            if (loading) loading.style.display = "none";
+        }, 1000);
 
-        isLoading = false;
-    }
+        return {
+            list: diaries,
+            criteria: {
+                hasMore: diaries && diaries.length > 0
+            }
+        };
+    };
+
+    // ===== 초기 로드 =====
+    diariesCriteria = await showList(page);
+
+    // ===== 좋아요 개수 갱신 =====
+    likeService.getLikedDiaryCount(memberId, (count) => {
+        const safe = Number.isFinite(count) ? count : 0;
+        if (tagNames.length > 1) {
+            tagNames[1].textContent = `좋아요(${safe})`;
+        }
+    });
 
     // ===== 스크롤 이벤트 (무한스크롤) =====
-    window.addEventListener("scroll", () => {
-        const nearBottom = window.scrollY + window.innerHeight >= document.body.offsetHeight - 200;
-        if (nearBottom) {
-            loadDiaries();
+    window.addEventListener("scroll", async () => {
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+
+        if (scrollTop + windowHeight >= documentHeight - 2) {
+            if (checkScroll) {
+                diariesCriteria = await showList(++page);
+                checkScroll = false;
+            }
+
+            setTimeout(() => {
+                if (diariesCriteria !== null && diariesCriteria.criteria.hasMore) {
+                    checkScroll = true;
+                }
+            }, 1100);
         }
     });
 
@@ -75,8 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 개수 업데이트
             likeService.getLikedDiaryCount(memberId, (count) => {
+                const safe = Number.isFinite(count) ? count : 0;
                 if (tagNames.length > 1) {
-                    tagNames[1].textContent = `좋아요(${count})`;
+                    tagNames[1].textContent = `좋아요(${safe})`;
                 }
             });
         }
