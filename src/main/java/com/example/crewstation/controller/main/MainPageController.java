@@ -31,18 +31,13 @@ public class MainPageController {
     private final AccompanyService accompanyService;
 
     @GetMapping
-    public String getMainPage(CrewDTO crewDTO,
-                              DiaryDTO diaryDTO,
-                              BannerDTO bannerDTO,
-                              GiftDTO giftDTO,
-                              AccompanyDTO accompanyDTO,
-                              Model model) {
+    public String getMainPage(Model model) {
 
-        List<CrewDTO> crews = crewService.getCrews(crewDTO);
-        List<DiaryDTO> diaries = diaryService.selectDiaryList(diaryDTO);
-        List<BannerDTO> banners = bannerService.getBanners(bannerDTO);
+        List<CrewDTO> crews = crewService.getCrews();
+        List<DiaryDTO> diaries = diaryService.selectDiaryList();
+        List<BannerDTO> banners = bannerService.getBanners();
         List<GiftDTO> gifts = giftService.getGift(4);
-        List<AccompanyDTO> accompanies = accompanyService.getAccompanies(4);
+        List<AccompanyDTO> accompanies = accompanyService.getAccompanies();
 
 
 

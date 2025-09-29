@@ -13,7 +13,7 @@ public class BannerDAO {
     private final BannerMapper bannerMapper;
 
 //    배너 리스트 조회하기
-    public List<BannerDTO> getBanners(BannerDTO bannerDTO) {
-        return bannerMapper.getBanners(bannerDTO);
+    public List<BannerDTO> getBanners() {
+        return bannerMapper.getBanners();
     }
 }

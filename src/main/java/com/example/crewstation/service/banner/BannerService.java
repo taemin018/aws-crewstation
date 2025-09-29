@@ -7,5 +7,5 @@ import java.util.List;
 public interface BannerService {
 
 //    배너 리스트 조회
-    List<BannerDTO> getBanners(BannerDTO bannerDTO);
+    List<BannerDTO> getBanners();
 }

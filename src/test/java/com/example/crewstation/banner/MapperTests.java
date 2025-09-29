@@ -20,7 +20,7 @@ public class MapperTests {
 
     @Test
     public void getBannerTest() {
-        List<BannerDTO> banners = bannerMapper.getBanners(bannerDTO);
+        List<BannerDTO> banners = bannerMapper.getBanners();
         for (BannerDTO b : banners) {
             log.info("banner={}", b);
         }
