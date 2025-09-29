@@ -86,10 +86,11 @@ public class PurchaseController {
     public RedirectView write(PurchaseDTO purchaseDTO,
 //                      @AuthenticationPrincipal CustomUserDetails customUserDetails,
                               @RequestParam("files") List<MultipartFile> files) {
-        purchaseDTO.setMemberId(1L);
-        purchaseService.write(purchaseDTO,files);
         log.info("purchaseDTO {}", purchaseDTO);
         log.info("files {}", files.size());
+        purchaseDTO.setMemberId(1L);
+        purchaseService.write(purchaseDTO,files);
+
 //        purchaseDTO.setMemberId(customUserDetails.getId());
 
         return new RedirectView("/gifts/" + purchaseDTO.getPostId());

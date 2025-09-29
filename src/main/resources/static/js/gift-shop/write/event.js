@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // === 가격/수량/시간 ===
     const form = document.querySelector("form");
-    const priceInput = document.getElementById("purchaseProductPrice");
+    const priceInput = document.getElementById("price");
     const quantityInput = document.getElementById("purchaseProductCount");
     const timeInput = document.getElementById("purchaseLimitTime");
 

@@ -38,7 +38,7 @@
         select id, member_name, member_phone, member_social_url, member_birth, member_gender, member_mbti, member_provider, social_img_url, member_social_email, member_description, chemistry_score
         from tbl_member
         where member_social_email = #{memberSocialEmail} and member_status = 'active'
-
+    </select>
     <!-- 멤버 프로필 조회용 -->
     <select id="selectProfileById" parameterType="long"
             resultType="com.example.crewstation.dto.member.MemberProfileDTO">

@@ -7,9 +7,9 @@ import java.text.DecimalFormat;
 @Slf4j
 public class PriceUtils {
 
-    public static String formatMoney(String price){
+    public static String formatMoney(int price){
         DecimalFormat df = new DecimalFormat("###,###,###,###");
-        String format = df.format(Integer.parseInt(price));
+        String format = df.format(price);
         return format;
     }
     

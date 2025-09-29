@@ -19,6 +19,7 @@ public class PurchaseDetailDTO {
     private String postTitle;
     private int postReadCount;
     private String purchaseProductPrice;
+    private int price;
     private int purchaseLimitTime;
     private int purchaseProductCount;
     private String purchaseCountry;

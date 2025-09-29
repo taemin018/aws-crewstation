@@ -8,6 +8,7 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.member.AddressDAO;
 import com.example.crewstation.repository.member.MemberDAO;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -178,6 +180,11 @@ public class MemberServiceImpl implements MemberService {
 
 
         memberDAO.saveSns(toVO(memberDTO));
+    }
+
+    @Override
+    public Optional<MemberProfileDTO> getMember(Long memberId) {
+        return Optional.empty();
     }
 
 }
