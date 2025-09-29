@@ -30,14 +30,14 @@ inputTags.forEach((input) => {
 
 const button = document.querySelector('.login-member-btn');
 
-    button.addEventListener('click', async () => {
-        const email = document.querySelector(".member-email").value;
-        const password = document.querySelector(".member-password").value;
-        const result = await memberService.login({memberEmail: email, memberPassword: password});
-        if(result.accessToken){
-            location.href = '/';
-        }
+button.addEventListener('click', async () => {
+    const email = document.querySelector(".member-email").value;
+    const password = document.querySelector(".member-password").value;
+    const result = await memberService.login({memberEmail: email, memberPassword: password});
+    if(result.accessToken){
+        location.href = '/';
+    }
 
-        console.log(result);
+    console.log(result);
 })
 
