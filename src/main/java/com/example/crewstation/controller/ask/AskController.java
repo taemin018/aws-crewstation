@@ -20,14 +20,14 @@ public class AskController {
 
     @GetMapping("register")
     public String goToRegisterForm(){
-        return "register";
+        return "/ask/register";
     }
 
     @PostMapping("register")
     public RedirectView register(AskVO askVO, RedirectAttributes redirectAttributes){
         askService.register(askVO);
         redirectAttributes.addAttribute("id",askVO.getId());
-        return new RedirectView("/ask/register");
+        return new RedirectView("/mypage/my-diary/inquiry");
     }
 
 }
