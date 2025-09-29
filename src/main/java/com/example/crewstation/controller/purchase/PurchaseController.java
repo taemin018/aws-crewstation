@@ -71,7 +71,10 @@ public class PurchaseController {
 
 
         Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
-
+//        purchase.ifPresent(purchaseDetailDTO -> {
+//            purchaseDetailDTO.setFilePath(null);
+//            purchaseDetailDTO.setSocialImgUrl("https://prs.ohousecdn.com/apne2/content/community/v1-385639845687296.jpg?w=768&h=1026&c=c");
+//        });
         model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
         return "gift-shop/detail";
     }

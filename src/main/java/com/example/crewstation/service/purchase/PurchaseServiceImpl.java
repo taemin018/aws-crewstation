@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,6 +85,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         sections.forEach(section -> {
             section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
         });
+        sections.sort(Comparator.comparing(SectionDTO::getImageType));
+        log.info(sections.toString());
         purchaseDetail.ifPresent(purchase -> {
             log.info("::::::{}",purchase.getPostId());
             log.info("::::::{}",purchase.getMemberId());
