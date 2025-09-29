@@ -19,6 +19,11 @@ create table tbl_member
     updated_datetime    timestamp       default now()
 );
 
+insert into tbl_member (member_name, member_phone, member_email, member_social_url, member_birth, member_mbti, member_password, kakao_img_url, member_social_email, member_description)
+VALUES ('정이랑','01088888888','a@gmail.com',null,'19950911','INSP','0000','null','null','안녕');
+
+
+alter table tbl_member add column member_description varchar(255);
 
 select * from tbl_member;
 
