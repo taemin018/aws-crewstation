@@ -18,4 +18,9 @@
                  join tbl_post_section_file tpsf on tps.id = tpsf.post_section_id and tps.post_id = #{postId}
                  join tbl_file tf on tpsf.file_id = tf.id
     </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="postSectionId">
+        insert into tbl_post_section(post_content, post_id)
+        values (#{purchaseContent},#{postId})
+    </insert>
 </mapper>

@@ -345,46 +345,46 @@ document.addEventListener("DOMContentLoaded", () => {
             const titleInput = document.querySelector("input.write-content-input[placeholder='제목을 입력해주세요.']");
             const contentDiv = document.querySelector("#purchaseContent");
             const hiddenContent = document.getElementById("hiddenContent");
-            // if (titleInput && !titleInput.value.trim()) {
-            //     alert("제목을 입력해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (deliveryInput && !deliveryInput.value.trim()) {
-            //     alert("전달 방법을 선택해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (!hasCover) {
-            //     alert("대표 이미지를 등록해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (quantityInput && !quantityInput.value.trim()) {
-            //     alert("판매 가능 수량을 선택해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (priceInput && !priceInput.value.trim()) {
-            //     alert("판매 가격을 입력해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (timeInput && !timeInput.value.trim()) {
-            //     alert("요청 마감 시간을 입력해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (countryInput && !countryInput.value.trim()) {
-            //     alert("나라 이름을 입력해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
-            // if (hiddenContent && !hiddenContent.textContent.trim()) {
-            //     alert("내용을 입력해주세요.");
-            //     e.preventDefault();
-            //     return;
-            // }
+            if (titleInput && !titleInput.value.trim()) {
+                alert("제목을 입력해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (deliveryInput && !deliveryInput.value.trim()) {
+                alert("전달 방법을 선택해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (!hasCover) {
+                alert("대표 이미지를 등록해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (quantityInput && !quantityInput.value.trim()) {
+                alert("판매 가능 수량을 선택해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (priceInput && !priceInput.value.trim()) {
+                alert("판매 가격을 입력해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (timeInput && !timeInput.value.trim()) {
+                alert("요청 마감 시간을 입력해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (countryInput && !countryInput.value.trim()) {
+                alert("나라 이름을 입력해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (hiddenContent && !hiddenContent.textContent.trim()) {
+                alert("내용을 입력해주세요.");
+                e.preventDefault();
+                return;
+            }
             deliveryInput.value = deliveryInput.value === "직접전달" ? "direct" : "parcel";
 
             console.log(coverInput.files.length);

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,14 +83,16 @@ public class PurchaseController {
     }
 
     @PostMapping("write")
-    public void write(PurchaseDTO purchaseDTO, Model model,
+    public RedirectView write(PurchaseDTO purchaseDTO,
 //                      @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                      @RequestParam("files") List<MultipartFile> files) {
+                              @RequestParam("files") List<MultipartFile> files) {
+        purchaseDTO.setMemberId(1L);
+        purchaseService.write(purchaseDTO,files);
         log.info("purchaseDTO {}", purchaseDTO);
         log.info("files {}", files.size());
 //        purchaseDTO.setMemberId(customUserDetails.getId());
 
-//        return "gif";
+        return new RedirectView("/gifts/" + purchaseDTO.getPostId());
     }
 
 }

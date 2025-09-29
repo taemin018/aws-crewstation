@@ -1,6 +1,7 @@
 package com.example.crewstation.repository.post;
 
 import com.example.crewstation.dto.post.PostDTO;
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.mapper.post.PostMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
@@ -23,7 +24,7 @@ public class PostDAO {
     }
 
 //    게시글 작성
-    public void savePost(PostDTO postDTO) {
-        postMapper.insert(postDTO);
+    public void savePost(PurchaseDTO purchaseDTO) {
+        postMapper.insert(purchaseDTO);
     }
 }

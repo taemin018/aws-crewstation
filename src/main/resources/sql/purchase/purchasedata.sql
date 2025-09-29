@@ -192,3 +192,35 @@ create index idx_member_test_trgm
     on tbl_purchase
         using gin (purchase_country gin_trgm_ops);
 
+
+
+
+
+
+
+select vpp.id as post_id,
+       vpp.post_title,
+       vpp.purchase_country,
+       vpp.purchase_delivery_method,
+       vpp.purchase_limit_time,
+       vpp.purchase_product_count,
+       vpp.purchase_product_price,
+       vpp.purchase_delivery_method,
+       vpp.created_datetime,
+       vpp.updated_datetime,
+       tm.id as member_id,
+       tm.chemistry_score,
+       tm.member_name,
+       tm.social_img_url,
+       vfmf.id as file_id,
+       vfmf.file_name,
+       vfmf.file_origin_name,
+       vfmf.file_path,
+       ta.address
+from tbl_member tm
+         left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
+         join view_post_purchase vpp on tm.id = vpp.member_id and vpp.id = 3
+    join tbl_address ta on tm.id = ta.member_id
+where vpp.post_status = 'active'
+
+select * from view_post_purchase;
