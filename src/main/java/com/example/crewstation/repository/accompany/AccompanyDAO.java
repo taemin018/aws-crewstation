@@ -12,7 +12,7 @@ import java.util.List;
 public class AccompanyDAO {
     private final AccompanyMapper accompanyMapper;
 
-    public List<AccompanyDTO> getAccompanies(int limit) {
-        return accompanyMapper.getAccompanies(limit);
+    public List<AccompanyDTO> getAccompanies() {
+        return accompanyMapper.getAccompanies();
     }
 }

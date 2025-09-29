@@ -23,7 +23,8 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "posts", key="'post_' + #id")
-    public List<CrewDTO> getCrews(CrewDTO crewDTO) {
+    public List<CrewDTO> getCrews() {
+        CrewDTO crewDTO = new CrewDTO();
            crewDAO.getCrews(crewDTO);
 
         return crewDAO.getCrews(crewDTO);

@@ -17,13 +17,13 @@ order by id;
 insert into tbl_diary
 (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
     overriding system value
-values (1, 'public', 5, 20, 13);
+values (4, 'public', 5, 20, 13);
 
 
 insert into tbl_diary
 (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
     overriding system value
-values (2, 'public', 5, 20, 13);
+values (5, 'public', 5, 20, 13);
 
 -- 다이어리 나러 경로
 insert into tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
@@ -35,7 +35,7 @@ select * from tbl_post;
 
 -- 1) 멤버 (작성자)
 insert into tbl_member (id, member_name, member_phone, member_email, member_birth, member_password, member_description)
-values (1, 'testUser', '01012345678', 'test@ac.kr', '2000-01-01', '1234', '더미 유저')
+values (2, 'testUser', '01012345678', 'test@ac.kr', '2000-01-01', '1234', '더미 유저')
 on conflict do nothing;
 
 -- 2) 게시글
@@ -124,21 +124,16 @@ values ('origin1', 'path1', 'name1'),
        ('origin13', 'path13', 'name13'),
        ('origin14', 'path14', 'name14');
 
-insert into tbl_post_section_file(file_id, post_section_id, image_type)
-values (1, 1, 'main'),
-       (2, 2, 'main'),
-       (3, 3, 'main'),
-       (4, 4, 'main'),
-       (5, 5, 'main'),
-       (6, 6, 'main'),
-       (7, 7, 'main'),
-       (8, 8, 'main'),
-       (9, 9, 'main'),
-       (10, 10, 'main'),
-       (11, 11, 'main'),
-       (12, 12, 'main'),
-       (13, 13, 'main'),
-       (14, 14, 'main');
+insert into tbl_post_section_file(post_section_id, image_type)
+values ( 1, 'main'),
+       ( 2, 'main'),
+       ( 3, 'main'),
+       ( 4, 'main'),
+       ( 5, 'main'),
+       ( 6, 'main'),
+       ( 7, 'main'),
+       ( 8, 'main');
+
 
 insert into tbl_purchase (post_id, purchase_limit_time, purchase_product_count, purchase_country,
                           purchase_product_price, purchase_delivery_method)
@@ -166,7 +161,7 @@ WHERE p.created_datetime + (tp.purchase_limit_time || 'hour')::interval > NOW();
 ;
 select p.created_datetime + (tp.purchase_limit_time || 'hour')::interval, now()
 from tbl_post p
-         join tbl_purchase tp on p.id = tp.post_id
+         join tbl_purchase tp on p.id = tp.post_id;
 
 
 
@@ -176,7 +171,7 @@ values ('1qweasd123cs.png', '2025/09/25/1qweasd123cs.png', '1qweasd123cs.png',10
 
 
 insert into tbl_post_section (post_content, post_id)
-values ('multi',1),('multi',1),('multi',1);
+values ('multi',3),('multi',4),('multi',5);
 
 select * from tbl_member;
 
@@ -196,5 +191,73 @@ insert into tbl_diary (diary_secret, diary_like_count, diary_reply_count, diary_
 values ('public','')
 
 
+select * from tbl_member;
+select * from tbl_diary;
+select * from tbl_like;
+select * from tbl_post_section;
+select * from tbl_file;
+select * from tbl_post_section_file;
+select * from view_post_purchase;
+select * from view_file_post_section_file;
 
+
+-- 1. 회원 (일기 작성자 & 좋아요 누르는 사람)
+INSERT INTO tbl_member (member_name, member_email, member_password, social_img_url)
+VALUES ('lisa', 'lisa@tes.com', 'pass023', 'https://dummyimage.com/100x100/000/fff&text=lisa');
+
+-- 2. 게시글 (Alice가 작성한 다이어리 글)
+INSERT INTO tbl_post (post_title, member_id)
+VALUES ('My First Diary', 1);
+
+INSERT INTO tbl_country (country_name)
+VALUES ('Korea');
+
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-31', 1, 1);
+
+-- 3. 일기 (게시글과 1:1 연결)
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (1, 'public', 5, 2, 1);
+
+-- 4. 좋아요 (Alice 본인이 자기 글 좋아요 누른 상황)
+INSERT INTO tbl_like (post_id, member_id)
+VALUES (1, 1);
+
+-- 5. 게시글 섹션 (본문 작성)
+INSERT INTO tbl_post_section (post_content, post_id)
+VALUES ('This is my first diary content', 2);
+
+-- 6. 파일 (대표 이미지)
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES (
+           'diary1.png',
+           '/images/diary1.png',
+           'diary1_20240926.png',
+           '2048'
+       );
+
+-- 7. 섹션-파일 연결 (대표 이미지 = main)
+INSERT INTO tbl_post_section_file (post_section_id, image_type)
+VALUES (5,  'main');
+
+insert into tbl_crew_diary ( crew_id, diary_id)
+values ('4', '1');
+
+insert into tbl_banner ( banner_order)
+values ('4');
+
+select * from tbl_member;
+select * from tbl_crew;
+select * from tbl_file;
+select * from tbl_crew_file;
+
+select * from tbl_crew_member;
+
+insert into tbl_crew_file (file_id, crew_id)
+values (5,3);
+
+insert into tbl_crew_member (crew_role, crew_id, member_id)
+values ('partner', 3, 2);
+
+select * from view_file_crew_file;
 
