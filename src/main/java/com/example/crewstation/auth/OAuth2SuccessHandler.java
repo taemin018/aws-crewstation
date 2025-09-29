@@ -24,18 +24,24 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String provider = oAuth2User.getAttribute("provider");
         String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+        String profile =  oAuth2User.getAttribute("profile");
         boolean isExist = oAuth2User.getAttribute("exist");
         String role = oAuth2User.getAuthorities().stream().findFirst().orElseThrow(IllegalAccessError::new).getAuthority();
         String path = null;
 
+        log.info("provider={}", provider);
+        log.info("email={}", email);
+        log.info("name={}", name);
+        log.info("profile={}", profile);
+
         if(isExist){
             jwtTokenProvider.createAccessToken(email, provider);
             jwtTokenProvider.createRefreshToken(email, provider);
-            log.info("-----------------------in---------------------");
 
             path = "/";
         }else{
-            Cookie memberEmailCookie = new Cookie("memberEmail", email);
+            Cookie memberEmailCookie = new Cookie("memberSocialEmail", email);
             memberEmailCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
             memberEmailCookie.setSecure(false);       // HTTPS 환경에서만 전송
             memberEmailCookie.setPath("/");          // 모든 경로에 쿠키 적용
@@ -51,7 +57,23 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             response.addCookie(roleCookie);
 
-            path = "/member/sns/join";
+            Cookie profileCookie = new Cookie("profile", profile);
+            profileCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
+            profileCookie.setSecure(false);       // HTTPS 환경에서만 전송
+            profileCookie.setPath("/");          // 모든 경로에 쿠키 적용
+            profileCookie.setMaxAge(60 * 60);    // 1시간
+
+            response.addCookie(profileCookie);
+
+            Cookie nameCookie = new Cookie("name", name);
+            nameCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
+            nameCookie.setSecure(false);       // HTTPS 환경에서만 전송
+            nameCookie.setPath("/");          // 모든 경로에 쿠키 적용
+            nameCookie.setMaxAge(60 * 60);    // 1시간
+
+            response.addCookie(nameCookie);
+
+            path = "/member/web/sns/join";
         }
 
         Cookie providerCookie = new Cookie("provider", provider);

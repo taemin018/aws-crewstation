@@ -24,7 +24,7 @@ public class CustomUserDetails implements UserDetails {
     private String memberPassword;
     private Status memberStatus;
     private MemberProvider memberProvider;
-    private String kakaoImgUrl;
+    private String socialImgUrl;
     private String memberSocialEmail;
     private String memberDescription;
     private MemberRole memberRole;
@@ -43,7 +43,7 @@ public class CustomUserDetails implements UserDetails {
         this.memberPassword = memberDTO.getMemberPassword();
         this.memberStatus = memberDTO.getMemberStatus();
         this.memberProvider = memberDTO.getMemberProvider();
-        this.kakaoImgUrl = memberDTO.getKakaoImgUrl();
+        this.socialImgUrl = memberDTO.getSocialImgUrl();
         this.memberSocialEmail = memberDTO.getMemberSocialEmail();
         this.memberDescription = memberDTO.getMemberDescription();
         this.memberRole = memberDTO.getMemberRole();

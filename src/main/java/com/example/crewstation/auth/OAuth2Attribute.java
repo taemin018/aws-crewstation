@@ -17,14 +17,15 @@ public class OAuth2Attribute {
     private Map<String, Object> attributes;
     private String attributeKey;
     private String email;
+    private String password;
     private String name;
     private String profile;
     private String provider;
 
     public static OAuth2Attribute of(String provider, String attributeKey, Map<String, Object> attributes){
-        log.info(provider);
-        log.info(attributeKey);
-        log.info(attributes.toString());
+//        log.info("provider" + provider);
+//        log.info("attributeKey" + attributeKey);
+//        log.info("attributes" + attributes.toString());
         switch (provider){
             case "google":
                 return ofGoogle(provider, attributeKey, attributes);
@@ -40,9 +41,11 @@ public class OAuth2Attribute {
 //    Google
     private static OAuth2Attribute ofGoogle(String provider, String attributeKey, Map<String, Object> attributes){
         log.info(attributes.toString());
+
         return OAuth2Attribute.builder()
                 .email((String)attributes.get("email"))
-                .profile((String)attributes.get("profile"))
+                .profile((String)attributes.get("picture"))
+                .name((String)attributes.get("name"))
                 .provider(provider)
                 .attributes(attributes)
                 .attributeKey(attributeKey)
@@ -52,13 +55,16 @@ public class OAuth2Attribute {
 //    Kakao
     private static OAuth2Attribute ofKakao(String provider, String attributeKey, Map<String, Object> attributes){
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile_image");
-        log.info(kakaoAccount.toString());
-        log.info(kakaoProfile.toString());
+        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+        log.info("1{}:",kakaoAccount);
+        log.info("2{}:",kakaoProfile);
+        log.info("3{}:",kakaoAccount.get("email"));
+        log.info("4{}:",kakaoProfile.get("profile_image_url"));
+
 
         return OAuth2Attribute.builder()
                 .email((String) kakaoAccount.get("email"))
-                .profile((String)kakaoProfile.get("profile"))
+                .profile((String)kakaoProfile.get("profile_image_url"))
                 .provider(provider)
                 .attributes(kakaoAccount)
                 .attributeKey(attributeKey)

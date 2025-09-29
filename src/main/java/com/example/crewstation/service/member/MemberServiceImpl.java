@@ -120,4 +120,64 @@ public class MemberServiceImpl implements MemberService {
                 : memberDAO.findBySnsEmail(memberEmail)).orElseThrow(MemberNotFoundException::new);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile) {
+        MemberVO vo = toVO(memberDTO);
+        memberDAO.saveSns(vo);
+
+        Long memberId = vo.getId();
+
+        AddressDTO addressDTO = new AddressDTO();
+
+
+        log.info("memberId: {}",memberId);
+
+        addressDTO.setMemberId(memberId);
+        addressDTO.setAddressDetail(memberDTO.getAddressDTO().getAddressDetail());
+        addressDTO.setAddress(memberDTO.getAddressDTO().getAddress());
+        addressDTO.setAddressZipCode(memberDTO.getAddressDTO().getAddressZipCode());
+
+        addressDAO.save(toVO(addressDTO));
+
+        if(multipartFile.getOriginalFilename().equals("")){
+            return;
+        }
+        FileDTO fileDTO = new FileDTO();
+        MemberFileDTO memberFileDTO = new MemberFileDTO();
+        try {
+            String s3Key = s3Service.uploadPostFile(multipartFile, getPath());
+
+            String originalFileName = multipartFile.getOriginalFilename();
+            String extension = "";
+
+            if(originalFileName != null && originalFileName.contains(".")){
+                extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            }
+
+
+            fileDTO.setFileOriginName(multipartFile.getOriginalFilename());
+            fileDTO.setFilePath(s3Key);
+            fileDTO.setFileSize(String.valueOf(multipartFile.getSize()));
+            fileDTO.setFileName(UUID.randomUUID() + extension);
+
+            FileVO filevo = toVO(fileDTO);
+            fileDAO.save(filevo);
+
+            Long fileId = filevo.getId();
+
+            memberFileDTO.setMemberId(memberId);
+            memberFileDTO.setFileId(fileId);
+
+            memberFileDAO.save(toVO(memberFileDTO));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+        memberDAO.saveSns(toVO(memberDTO));
+    }
+
 }
