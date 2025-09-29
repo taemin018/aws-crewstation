@@ -29,7 +29,8 @@ public interface MemberService {
 // sns 가입
     public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
 
-    public Optional<MemberProfileDTO> getMember(Long memberId);
+    public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
+
 
 
     default MemberVO toVO(MemberDTO memberDTO) {

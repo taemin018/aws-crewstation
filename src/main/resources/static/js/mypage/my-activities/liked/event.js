@@ -10,6 +10,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     let checkScroll = true;
     let diariesCriteria = null;
 
+    const navButtons = document.querySelectorAll(".nav-button");
+    const currentPath = window.location.pathname;
+
+    navButtons.forEach((btn) => {
+        btn.classList.remove("active"); // 혹시 있을지 모르는 active 초기화
+        if (btn.getAttribute("href") === currentPath) {
+            btn.classList.add("active");
+        }
+    });
+
     if (!diaryFeed) {
         console.error("좋아요 일기 컨테이너(#liked-diary-list)를 찾을 수 없습니다.");
         return;
@@ -35,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("프로필 불러오기 실패:", e);
     }
 
-    // 함수: 일기 불러오기
+    // 함수: 좋아요 일기 불러오기
     const showList = async (page = 1) => {
         const loading = document.getElementById("loading");
         if (loading) loading.style.display = "block";
@@ -59,10 +69,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 초기 로드
     diariesCriteria = await showList(page);
 
-    // 좋아요 개수 갱신
-    const count = await likeService.getLikedDiaryCount(memberId);
+    // === 댓글 개수 갱신 ===
+    const replyCount = await replyService.getReplyDiaryCount(memberId);
+    if (tagNames.length > 0) {
+        tagNames[0].textContent = `댓글(${replyCount})`;
+    }
+
+    // === 좋아요 개수 갱신 ===
+    const likeCount = await likeService.getLikedDiaryCount(memberId);
     if (tagNames.length > 1) {
-        tagNames[1].textContent = `좋아요(${count})`;
+        tagNames[1].textContent = `좋아요(${likeCount})`;
     }
 
     // 스크롤 이벤트 (무한스크롤)
@@ -85,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // 이벤트 위임 - 좋아요 & 댓글
+    // 이벤트 위임 - 좋아요 & 댓글 버튼
     diaryFeed.addEventListener("click", (e) => {
         const likeBtn = e.target.closest(".like-btn");
         const commentBtn = e.target.closest(".comment-btn");
@@ -99,6 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const card = likeBtn.closest(".card-feed-item-wrap");
             if (card) card.remove();
 
+            // 좋아요 개수 다시 갱신
             likeService.getLikedDiaryCount(memberId).then((count) => {
                 if (tagNames.length > 1) {
                     tagNames[1].textContent = `좋아요(${count})`;
