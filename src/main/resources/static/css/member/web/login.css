@@ -12,6 +12,9 @@ button, input, select, textarea {
     font-size: inherit;
 }
 
+input:focus {outline: none;}
+
+textarea:focus {outline: none;}
 
 input, select, textarea {
     font-family: inherit;

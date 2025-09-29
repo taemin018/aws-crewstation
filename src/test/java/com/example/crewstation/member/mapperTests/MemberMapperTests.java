@@ -55,4 +55,5 @@ public class MemberMapperTests {
         memberMapper.selectForLogin(memberDTO);
         log.info(String.valueOf(memberMapper.selectForLogin(memberDTO)));
     }
+
 }
