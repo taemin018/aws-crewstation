@@ -543,3 +543,27 @@ div.card-collection-item-content:hover div.card-item-description  div.card-item-
     opacity: 0;
     transition: opacity 0.5s;
 }
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #ddd;
+    border-top: 3px solid #647FBC;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loading {
+    display: none;
+    position: fixed; /* 스크롤 상관없이 항상 가운데 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 정확히 가운데로 이동 */
+    z-index: 9999;
+}

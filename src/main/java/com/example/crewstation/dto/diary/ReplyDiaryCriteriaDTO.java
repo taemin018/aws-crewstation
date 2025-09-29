@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class LikedDiaryCriteriaDTO {
-    private List<LikedDiaryDTO> likedDiaryDTOs;
+public class ReplyDiaryCriteriaDTO {
+    private List<ReplyDiaryDTO> replyDiaryDTOs;
     private ScrollCriteria criteria;
 }

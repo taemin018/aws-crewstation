@@ -2,7 +2,9 @@ package com.example.crewstation.mapper.member;
 
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
@@ -25,4 +27,7 @@ public interface MemberMapper {
 
 //  게스트 추가
     public void insertGuest(MemberDTO memberDTO);
+
+//  멤버 프로필 조회용
+    public Optional<MemberProfileDTO> selectProfileById(@Param("memberId") Long memberId);
 }

@@ -82,8 +82,8 @@ const likeLayout = (() => {
     };
 
     return {
-        renderDiaryList: renderDiaryList,
-        appendDiaryList: appendDiaryList
+        renderDiaryList : renderDiaryList,
+        appendDiaryList : appendDiaryList
     };
 
 })();
