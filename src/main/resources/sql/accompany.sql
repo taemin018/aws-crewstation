@@ -6,3 +6,4 @@ create table tbl_accompany
     constraint fk_accompany_post foreign key (post_id)
         references tbl_post (id)
 );
+
