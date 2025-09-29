@@ -20,7 +20,6 @@ public interface MemberService {
 //    이메일 중복 검사
     public boolean checkEmail(String memberEmail);
 
-<<<<<<< HEAD
 //    로그인
     public MemberDTO login(MemberDTO memberDTO);
 
