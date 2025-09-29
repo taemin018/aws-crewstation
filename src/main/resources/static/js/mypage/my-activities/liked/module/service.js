@@ -13,7 +13,28 @@ const memberService = (() => {
         }
     };
 
-    return { getProfile : getProfile };
+    return { getProfile : getProfile};
+})();
+
+// ===================== Reply Service =====================
+const replyService = (() => {
+    // 내가 댓글 단 일기 총 개수 조회
+    const getReplyDiaryCount = async (memberId) => {
+        try {
+            const response = await fetch(`/api/diaries/replies/${memberId}/count`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const count = await response.json();
+            console.log("댓글 단 일기 개수 조회 성공", count);
+            return count;
+        } catch (error) {
+            console.error("getReplyDiaryCount Error:", error);
+            return 0;
+        }
+    };
+
+    return { getReplyDiaryCount : getReplyDiaryCount };
 })();
 
 // ===================== Like Service =====================

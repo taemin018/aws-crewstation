@@ -107,8 +107,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<MemberProfileDTO> getMember(Long memberId) {
-        return memberDAO.findById(memberId);
+    public Optional<MemberProfileDTO> getMemberProfile (Long memberId) {
+        return memberDAO.selectProfileById(memberId);
     }
 
 }

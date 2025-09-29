@@ -20,7 +20,7 @@ public interface MemberService {
 //    이메일 중복 검사
     public boolean checkEmail(String memberEmail);
 
-    public Optional<MemberProfileDTO> getMember(Long memberId);
+    public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()
