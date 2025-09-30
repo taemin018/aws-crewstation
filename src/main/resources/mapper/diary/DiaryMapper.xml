@@ -27,17 +27,17 @@
 
         from view_post_diary vpd
                  join tbl_member m
-                      on vpd.member_id = m.id
-                left join view_file_member_file vfmf
-                      on vfmf.member_id = m.id
-                join tbl_crew_diary cd
-                      on vpd.id = cd.crew_id
-                join tbl_crew tc
-                      on vpd.id = tc.id
-                join tbl_post_section ps
-                      on vpd.id = ps.id
-                left join view_file_post_section_file vfpsf
-                      on vpd.id = vfpsf.file_id
+                      on m.id = vpd.member_id
+                 left join view_file_member_file vfmf
+                           on vfmf.member_id = m.id
+                 left join tbl_crew_diary cd
+                           on cd.diary_id = vpd.id
+                 left join tbl_crew tc
+                           on tc.id = cd.crew_id
+                 left join tbl_post_section ps
+                           on ps.post_id = vpd.id
+                 left join view_file_post_section_file vfpsf
+                           on vfpsf.post_section_id = ps.id
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
     </select>
