@@ -1,5 +1,6 @@
 package com.example.crewstation.repository.post;
 
+import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.mapper.post.PostMapper;
@@ -23,8 +24,17 @@ public class PostDAO {
 
     }
 
-//    게시글 작성
+    //    게시글 작성
     public void savePost(PurchaseDTO purchaseDTO) {
         postMapper.insert(purchaseDTO);
+    }
+
+    //    게시글 수정
+    public void update(PostVO postVO) {
+        postMapper.update(postVO);
+    }
+    //   게시글 삭제 소프트 딜리트
+    public void updatePostStatus(Long id){
+        postMapper.updatePostStatus(id);
     }
 }

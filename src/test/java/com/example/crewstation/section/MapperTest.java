@@ -1,5 +1,6 @@
 package com.example.crewstation.section;
 
+import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.mapper.section.SectionMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -28,5 +29,22 @@ public class MapperTest {
         purchaseDTO.setPostId(14L);
         sectionMapper.insert(purchaseDTO);
         log.info("purchaseDTO postSectionId:{}", purchaseDTO.getPostSectionId());
+    }
+
+    @Test
+    @Transactional
+    public void testUpdate(){
+        PostSectionVO vo = PostSectionVO.builder()
+                .postContent("수정 내용")
+                .id(33L)
+                .postId(25L)
+                .build();
+        sectionMapper.update(vo);
+    }
+
+    @Test
+    @Transactional
+    public void testDelete(){
+        sectionMapper.delete(35L);
     }
 }

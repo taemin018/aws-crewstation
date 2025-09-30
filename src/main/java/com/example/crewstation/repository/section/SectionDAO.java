@@ -1,7 +1,9 @@
 package com.example.crewstation.repository.section;
 
+import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
+import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.section.SectionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,5 +24,14 @@ public class SectionDAO {
 //    섹션 작성하기
     public void save(PurchaseDTO purchaseDTO) {
         sectionMapper.insert(purchaseDTO);
+    }
+
+    //  섹션 수정하기
+    public void update(PostSectionVO postSectionVO){
+        sectionMapper.update(postSectionVO);
+    }
+//  섹션 삭제하기
+    public void delete(Long id){
+        sectionMapper.delete(id);
     }
 }

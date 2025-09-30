@@ -34,6 +34,7 @@ public class PurchaseDetailDTO {
     private String createdDatetime;
     private String updatedDatetime;
     private String fileOriginName;
+    private boolean writer;
     private String address;
     private List<SectionDTO> sections;
 }

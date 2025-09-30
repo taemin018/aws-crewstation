@@ -191,6 +191,13 @@
                               clip-rule="evenodd"></path>
                     </svg>
                 </a>
+                <div class="modify-wrap" th:if="${writer}">
+                    <img src="/images/morebtn.png" alt="">
+                    <div class="modify-container">
+                        <div> <a th:href="@{/gifts/{id}(id=${purchase.postId})}">수정</a></div>
+                        <div class="del-post"> <a>삭제</a></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="product-selling-detail-wrap container">
@@ -388,6 +395,21 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="delconfirmModal" class="modal">
+                        <div class="modal-content">
+                            <p style="margin-top: 12px; font-size: 20px">
+                                정말 삭제하시겠습니까?
+                            </p>
+                            <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                                <a class="confirm-btn yes" th:href="@{/gifts/delete/{id}(id=${purchase.postId})}">확인
+                                </a>
+                                <button id="cancelDel" class="confirm-btn no">취소</button>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>

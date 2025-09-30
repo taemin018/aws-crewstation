@@ -61,4 +61,18 @@ public class DaoTest {
                 .build();
         purchaseDAO.save(vo);
     }
+
+    @Test
+    @Transactional
+    public void testUpdate(){
+        PurchaseVO vo = PurchaseVO.builder()
+                .postId(19L)
+                .deliveryMethod(DeliveryMethod.DIRECT)
+                .purchaseCountry("호주")
+                .purchaseLimitTime(12)
+                .purchaseProductPrice(1000)
+                .purchaseProductCount(5)
+                .build();
+        purchaseDAO.update(vo);
+    }
 }

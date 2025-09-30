@@ -16,4 +16,16 @@
         insert into tbl_post(post_title,member_id)
         values (#{postTitle},#{memberId})
     </insert>
+
+    <update id="update">
+        update tbl_post
+        set post_title = #{postTitle},updated_datetime = now()
+        where id = #{id}
+    </update>
+
+    <update id="updatePostStatus">
+        update tbl_post
+        set post_status = 'inactive'
+        where id =#{id}
+    </update>
 </mapper>

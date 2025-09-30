@@ -3,6 +3,7 @@ package com.example.crewstation.purchase;
 import com.example.crewstation.common.enumeration.DeliveryMethod;
 import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.domain.purchase.PurchaseVO;
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
 import com.example.crewstation.util.Criteria;
@@ -44,7 +45,7 @@ public class MapperTest {
 
     @Test
     public void testSelectByPostId() {
-        Optional<PurchaseDetailDTO> purchaseDetailDTO = purchaseMapper.selectByPostId(1L);
+        Optional<PurchaseDTO> purchaseDetailDTO = purchaseMapper.selectByPostId(1L);
         assertThat(purchaseDetailDTO).isPresent();
 //        log.info("testSelectByPostId {}", );
     }
@@ -66,5 +67,19 @@ public class MapperTest {
                 .purchaseProductCount(5)
                 .build();
         purchaseMapper.insert(vo);
+    }
+
+    @Test
+    @Transactional
+    public void testUpdate(){
+        PurchaseVO vo = PurchaseVO.builder()
+                .postId(19L)
+                .deliveryMethod(DeliveryMethod.DIRECT)
+                .purchaseCountry("호주")
+                .purchaseLimitTime(12)
+                .purchaseProductPrice(1000)
+                .purchaseProductCount(5)
+                .build();
+        purchaseMapper.update(vo);
     }
 }
