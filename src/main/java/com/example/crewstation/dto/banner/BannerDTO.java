@@ -16,5 +16,9 @@ public class BannerDTO {
     private int bannerOrder;
     private String createdDatetime;
     private String updatedDatetime;
+    private Long fileId;
+    private String fileName;
+    private String filePath;
+    private String fileOriginName;
 
 }

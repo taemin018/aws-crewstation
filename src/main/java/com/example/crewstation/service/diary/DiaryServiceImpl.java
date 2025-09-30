@@ -2,6 +2,7 @@ package com.example.crewstation.service.diary;
 
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.repository.diary.DiaryDAO;
+import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -18,14 +20,19 @@ import java.util.List;
 public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryDAO diaryDAO;
+    private final S3Service s3Service;
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    @Cacheable(value = "posts", key="'post_' + #id")
+    @Cacheable(value = "diaries", key="'diaries_' + #post_id")
     public List<DiaryDTO> selectDiaryList(int limit) {
-        DiaryDTO diaryDTO = new DiaryDTO();
-        diaryDAO.selectDiaryList(4);
-
-        return diaryDAO.selectDiaryList(4);
+        List<DiaryDTO> diaries = diaryDAO.selectDiaryList(limit);
+        diaries.forEach(diary -> {
+            log.info("Selected diary: {}", diary);
+            diary.setFilePath(s3Service.getPreSignedUrl(diary.getFilePath(),
+                    Duration.ofMinutes(5)));
+        });
+        return diaries;
     }
 
     @Override
