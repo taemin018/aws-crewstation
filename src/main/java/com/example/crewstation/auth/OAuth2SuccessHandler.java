@@ -29,6 +29,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         boolean isExist = oAuth2User.getAttribute("exist");
         String role = oAuth2User.getAuthorities().stream().findFirst().orElseThrow(IllegalAccessError::new).getAuthority();
         String path = null;
+        if (profile == null) {
+            profile = "https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c";
+        }
 
         log.info("provider={}", provider);
         log.info("email={}", email);
@@ -73,7 +76,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             response.addCookie(nameCookie);
 
-            path = "/member/web/sns/join";
+            String ua = request.getHeader("User-Agent");
+
+            boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
+
+            if (isMobile) {
+                path = "/member/web/sns/join";
+            } else {
+                path = "/member/mobile/sns/join";
+            }
         }
 
         Cookie providerCookie = new Cookie("provider", provider);
