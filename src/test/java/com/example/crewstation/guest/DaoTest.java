@@ -1,11 +1,11 @@
 package com.example.crewstation.guest;
 
 import com.example.crewstation.domain.guest.GuestVO;
+import com.example.crewstation.dto.guest.GuestDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.repository.guest.GuestDAO;
 import com.example.crewstation.repository.member.MemberDAO;
-import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.service.payment.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -37,6 +37,16 @@ public class DaoTest {
         paymentStatusDTO.setAddressZipCode("test");
         GuestVO vo = paymentService.toVO(paymentStatusDTO);
         guestDAO.save(vo);
+    }
+
+    @Test
+    public void testSelect() {
+        GuestDTO guestDTO = new GuestDTO();
+        guestDTO.setGuestPhone("test");
+        guestDTO.setGuestOrderNumber("test");
+
+        guestDAO.findGuest(guestDTO);
+        log.info("guest {}", guestDAO.findGuest(guestDTO));
     }
 
 }

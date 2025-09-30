@@ -11,10 +11,11 @@ create table tbl_member
     member_password     varchar(255),
     member_status       status          default 'active',
     member_provider     member_provider default 'crewstation',
-    kakao_img_url       varchar(255),
+    social_img_url       varchar(255),
     member_social_email varchar(255) unique,
     member_description  varchar(255),
     member_role         member_role     default 'member',
+    chemistry_score int default 70,
     created_datetime    timestamp       default now(),
     updated_datetime    timestamp       default now()
 );
@@ -33,4 +34,4 @@ alter table tbl_member
 ALTER TABLE tbl_member RENAME COLUMN kakao_img_url TO social_img_url;
 
 delete from tbl_member
-where id = 46;
+where id = 57;

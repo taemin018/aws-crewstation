@@ -18,6 +18,6 @@ public class OAuth2FailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         exception.printStackTrace();
-        response.sendRedirect("/member/login");
+        response.sendRedirect("/member/web/login");
     }
 }

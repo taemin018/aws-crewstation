@@ -7,19 +7,30 @@
             tc.crew_name as crewName,
             tc.crew_description as crewDescription,
             tc.crew_member_count as crewMemberCount,
-            tcm.crew_role as crewRole,
             tc.created_datetime as createdDatetime,
             tc.updated_datetime as updatedDatetime,
+
+            tcm.crew_role as crewRole,
             tcm.member_id as memberId,
-            vfcf.file_origin_name as fileOriginName,
+
+            tm.member_name as memberName,
+            tm.member_social_url as memberSocialUrl,
+            tm.social_img_url as socialImgUrl,
+
             vfcf.file_path as filePath,
             vfcf.file_name as fileName,
+            vfcf.file_origin_name as fileOriginName,
             vfcf.file_id as fileId
+
     from  tbl_crew tc
         left join tbl_crew_member tcm
             on tc.id = tcm.crew_id
+        join tbl_member tm
+             on tm.id = tcm.member_id
         left join view_file_crew_file vfcf
-            on tc.id = vfcf.crew_id
+                  on tc.id = vfcf.crew_id
+
+
     ORDER BY tc.id DESC
 </select>
 </mapper>

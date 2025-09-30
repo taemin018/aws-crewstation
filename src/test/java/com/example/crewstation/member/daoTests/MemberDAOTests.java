@@ -41,4 +41,35 @@ public class MemberDAOTests {
         MemberDTO memberDTO = new MemberDTO();
         memberDAO.saveGuest(memberDTO);
     }
+
+    @Test
+    @Transactional
+    public void snsJoinTest() {
+        MemberVO memberVO = MemberVO.builder()
+                .memberName("test")
+                .memberPhone("test")
+                .memberSocialEmail("test")
+                .memberBirth("test")
+                .memberGender(Gender.MALE)
+                .memberProvider(MemberProvider.KAKAO)
+                .memberRole(MemberRole.MEMBER)
+                .build();
+
+        memberDAO.saveSns(memberVO);
+    }
+
+    @Test
+    public void snsSelectTest() {
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberSocialEmail("test123");
+
+        memberDAO.findBySnsEmail("test123");
+        log.info(String.valueOf(memberDAO.findBySnsEmail("test123")));
+    }
+
+    @Test
+    @Transactional
+    public void passwordUpdateTest() {
+        memberDAO.updatePassword("test@gmail.com", "1234");
+    }
 }

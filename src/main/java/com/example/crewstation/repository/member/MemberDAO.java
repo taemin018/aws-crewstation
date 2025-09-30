@@ -2,6 +2,7 @@ package com.example.crewstation.repository.member;
 
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,13 @@ public class MemberDAO {
     public Optional<MemberDTO> findByMemberEmail(String memberEmail){
         return memberMapper.selectMemberByMemberEmail(memberEmail);
     }
+
+//    sns 회원가입
+    public void saveSns(MemberVO memberVO){
+    memberMapper.insertSns(memberVO);
+}
+
+//    sns 회원 조회
     public Optional<MemberDTO> findBySnsEmail(String snsEmail){
         return memberMapper.selectMemberBySnsEmail(snsEmail);
     }
@@ -41,4 +49,14 @@ public class MemberDAO {
     public void saveGuest(MemberDTO memberDTO){
         memberMapper.insertGuest(memberDTO);
     }
+
+    public Optional<MemberProfileDTO> selectProfileById(Long memberId) {
+        return memberMapper.selectProfileById(memberId);
+    }
+
+//    비밀번호 업데이트
+    public void updatePassword(String memberEmail, String memberPassword) {
+        memberMapper.updatePassword(memberEmail, memberPassword);
+    }
+
 }

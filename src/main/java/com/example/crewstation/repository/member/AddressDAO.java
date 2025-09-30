@@ -1,6 +1,6 @@
 package com.example.crewstation.repository.member;
 
-import com.example.crewstation.domain.member.AddressVO;
+import com.example.crewstation.domain.address.AddressVO;
 import com.example.crewstation.mapper.member.AddressMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

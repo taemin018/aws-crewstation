@@ -3,29 +3,47 @@
 <mapper namespace="com.example.crewstation.mapper.accompany.AccompanyMapper">
     <select id="getAccompanies">
         select
-            a.post_id             as postId,
-            a.accompany_status    as accompanyStatus,
-            a.accompany_age_range as accompanyAgeRange,
-            p.post_title          as postTitle,
-            min(v.country_start_date) as startDate,
-            max(v.country_end_date)   as endDate,
-            string_agg(distinct v.country_name, ', ') as countries,
+            v.post_id             as postId,
+            v.post_title          as postTitle,
+            v.created_datetime    as createdDatetime,
+            v.updated_datetime    as updatedDatetime,
+            v.accompany_status    as accompanyStatus,
+            v.accompany_age_range as accompanyAgeRange,
+
+            v.accompany_path_id   as accompanyPathId,
+            v.country_start_date  as countryStartDate,
+            v.country_end_date    as countryEndDate,
+            v.country_id          as countryId,
+            v.country_name        as countryName,
+
+            m.id                  as memberId,
             m.member_name         as memberName,
+            m.member_description  as memberDescription,
             m.social_img_url      as socialImgUrl,
-            max(f.file_path)      as filePath,
-            max(f.file_name)      as fileName
-        from tbl_accompany a
-                 join tbl_post p on p.id = a.post_id
-                 left join view_post_accompany_accompany_path_country v
-                           on v.post_id = a.post_id
-                 left join tbl_member m
-                           on m.id = p.member_id
-                 left join tbl_post_section ps
-                           on ps.post_id = p.id
-                 left join view_file_post_section_file f
-                           on f.post_section_id = ps.id
-        group by a.post_id, a.accompany_status, a.accompany_age_range,
-                 p.post_title, m.member_name, m.social_img_url
-        limit #{limit}
+
+            tc.id                 as crewId,
+            tc.crew_name          as crewName,
+            tc.crew_description   as crewDescription,
+            cf.file_id            as fileId,
+
+            tf.file_origin_name   as fileOriginName,
+            tf.file_name          as fileName,
+            tf.file_path          as filePath
+
+        from view_post_accompany_accompany_path_country v
+            join tbl_member m
+                on m.id = v.member_id
+            left join tbl_crew_member cm
+                on cm.member_id = m.id
+            left join tbl_crew tc
+                on tc.id = cm.crew_id
+            left join tbl_crew_file cf
+                on cf.crew_id = tc.id
+            left join tbl_file tf
+                on tf.id = cf.file_id
+
+        order by v.post_id, v.created_datetime desc
+            limit 4;
     </select>
+
 </mapper>

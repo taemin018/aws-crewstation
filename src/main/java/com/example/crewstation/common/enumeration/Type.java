@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public enum Type {
 
-    SUB("sub"), MAIN("main");
+    MAIN("main"),SUB("sub") ;
 
     private final String value;
     private static final Map<String, Type> TYPE_MAP =

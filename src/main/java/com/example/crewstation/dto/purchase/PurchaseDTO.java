@@ -20,6 +20,11 @@ public class PurchaseDTO{
     private String postTitle;
     private String purchaseProductPrice;
     private int purchaseLimitTime;
+    private int price;
+    private String purchaseContent;
+    private Long postSectionId;
+    private Long memberId;
+    private int thumbnail;
     private int purchaseProductCount;
     private String purchaseCountry;
     private DeliveryMethod purchaseDeliveryMethod;

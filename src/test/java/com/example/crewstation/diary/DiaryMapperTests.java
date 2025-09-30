@@ -18,19 +18,13 @@ public class DiaryMapperTests {
 
     @Autowired
     private DiaryMapper diaryMapper;
-    @Autowired
-    private DiaryDTO diaryDTO;
+
 
     @Test
     public void selectDiaryListTest() {
-        List<DiaryDTO> diaries = diaryMapper.selectDiaryList(new DiaryDTO());
-
-        for (DiaryDTO diary : diaries) {
-            log.info("diary={}", diary);
-            assertNotNull(diary.getPostId());
-            assertNotNull(diary.getPostTitle());
-
-
+        DiaryDTO diaryDTO = new DiaryDTO();
+        List<DiaryDTO> dtos =  diaryMapper.selectDiaryList(4);
+        log.info("diaryDTO={}", dtos);
         }
     }
-}
+

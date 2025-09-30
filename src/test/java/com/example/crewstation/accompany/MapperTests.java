@@ -17,11 +17,11 @@ public class MapperTests {
 
     @Test
     public void getAccompaniesTest() {
-        List<AccompanyDTO> accompanies = accompanyMapper.getAccompanies(4);
+        AccompanyDTO dto = new AccompanyDTO();
+        List<AccompanyDTO> dtos = accompanyMapper.getAccompanies(4);
+        log.info("AccompanyDTO: {}", dtos);
 
-        for (AccompanyDTO accompany : accompanies) {
-            log.info("accompany = {}", accompany);
         }
     }
 
-}
+

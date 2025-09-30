@@ -1,6 +1,6 @@
 package com.example.crewstation.mapper.member;
 
-import com.example.crewstation.domain.member.AddressVO;
+import com.example.crewstation.domain.address.AddressVO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

@@ -27,3 +27,39 @@ inputTags.forEach((input) => {
         }
     });
 });
+
+const button = document.querySelector('.login-member-btn');
+
+button.addEventListener('click', async () => {
+    const email = document.querySelector(".member-email").value;
+    const password = document.querySelector(".member-password").value;
+    const result = await memberService.login({memberEmail: email, memberPassword: password});
+    if(result.accessToken){
+        location.href = '/';
+    }
+
+    console.log(result);
+})
+
+
+// social 로그인
+
+
+// 카카오 로그인
+const kakaoLoginButton = document.querySelector(".kakao");
+kakaoLoginButton.addEventListener("click", (e) => {
+    window.location.href = "http://localhost:10000/oauth2/authorization/kakao";
+});
+
+// 네이버 로그인
+const naverLoginButton = document.querySelector(".naver");
+naverLoginButton.addEventListener("click", (e) => {
+    window.location.href = "http://localhost:10000/oauth2/authorization/naver";
+});
+
+// 구글 로그인
+const googleLoginButton = document.querySelector(".google");
+googleLoginButton.addEventListener("click", (e) => {
+    window.location.href = "http://localhost:10000/oauth2/authorization/google";
+});
+

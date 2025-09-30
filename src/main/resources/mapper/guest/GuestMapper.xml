@@ -5,4 +5,9 @@
         insert into tbl_guest(member_id, guest_phone, guest_order_number, address_zip_code, address_detail, address)
         values (#{memberId},#{guestPhone},#{guestOrderNumber},#{addressZipCode},#{addressDetail},#{address})
     </insert>
+    <select id="select">
+        select id, member_id, guest_phone, guest_order_number, address_zip_code, address_detail, address
+        from tbl_guest
+        where guest_phone = #{guestPhone} and guest_order_number = #{guestOrderNumber}
+    </select>
 </mapper>

@@ -16,6 +16,13 @@ public class DiaryDTO {
     private String diaryCountryPathId;
     private String postTitle;
     private Long diaryId;
+    private Long crewId;
+    private String crewName;
     private String filePath;
+    private String fileName;
+    private String fileOriginName;
     private Long memberId;
+    private String memberName;
+    private String memberDescription;
+    private String postContent;
 }

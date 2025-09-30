@@ -14,8 +14,11 @@ public class DateUtils {
         }
 
         try {
+            // 마이크로초 제거 (있어도 없어도 안전)
+            String splitDate = date.split("\\.")[0];
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime pastDateTime = LocalDateTime.parse(date, formatter);
+            LocalDateTime pastDateTime = LocalDateTime.parse(splitDate, formatter);
             LocalDateTime now = LocalDateTime.now();
 
             Duration duration = Duration.between(pastDateTime, now);
@@ -52,6 +55,7 @@ public class DateUtils {
             return date;
         }
     }
+
 
     public static String calcLimitDateTime(String date,int limit){
         // 입력 포맷 (마이크로초 6자리 처리)
