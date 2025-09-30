@@ -25,6 +25,7 @@ public class PurchaseDTO{
     private Long postSectionId;
     private Long memberId;
     private int thumbnail;
+    private boolean prev;
     private int purchaseProductCount;
     private String purchaseCountry;
     private DeliveryMethod purchaseDeliveryMethod;

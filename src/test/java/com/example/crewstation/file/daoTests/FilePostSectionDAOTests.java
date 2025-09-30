@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Slf4j
 @SpringBootTest
 public class FilePostSectionDAOTests {
@@ -24,5 +28,20 @@ public class FilePostSectionDAOTests {
                 .imageType(Type.MAIN)
                 .build();
         filePostSectionDAO.save(postSectionFileVO);
+    }
+
+    @Test
+    @Transactional
+    public void testDelete() {
+        filePostSectionDAO.delete(32L);
+    }
+
+
+    @Test
+    @Transactional
+    public void testSelectPostSectionFileIdBySectionId() {
+        Optional<Long> l = filePostSectionDAO.findPostSectionFileIdBySectionId(32L);
+        assertThat(l.isPresent()).isTrue();
+        log.info("{}", l.get());
     }
 }

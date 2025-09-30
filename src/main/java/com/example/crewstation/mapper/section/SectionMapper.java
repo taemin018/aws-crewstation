@@ -1,5 +1,7 @@
 package com.example.crewstation.mapper.section;
 
+import com.example.crewstation.domain.post.PostVO;
+import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,4 +15,9 @@ public interface SectionMapper {
 
 //  섹션 작성하기
     public void insert(PurchaseDTO purchaseDTO);
+//  섹션 수정하기
+    public void update(PostSectionVO postSectionVO);
+
+//  섹션 삭제하기
+    public void delete(Long id);
 }

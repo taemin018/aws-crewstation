@@ -13,10 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @EqualsAndHashCode(of = "id")
 public class PostSectionVO extends Period {
-
     private Long id;
-    private String postTitle;
-    private Status postStatus;
-    private int postReadCount;
-    private Long memberId;
+    private String postContent;
+    private Long postId;
 }

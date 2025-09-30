@@ -11,4 +11,7 @@ public interface FileMapper {
 
 //  파일 추가
     public void insert(FileDTO fileDTO);
+
+//  파일 삭제
+    public void delete(Long id);
 }
