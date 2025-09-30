@@ -81,7 +81,7 @@
                   type="text"
 
                   class="write-content-input"
-                  th:field="*{purchaseProductPrice}"
+                  th:field="*{price}"
                   inputmode="numeric"
                   pattern="[0-9,]*"
                   placeholder="판매 가격을 입력해주세요.">
@@ -113,7 +113,7 @@
               <div class="write-content-select-wrap autocomplete">
                 <input 
                   type="text" 
-                  th:file="*{purchaseCountry}"
+                  th:field="*{purchaseCountry}"
                   class="write-content-select"
                   placeholder="나라 이름을 입력해주세요.">
                 <ul id="countryDropdown" class="write-content-select-dropdown"></ul>

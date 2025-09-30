@@ -6,6 +6,7 @@ import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.file.section.PostSectionFileVO;
+import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.PostSectionFileDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,7 +60,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         Criteria criteria = new Criteria(page, purchaseDAO.findCountAllByKeyWord(search));
         List<PurchaseDTO> purchases = purchaseDAO.findAllByKeyWord(criteria, search);
         purchases.forEach(purchase -> {
-            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPurchaseProductPrice()));
+            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPrice()));
             purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
             purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
         });
@@ -83,10 +85,12 @@ public class PurchaseServiceImpl implements PurchaseService {
         sections.forEach(section -> {
             section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
         });
+        sections.sort(Comparator.comparing(SectionDTO::getImageType));
+        log.info(sections.toString());
         purchaseDetail.ifPresent(purchase -> {
             log.info("::::::{}",purchase.getPostId());
             log.info("::::::{}",purchase.getMemberId());
-            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPurchaseProductPrice()));
+            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPrice()));
             purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
             purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
             purchase.setSections(sections);
@@ -101,6 +105,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         FileDTO fileDTO = new FileDTO();
         PostSectionFileDTO  sectionFileDTO = new PostSectionFileDTO();
         postDAO.savePost(purchaseDTO);
+        PurchaseVO purchaseVO = toPurchaseVO(purchaseDTO);
+        purchaseDAO.save(purchaseVO);
         IntStream.range(0, files.size()).forEach(i->{
             MultipartFile file = files.get(i);
             if(file.getOriginalFilename().equals("")){
