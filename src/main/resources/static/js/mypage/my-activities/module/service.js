@@ -11,11 +11,13 @@ const memberService = (() => {
         }
     };
 
-    return { getProfile : getProfile };
+    return { getProfile };
 })();
+
 
 // ===================== Reply Service =====================
 const replyService = (() => {
+    // 내가 댓글 단 일기 목록 조회
     const getReplyDiaries = async (memberId, page = 1, size = 10) => {
         try {
             const response = await fetch(`/api/diaries/replies/${memberId}?page=${page}&size=${size}`);
@@ -27,6 +29,7 @@ const replyService = (() => {
         }
     };
 
+    // 내가 댓글 단 일기 총 개수 조회
     const getReplyDiaryCount = async (memberId) => {
         try {
             const response = await fetch(`/api/diaries/replies/${memberId}/count`);
@@ -38,12 +41,25 @@ const replyService = (() => {
         }
     };
 
-    return { getReplyDiaries : getReplyDiaries,
-            getReplyDiaryCount : getReplyDiaryCount };
+    return { getReplyDiaries, getReplyDiaryCount };
 })();
+
 
 // ===================== Like Service =====================
 const likeService = (() => {
+    // 좋아요한 일기 목록 조회
+    const getLikedDiaries = async (memberId, page = 1, size = 10) => {
+        try {
+            const response = await fetch(`/api/diaries/liked/${memberId}?page=${page}&size=${size}`);
+            if (!response.ok) throw new Error(`Error: ${response.status}`);
+            return await response.json(); // { likedDiaryDTOs, criteria }
+        } catch (error) {
+            console.error("getLikedDiaries Error:", error);
+            return { likedDiaryDTOs: [], criteria: { hasMore: false } };
+        }
+    };
+
+    // 좋아요한 일기 총 개수 조회
     const getLikedDiaryCount = async (memberId) => {
         try {
             const response = await fetch(`/api/diaries/liked/${memberId}/count`);
@@ -55,5 +71,21 @@ const likeService = (() => {
         }
     };
 
-    return { getLikedDiaryCount : getLikedDiaryCount };
+    // 좋아요 취소
+    const cancelLike = async (memberId, diaryId) => {
+        try {
+            const response = await fetch(`/api/diaries/liked/${memberId}/${diaryId}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) throw new Error(`Error: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error("cancelLike Error:", error);
+            return { success: false, message: error.message };
+        }
+    };
+
+    return { getLikedDiaries : getLikedDiaries,
+            getLikedDiaryCount : getLikedDiaryCount,
+            cancelLike : cancelLike };
 })();
