@@ -8,6 +8,7 @@ import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class DiaryDAO {
     private final DiaryMapper diaryMapper;
 
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList()
+    public List<DiaryDTO> selectDiaryList(@Param("limit") int limit)
     {
-        return diaryMapper.selectDiaryList();
+        return diaryMapper.selectDiaryList(limit);
     }
 
     // 특정 회원이 좋아요한 일기 목록 조회
