@@ -1,8 +1,10 @@
 package com.example.crewstation.service.gift;
 
+import com.example.crewstation.common.exception.PostNotFoundException;
 import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.mapper.gift.GiftMapper;
 import com.example.crewstation.repository.gift.GiftDAO;
+import com.example.crewstation.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,8 @@ public class GiftServiceImpl implements GiftService {
     public List<GiftDTO> getGift(int limit) {
         giftDAO.getMainGifts(limit);
 
-        GiftDTO giftDTO = giftDAO.getMainGifts(limit)
+//        GiftDTO giftDTO = giftDAO.getMainGifts(limit).orElseThrow(PostNotFoundException::new);
+//        giftDTO.setRelativeDate(DateUtils.toRelativeTime(giftDTO.getCreatedDatetime().split("\\.")[0]));
 
         return giftDAO.getMainGifts(limit);
     }
