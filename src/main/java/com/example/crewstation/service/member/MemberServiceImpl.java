@@ -187,6 +187,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void resetPassword(String memberEmail, String memberPassword) {
+        String newPassword = passwordEncoder.encode(memberPassword);
+
+        memberDAO.updatePassword(memberEmail, newPassword);
+    }
+
     public Optional<MemberProfileDTO> getMember(Long memberId) {
         return Optional.empty();
     }

@@ -1,8 +1,8 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.domain.address.AddressVO;
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.file.member.MemberFileVO;
-import com.example.crewstation.domain.address.AddressVO;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
@@ -29,9 +29,11 @@ public interface MemberService {
 // sns 가입
     public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
 
+//
     public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
 
-
+//  비밀번호 변경
+    public void resetPassword(String memberEmail, String memberPassword);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

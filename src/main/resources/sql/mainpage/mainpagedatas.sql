@@ -261,3 +261,88 @@ values ('partner', 3, 2);
 
 select * from view_file_crew_file;
 
+-- 멤버
+insert into tbl_member(member_name, social_img_url)
+values ('test1', 'https://example.com/img/test1.png'),
+       ('test2', 'https://example.com/img/test2.png');
+
+-- 파일
+insert into tbl_file(file_origin_name, file_path, file_name, file_size)
+values ('crew1.png', '/upload/crew', 'crew1.png', '100kb'),
+       ('crew2.png', '/upload/crew', 'crew2.png', '120kb');
+
+-- 크루
+insert into tbl_crew(crew_name, crew_description, crew_member_count)
+values ('여행크루A', '즐거운 여행 함께해요', 2);
+
+-- 크루 멤버 (멤버 1,2를 크루에 연결)
+insert into tbl_crew_member(crew_role, crew_id, member_id)
+values ('leader', 1, 1),
+       ('partner', 1, 2);
+
+-- 크루 파일 (첫 번째 파일을 크루에 연결)
+insert into tbl_crew_file(file_id, crew_id)
+values (2, 2);
+
+select * from tbl_crew_file;
+
+-- 게시글 (카드리스트 4개)
+insert into tbl_post(post_title, post_read_count, post_status, member_id)
+values ('일본 오사카 여행 모집', 0, 'active', 1),
+       ('유럽 투어 동행 구해요', 0, 'active', 2),
+       ('베트남 다낭 힐링', 0, 'active', 1),
+       ('미국 서부 로드트립', 0, 'active', 2);
+
+-- accompany (게시글과 1:1)
+insert into tbl_accompany(accompany_status, accompany_age_range, post_id)
+values ('short', 20, 2),
+       ('long', 30, 2),
+       ('short', 25, 3),
+       ('long', 35, 4);
+
+insert into tbl_accompany(accompany_status, accompany_age_range, post_id)
+values ('short', 20, 1);
+
+insert into tbl_accompany(accompany_status, accompany_age_range, post_id)
+    overriding system value
+select v.status::accompany_status, v.age, p.id
+from tbl_post p
+         join (
+    values
+        ('일본 오사카 여행 모집', 'short', 20),
+        ('유럽 투어 동행 구해요', 'long',  30),
+        ('베트남 다낭 힐링',     'short', 25),
+        ('미국 서부 로드트립',   'long',  35)
+) as v(title, status, age)
+              on p.post_title = v.title;
+
+
+select * from tbl_post;
+select * from tbl_accompany;
+
+-- 나라
+insert into tbl_country(country_name)
+values ('일본'),
+       ('프랑스'),
+       ('베트남'),
+       ('미국');
+
+-- accompany_path (각 게시글에 나라 연결)
+insert into tbl_accompany_path(country_start_date, country_end_date, accompany_id, country_id)
+values ('2025-10-01', '2025-10-05', 1, 1), -- 일본
+       ('2025-11-10', '2025-11-20', 2, 2), -- 프랑스
+       ('2025-12-01', '2025-12-07', 3, 3), -- 베트남
+       ('2026-01-05', '2026-01-20', 4, 4); -- 미국
+
+
+insert into tbl_accompany_path(country_start_date, country_end_date, accompany_id, country_id)
+select d.start_date, d.end_date, p.id, c.id
+from (values
+          ('일본 오사카 여행 모집','일본','2025-10-01','2025-10-05'),
+          ('유럽 투어 동행 구해요','프랑스','2025-11-10','2025-11-20'),
+          ('베트남 다낭 힐링','베트남','2025-12-01','2025-12-07'),
+          ('미국 서부 로드트립','미국','2026-01-05','2026-01-20')
+     ) as d(post_title, country_name, start_date, end_date)
+         join tbl_post    p on p.post_title    = d.post_title
+         join tbl_country c on c.country_name  = d.country_name;
+

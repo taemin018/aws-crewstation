@@ -1,11 +1,16 @@
 package com.example.crewstation.controller.member;
 
 import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.service.mail.MailService;
 import com.example.crewstation.service.member.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member/**")
@@ -14,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class MembersApiController {
 //    이메일 중복 검사
     private final MemberService memberService;
+    private final MailService mailService;
+    private final HttpServletRequest request;
 
     @PostMapping("email-check")
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
@@ -23,6 +30,7 @@ public class MembersApiController {
 
     }
 
+
     @GetMapping("/{memberId}")
     public ResponseEntity<MemberProfileDTO> getMemberProfile(@PathVariable Long memberId) {
         return memberService.getMemberProfile(memberId)
@@ -30,4 +38,16 @@ public class MembersApiController {
                 .orElse(ResponseEntity.notFound().build()); // 없으면 404
     }
 
+    @PostMapping("/send-email")
+    public ResponseEntity<Map<String, String>> sendEmail(@RequestParam("email") String email) {
+        try {
+            String code = mailService.sendMail(email);
+            return ResponseEntity.ok(Map.of("code", code));
+
+        } catch (jakarta.mail.MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "메일 전송 실패"));
+
+        }
+    }
 }

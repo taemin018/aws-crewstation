@@ -2,17 +2,14 @@ package com.example.crewstation.service.diary;
 
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.repository.diary.DiaryDAO;
-import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,11 +21,11 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "posts", key="'post_' + #id")
-    public List<DiaryDTO> selectDiaryList() {
+    public List<DiaryDTO> selectDiaryList(int limit) {
         DiaryDTO diaryDTO = new DiaryDTO();
-        diaryDAO.selectDiaryList();
+        diaryDAO.selectDiaryList(4);
 
-        return diaryDAO.selectDiaryList();
+        return diaryDAO.selectDiaryList(4);
     }
 
     @Override
@@ -51,23 +48,25 @@ public class DiaryServiceImpl implements DiaryService {
         return dto;
     }
 
+    //  좋아요 한 다이어리 개수
     @Override
     public int getCountDiariesLikedByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);
         return diaryDAO.countDiariesLikedByMemberId(memberId);
     }
 
+    //  좋아요 취소
     @Override
-    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO) {
-        return List.of();
+    public void cancelLike(Long memberId, Long diaryId) {
+        diaryDAO.deleteLike(memberId, diaryId);
     }
 
+    // 댓글 단 다이어리 목록 조회
     @Override
     public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria) {
         log.info("댓글 단 다이어리 조회 - memberId={}, page={}, size={}",
                 memberId, criteria.getPage(), criteria.getSize());
 
-        // 댓글 단 다이어리 목록 조회
         List<ReplyDiaryDTO> diaries = diaryDAO.findReplyDiariesByMemberId(memberId, criteria);
 
         // 상대시간 변환
@@ -87,6 +86,7 @@ public class DiaryServiceImpl implements DiaryService {
         return dto;
     }
 
+    //  내가 댓글 단 일기 개수
     @Override
     public int getCountReplyDiariesByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);

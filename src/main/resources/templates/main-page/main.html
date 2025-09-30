@@ -258,43 +258,43 @@
                                         <p th:text="${accompany.postTitle}">낯선 곳에서 익숙함을 찾다</p>
                                     </div>
                                         <div class="together-category"
-                                        th:classappend="${accompany.accompanyStatus == 'SHORT'} ? ' short' : ' long'"
-                                        th:text="${accompany.accompanyStatus == 'SHORT'} ? '숏 크루' : '롱 크루'">
+                                             th:text="${accompany.accompanyStatus == 'short' ? '숏크루' : '롱크루'}">
+
                                         </div>
-                                        <img th:src="${accompany.filePath}" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/projects/cover_images/170391967052616401.jpeg?w=360&h=240&c=c" alt="" srcset="">
+                                        <img th:src="@{${accompany.filePath}}" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/projects/cover_images/170391967052616401.jpeg?w=360&h=240&c=c" alt="" srcset="">
                                         <div class="together-profile-wrap">
                                                         <div class="together-detail-text-wrap">
                                                             <div class="together-profile-block">
-                                                                <img th:src="${accompany.socialImgUrl}" src="https://prs.ohousecdn.com/apne2/home/profileImageUrl/v1-311723141476416.jpg?w=72" alt="">
+                                                                <img th:src="@{${accompany.socialImgUrl}}" src="https://prs.ohousecdn.com/apne2/home/profileImageUrl/v1-311723141476416.jpg?w=72" alt="">
                                                             </div>
-                                                            <span class="together-name" th:text="${accompany.memberName}">
+                                                            <span class="together-name" th:text="${accompany.crewName}">
                                                                 크루 이름
                                                             </span>
                                                         </div>
                                                     </div>
                                     </div>
                                     <div class="together-date">
-                                            <span th:text="${accompany.startDate}" >25.08.15</span>
-                                            <span th:text="${accompany.endDate}" >25.08.19</span>
+                                            <span th:text="${accompany.countryStartDate}" >25.08.15</span>
+                                            <span th:text="${accompany.countryEndDate}" >25.08.19</span>
                                     </div>
                                     <div class="trip-path-wrap">
                                         <div class="trip-path">
                                             <div class="marker-circle last"></div>
-                                            <div class="marker" th:each="country : ${#strings.arraySplit(accompany.countries, ',')}">
+                                            <div class="marker">
                                                 <div class="marker-circle first"></div>
-                                                <div class="marker-country" th:text="${country}">프랑스</div>
+                                                <div class="marker-country" th:text="${countryName}">프랑스</div>
                                             </div>
                                             <div class="marker">
                                                 <div class="marker-circle"></div>
-                                                <div class="marker-country">캄보디아</div>
+                                                <div class="marker-country" th:text="${countryName}">캄보디아</div>
                                             </div>
                                             <div class="marker">
                                                 <div class="marker-circle"></div>
-                                                <div class="marker-country">오스트레일리아</div>
+                                                <div class="marker-country" th:text="${countryName}">오스트레일리아</div>
                                             </div>
                                             <div class="marker">
                                                 <div class="marker-circle"></div>
-                                                <div class="marker-country">뉴욕</div>
+                                                <div class="marker-country" th:text="${countryName}">뉴욕</div>
                                             </div>
                                         </div>
                                     </div>
@@ -364,7 +364,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="gift-date">
-                                                            <span class="gift-create-date" th:text="${gift.}">
+                                                            <span class="gift-create-date" th:text="${gift.relativeDate}">
                                                                 12일 전
                                                             </span>
                                                         </div>

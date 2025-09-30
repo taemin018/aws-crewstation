@@ -76,4 +76,10 @@ public class MemberMapperTests {
         memberMapper.selectMemberBySnsEmail("test123");
         log.info(String.valueOf(memberMapper.selectMemberBySnsEmail("test123")));
     }
+
+    @Test
+    @Transactional
+    public void passwordUpdateTest() {
+        memberMapper.updatePassword("test@gmail.com", "1234");
+    }
 }

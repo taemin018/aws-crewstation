@@ -5,6 +5,7 @@ import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.util.ScrollCriteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,8 +17,11 @@ public interface DiaryService {
     // 특정 회원이 좋아요한 일기 수 조회
     public int getCountDiariesLikedByMemberId(Long memberId);
 
+    //  좋아요 취소
+    public void cancelLike (Long memberId, Long diaryId);
+
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList();
+    public List<DiaryDTO> selectDiaryList(@Param("limit") int limit);
     //    내가 댓글 쓴 일기 조회
     public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria);
 
