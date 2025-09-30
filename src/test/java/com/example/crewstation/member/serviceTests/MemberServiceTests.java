@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
@@ -36,5 +37,11 @@ public class MemberServiceTests {
         boolean check =  memberService.checkEmail("test@gmail.com");
 
         log.info(String.valueOf(check));
+    }
+
+    @Test
+    @Transactional
+    public void passwordUpdateTest() {
+        memberService.resetPassword("test@gmail.com", "1234");
     }
 }
