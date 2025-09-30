@@ -48,7 +48,7 @@ const likeService = (() => {
             }
             const result = await response.json();
             console.log("좋아요한 일기 목록 조회 성공", result);
-            return result; // { likedDiaryDTOs, criteria }
+            return result; //
         } catch (error) {
             console.error("getLikedDiaries Error:", error);
             return { likedDiaryDTOs: [], criteria: { hasMore: false } };
@@ -77,7 +77,7 @@ const likeService = (() => {
                 method: "DELETE"
             });
             if (!response.ok) throw new Error(`Error: ${response.status}`);
-            return await response.json(); // { success: true } or { success: false, message: ... }
+            return await response.json();
         } catch (error) {
             console.error("cancelLike Error:", error);
             return { success: false, message: error.message };
