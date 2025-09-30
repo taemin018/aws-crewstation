@@ -32,7 +32,8 @@ public class CrewServiceImpl implements CrewService {
     public List<CrewDTO> getCrews() {
         List<CrewDTO> crews = crewDAO.getCrews(crewDTO);
         crews.forEach(crew -> {
-            crew.setFilePath(s3Service.getPreSignedUrl(crew.getFilePath(), Duration.ofMinutes(5)));
+            crew.setFilePath(s3Service.getPreSignedUrl(crew.getFilePath(),
+                    Duration.ofMinutes(5)));
 
         });
         return crews;

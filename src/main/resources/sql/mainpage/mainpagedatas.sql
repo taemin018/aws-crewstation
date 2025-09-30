@@ -184,6 +184,29 @@ values ('test', '테스트 입니다1', '5', '2025-09-26','2025-09-27');
 insert into tbl_crew (crew_name, crew_description, crew_member_count, created_datetime, updated_datetime)
 values ('test1', '테스트 입니다1', '3', '2025-09-24','2025-09-27');
 
+select * from tbl_crew_file;
+select * from tbl_crew;
+select * from tbl_file;
+select * from tbl_diary;
+select * from view_file_post_section_file;
+select * from view_file_post_section_file;
+
+
+select d.post_id,
+       f.file_path
+
+
+
+from tbl_diary d
+        join tbl_file f
+            on f.id = d.post_id;
+
+
+
+
+
+
+
 insert into tbl_like (post_id, member_id)
 values ('1','1');
 
@@ -244,7 +267,7 @@ insert into tbl_crew_diary ( crew_id, diary_id)
 values ('4', '1');
 
 insert into tbl_banner ( banner_order)
-values ('4');
+values ('7');
 
 select * from tbl_member;
 select * from tbl_crew;
@@ -346,3 +369,11 @@ from (values
          join tbl_post    p on p.post_title    = d.post_title
          join tbl_country c on c.country_name  = d.country_name;
 
+select * from tbl_file;
+select * from tbl_banner;
+select * from tbl_banner_file;
+
+insert into tbl_banner_file (file_id, banner_id)
+values (7,5);
+
+select * from view_file_banner_file;
