@@ -49,8 +49,9 @@ public class MemberController {
 
     //    mobile 회원가입
     @GetMapping("mobile/join")
-    public String mobileJoin(MemberDTO memberDTO, Model model) {
+    public String mobileJoin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
+        model.addAttribute("guestDTO", guestDTO);
 
         return "member/mobile/join";
     }
@@ -62,7 +63,7 @@ public class MemberController {
         return new RedirectView("/member/mobile/login");
     }
 
-    //    web 로그인
+    //    mobile 로그인
     @GetMapping("mobile/login")
     public String mobileLogin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
@@ -105,6 +106,35 @@ public class MemberController {
 
     @PostMapping("web/sns/join")
     public RedirectView join(@CookieValue(value = "role", required = false) String role,
+                             @CookieValue(value = "provider", required = false) String provider, MemberDTO memberDTO,
+                             @RequestParam("file")MultipartFile multipartFile) {
+        memberDTO.setMemberRole(role.equals("ROLE_MEMBER") ? MemberRole.MEMBER : MemberRole.ADMIN);
+        memberDTO.setMemberProvider(MemberProvider.valueOf(provider.toUpperCase()));
+        memberService.joinSns(memberDTO, multipartFile);
+
+        jwtTokenProvider.createAccessToken(memberDTO.getMemberSocialEmail(), provider);
+        jwtTokenProvider.createRefreshToken(memberDTO.getMemberSocialEmail(), provider);
+
+        return new RedirectView("/");
+    }
+
+    //    mobile sns 회원가입
+    @GetMapping("mobile/sns/join")
+    public String mobileJoin(@CookieValue(value = "memberSocialEmail", required = false) String memberSocialEmail,
+                          @CookieValue(value = "profile", required = false) String socialProfile,
+                          @CookieValue(value = "name", required = false) String memberName,
+                          MemberDTO memberDTO, Model model) {
+        memberDTO.setMemberSocialEmail(memberSocialEmail);
+        memberDTO.setSocialImgUrl(socialProfile);
+        memberDTO.setMemberName(memberName);
+
+        model.addAttribute("memberDTO", memberDTO);
+
+        return "member/mobile/sns/join";
+    }
+
+    @PostMapping("mobile/sns/join")
+    public RedirectView mobileJoin(@CookieValue(value = "role", required = false) String role,
                              @CookieValue(value = "provider", required = false) String provider, MemberDTO memberDTO,
                              @RequestParam("file")MultipartFile multipartFile) {
         memberDTO.setMemberRole(role.equals("ROLE_MEMBER") ? MemberRole.MEMBER : MemberRole.ADMIN);

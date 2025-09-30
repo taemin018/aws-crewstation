@@ -76,7 +76,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             response.addCookie(nameCookie);
 
-            path = "/member/web/sns/join";
+            String ua = request.getHeader("User-Agent");
+
+            boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
+
+            if (isMobile) {
+                path = "/member/web/sns/join";
+            } else {
+                path = "/member/mobile/sns/join";
+            }
         }
 
         Cookie providerCookie = new Cookie("provider", provider);
