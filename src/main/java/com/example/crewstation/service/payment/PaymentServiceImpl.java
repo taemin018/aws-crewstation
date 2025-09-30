@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -30,16 +32,18 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @LogReturnStatus
-    public void requestPayment(PaymentStatusDTO paymentStatusDTO) {
+    public Map<String,Object> requestPayment(PaymentStatusDTO paymentStatusDTO) {
         String code = null;
+        String message = null;
         boolean isExist = postDAO.isActivePost(paymentStatusDTO.getPurchaseId());
         log.info("isExist={}", isExist);
         log.info("paymentStatusDTO={}", paymentStatusDTO.toString());
+
         if(!isExist){
             throw new PostNotActiveException("이미 삭제된 상품입니다.");
         }
         code = smsService.send(paymentStatusDTO.getMemberPhone());
-        if(paymentStatusDTO.getMemberId() == null){
+        if(paymentStatusDTO.isGuest()){
 //            멤버랑 게스트에 값 넣어주기
             MemberDTO memberDTO = new MemberDTO();
             memberDAO.saveGuest(memberDTO);
@@ -48,8 +52,13 @@ public class PaymentServiceImpl implements PaymentService {
             GuestVO vo = toVO(paymentStatusDTO);
             log.info("vo={}", vo.toString());
             guestDAO.save(vo);
+        }else if( paymentStatusDTO.getMemberId() == null){
+            message = "비회원입니다.";
+            return Map.of("guest" ,true,"message",message);
         }
         paymentStatusDAO.save(paymentStatusDTO);
         alarmDAO.save(paymentStatusDTO.getId());
+        message = "판매요청 완료되었습니다.";
+        return Map.of("message",message);
     }
 }
