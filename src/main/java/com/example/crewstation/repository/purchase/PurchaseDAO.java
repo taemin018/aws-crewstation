@@ -40,5 +40,8 @@ public class PurchaseDAO {
     public void save(PurchaseVO purchaseVO) {
         purchaseMapper.insert(purchaseVO);
     }
-
+    //  상품 수정
+    public void update(PurchaseVO purchaseVO){
+        purchaseMapper.update(purchaseVO);
+    };
 }

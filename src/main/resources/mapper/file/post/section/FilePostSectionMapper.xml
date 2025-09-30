@@ -5,4 +5,15 @@
         insert into tbl_post_section_file(file_id, post_section_id, image_type)
         values (#{fileId},#{postSectionId},#{imageType})
     </insert>
+
+    <delete id="delete">
+        delete from tbl_post_section_file
+        where post_section_id = #{sectionId}
+    </delete>
+
+    <select id="selectPostSectionFileIdBySectionId">
+        select file_id
+        from tbl_post_section_file
+        where post_section_id = #{sectionId}
+    </select>
 </mapper>

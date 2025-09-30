@@ -27,4 +27,7 @@ public interface PurchaseMapper {
 
 //  기프트 추가
     public void insert(PurchaseVO purchaseVO);
+
+//  상품 수정
+    public void update(PurchaseVO purchaseVO);
 }

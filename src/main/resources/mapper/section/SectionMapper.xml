@@ -23,4 +23,14 @@
         insert into tbl_post_section(post_content, post_id)
         values (#{purchaseContent},#{postId})
     </insert>
+
+    <update id="update">
+        update tbl_post_section
+        set post_content = #{postContent}
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from tbl_post_section
+        where id = #{id}
+    </delete>
 </mapper>

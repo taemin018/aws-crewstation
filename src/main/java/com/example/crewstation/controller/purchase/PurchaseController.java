@@ -23,12 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/gifts/**")
@@ -80,7 +78,7 @@ public class PurchaseController {
     }
 
     @GetMapping("write")
-    public String goToWriteForm(PurchaseDTO purchaseDTO,Model model) {
+    public String goToWriteForm(PurchaseDTO purchaseDTO, Model model) {
         model.addAttribute("purchase", purchaseDTO);
         return "gift-shop/write";
     }
@@ -92,7 +90,7 @@ public class PurchaseController {
         log.info("purchaseDTO {}", purchaseDTO);
         log.info("files {}", files.size());
         purchaseDTO.setMemberId(1L);
-        purchaseService.write(purchaseDTO,files);
+        purchaseService.write(purchaseDTO, files);
 
 //        purchaseDTO.setMemberId(customUserDetails.getId());
 
@@ -104,6 +102,18 @@ public class PurchaseController {
         Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
         model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
         return "gift-shop/update";
+    }
+
+    @PostMapping("{postId}")
+    public void modify(@PathVariable Long postId,
+                         PurchaseDTO purchaseDTO,
+                         Long[] deleteFiles,
+                         @RequestParam("files") List<MultipartFile> files,
+                         @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("purchaseDTO {}", purchaseDTO);
+        log.info("deleteFiles {}", Arrays.asList(deleteFiles));
+
+
     }
 
 }
