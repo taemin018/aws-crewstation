@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         purchaseId: postId
                     })
                     console.log(isGuest)
-                    if (!isGuest){
+                    if (!isGuest) {
                         toastModal(message);
-                    }else {
+                    } else {
                         e.stopPropagation();
                         modal.classList.add("active");
                     }
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const form = document.getElementById("requestForm");
                 const formData = new FormData(form);
                 const {message, status} = await purchaseDetailService.requestToSell({
-                    guest : true,
+                    guest: true,
                     purchaseId: document.getElementById("postId").dataset.post,
                     memberPhone: formData.get("phone"),
                     address: formData.get("addressInput"),
@@ -343,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         dots.forEach((dot) => dot.classList.remove("selected"));
-        if (dots[count]) dots[count].classList.add("selected");
+        if (dots[count - 1]) dots[count - 1].classList.add("selected");
     }
 
     function autoSlide() {
@@ -472,3 +472,24 @@ function clip() {
 
 
 document.addEventListener("DOMContentLoaded", startCountdown);
+
+
+document.querySelector("div.product-detail-container").addEventListener("click",(e)=>{
+    console.log(e.target)
+    console.log(e.target.closest("div.modify-wrap"))
+    if(e.target.closest("div.modify-wrap")){
+        console.log(123)
+        console.log(e.target.closest("div.modify-wrap").querySelector("div.modify-container"));
+        e.target.closest("div.modify-wrap").querySelector("div.modify-container").style.display = "flex";
+        return
+    }
+    document.querySelector("div.modify-container").style.display = "none";
+})
+
+document.querySelector("div.del-post").addEventListener("click",(e)=>{
+    document.getElementById("delconfirmModal").classList.add("active");
+})
+
+document.getElementById("cancelDel").addEventListener("click",(e)=>{
+    document.getElementById("delconfirmModal").classList.remove("active");
+})

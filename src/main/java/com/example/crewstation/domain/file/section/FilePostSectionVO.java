@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @Getter
 @EqualsAndHashCode(of = "fileId")
-public class PostSectionFileVO extends Period {
+public class FilePostSectionVO extends Period {
     private Long fileId;
     private Long postSectionId;
     private Type imageType;

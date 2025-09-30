@@ -29,7 +29,7 @@ public class PurchaseDAO {
         return purchaseMapper.selectCountAllByKeyWord(search);
     }
     //  기프트 상세 보기
-    public Optional<PurchaseDetailDTO> findByPostId(Long postId){
+    public Optional<PurchaseDTO> findByPostId(Long postId){
         return purchaseMapper.selectByPostId(postId);
     }
 //  조회 수 증가

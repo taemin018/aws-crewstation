@@ -99,7 +99,7 @@
               <div class="write-content-cover-add" id="coverAdd" style="display: none;">
                 <input type="hidden" id="prevMainImg" name="prevMainImg" th:value="${purchase.sections[0].postSectionId}">
                 <input type="hidden" id="nextMainImg" name="thumbnail">
-                <input type="hidden" id="checkPrevNext" name="old">
+                <input type="hidden" id="checkPrevNext" name="prev" value="false">
                 <input type="file" id="coverImageInput" name="files" accept="image/*" style="display:none;" multiple>
                 <button type="button" class="write-content-img-add-btn large">+</button>
                 <p class="write-content-add-desc">업로드할 이미지를 최대 8장까지 선택해주세요.<br>(대표 이미지 등록은 필수입니다.)</p>
@@ -150,6 +150,9 @@
 <div id="deleteFiles" style="display: none">
 
 </div>
-<script src="/js/gift-shop/update/event.js"></script>
 </body>
+<script th:inline="javascript">
+  const sections = [[${purchase.sections}]]
+</script>
+<script src="/js/gift-shop/update/event.js"></script>
 </html>

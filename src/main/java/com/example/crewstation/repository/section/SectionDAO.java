@@ -3,6 +3,7 @@ package com.example.crewstation.repository.section;
 import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
+import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.section.SectionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

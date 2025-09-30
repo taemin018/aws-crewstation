@@ -33,4 +33,8 @@ public class PostDAO {
     public void update(PostVO postVO) {
         postMapper.update(postVO);
     }
+    //   게시글 삭제 소프트 딜리트
+    public void updatePostStatus(Long id){
+        postMapper.updatePostStatus(id);
+    }
 }

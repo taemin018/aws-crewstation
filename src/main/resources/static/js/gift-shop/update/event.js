@@ -178,8 +178,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     let hasCover = true;
-    let currentCoverThumb = null; // 현재 대표 썸네일 기억
+    let currentCoverThumb = document.querySelector("div.write-content-thumbnail"); // 현재 대표 썸네일 기억
+    coverPreview.querySelector(".write-content-img-delete-btn").addEventListener("click", () => {
+        const image = coverPreview.querySelector("img.main-image");
+        const index = image.dataset.index;
+        const sectionId = image.dataset.section;
+        console.log(index)
+        index && fileBuffer.splice(Number(index), 1);
+        sectionId && deleteFiles.push(sectionId);
+        // 현재 대표 썸네일까지 삭제
+        console.log(currentCoverThumb);
+        if (currentCoverThumb && currentCoverThumb.isConnected) {
+            currentCoverThumb.remove();
+            currentCoverThumb = null;
+        }
+        let count = 0
+        thumbnailContainer.querySelectorAll("div.write-content-thumbnail img").forEach((img, idx) => {
+            if(img.dataset.section) return;
+            img.dataset.index = String(count++);
+        });
 
+        coverInput.value = "";
+        coverPreview.innerHTML = "";
+        console.log(fileBuffer);
+        // 다음 승격할 썸네일 찾기
+        const nextThumb = thumbnailContainer.querySelector(".write-content-thumbnail");
+        if (nextThumb) {
+            const nextSrc = nextThumb.querySelector("img").src;
+            setAsCover(nextSrc, nextThumb);
+        } else {
+            coverAdd.style.display = "flex";   // 커버 큰 + 다시 보이기
+            hasCover = false;
+        }
+
+        updateThumbAddBtn(); // 작은 + 버튼 상태 갱신
+    }, {once: true});
 // 전체 이미지 개수 (대표는 썸네일 중 하나이므로 썸네일만 카운트)
     function getTotalImageCount() {
         return document.querySelectorAll(".write-content-thumbnail").length;
@@ -206,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function setAsCover(src, fromThumb) {
         // 대표 미리보기 갱신
         coverAdd.style.display = "none";
+
         console.log(fromThumb.firstElementChild);
         const index = fromThumb.firstElementChild.dataset?.index;
         const postSectionId = fromThumb.firstElementChild.dataset?.section;
@@ -247,12 +281,15 @@ document.addEventListener("DOMContentLoaded", () => {
             index && fileBuffer.splice(Number(index), 1);
             sectionId && deleteFiles.push(sectionId);
             // 현재 대표 썸네일까지 삭제
+            console.log(currentCoverThumb);
             if (currentCoverThumb && currentCoverThumb.isConnected) {
                 currentCoverThumb.remove();
                 currentCoverThumb = null;
             }
+            let count = 0
             thumbnailContainer.querySelectorAll("div.write-content-thumbnail img").forEach((img, idx) => {
-                img.dataset.index = String(idx)
+                if(img.dataset.section) return;
+                img.dataset.index = String(count++);
             });
 
             coverInput.value = "";
@@ -431,5 +468,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // 선택된 파일을 유지/재구성하기 위한 버퍼
+
+const imageWrap = document.querySelector("div.write-content-thumbnail-container").firstElementChild;
+
+sections.forEach((s)=>{
+
+})
+
+
 
 
