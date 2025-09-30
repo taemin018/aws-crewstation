@@ -23,11 +23,13 @@ public class MembersApiController {
 
     }
 
+
     @GetMapping("/{memberId}")
     public ResponseEntity<MemberProfileDTO> getMemberProfile(@PathVariable Long memberId) {
         return memberService.getMemberProfile(memberId)
                 .map(ResponseEntity::ok)      // 값이 있으면 200ok
                 .orElse(ResponseEntity.notFound().build()); // 없으면 404
     }
+
 
 }
