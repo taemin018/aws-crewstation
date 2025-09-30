@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="../../static/images/crew-station-favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="../../static/css/notice/notice.css">
     <style>
-        /* ✅ 전역: 모든 링크 밑줄 제거 */
+        /* 링크 밑줄 제거 */
         a {
             text-decoration: none;
             color: inherit;
@@ -21,12 +21,8 @@
     <div class="myhome-nav">
         <nav class="myhome-nav__owner">
             <ul>
-                <li class="page-navigation__item">
-                    <a href="#">문의하기</a>
-                </li>
-                <li class="page-navigation__item">
-                    <a href="#">공지사항</a>
-                </li>
+                <li class="page-navigation__item"><a href="#">문의하기</a></li>
+                <li class="page-navigation__item"><a href="#">공지사항</a></li>
             </ul>
         </nav>
     </div>
@@ -35,78 +31,28 @@
     <div class="notice-list__content">
         <h1 class="notice-list__title">공지사항</h1>
 
-        <!-- 항목 1 -->
-        <div class="notice-list__list-item">
-            <a class="feed-item" href="#">
-                <article class="notice-feed-item__content">
-                    <h2 class="notice-feed-item__title">크루스테이션 운영정책 개정 안내</h2>
-                    <time class="notice-feed-item__date" datetime="2025-07-21T10:25:06.000+09:00">
-                        2025. 07. 21
-                    </time>
-                </article>
-            </a>
-        </div>
+        <!-- DB 데이터 루프 -->
+        <ul class="notice-list__items"
+            th:if="${noticeCriteriaDTO != null and noticeCriteriaDTO.noticeLists != null}">
+            <li class="notice-list__list-item" th:each="n : ${noticeCriteriaDTO.noticeLists}">
+                <a class="feed-item" th:href="@{|/notice/detail/${n.id}|}">
+                    <article class="notice-feed-item__content">
+                        <h2 class="notice-feed-item__title" th:text="${n.noticeTitle}">공지 제목</h2>
+                        <time class="notice-feed-item__date"
+                              th:datetime="${#dates.format(n.createdDatetime,'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+                              th:text="${#dates.format(n.createdDatetime,'yyyy. MM. dd')}">
+                            2025. 07. 21
+                        </time>
+                    </article>
+                </a>
+            </li>
+        </ul>
 
-        <!-- 항목 2 -->
-        <div class="notice-list__list-item">
-            <a class="feed-item" href="#">
-                <article class="notice-feed-item__content">
-                    <h2 class="notice-feed-item__title">상품인증정보 검색∙확인 사이트 안내</h2>
-                    <time class="notice-feed-item__date" datetime="2024-07-05T21:04:52.000+09:00">
-                        2024. 07. 05
-                    </time>
-                </article>
-            </a>
+        <!-- 빈 상태 -->
+        <div class="notice-list__empty"
+             th:if="${noticeCriteriaDTO == null or #lists.isEmpty(noticeCriteriaDTO.noticeLists)}">
+            등록된 공지사항이 없습니다.
         </div>
-
-        <!-- 항목 3 -->
-        <div class="notice-list__list-item">
-            <a class="feed-item" href="#">
-                <article class="notice-feed-item__content">
-                    <h2 class="notice-feed-item__title">상품인증정보 검색∙확인 사이트 안내</h2>
-                    <time class="notice-feed-item__date" datetime="2024-07-05T21:04:52.000+09:00">
-                        2024. 07. 05
-                    </time>
-                </article>
-            </a>
-        </div>
-
-        <!-- 항목 4 -->
-        <div class="notice-list__list-item">
-            <a class="feed-item" href="#">
-                <article class="notice-feed-item__content">
-                    <h2 class="notice-feed-item__title">상품인증정보 검색∙확인 사이트 안내</h2>
-                    <time class="notice-feed-item__date" datetime="2024-07-05T21:04:52.000+09:00">
-                        2024. 07. 05
-                    </time>
-                </article>
-            </a>
-        </div>
-
-        <!-- 항목 5 -->
-        <div class="notice-list__list-item">
-            <a class="feed-item" href="#">
-                <article class="notice-feed-item__content">
-                    <h2 class="notice-feed-item__title">상품인증정보 검색∙확인 사이트 안내</h2>
-                    <time class="notice-feed-item__date" datetime="2024-07-05T21:04:52.000+09:00">
-                        2024. 07. 05
-                    </time>
-                </article>
-            </a>
-        </div>
-
-        <!-- 항목 6 -->
-        <div class="notice-list__list-item">
-            <a class="feed-item" href="#">
-                <article class="notice-feed-item__content">
-                    <h2 class="notice-feed-item__title">상품인증정보 검색∙확인 사이트 안내</h2>
-                    <time class="notice-feed-item__date" datetime="2024-07-05T21:04:52.000+09:00">
-                        2024. 07. 05
-                    </time>
-                </article>
-            </a>
-        </div>
-
     </div>
 </div>
 </body>
