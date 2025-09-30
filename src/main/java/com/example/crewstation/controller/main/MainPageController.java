@@ -49,3 +49,4 @@ public class MainPageController {
         return "main-page/main";
     }
 }
+

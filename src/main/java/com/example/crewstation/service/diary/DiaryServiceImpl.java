@@ -19,7 +19,6 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryDAO diaryDAO;
 
-    @Override
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "posts", key="'post_' + #id")
     public List<DiaryDTO> selectDiaryList() {

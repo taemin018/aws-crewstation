@@ -1,5 +1,7 @@
 package com.example.crewstation.purchase;
 
+import com.example.crewstation.common.enumeration.DeliveryMethod;
+import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
 import com.example.crewstation.util.Criteria;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
@@ -43,5 +46,19 @@ public class DaoTest {
     public void testIncreaseReadCount(){
         purchaseDAO.increaseReadCount(1L);
 
+    }
+
+    @Test
+    @Transactional
+    public void testInsert(){
+        PurchaseVO vo = PurchaseVO.builder()
+                .postId(19L)
+                .deliveryMethod(DeliveryMethod.DIRECT)
+                .purchaseCountry("호주")
+                .purchaseLimitTime(12)
+                .purchaseProductPrice(1000)
+                .purchaseProductCount(5)
+                .build();
+        purchaseDAO.save(vo);
     }
 }

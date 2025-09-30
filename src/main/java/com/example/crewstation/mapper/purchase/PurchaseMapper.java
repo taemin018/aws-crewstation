@@ -1,5 +1,6 @@
 package com.example.crewstation.mapper.purchase;
 
+import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.util.Criteria;
@@ -23,4 +24,7 @@ public interface PurchaseMapper {
 
 //  조회 수 증가
     public void updateReadCount(Long postId);
+
+//  기프트 추가
+    public void insert(PurchaseVO purchaseVO);
 }

@@ -1,5 +1,8 @@
 package com.example.crewstation.purchase;
 
+import com.example.crewstation.common.enumeration.DeliveryMethod;
+import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
 import com.example.crewstation.util.Criteria;
@@ -10,6 +13,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -48,5 +52,19 @@ public class MapperTest {
     public void testUpdateReadCount(){
         purchaseMapper.updateReadCount(1L);
 
+    }
+
+    @Test
+    @Transactional
+    public void testInsert(){
+        PurchaseVO vo = PurchaseVO.builder()
+                .postId(19L)
+                .deliveryMethod(DeliveryMethod.DIRECT)
+                .purchaseCountry("호주")
+                .purchaseLimitTime(12)
+                .purchaseProductPrice(1000)
+                .purchaseProductCount(5)
+                .build();
+        purchaseMapper.insert(vo);
     }
 }

@@ -16,7 +16,7 @@
         vpp.purchase_delivery_method,
         vpp.purchase_limit_time,
         vpp.purchase_product_count,
-        vpp.purchase_product_price,
+        vpp.purchase_product_price as price,
         vpp.purchase_delivery_method,
         vpp.created_datetime,
         vpp.updated_datetime,
@@ -48,7 +48,7 @@
                vpp.purchase_delivery_method,
                vpp.purchase_limit_time,
                vpp.purchase_product_count,
-               vpp.purchase_product_price,
+               vpp.purchase_product_price as price,
                vpp.purchase_delivery_method,
                vpp.created_datetime,
                vpp.updated_datetime,
@@ -73,4 +73,10 @@
         set post_read_count = post_read_count + 1
         where id = #{postId}
     </update>
+
+    <insert id="insert">
+        insert into tbl_purchase(post_id, purchase_product_price, purchase_limit_time, purchase_product_count,
+                                 purchase_country, purchase_delivery_method)
+        values (#{postId},#{purchaseProductPrice},#{purchaseLimitTime},#{purchaseProductCount},#{purchaseCountry},#{deliveryMethod})
+    </insert>
 </mapper>

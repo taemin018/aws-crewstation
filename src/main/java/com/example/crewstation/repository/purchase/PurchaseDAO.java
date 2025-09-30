@@ -1,5 +1,6 @@
 package com.example.crewstation.repository.purchase;
 
+import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
@@ -31,8 +32,13 @@ public class PurchaseDAO {
     public Optional<PurchaseDetailDTO> findByPostId(Long postId){
         return purchaseMapper.selectByPostId(postId);
     }
+//  조회 수 증가
     public void increaseReadCount(Long postId) {
         purchaseMapper.updateReadCount(postId);
+    }
+//  기프트 추가
+    public void save(PurchaseVO purchaseVO) {
+        purchaseMapper.insert(purchaseVO);
     }
 
 }
