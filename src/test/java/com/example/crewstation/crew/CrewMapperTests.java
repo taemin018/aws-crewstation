@@ -23,7 +23,7 @@ public class CrewMapperTests {
     @Test
     public void testGetCrews() {
         CrewDTO dto = new CrewDTO();
-        List<CrewDTO> crewDTOS  = crewMapper.getCrews(dto);
+        List<CrewDTO> crewDTOS  = crewMapper.getCrews();
 
         log.info("CrewDTO={}", crewDTOS);
 
