@@ -4,6 +4,7 @@ import com.example.crewstation.dto.diary.LikedDiaryDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.diary.DiaryMapper;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,8 @@ public class MapperTest {
     @Test
     public void testFindLikedDiariesByMemberId() {
         Long memberId = 1L;
-        Criteria criteria = new Criteria(1, 17);
-        criteria.setRowCount(5);
+        ScrollCriteria criteria = new ScrollCriteria(1, 17);
+        criteria.setSize(5);
         criteria.setOffset(0);
 
         List<LikedDiaryDTO> diaries = diaryMapper.findDiariesLikedByMemberId(memberId, criteria);
