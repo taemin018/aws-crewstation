@@ -17,4 +17,7 @@ public interface PostMapper {
     public void insert(PurchaseDTO purchaseDTO);
 //    게시글 수정
     public void update(PostVO postVO);
+
+//   게시글 삭제 소프트 딜리트
+    public void updatePostStatus(Long id);
 }

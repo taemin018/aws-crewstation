@@ -68,12 +68,16 @@ public class PurchaseController {
 //        }
 
 
-        Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
-//        purchase.ifPresent(purchaseDetailDTO -> {
-//            purchaseDetailDTO.setFilePath(null);
-//            purchaseDetailDTO.setSocialImgUrl("https://prs.ohousecdn.com/apne2/content/community/v1-385639845687296.jpg?w=768&h=1026&c=c");
-//        });
-        model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
+        PurchaseDTO purchase = purchaseService.getPurchase(postId);
+/*
+        purchase.ifPresent(purchaseDetailDTO -> {
+            purchaseDetailDTO.setWriter(true);
+            purchaseDetailDTO.setFilePath(null);
+            purchaseDetailDTO.setSocialImgUrl("https://prs.ohousecdn.com/apne2/content/community/v1-385639845687296.jpg?w=768&h=1026&c=c");
+        });*/
+        log.info("purchase {}", purchase);
+        model.addAttribute("purchase", purchase);
+        model.addAttribute("writer", true);
         return "gift-shop/detail";
     }
 
@@ -94,26 +98,31 @@ public class PurchaseController {
 
 //        purchaseDTO.setMemberId(customUserDetails.getId());
 
-        return new RedirectView("/gifts/" + purchaseDTO.getPostId());
+        return new RedirectView("/gifts/detail/" + purchaseDTO.getPostId());
     }
 
     @GetMapping("{postId}")
     public String goToModifyForm(@PathVariable Long postId, Model model) {
-        Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
-        model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
+        PurchaseDTO purchase = purchaseService.getPurchase(postId);
+        model.addAttribute("purchase", purchase);
         return "gift-shop/update";
     }
 
     @PostMapping("{postId}")
-    public void modify(@PathVariable Long postId,
+    public RedirectView modify(@PathVariable Long postId,
                          PurchaseDTO purchaseDTO,
                          Long[] deleteFiles,
                          @RequestParam("files") List<MultipartFile> files,
                          @AuthenticationPrincipal UserDetails userDetails) {
+        purchaseDTO.setPostId(postId);
         log.info("purchaseDTO {}", purchaseDTO);
-        log.info("deleteFiles {}", Arrays.asList(deleteFiles));
-
-
+        purchaseService.update(purchaseDTO, deleteFiles, files);
+        return  new RedirectView("/gifts/detail/" + postId);
     }
 
+    @GetMapping("delete/{id}")
+    public RedirectView delete(@PathVariable Long id) {
+        purchaseService.softDelete(id);
+        return new RedirectView("/gifts");
+    }
 }

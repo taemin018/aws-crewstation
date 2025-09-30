@@ -4,6 +4,7 @@ import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
+import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
