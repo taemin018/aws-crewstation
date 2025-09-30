@@ -21,8 +21,8 @@ public class GiftDTO {
     private Integer purchaseLimitTime;
     private Integer purchaseProductCount;
     private Integer purchaseProductPrice;
-    private LocalDateTime createdDatetime;
-    private LocalDateTime updatedDatetime;
+    private String createdDatetime;
+    private String updatedDatetime;
     private String filePath;
     private String fileName;
     private String memberName;

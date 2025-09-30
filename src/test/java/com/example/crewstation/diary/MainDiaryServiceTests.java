@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 @Slf4j
 public class MainDiaryServiceTests {
@@ -15,6 +17,7 @@ public class MainDiaryServiceTests {
 
     @Test
     public void selectDiaryListTest(){
-        DiaryDTO diaryDTO = new DiaryDTO();
+        List<DiaryDTO> diaryList = diaryService.selectDiaryList(4);
+        log.info("diaryList: {}", diaryList);
     }
 }

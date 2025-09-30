@@ -1,7 +1,7 @@
 package com.example.crewstation.banner;
 
 import com.example.crewstation.dto.banner.BannerDTO;
-import com.example.crewstation.mapper.banner.BannerMapper;
+import com.example.crewstation.service.banner.BannerService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +11,13 @@ import java.util.List;
 
 @SpringBootTest
 @Slf4j
-public class MapperTests {
-
+public class ServiceTests {
     @Autowired
-    private BannerMapper bannerMapper;
-    @Autowired
-    private BannerDTO bannerDTO;
+    private BannerService bannerService;
 
     @Test
-    public void getBannerTest() {
-        List<BannerDTO> banners = bannerMapper.getBanners(5);
-        log.info("banners: {}", banners);
+    public void getBannerTest(){
+        List<BannerDTO> banners = bannerService.getBanners(4);
+        log.info("banners:{}",banners);
     }
 }
