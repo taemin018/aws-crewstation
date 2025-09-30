@@ -3,7 +3,6 @@ const inputTag = document.querySelector("input.member-email");
 const inputWrap = document.querySelector("div.email-input-wrap");
 const errorTag = document.querySelector("div.error-text-wrap");
 const errorTextWrap = document.querySelector("div.error-text-wrap");
-console.log(inputTag);
 
 inputTag.addEventListener("blur", (e) => {
     if (inputTag.value.trim() === "") {
@@ -18,12 +17,17 @@ inputTag.addEventListener("blur", (e) => {
 
 // input에 값이 존재하면 확인 버튼 활성화
 const mailCheckBtn = document.querySelector("button.mail-certification");
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 inputTag.addEventListener("input", (e) => {
     mailSendBtn.disabled = true;
-    if (inputTag.value.trim() !== "") {
+    if (emailRegex.test(inputTag.value)) {
         mailCheckBtn.disabled = false;
+        errorTag.style.display = "none";
     } else {
         mailCheckBtn.disabled = true;
+        errorTag.style.display = "block";
+        errorTextWrap.firstElementChild.textContent = "이메일 형식이 올바르지 않습니다.";
     }
 });
 
@@ -32,14 +36,15 @@ inputTag.addEventListener("input", (e) => {
 const mailSendBtn = document.querySelector("button.mail-send-btn");
 // 메일 한 번 보내면 다시 못 보내게 체크하기
 let mailSendCheck = true;
-mailCheckBtn.addEventListener("click", (e) => {
+mailCheckBtn.addEventListener("click", async (e) => {
     // 여기서 서버 연결해서 응답에 따라 에러 문구가 나오거나 메일 인증 보내기 버튼 활성화
-    if (true) {
+    let check = await memberService.checkEmail(inputTag.value);
+    if (check) {
         mailSendBtn.disabled = false;
         inputWrap.classList.remove("error");
         errorTag.style.display = "none";
     } else {
-        errorTextWrap.firstElementChild.textContent = "에러 문구에 맞게 수정";
+        errorTextWrap.firstElementChild.textContent = "가입되지 않은 이메일 입니다.";
         inputWrap.classList.add("error");
         errorTag.style.display = "block";
     }

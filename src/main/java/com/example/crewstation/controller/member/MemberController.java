@@ -146,4 +146,15 @@ public class MemberController {
 
         return new RedirectView("/");
     }
+
+
+
+
+//    비밀번호 찾기
+//    web
+    @GetMapping("web/password")
+    public String password(MemberDTO memberDTO, Model model) {
+        model.addAttribute("memberDTO", memberDTO);
+        return "member/web/forgot-password";
+    }
 }
