@@ -52,6 +52,7 @@ public class DiaryRestController {
             diaryService.cancelLike(memberId, diaryId);
             return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
+            log.error("좋아요 취소 실패 - memberId={}, diaryId={}", memberId, diaryId, e);
             return ResponseEntity.badRequest()
                     .body(Map.of("success", false, "message", e.getMessage()));
         }

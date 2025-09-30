@@ -86,6 +86,7 @@ public class DiaryServiceImpl implements DiaryService {
         return dto;
     }
 
+    //  내가 댓글 단 일기 개수
     @Override
     public int getCountReplyDiariesByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);
