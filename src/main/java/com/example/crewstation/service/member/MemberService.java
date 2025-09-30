@@ -32,7 +32,8 @@ public interface MemberService {
 //
     public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
 
-
+//  비밀번호 변경
+    public void resetPassword(String memberEmail, String memberPassword);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

@@ -66,4 +66,10 @@ public class MemberDAOTests {
         memberDAO.findBySnsEmail("test123");
         log.info(String.valueOf(memberDAO.findBySnsEmail("test123")));
     }
+
+    @Test
+    @Transactional
+    public void passwordUpdateTest() {
+        memberDAO.updatePassword("test@gmail.com", "1234");
+    }
 }

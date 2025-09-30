@@ -2,9 +2,6 @@ package com.example.crewstation.service.mail;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,19 +14,17 @@ import java.util.Random;
 public class MailService {
     private final JavaMailSender javaMailSender;
 
-    public void sendMail(String mail, HttpServletRequest request, HttpServletResponse response) throws MessagingException {
+    public String sendMail(String mail) throws MessagingException {
         String code = createCode();
-
-        Cookie cookie = new Cookie("code", code);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 5);
-        response.addCookie(cookie);
 
         String receiver = mail;
         String sender = "ccocco55@gmail.com";
         String title = "인증";
 
         StringBuilder body = new StringBuilder();
+        body.append("<html><body><h1>crew-station 이메일 인증</h1><h3>");
+        body.append(code);
+        body.append("</h3></body></html>");
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -39,6 +34,8 @@ public class MailService {
         mimeMessageHelper.setSubject(title);
         mimeMessageHelper.setText(body.toString(), true);
         javaMailSender.send(mimeMessage);
+
+        return code;
     }
 
 //    코드 생성

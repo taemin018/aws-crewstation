@@ -54,4 +54,9 @@ public class MemberDAO {
         return memberMapper.selectProfileById(memberId);
     }
 
+//    비밀번호 업데이트
+    public void updatePassword(String memberEmail, String memberPassword) {
+        memberMapper.updatePassword(memberEmail, memberPassword);
+    }
+
 }

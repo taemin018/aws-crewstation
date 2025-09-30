@@ -38,7 +38,7 @@ public class OAuth2Attribute {
         }
     }
 
-//    Google
+    //    Google
     private static OAuth2Attribute ofGoogle(String provider, String attributeKey, Map<String, Object> attributes){
         log.info(attributes.toString());
 
@@ -52,7 +52,7 @@ public class OAuth2Attribute {
                 .build();
     }
 
-//    Kakao
+    //    Kakao
     private static OAuth2Attribute ofKakao(String provider, String attributeKey, Map<String, Object> attributes){
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
@@ -71,7 +71,7 @@ public class OAuth2Attribute {
                 .build();
     }
 
-//    Naver
+    //    Naver
     private static OAuth2Attribute ofNaver(String provider, String attributeKey, Map<String, Object> attributes) {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         log.info(response.toString());
