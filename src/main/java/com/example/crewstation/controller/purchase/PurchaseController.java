@@ -40,13 +40,13 @@ public class PurchaseController {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
-    @GetMapping("")
+    @GetMapping()
     public String list(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("userDetails {}", userDetails);
         return "gift-shop/list";
     }
 
-    @GetMapping("{postId}")
+    @GetMapping("detail/{postId}")
     public String detail(@PathVariable Long postId, Model model) {
 
 //        임시 로그인
@@ -80,7 +80,7 @@ public class PurchaseController {
     }
 
     @GetMapping("write")
-    public String goWriteForm(PurchaseDTO purchaseDTO,Model model) {
+    public String goToWriteForm(PurchaseDTO purchaseDTO,Model model) {
         model.addAttribute("purchase", purchaseDTO);
         return "gift-shop/write";
     }
@@ -97,6 +97,13 @@ public class PurchaseController {
 //        purchaseDTO.setMemberId(customUserDetails.getId());
 
         return new RedirectView("/gifts/" + purchaseDTO.getPostId());
+    }
+
+    @GetMapping("{postId}")
+    public String goToModifyForm(@PathVariable Long postId, Model model) {
+        Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
+        model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
+        return "gift-shop/update";
     }
 
 }

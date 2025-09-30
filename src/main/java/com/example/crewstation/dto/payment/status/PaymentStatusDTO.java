@@ -15,6 +15,7 @@ public class PaymentStatusDTO {
     private Long paymentId;
     private Long purchaseId;
     private Long memberId;
+    private boolean guest;
     private String memberPhone;
     private String addressZipCode;
     private String addressDetail;

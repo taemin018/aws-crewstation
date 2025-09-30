@@ -32,19 +32,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log("판매 요청 들어왔고");
                     const memberId = document.getElementById("memberId").value;
                     const postId = document.getElementById("postId").dataset.post;
-                    if (memberId) {
-                        console.log("회원 유저야")
-                        console.log(123)
-                        const {message, status} = await purchaseDetailService.requestToSell({
-                            purchaseId: postId,
-                            memberId: memberId
-                        })
+                    console.log("회원 유저야")
+                    console.log(123)
+                    const {isGuest, message, status} = await purchaseDetailService.requestToSell({
+                        purchaseId: postId
+                    })
+                    console.log(isGuest)
+                    if (!isGuest){
                         toastModal(message);
-                        return;
+                    }else {
+                        e.stopPropagation();
+                        modal.classList.add("active");
                     }
                 }
-                e.stopPropagation();
-                modal.classList.add("active");
             });
         });
 
@@ -190,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const form = document.getElementById("requestForm");
                 const formData = new FormData(form);
                 const {message, status} = await purchaseDetailService.requestToSell({
+                    guest : true,
                     purchaseId: document.getElementById("postId").dataset.post,
                     memberPhone: formData.get("phone"),
                     address: formData.get("addressInput"),
@@ -199,9 +200,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("message + ::::::", message)
                 confirmModal.style.display = "none";
                 document.getElementById("myModal").style.display = "none";
-                if(status === 200){
+                if (status === 200) {
                     alert("요청이 전송되었습니다. 임시 주문번호는 입력하신 휴대폰 번호로 발송됩니다.");
-                }else{
+                } else {
                     toastModal(message);
                 }
 
@@ -234,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const postId = document.getElementById("postId").dataset.post;
         const {message, status} = await purchaseDetailService.report({
             reportContent: reportContent,
-            memberId: memberId,
             postId: postId
         })
         console.log(message)
