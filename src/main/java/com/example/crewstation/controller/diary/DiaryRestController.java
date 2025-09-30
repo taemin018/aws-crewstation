@@ -43,7 +43,22 @@ public class DiaryRestController {
         return ResponseEntity.ok(count);
     }
 
-    // 내가 댓글 단 다이어리 목록 (JSON, 무한스크롤)
+    // 좋아요 취소
+    @DeleteMapping("/liked/{memberId}/{diaryId}")
+    public ResponseEntity<Map<String, Object>> cancelLikedDiary(
+            @PathVariable Long memberId,
+            @PathVariable Long diaryId) {
+        try {
+            diaryService.cancelLike(memberId, diaryId);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (Exception e) {
+            log.error("좋아요 취소 실패 - memberId={}, diaryId={}", memberId, diaryId, e);
+            return ResponseEntity.badRequest()
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
+    // 내가 댓글 단 다이어리 목록 (무한스크롤)
     @GetMapping("/replies/{memberId}")
     public ResponseEntity<ReplyDiaryCriteriaDTO> getReplyDiaries(
             @PathVariable Long memberId,
@@ -56,7 +71,7 @@ public class DiaryRestController {
         return ResponseEntity.ok(dto);
     }
 
-    // 댓글 단 다이어리 개수 조회 (탭 카운트 표시용)
+    // 댓글 단 다이어리 개수 조회
     @GetMapping("/replies/{memberId}/count")
     public ResponseEntity<Integer> getReplyDiaryCount(@PathVariable Long memberId) {
         int count = diaryService.getCountReplyDiariesByMemberId(memberId);

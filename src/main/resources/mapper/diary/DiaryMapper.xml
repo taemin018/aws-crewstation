@@ -40,6 +40,7 @@
                            on vfpsf.post_section_id = ps.id
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
+        limit 4;
     </select>
 
     <!-- 내가 좋아요 한 일기 -->
@@ -89,6 +90,13 @@
         ORDER BY l.id DESC
         LIMIT #{criteria.size} OFFSET #{criteria.offset}
     </select>
+
+    <!-- 좋아요 취소 -->
+    <delete id="deleteLike">
+        DELETE FROM tbl_like
+        WHERE member_id = #{memberId}
+          AND post_id = #{diaryId}
+    </delete>
 
     <!-- 내가 좋아요 한 일기 개수 -->
     <select id="countDiariesLikedByMemberId" parameterType="long" resultType="int">

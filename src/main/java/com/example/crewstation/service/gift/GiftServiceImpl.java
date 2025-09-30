@@ -6,6 +6,7 @@ import com.example.crewstation.mapper.gift.GiftMapper;
 import com.example.crewstation.repository.gift.GiftDAO;
 import com.example.crewstation.util.DateUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,21 +15,20 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GiftServiceImpl implements GiftService {
 
-    private final GiftMapper giftMapper;
     private final GiftDAO giftDAO;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @Cacheable(value = "posts", key="'post_' + #id")
+    @Cacheable(value = "gifts", key="'gifts_' + #post_id")
     public List<GiftDTO> getGift(int limit) {
-        giftDAO.getMainGifts(limit);
 
-//        GiftDTO giftDTO = giftDAO.getMainGifts(limit).orElseThrow(PostNotFoundException::new);
-//        giftDTO.setRelativeDate(DateUtils.toRelativeTime(giftDTO.getCreatedDatetime().split("\\.")[0]));
-
+        giftDAO.getMainGifts(limit).forEach(giftDTO -> {
+            giftDTO.setRelativeDate(DateUtils.toRelativeTime(giftDTO.getRelativeDate().split("\\.")[0]));
+        });
         return giftDAO.getMainGifts(limit);
     }
 }

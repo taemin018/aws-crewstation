@@ -3,8 +3,11 @@ package com.example.crewstation.service.payment;
 import com.example.crewstation.domain.guest.GuestVO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 
+import java.util.Map;
+import java.util.Objects;
+
 public interface PaymentService {
-    public void requestPayment(PaymentStatusDTO paymentStatusDTO);
+    public Map<String, Object> requestPayment(PaymentStatusDTO paymentStatusDTO);
 
     default GuestVO toVO(PaymentStatusDTO  paymentStatusDTO) {
         return GuestVO.builder()
