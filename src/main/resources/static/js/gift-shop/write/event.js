@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // === 가격/수량/시간 ===
     const form = document.querySelector("form");
-    const priceInput = document.getElementById("purchaseProductPrice");
+    const priceInput = document.getElementById("price");
     const quantityInput = document.getElementById("purchaseProductCount");
     const timeInput = document.getElementById("purchaseLimitTime");
 
@@ -104,19 +104,24 @@ document.addEventListener("DOMContentLoaded", () => {
         "카자흐스탄", "카타르", "캄보디아", "캐나다", "케냐", "코모로", "코스타리카", "코트디부아르", "콜롬비아", "콩고공화국",
         "콩고민주공화국", "쿠바", "쿠웨이트", "쿡제도", "크로아티아", "키르기스스탄", "키리바시", "타지키스탄", "탄자니아", "태국",
         "토고", "통가", "투르크메니스탄", "투발루", "튀니지", "튀르키예", "트리니다드토바고", "파나마", "파라과이", "파키스탄",
-        "파푸아뉴기니", "팔라우", "팔레스타인", "페루", "포르투갈", "폴란드", "프랑스", "피지", "핀란드", "필리핀"
+        "파푸아뉴기니", "팔라우", "팔레스타인", "페루", "포르투갈", "폴란드", "프랑스", "피지", "핀란드", "필리핀","호주"
     ];
     const countryInput = document.getElementById("purchaseCountry");
     const countryDropdown = document.getElementById("countryDropdown");
     if (countryInput && countryDropdown) {
         countryInput.addEventListener("input", () => {
+            console.log(countryInput.value);
             const value = countryInput.value.trim();
+            console.log(value);
             countryDropdown.innerHTML = "";
             if (!value) {
+
                 countryDropdown.style.display = "none";
                 return;
             }
+            console.log("여기까지 통관")
             const filtered = countries.filter(c => c.includes(value));
+            console.log(filtered)
             if (filtered.length) {
                 filtered.forEach(country => {
                     const li = document.createElement("li");

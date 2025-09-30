@@ -2,6 +2,7 @@ package com.example.crewstation.service.purchase;
 
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.file.section.PostSectionFileVO;
+import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.PostSectionFileDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
@@ -31,6 +32,19 @@ public interface PurchaseService {
                 .imageType(sectionFileDTO.getImageType())
                 .createdDatetime(sectionFileDTO.getCreateDatetime())
                 .updatedDatetime(sectionFileDTO.getUpdateDatetime())
+                .build();
+    }
+
+    default PurchaseVO toPurchaseVO(PurchaseDTO purchaseDTO) {
+        return PurchaseVO.builder()
+                .postId(purchaseDTO.getPostId())
+                .purchaseCountry(purchaseDTO.getPurchaseCountry())
+                .createdDatetime(purchaseDTO.getCreatedDatetime())
+                .updatedDatetime(purchaseDTO.getUpdatedDatetime())
+                .deliveryMethod(purchaseDTO.getPurchaseDeliveryMethod())
+                .purchaseLimitTime(purchaseDTO.getPurchaseLimitTime())
+                .purchaseProductCount(purchaseDTO.getPurchaseProductCount())
+                .purchaseProductPrice(purchaseDTO.getPrice())
                 .build();
     }
 }

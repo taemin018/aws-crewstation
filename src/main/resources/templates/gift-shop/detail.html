@@ -172,7 +172,16 @@
             <div class="product-seller-info-container">
                 <a class="product-seller-info-wrapper">
                     <div class="product-seller-profile">
-                        <img class="product-seller-profile-img" th:src="@{${purchase.filePath}}">
+                        <th:block th:if="${purchase.filePath != null}">
+                            <img class="product-seller-profile-img" th:src="@{${purchase.filePath}}">
+                        </th:block>
+                        <th:block th:if="${purchase.filePath == null and purchase.socialImgUrl !=null}">
+                            <img class="product-seller-profile-img" th:src="@{${purchase.socialImgUrl}}">
+                        </th:block>
+                        <th:block th:if="${purchase.filePath == null and purchase.socialImgUrl ==null}">
+                            <img class="product-seller-profile-img" src="/images/air1.png">
+                        </th:block>
+
                     </div>
                     <span class="product-seller-name" th:text="${purchase.memberName}"></span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" fill="#2F3438" viewBox="0 0 12 12"

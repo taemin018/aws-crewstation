@@ -22,7 +22,6 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryDAO diaryDAO;
 
-    @Override
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "posts", key="'post_' + #id")
     public List<DiaryDTO> selectDiaryList() {
@@ -56,6 +55,11 @@ public class DiaryServiceImpl implements DiaryService {
     public int getCountDiariesLikedByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);
         return diaryDAO.countDiariesLikedByMemberId(memberId);
+    }
+
+    @Override
+    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO) {
+        return List.of();
     }
 
     @Override
