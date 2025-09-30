@@ -13,7 +13,12 @@
 --     tbl_member
 --     RESTART IDENTITY CASCADE;
 
-    Select * from tbl_member;
+Select * from tbl_member;
+Select * from tbl_like;
+
+UPDATE tbl_member
+SET member_name = '데구르르구르는바나나'
+WHERE id = 3;
 
 -- 2. 회원
 INSERT INTO tbl_member (member_name, member_email, member_password, social_img_url) VALUES
