@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 // http://localhost:10000/swagger-ui/index.html
 @Tag(name = "Auth", description = "Auth API")
 public interface AuthControllerDocs {
-    @Operation(summary = "일반 회원 로그인",
+    @Operation(summary = "회원 로그인",
             description = "일반 회원이 로그인 할 때 토큰 발급",
             parameters = {
                 @Parameter(name = "memberDTO", description = "로그인 화면에서 입력한 인증 정보")

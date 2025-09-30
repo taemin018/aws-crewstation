@@ -1,27 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crew Station</title>
-    <link rel="stylesheet" href="../../../static/css/font.css">
-    <link rel="shortcut icon" href="../../../static/images/crew-station-favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../../static/css/member/web/reset-password.css">
-</head>
-<body>
-    <main class="main-container">
-        <div class="main-wrap">
+const passwordLayout = (() => {
+    const passwordModal = () => {
+         let text = ``;
+         const tbody = document.querySelector("#password");
+
+         text = `
             <div class="form-wrap-desc">
                 <span style="font-size: 17px;">비밀번호를 재설정 해주세요.</span><br><br>
                 영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요. 나중에 수정
             </div>
-            <!-- 나중에 이름 바꿔야 합니다. -->
-            <form name="number-temp">
+            <form name="number-temp" action="/member/web/forgot-password" method="post">
                 <div class="password-input-wrap">
                     <div class="input-wrap">
-                        <input type="password" name="" placeholder="비밀번호" class="member-password password">
+                        <input type="password" name="memberPassword" placeholder="비밀번호" class="member-password password">
                     </div>
-                    <div class="error-text-wrap">
+                    <div class="password-error-text-wrap">
                         <span>필수 입력 항목입니다.</span>
                     </div>
                 </div>
@@ -29,14 +21,17 @@
                     <div class="input-wrap">
                         <input type="password" name="" placeholder="비밀번호 확인" class="member-password password-check">
                     </div>
-                    <div class="error-text-wrap">
+                    <div class="error-text-wrap-check">
                         <span>필수 입력 항목입니다.</span>
                     </div>
                 </div>
+                <input type="hidden" name="memberEmail" class="email-member">
                 <button class="password-send-btn" disabled>비밀번호 변경하기</button>
             </form>
-        </div>
-    </main>  
-</body>
-<script src="../../../static/js/member/web/reset-password/event.js"></script>
-</html>
+         `;
+
+
+         tbody.innerHTML = text;
+    }
+    return {passwordModal:passwordModal}
+})();

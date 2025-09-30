@@ -152,9 +152,45 @@ public class MemberController {
 
 //    비밀번호 찾기
 //    web
-    @GetMapping("web/password")
-    public String password(MemberDTO memberDTO, Model model) {
+    @GetMapping("web/forgot-password")
+    public String changePassword(MemberDTO memberDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
         return "member/web/forgot-password";
+    }
+
+    @PostMapping("web/forgot-password")
+    public RedirectView changePassword(
+            @RequestParam("memberEmail") String memberEmail,
+            @RequestParam("memberPassword") String memberPassword
+    ) {
+        memberService.resetPassword(memberEmail, memberPassword); // 서비스에서 Mapper 호출
+        return new RedirectView("/member/web/reset-password-success"); // 변경 후 로그인 페이지로
+    }
+
+    @GetMapping("web/reset-password-success")
+    public String resetPasswordSuccess() {
+        return "member/web/reset-password-success";
+    }
+
+    //    비밀번호 찾기
+//    mobile
+    @GetMapping("mobile/forgot-password")
+    public String mobileChangePassword(MemberDTO memberDTO, Model model) {
+        model.addAttribute("memberDTO", memberDTO);
+        return "member/mobile/forgot-password";
+    }
+
+    @PostMapping("mobile/forgot-password")
+    public RedirectView mobileChangePassword(
+            @RequestParam("memberEmail") String memberEmail,
+            @RequestParam("memberPassword") String memberPassword
+    ) {
+        memberService.resetPassword(memberEmail, memberPassword); // 서비스에서 Mapper 호출
+        return new RedirectView("/member/mobile/reset-password-success"); // 변경 후 로그인 페이지로
+    }
+
+    @GetMapping("mobile/reset-password-success")
+    public String mobileResetPasswordSuccess() {
+        return "member/mobile/reset-password-success";
     }
 }

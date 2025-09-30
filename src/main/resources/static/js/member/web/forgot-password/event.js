@@ -8,7 +8,7 @@ inputTag.addEventListener("blur", (e) => {
     if (inputTag.value.trim() === "") {
         inputWrap.classList.add("error");
         errorTag.style.display = "block";
-        errorTextWrap.firstElementChild.textContent = "인증번호가 다릅니다.";
+        errorTextWrap.firstElementChild.textContent = "필수 입력 요소 입니다.";
     } else {
         inputWrap.classList.remove("error");
         errorTag.style.display = "none";
@@ -22,12 +22,14 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 inputTag.addEventListener("input", (e) => {
     mailSendBtn.disabled = true;
     if (emailRegex.test(inputTag.value)) {
+        inputWrap.classList.remove("error");
         mailCheckBtn.disabled = false;
         errorTag.style.display = "none";
     } else {
         mailCheckBtn.disabled = true;
         errorTag.style.display = "block";
         errorTextWrap.firstElementChild.textContent = "이메일 형식이 올바르지 않습니다.";
+        inputWrap.classList.add("error");
     }
 });
 
@@ -73,26 +75,41 @@ function updateTimer(timer) {
         clearInterval(timer); // 0초가 되면 멈춤
     }
 }
+// 메일 보내기
+
+let serverCode = null;
+
 mailSendBtn.addEventListener("click", (e) => {
-    if (!mailSendCheck) return;
-    codeInputWrap.style.display = "block";
-    mailSendCheck = false;
     codeInputWrap.style.display = "block";
     mailSendCheckBtn.style.display = "block";
-    mailSendBtn.style.display = "none";
+    mailSendBtn.style.display = "none"
+});
+
+mailSendBtn.addEventListener("click", async (e) => {
+    serverCode = await memberService.sendEmail(inputTag.value);
+
+    if (!mailSendCheck) return;
+    mailSendCheck = false;;
     timer = setInterval(updateTimer, 1000);
     updateTimer(timer);
+
+    console.log(serverCode)
 });
 
 // 메일 재전송
 const mailResendBtn = document.querySelector("button.mail-resend");
-mailResendBtn.addEventListener("click", (e) => {
-    if (!mailSendCheck) return;
+mailResendBtn.addEventListener("click", async (e) => {
+    // 시간
+    serverCode = await memberService.sendEmail(inputTag.value);
+
     clearInterval(timer);
-    mailSendCheck = false;
     time = 5 * 60;
     timer = setInterval(updateTimer, 1000);
     updateTimer(timer);
+
+    console.log(serverCode)
+
+//     이메일 전송
 });
 
 const codeInput = document.querySelector("input.code");
@@ -116,13 +133,82 @@ codeInput.addEventListener("input", (e) => {
         mailSendCheckBtn.disabled = false;
     }
 });
+const certify = document.querySelector(".certify");
 
 // 인증번호 인증 버튼
 mailSendCheckBtn.addEventListener("click", (e) => {
-    mailSendCheck = true;
-    // 성공 시 리다이렉트
-    if (true) {
+    e.preventDefault();
+    // 인증 성공시
+    if (serverCode.code  === codeInput.value) {
         clearInterval(timer);
+        certify.style.display = "none";
+        // 비밀번호 변경 layout으로 바꿔주기
+        passwordLayout.passwordModal();
+        // input에 이메일 값 넣어주기
+        const hiddenEmailInput = document.querySelector(".email-member");
+
+        hiddenEmailInput.value = inputTag.value;
+
+        // 빈 값 체크, 비밀번호 + 비밀번호 확인 값 체크 유효성
+        const passwordInput = document.querySelector(
+            "input.member-password.password"
+        );
+        const passwordCheckInput = document.querySelector(
+            "input.member-password.password-check"
+        );
+        const passwordError = document.querySelector("div.password-error-text-wrap");
+        const passwordCheckError = document.querySelector(
+            "div.error-text-wrap-check"
+        );
+        const passwordBtn = document.querySelector("button.password-send-btn");
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+        passwordInput.addEventListener("blur", (e) => {
+            if (passwordInput.value.trim() === "") {
+                passwordError.style.display = "block";
+                passwordError.firstElementChild.textContent = "필수 입력 항목입니다.";
+            } else if (passwordInput.value.trim() !== passwordCheckInput.value.trim()) {
+                passwordCheckError.style.display = "block";
+                passwordCheckError.firstElementChild.textContent =
+                    "비밀번호가 다릅니다.";
+            } else if (passwordInput.value.trim() === passwordCheckInput.value.trim()) {
+                passwordCheckError.style.display = "none";
+            } else {
+                passwordError.style.display = "none";
+            }
+        });
+
+        passwordInput.addEventListener("keyup", (e) => {
+            const password = passwordInput.value.trim();
+
+            if (!passwordRegex.test(password)) {
+                passwordError.style.display = "block";
+                passwordError.firstElementChild.textContent =
+                    "영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요.";
+
+                passwordInput.classList.add("error");
+            } else {
+                passwordError.style.display = "none";
+                passwordError.firstElementChild.textContent = "";
+
+                passwordInput.classList.remove("error");
+            }
+        });
+
+        passwordCheckInput.addEventListener("blur", (e) => {
+            if (passwordCheckInput.value.trim() === "") {
+                passwordCheckError.style.display = "block";
+                passwordCheckError.firstElementChild.textContent =
+                    "필수 입력 항목입니다.";
+            } else if (passwordInput.value.trim() !== passwordCheckInput.value.trim()) {
+                passwordCheckError.style.display = "block";
+                passwordCheckError.firstElementChild.textContent =
+                    "비밀번호가 다릅니다.";
+            } else if (passwordInput.value.trim() === passwordCheckInput.value.trim()) {
+                passwordCheckError.style.display = "none";
+                passwordBtn.disabled = false;
+            }
+        });
     }
     // 실패시 에러 문구 보여주기
     else {

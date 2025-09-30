@@ -1,7 +1,6 @@
 package com.example.crewstation.diary;
 
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
-import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.diary.DiaryMapper;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
@@ -12,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Slf4j
