@@ -40,6 +40,7 @@
                            on vfpsf.post_section_id = ps.id
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
+        limit 4;
     </select>
 
     <!-- 내가 좋아요 한 일기 -->

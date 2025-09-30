@@ -5,7 +5,6 @@
         select
             v.post_id             as postId,
             v.post_title          as postTitle,
-            v.post_read_count     as postReadCount,
             v.created_datetime    as createdDatetime,
             v.updated_datetime    as updatedDatetime,
             v.accompany_status    as accompanyStatus,
@@ -25,8 +24,6 @@
             tc.id                 as crewId,
             tc.crew_name          as crewName,
             tc.crew_description   as crewDescription,
-            tc.crew_member_count  as crewMemberCount,
-
             cf.file_id            as fileId,
 
             tf.file_origin_name   as fileOriginName,

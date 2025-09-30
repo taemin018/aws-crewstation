@@ -21,11 +21,11 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "posts", key="'post_' + #id")
-    public List<DiaryDTO> selectDiaryList() {
+    public List<DiaryDTO> selectDiaryList(int limit) {
         DiaryDTO diaryDTO = new DiaryDTO();
-        diaryDAO.selectDiaryList();
+        diaryDAO.selectDiaryList(4);
 
-        return diaryDAO.selectDiaryList();
+        return diaryDAO.selectDiaryList(4);
     }
 
     @Override

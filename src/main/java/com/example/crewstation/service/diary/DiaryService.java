@@ -5,6 +5,7 @@ import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.util.ScrollCriteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface DiaryService {
     public int getCountDiariesLikedByMemberId(Long memberId);
 
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList();
+    public List<DiaryDTO> selectDiaryList(@Param("limit") int limit);
     //    내가 댓글 쓴 일기 조회
     public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria);
 

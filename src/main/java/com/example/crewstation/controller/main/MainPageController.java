@@ -3,6 +3,7 @@ package com.example.crewstation.controller.main;
 import com.example.crewstation.dto.accompany.AccompanyDTO;
 import com.example.crewstation.dto.banner.BannerDTO;
 import com.example.crewstation.dto.crew.CrewDTO;
+import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.service.accompany.AccompanyService;
 import com.example.crewstation.service.banner.BannerService;
@@ -24,8 +25,8 @@ import java.util.List;
 @Slf4j
 public class MainPageController {
     private final CrewService crewService;
-    private final DiaryService diaryService;
     private final BannerService bannerService;
+    private final DiaryService diaryService;
     private final GiftService giftService;
     private final AccompanyService accompanyService;
 
@@ -33,15 +34,15 @@ public class MainPageController {
     public String getMainPage(Model model) {
 
         List<CrewDTO> crews = crewService.getCrews();
-//        List<DiaryDTO> diaries = diaryService.selectDiaryList();
+        List<DiaryDTO> diaries = diaryService.selectDiaryList(4);
         List<BannerDTO> banners = bannerService.getBanners();
         List<GiftDTO> gifts = giftService.getGift(4);
-        List<AccompanyDTO> accompanies = accompanyService.getAccompanies();
+        List<AccompanyDTO> accompanies = accompanyService.getAccompanies(4);
 
 
 
         model.addAttribute("crews", crews);
-//        model.addAttribute("diaries", diaries);
+        model.addAttribute("diaries", diaries);
         model.addAttribute("banners", banners);
         model.addAttribute("gifts", gifts);
         model.addAttribute("accompanies", accompanies);
