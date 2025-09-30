@@ -48,18 +48,25 @@ public class DiaryServiceImpl implements DiaryService {
         return dto;
     }
 
+    //  좋아요 한 다이어리 개수
     @Override
     public int getCountDiariesLikedByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);
         return diaryDAO.countDiariesLikedByMemberId(memberId);
     }
 
+    //  좋아요 취소
+    @Override
+    public void cancelLike(Long memberId, Long diaryId) {
+        diaryDAO.deleteLike(memberId, diaryId);
+    }
+
+    // 댓글 단 다이어리 목록 조회
     @Override
     public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria) {
         log.info("댓글 단 다이어리 조회 - memberId={}, page={}, size={}",
                 memberId, criteria.getPage(), criteria.getSize());
 
-        // 댓글 단 다이어리 목록 조회
         List<ReplyDiaryDTO> diaries = diaryDAO.findReplyDiariesByMemberId(memberId, criteria);
 
         // 상대시간 변환
@@ -79,6 +86,7 @@ public class DiaryServiceImpl implements DiaryService {
         return dto;
     }
 
+    //  내가 댓글 단 일기 개수
     @Override
     public int getCountReplyDiariesByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);

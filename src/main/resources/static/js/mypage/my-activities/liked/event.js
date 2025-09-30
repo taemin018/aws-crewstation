@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // 이벤트 위임 - 좋아요 & 댓글 버튼
-    diaryFeed.addEventListener("click", (e) => {
+    diaryFeed.addEventListener("click", async (e) => {
         const likeBtn = e.target.closest(".like-btn");
         const commentBtn = e.target.closest(".comment-btn");
 
@@ -110,23 +110,29 @@ document.addEventListener("DOMContentLoaded", async () => {
             const diaryId = likeBtn.dataset.id;
             if (!confirm("좋아요를 취소하시겠습니까?")) return;
 
-            console.log(`좋아요 취소: 일기 ID ${diaryId}`);
+            console.log(`좋아요 취소: ID ${diaryId}`);
 
-            const card = likeBtn.closest(".card-feed-item-wrap");
-            if (card) card.remove();
+            // 서버에 좋아요 취소 요청
+            const result = await likeService.cancelLike(memberId, diaryId);
 
-            // 좋아요 개수 다시 갱신
-            likeService.getLikedDiaryCount(memberId).then((count) => {
+            if (result.success) {
+                const card = likeBtn.closest(".card-feed-item-wrap");
+                if (card) card.remove();
+
+                // 뒤에 남은 데이터 있으면 한 장 더 불러오기
+                if (diariesCriteria?.hasMore) {
+                    diariesCriteria = await showList(++page);
+                }
+
+                // 좋아요 개수 갱신
+                const count = await likeService.getLikedDiaryCount(memberId);
                 if (tagNames.length > 1) {
                     tagNames[1].textContent = `좋아요(${count})`;
                 }
-            });
-        }
 
-        if (commentBtn) {
-            const diaryId = commentBtn.dataset.id;
-            console.log(`댓글 버튼 클릭됨: ${diaryId}`);
-            alert(`댓글 버튼 클릭됨: 일기 ID ${diaryId}`);
+            } else {
+                alert("좋아요 취소 실패: " + result.message);
+            }
         }
     });
 });

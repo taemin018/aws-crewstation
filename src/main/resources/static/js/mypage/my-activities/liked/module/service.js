@@ -71,5 +71,20 @@ const likeService = (() => {
         }
     };
 
-    return { getLikedDiaries : getLikedDiaries, getLikedDiaryCount : getLikedDiaryCount };
+    const cancelLike = async (memberId, diaryId) => {
+        try {
+            const response = await fetch(`/api/diaries/liked/${memberId}/${diaryId}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) throw new Error(`Error: ${response.status}`);
+            return await response.json(); // { success: true } or { success: false, message: ... }
+        } catch (error) {
+            console.error("cancelLike Error:", error);
+            return { success: false, message: error.message };
+        }
+    };
+
+    return { getLikedDiaries : getLikedDiaries,
+            getLikedDiaryCount : getLikedDiaryCount,
+            cancelLike : cancelLike };
 })();
