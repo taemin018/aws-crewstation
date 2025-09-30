@@ -24,24 +24,36 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String provider = oAuth2User.getAttribute("provider");
         String email = oAuth2User.getAttribute("email");
+<<<<<<< HEAD
         String name = oAuth2User.getAttribute("name");
         String profile =  oAuth2User.getAttribute("profile");
+=======
+>>>>>>> noticedetail
         boolean isExist = oAuth2User.getAttribute("exist");
         String role = oAuth2User.getAuthorities().stream().findFirst().orElseThrow(IllegalAccessError::new).getAuthority();
         String path = null;
 
+<<<<<<< HEAD
         log.info("provider={}", provider);
         log.info("email={}", email);
         log.info("name={}", name);
         log.info("profile={}", profile);
 
+=======
+>>>>>>> noticedetail
         if(isExist){
             jwtTokenProvider.createAccessToken(email, provider);
             jwtTokenProvider.createRefreshToken(email, provider);
 
+<<<<<<< HEAD
             path = "/";
         }else{
             Cookie memberEmailCookie = new Cookie("memberSocialEmail", email);
+=======
+            path = "/post/list/1";
+        }else{
+            Cookie memberEmailCookie = new Cookie("memberEmail", email);
+>>>>>>> noticedetail
             memberEmailCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
             memberEmailCookie.setSecure(false);       // HTTPS 환경에서만 전송
             memberEmailCookie.setPath("/");          // 모든 경로에 쿠키 적용
@@ -57,6 +69,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             response.addCookie(roleCookie);
 
+<<<<<<< HEAD
             Cookie profileCookie = new Cookie("profile", profile);
             profileCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
             profileCookie.setSecure(false);       // HTTPS 환경에서만 전송
@@ -74,6 +87,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             response.addCookie(nameCookie);
 
             path = "/member/web/sns/join";
+=======
+            path = "/member/sns/join";
+>>>>>>> noticedetail
         }
 
         Cookie providerCookie = new Cookie("provider", provider);
