@@ -28,4 +28,5 @@ public class GiftDTO {
     private String memberName;
     private Integer chemistryScore;
     private String socialImgUrl;
+    private String relativeDate;
 }
