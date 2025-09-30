@@ -1,8 +1,9 @@
 package com.example.crewstation.service.diary;
 
 
-import com.example.crewstation.dto.diary.*;
-import com.example.crewstation.util.Criteria;
+import com.example.crewstation.dto.diary.DiaryDTO;
+import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
+import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.util.ScrollCriteria;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface DiaryService {
     public int getCountDiariesLikedByMemberId(Long memberId);
 
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO);
+    public List<DiaryDTO> selectDiaryList();
     //    내가 댓글 쓴 일기 조회
     public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria);
 

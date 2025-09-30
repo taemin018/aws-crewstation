@@ -50,7 +50,7 @@ public class MemberDAO {
         memberMapper.insertGuest(memberDTO);
     }
 
-    public Optional<MemberProfileDTO> findById(Long memberId) {
+    public Optional<MemberProfileDTO> selectProfileById(Long memberId) {
         return memberMapper.selectProfileById(memberId);
     }
 

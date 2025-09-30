@@ -6,7 +6,9 @@ import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,15 +19,15 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryDAO diaryDAO;
 
-//    @Override
-//    @Transactional(rollbackFor = Exception.class)
-//    @Cacheable(value = "posts", key="'post_' + #id")
-//    public List<DiaryDTO> selectDiaryList() {
-//        DiaryDTO diaryDTO = new DiaryDTO();
-//        diaryDAO.selectDiaryList();
-//
-//        return diaryDAO.selectDiaryList();
-//    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @Cacheable(value = "posts", key="'post_' + #id")
+    public List<DiaryDTO> selectDiaryList() {
+        DiaryDTO diaryDTO = new DiaryDTO();
+        diaryDAO.selectDiaryList();
+
+        return diaryDAO.selectDiaryList();
+    }
 
     @Override
     public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(Long memberId, ScrollCriteria criteria) {
@@ -51,11 +53,6 @@ public class DiaryServiceImpl implements DiaryService {
     public int getCountDiariesLikedByMemberId(Long memberId) {
         log.info("memberId: {}", memberId);
         return diaryDAO.countDiariesLikedByMemberId(memberId);
-    }
-
-    @Override
-    public List<DiaryDTO> selectDiaryList(DiaryDTO diaryDTO) {
-        return List.of();
     }
 
     @Override

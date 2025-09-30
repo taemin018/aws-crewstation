@@ -8,6 +8,7 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.member.AddressDAO;
 import com.example.crewstation.repository.member.MemberDAO;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -131,7 +133,7 @@ public class MemberServiceImpl implements MemberService {
         AddressDTO addressDTO = new AddressDTO();
 
 
-        log.info("memberId: {}",memberId);
+        log.info("memberId: {}", memberId);
 
         addressDTO.setMemberId(memberId);
         addressDTO.setAddressDetail(memberDTO.getAddressDTO().getAddressDetail());
@@ -140,7 +142,7 @@ public class MemberServiceImpl implements MemberService {
 
         addressDAO.save(toVO(addressDTO));
 
-        if(multipartFile.getOriginalFilename().equals("")){
+        if (multipartFile.getOriginalFilename().equals("")) {
             return;
         }
         FileDTO fileDTO = new FileDTO();
@@ -151,7 +153,7 @@ public class MemberServiceImpl implements MemberService {
             String originalFileName = multipartFile.getOriginalFilename();
             String extension = "";
 
-            if(originalFileName != null && originalFileName.contains(".")){
+            if (originalFileName != null && originalFileName.contains(".")) {
                 extension = originalFileName.substring(originalFileName.lastIndexOf("."));
             }
 
@@ -176,8 +178,12 @@ public class MemberServiceImpl implements MemberService {
         }
 
 
-
         memberDAO.saveSns(toVO(memberDTO));
+
+    }
+    @Override
+    public Optional<MemberProfileDTO> getMemberProfile (Long memberId) {
+        return memberDAO.selectProfileById(memberId);
     }
 
 }

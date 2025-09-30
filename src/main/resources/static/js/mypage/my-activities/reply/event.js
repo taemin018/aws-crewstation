@@ -10,12 +10,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     let checkScroll = true;
     let replyCriteria = null;
 
+    const navButtons = document.querySelectorAll(".nav-button");
+    const currentPath = window.location.pathname;
+
+    navButtons.forEach((btn) => {
+        btn.classList.remove("active"); // 혹시 있을지 모르는 active 초기화
+        if (btn.getAttribute("href") === currentPath) {
+            btn.classList.add("active");
+        }
+    });
+
     if (!replyFeed) {
         console.error("댓글 단 다이어리 컨테이너(#reply-diary-list)를 찾을 수 없습니다.");
         return;
     }
 
-    // 프로필 링크 고정
+    // 프로필 링크
     if (profileWrap) {
         const a = profileWrap.querySelector("a");
         if (a) a.href = PROFILE_EDIT_URL;
@@ -35,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("프로필 불러오기 실패:", e);
     }
 
-    // 함수: 댓글 단 다이어리 불러오기
+    // 댓글 다이어리 불러오기
     const showList = async (page = 1) => {
         const loading = document.getElementById("loading");
         if (loading) loading.style.display = "block";
@@ -49,9 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             replyLayout.appendReplyList(replyFeed, diaries);
         }
 
-        setTimeout(() => {
-            if (loading) loading.style.display = "none";
-        }, 1000);
+        setTimeout(() => { if (loading) loading.style.display = "none"; }, 1000);
 
         return result.criteria;
     };
@@ -60,12 +68,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     replyCriteria = await showList(page);
 
     // 댓글 개수 갱신
-    const count = await replyService.getReplyDiaryCount(memberId);
-    if (tagNames.length > 0) {
-        tagNames[0].textContent = `댓글(${count})`;
-    }
+    const replyCount = await replyService.getReplyDiaryCount(memberId);
+    if (tagNames.length > 0) tagNames[0].textContent = `댓글(${replyCount})`;
 
-    // 스크롤 이벤트 (무한스크롤)
+    // 좋아요 개수 갱신 (목록 X, 개수만)
+    const likeCount = await likeService.getLikedDiaryCount(memberId);
+    if (tagNames.length > 1) tagNames[1].textContent = `좋아요(${likeCount})`;
+
+    // 무한스크롤
     window.addEventListener("scroll", async () => {
         const scrollTop = window.scrollY;
         const windowHeight = window.innerHeight;
@@ -75,12 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (checkScroll && replyCriteria?.hasMore) {
                 replyCriteria = await showList(++page);
                 checkScroll = false;
-
-                setTimeout(() => {
-                    if (replyCriteria?.hasMore) {
-                        checkScroll = true;
-                    }
-                }, 1100);
+                setTimeout(() => { if (replyCriteria?.hasMore) checkScroll = true; }, 1100);
             }
         }
     });
