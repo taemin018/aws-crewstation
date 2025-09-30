@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.crewstation.mapper.ask.AskMapper">
-    <!--    추가-->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into tbl_inquiry(inquiry_title, inquiry_content, member_id)
-        values (#{inquiryTitle}, #{inquiryContent}, #{memberId})
-    </insert>
-    <update id="update">
-        update tbl_inquiry
-        set inquiry_title = #{inquiryTitle}, inquiry_content = #{inquiryContent}, member_id = #{memberId}
-        where id = #{id}
-    </update>
-    <delete id="delete">
-        delete from tbl_inquiry
-        where id = #{id}
-    </delete>
-</mapper>
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.example.crewstation.mapper.ask.AskMapper">-->
+<!--    &lt;!&ndash;    추가&ndash;&gt;-->
+<!--    <insert id="insert" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into tbl_inquiry(inquiry_title, inquiry_content, member_id)-->
+<!--        values (#{inquiryTitle}, #{inquiryContent}, #{memberId})-->
+<!--    </insert>-->
+<!--    <update id="update">-->
+<!--        update tbl_inquiry-->
+<!--        set inquiry_title = #{inquiryTitle}, inquiry_content = #{inquiryContent}, member_id = #{memberId}-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+<!--    <delete id="delete">-->
+<!--        delete from tbl_inquiry-->
+<!--        where id = #{id}-->
+<!--    </delete>-->
+<!--</mapper>-->
