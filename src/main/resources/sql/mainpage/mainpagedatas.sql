@@ -1,379 +1,867 @@
--- 멤버
-insert into tbl_member (member_name, member_phone, member_email, member_birth, member_password, member_description)
-values ('test', '01012341234', 'test@ac.kr', '20000113', '1234', '테스트 데이터 입니다.');
-
-insert into tbl_member (member_name, member_phone, member_email, member_birth, member_password, member_description)
-values ('test2', '01012341234', 'test2@ac.kr', '20000113', '1234', '테스트 데이터 입니다.');
-
-SELECT id FROM tbl_diary_country_path ORDER BY id;   -- 경로 존재 확인
-SELECT id FROM tbl_post ORDER BY id;                 -- 포스트 존재 확인
-SELECT * FROM tbl_diary ORDER BY post_id;
-
-select id, country_start_date, country_end_date, member_id, country_id
-from tbl_diary_country_path
-order by id;
-
--- 다이어리
-insert into tbl_diary
-(post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-    overriding system value
-values (4, 'public', 5, 20, 13);
-
-
-insert into tbl_diary
-(post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-    overriding system value
-values (5, 'public', 5, 20, 13);
-
--- 다이어리 나러 경로
-insert into tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-values ('2025-01-01', '2025-01-10', 1, 1), -- 한국 여행
-       ('2025-02-15', '2025-02-20', 2, 2); -- 일본 여행
-
-select * from tbl_post;
+EXPLAIN ANALYZE
+select vpp.post_title,
+       vpp.purchase_country,
+       vpp.purchase_delivery_method,
+       vpp.purchase_limit_time,
+       vpp.purchase_product_count,
+       vpp.purchase_product_price,
+       vpp.purchase_delivery_method,
+       vpp.created_datetime,
+       vpp.updated_datetime,
+       tm.id,
+       tm.chemistry_score,
+       tm.member_name,
+       tm.social_img_url,
+       vfmf.id as file_id,
+       vfmf.file_name,
+       vfmf.file_origin_name,
+       vfmf.file_path,
+       ta.address
+from tbl_member tm
+         left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
+         join view_post_purchase vpp on tm.id = vpp.member_id and vpp.id = 1
+         join tbl_address ta on tm.id = ta.member_id;
 
 
--- 1) 멤버 (작성자)
-insert into tbl_member (id, member_name, member_phone, member_email, member_birth, member_password, member_description)
-values (2, 'testUser', '01012345678', 'test@ac.kr', '2000-01-01', '1234', '더미 유저')
-on conflict do nothing;
 
--- 2) 게시글
-insert into tbl_post (id, post_title, member_id, created_datetime, updated_datetime)
-values (1, '테스트 다이어리 제목', 1, now(), now())
-on conflict do nothing;
+EXPLAIN ANALYZE
+select *
+from tbl_member tm
+         left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
+         join view_post_purchase vpp on tm.id = vpp.member_id
+         join tbl_address ta on tm.id = ta.member_id;
 
--- 3) 다이어리
+
+EXPLAIN ANALYZE
+select vpp.id as post_id,
+       vpp.post_title,
+       vpp.purchase_country,
+       vpp.purchase_delivery_method,
+       vpp.purchase_limit_time,
+       vpp.purchase_product_count,
+       vpp.purchase_product_price,
+       vpp.purchase_delivery_method,
+       vpp.created_datetime,
+       vpp.updated_datetime,
+       vfps.file_path,
+       vfps.file_name,
+       tm.member_name,
+       tm.chemistry_score
+from tbl_member tm join
+     view_post_purchase vpp on tm.id = vpp.member_id
+                   join tbl_post_section tps on vpp.id = tps.post_id and vpp.post_status = 'active'
+                   join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
+-- where vpp.created_datetime + (vpp.purchase_limit_time || 'hour')::interval > now()
+--   and (
+where vpp.purchase_country like '%' || 'test' || '%'
+   or vpp.post_title like '%' || 'test' || '%'
+--     )
+limit 5 offset 0;
+
+create extension if not exists pg_trgm;/* (최초 1번만)*/
+create index idx_member_name_trgm
+    on tbl_post
+        using gin (post_title gin_trgm_ops);
+
+create index idx_member_test_trgm
+    on tbl_purchase
+        using gin (purchase_country gin_trgm_ops);
+
+
+
+
+
+
+
+select vpp.id as post_id,
+       vpp.post_title,
+       vpp.purchase_country,
+       vpp.purchase_delivery_method,
+       vpp.purchase_limit_time,
+       vpp.purchase_product_count,
+       vpp.purchase_product_price,
+       vpp.purchase_delivery_method,
+       vpp.created_datetime,
+       vpp.updated_datetime,
+       tm.id as member_id,
+       tm.chemistry_score,
+       tm.member_name,
+       tm.social_img_url,
+       vfmf.id as file_id,
+       vfmf.file_name,
+       vfmf.file_origin_name,
+       vfmf.file_path,
+       ta.address
+from tbl_member tm
+         left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
+         join view_post_purchase vpp on tm.id = vpp.member_id and vpp.id = 3
+         join tbl_address ta on tm.id = ta.member_id
+where vpp.post_status = 'active'
+
+select * from view_post_purchase;
+
+
+-- init_dummy.sql : PostgreSQL 초기화 + 더미데이터 30개
+
+-- -- 1. 기존 데이터 초기화
+-- TRUNCATE TABLE
+--     tbl_post_section_file,
+--     tbl_file,
+--     tbl_post_section,
+--     tbl_like,
+--     tbl_diary,
+--     tbl_diary_country_path,
+--     tbl_post,
+--     tbl_country,
+--     tbl_member
+--     RESTART IDENTITY CASCADE;
+
+Select * from tbl_member;
+Select * from tbl_like;
+
+UPDATE tbl_member
+SET member_name = '데구르르구르는바나나'
+WHERE id = 3;
+
+-- 2. 회원
+INSERT INTO tbl_member (member_name, member_email, member_password, social_img_url) VALUES
+                                                                                        ('Alice', 'alice@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Alice'),
+                                                                                        ('Bob', 'bob@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Bob'),
+                                                                                        ('Charlie', 'charlie@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Charlie'),
+                                                                                        ('David', 'david@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=David'),
+                                                                                        ('Emma', 'emma@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Emma'),
+                                                                                        ('Frank', 'frank@test.com', 'pass123', 'https://dummyimage.com/100x100/000/fff&text=Frank');
+
+-- 3. 나라
+INSERT INTO tbl_country (country_name) VALUES
+                                           ('Korea'), ('Japan'), ('USA'), ('France'), ('Italy');
+
+-- 4. 일기 더미 데이터 (30개)
+
+-- 1
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 1', 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01','2025-01-10',2,1);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (1,'public',1,0,1);
+INSERT INTO tbl_like (post_id, member_id) VALUES (1,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 1',1);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (1,1,'main');
+
+-- 2
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 2', 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-02','2025-01-11',3,2);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (2,'public',1,0,2);
+INSERT INTO tbl_like (post_id, member_id) VALUES (2,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 2',2);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (2,2,'main');
+
+-- 3
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 3', 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-03','2025-01-12',4,3);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (3,'public',1,0,3);
+INSERT INTO tbl_like (post_id, member_id) VALUES (3,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 3',3);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (3,3,'main');
+
+-- 4
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 4', 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-04','2025-01-13',5,4);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (4,'public',1,0,4);
+INSERT INTO tbl_like (post_id, member_id) VALUES (4,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 4',4);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (4,4,'main');
+
+-- 5
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 5', 6);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-05','2025-01-14',6,5);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (5,'public',1,0,5);
+INSERT INTO tbl_like (post_id, member_id) VALUES (5,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 5',5);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (5,5,'main');
+
+-- 6
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 6', 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-06','2025-01-15',2,1);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (6,'public',1,0,6);
+INSERT INTO tbl_like (post_id, member_id) VALUES (6,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 6',6);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (6,6,'main');
+
+-- 7
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 7', 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-07','2025-01-16',3,2);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (7,'public',1,0,7);
+INSERT INTO tbl_like (post_id, member_id) VALUES (7,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 7',7);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (7,7,'main');
+
+-- 8
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 8', 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-08','2025-01-17',4,3);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (8,'public',1,0,8);
+INSERT INTO tbl_like (post_id, member_id) VALUES (8,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 8',8);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (8,8,'main');
+
+-- 9
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 9', 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-09','2025-01-18',5,4);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (9,'public',1,0,9);
+INSERT INTO tbl_like (post_id, member_id) VALUES (9,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 9',9);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (9,9,'main');
+
+-- 10
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 10', 6);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-10','2025-01-19',6,5);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (10,'public',1,0,10);
+INSERT INTO tbl_like (post_id, member_id) VALUES (10,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 10',10);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (10,10,'main');
+
+-- 11
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 11', 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-11','2025-01-20',2,1);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (11,'public',1,0,11);
+INSERT INTO tbl_like (post_id, member_id) VALUES (11,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 11',11);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (11,11,'main');
+
+-- 12
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 12', 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-12','2025-01-21',3,2);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (12,'public',1,0,12);
+INSERT INTO tbl_like (post_id, member_id) VALUES (12,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 12',12);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (12,12,'main');
+
+-- 13
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 13', 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-13','2025-01-22',4,3);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (13,'public',1,0,13);
+INSERT INTO tbl_like (post_id, member_id) VALUES (13,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 13',13);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (13,13,'main');
+
+-- 14
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 14', 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-14','2025-01-23',5,4);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (14,'public',1,0,14);
+INSERT INTO tbl_like (post_id, member_id) VALUES (14,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 14',14);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (14,14,'main');
+
+-- 15
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 15', 6);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-15','2025-01-24',6,5);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (15,'public',1,0,15);
+INSERT INTO tbl_like (post_id, member_id) VALUES (15,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 15',15);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (15,15,'main');
+
+-- 16
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 16', 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-16','2025-01-25',2,1);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (16,'public',1,0,16);
+INSERT INTO tbl_like (post_id, member_id) VALUES (16,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 16',16);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (16,16,'main');
+
+-- 17
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 17', 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-17','2025-01-26',3,2);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (17,'public',1,0,17);
+INSERT INTO tbl_like (post_id, member_id) VALUES (17,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 17',17);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (17,17,'main');
+
+-- 18
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 18', 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-18','2025-01-27',4,3);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (18,'public',1,0,18);
+INSERT INTO tbl_like (post_id, member_id) VALUES (18,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 18',18);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (18,18,'main');
+
+-- 19
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 19', 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-19','2025-01-28',5,4);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (19,'public',1,0,19);
+INSERT INTO tbl_like (post_id, member_id) VALUES (19,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 19',19);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (19,19,'main');
+
+-- 20
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 20', 6);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-20','2025-01-29',6,5);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (20,'public',1,0,20);
+INSERT INTO tbl_like (post_id, member_id) VALUES (20,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 20',20);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (20,20,'main');
+
+-- 21
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 21', 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-21','2025-01-30',2,1);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (21,'public',1,0,21);
+INSERT INTO tbl_like (post_id, member_id) VALUES (21,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 21',21);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (21,21,'main');
+
+-- 22
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 22', 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-22','2025-01-31',3,2);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (22,'public',1,0,22);
+INSERT INTO tbl_like (post_id, member_id) VALUES (22,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 22',22);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (22,22,'main');
+
+-- 23
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 23', 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-23','2025-01-32',4,3);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (23,'public',1,0,23);
+INSERT INTO tbl_like (post_id, member_id) VALUES (23,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 23',23);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (23,23,'main');
+
+-- 24
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 24', 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-24','2025-01-33',5,4);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (24,'public',1,0,24);
+INSERT INTO tbl_like (post_id, member_id) VALUES (24,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 24',24);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (24,24,'main');
+
+-- 25
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 25', 6);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-25','2025-01-34',6,5);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (25,'public',1,0,25);
+INSERT INTO tbl_like (post_id, member_id) VALUES (25,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 25',25);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (25,25,'main');
+
+-- 26
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 26', 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-26','2025-01-35',2,1);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (26,'public',1,0,26);
+INSERT INTO tbl_like (post_id, member_id) VALUES (26,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 26',26);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary1.png','/images/diary1.png','diary1_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (26,26,'main');
+
+-- 27
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 27', 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-27','2025-01-36',3,2);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (27,'public',1,0,27);
+INSERT INTO tbl_like (post_id, member_id) VALUES (27,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 27',27);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary2.png','/images/diary2.png','diary2_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (27,27,'main');
+
+-- 28
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 28', 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-28','2025-01-37',4,3);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (28,'public',1,0,28);
+INSERT INTO tbl_like (post_id, member_id) VALUES (28,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 28',28);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary3.png','/images/diary3.png','diary3_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (28,28,'main');
+
+-- 29
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 29', 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-29','2025-01-38',5,4);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (29,'public',1,0,29);
+INSERT INTO tbl_like (post_id, member_id) VALUES (29,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 29',29);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary4.png','/images/diary4.png','diary4_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (29,29,'main');
+
+-- 30
+INSERT INTO tbl_post (post_title, member_id) VALUES ('Diary Post 30', 6);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-30','2025-01-39',6,5);
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (30,'public',1,0,30);
+INSERT INTO tbl_like (post_id, member_id) VALUES (30,1);
+INSERT INTO tbl_post_section (post_content, post_id) VALUES ('Diary content 30',30);
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES ('diary5.png','/images/diary5.png','diary5_20240926.png','2048');
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type) VALUES (30,30,'main');
+
+-- tbl_reply 더미 데이터
+INSERT INTO tbl_reply (reply_content, diary_id, member_id) VALUES
+                                                               ('좋은 글이네요!', 1, 3),
+                                                               ('여행기 재미있게 봤습니다.', 1, 4),
+                                                               ('사진이 멋져요!', 2, 5),
+                                                               ('가보고 싶네요~', 2, 6),
+                                                               ('공감합니다!', 3, 2),
+                                                               ('다음 글도 기대할게요.', 3, 5),
+                                                               ('풍경이 인상적이에요.', 4, 6),
+                                                               ('즐거운 여행 같아요!', 4, 1),
+                                                               ('좋은 정보 감사합니다.', 5, 2),
+                                                               ('재밌게 읽었어요 ^^', 5, 3),
+
+                                                               ('다음엔 저도 가보고 싶네요.', 6, 4),
+                                                               ('추억이 느껴지네요.', 7, 5),
+                                                               ('사진 퀄리티가 좋네요!', 7, 2),
+                                                               ('글이 따뜻하네요.', 8, 1),
+                                                               ('정말 멋진 경험 같아요!', 8, 6),
+                                                               ('여행 코스 참고하겠습니다.', 9, 3),
+                                                               ('읽으면서 힐링했어요.', 10, 4),
+                                                               ('좋은 글 감사합니다.', 10, 2),
+                                                               ('나도 그곳 다녀왔었는데 반갑네요.', 11, 5),
+                                                               ('추천 감사합니다!', 12, 6);
+
+
+-- 1) 크루 3개
+INSERT INTO tbl_crew (crew_name, crew_description, crew_member_count)
+VALUES
+    ('오사카 크루', '오사카 여행 같이 가는 사람들', 2),
+    ('뉴욕 크루', '뉴욕 브런치 투어 크루', 3),
+    ('파리 크루', '파리 미술관 투어 크루', 2);
+
+-- 2) 크루 파일 (크루 썸네일 이미지)
+--   tbl_file 에 crew1.png, crew2.png, crew3.png 가 있다고 가정
+INSERT INTO tbl_crew_file (file_id, crew_id)
+SELECT f.id, c.id
+FROM tbl_file f
+         JOIN tbl_crew c ON c.crew_name='오사카 크루'
+WHERE f.file_name='crew1.png';
+
+INSERT INTO tbl_crew_file (file_id, crew_id)
+SELECT f.id, c.id
+FROM tbl_file f
+         JOIN tbl_crew c ON c.crew_name='뉴욕 크루'
+WHERE f.file_name='crew2.png';
+
+INSERT INTO tbl_crew_file (file_id, crew_id)
+SELECT f.id, c.id
+FROM tbl_file f
+         JOIN tbl_crew c ON c.crew_name='파리 크루'
+WHERE f.file_name='crew3.png';
+
+-- 3) 크루 멤버
+--   멤버 3명 (alice, bob, carol)이 있다고 가정
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+VALUES
+    ('leader'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='오사카 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='alice@example.com')),
+    ('partner'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='오사카 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='bob@example.com')),
+
+    ('leader'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='뉴욕 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='carol@example.com')),
+    ('partner'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='뉴욕 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='alice@example.com')),
+    ('partner'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='뉴욕 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='bob@example.com')),
+
+    ('leader'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='파리 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='carol@example.com')),
+    ('partner'::crew_role,
+     (SELECT id FROM tbl_crew WHERE crew_name='파리 크루'),
+     (SELECT id FROM tbl_member WHERE member_email='alice@example.com'));
+
+
+-------------------------
+
+-- 혹시 실패 트랜잭션 잔여가 있으면 먼저
+ROLLBACK;
+
+BEGIN;
+
+-- 1) 크루 썸네일 파일 3개 (없다면 생성)
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+VALUES
+    ('osaka_crew.png','images/crew/','osaka_crew.png','1024'),
+    ('ny_crew.png',   'images/crew/','ny_crew.png','1024'),
+    ('paris_crew.png','images/crew/','paris_crew.png','1024');
+
+-- 2) 크루 3개
+INSERT INTO tbl_crew (crew_name, crew_description, crew_member_count)
+VALUES
+    ('오사카 크루',  '오사카 여행 같이 가는 사람들', 2),
+    ('뉴욕 크루',    '뉴욕 브런치/산책 모임',       3),
+    ('파리 크루',    '파리 미술관/산책 모임',       2);
+
+
+-- 1) 깨진 트랜잭션 해제
+ROLLBACK;
+
+BEGIN;
+
+-- 2) 크루 썸네일 파일이 없으면 만들기 (있으면 건너뜀)
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+SELECT 'osaka_crew.png','images/crew/','osaka_crew.png','1024'
+WHERE NOT EXISTS (SELECT 1 FROM tbl_file WHERE file_name='osaka_crew.png');
+
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+SELECT 'ny_crew.png','images/crew/','ny_crew.png','1024'
+WHERE NOT EXISTS (SELECT 1 FROM tbl_file WHERE file_name='ny_crew.png');
+
+INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
+SELECT 'paris_crew.png','images/crew/','paris_crew.png','1024'
+WHERE NOT EXISTS (SELECT 1 FROM tbl_file WHERE file_name='paris_crew.png');
+
+-- 3) 크루가 없으면 만들기 (있으면 건너뜀)
+INSERT INTO tbl_crew (crew_name, crew_description, crew_member_count)
+SELECT '오사카 크루','오사카 여행 같이 가는 사람들',2
+WHERE NOT EXISTS (SELECT 1 FROM tbl_crew WHERE crew_name='오사카 크루');
+
+INSERT INTO tbl_crew (crew_name, crew_description, crew_member_count)
+SELECT '뉴욕 크루','뉴욕 브런치/산책 모임',3
+WHERE NOT EXISTS (SELECT 1 FROM tbl_crew WHERE crew_name='뉴욕 크루');
+
+INSERT INTO tbl_crew (crew_name, crew_description, crew_member_count)
+SELECT '파리 크루','파리 미술관/산책 모임',2
+WHERE NOT EXISTS (SELECT 1 FROM tbl_crew WHERE crew_name='파리 크루');
+
+-- 4) 크루–파일 매핑: 중복이면 crew_id 만 업데이트 (UPSERT)
+INSERT INTO tbl_crew_file (file_id, crew_id)
+SELECT f.id, c.id
+FROM tbl_file f JOIN tbl_crew c ON c.crew_name='오사카 크루'
+WHERE f.file_name='osaka_crew.png'
+ON CONFLICT (file_id) DO UPDATE SET crew_id = EXCLUDED.crew_id;
+
+INSERT INTO tbl_crew_file (file_id, crew_id)
+SELECT f.id, c.id
+FROM tbl_file f JOIN tbl_crew c ON c.crew_name='뉴욕 크루'
+WHERE f.file_name='ny_crew.png'
+ON CONFLICT (file_id) DO UPDATE SET crew_id = EXCLUDED.crew_id;
+
+INSERT INTO tbl_crew_file (file_id, crew_id)
+SELECT f.id, c.id
+FROM tbl_file f JOIN tbl_crew c ON c.crew_name='파리 크루'
+WHERE f.file_name='paris_crew.png'
+ON CONFLICT (file_id) DO UPDATE SET crew_id = EXCLUDED.crew_id;
+
+-- 5) 크루 멤버 배정 (멤버가 있으면만 들어가게)
+-- 오사카: Alice(leader), Bob(partner)
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'leader'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Alice'
+WHERE c.crew_name='오사카 크루'
+  AND NOT EXISTS (
+    SELECT 1 FROM tbl_crew_member x
+    WHERE x.crew_id = c.id AND x.member_id = m.id
+);
+
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'partner'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Bob'
+WHERE c.crew_name='오사카 크루'
+  AND NOT EXISTS (
+    SELECT 1 FROM tbl_crew_member x
+    WHERE x.crew_id = c.id AND x.member_id = m.id
+);
+
+-- 뉴욕: Charlie(leader), Emma(partner), Frank(partner)
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'leader'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Charlie'
+WHERE c.crew_name='뉴욕 크루'
+  AND NOT EXISTS (SELECT 1 FROM tbl_crew_member x WHERE x.crew_id=c.id AND x.member_id=m.id);
+
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'partner'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Emma'
+WHERE c.crew_name='뉴욕 크루'
+  AND NOT EXISTS (SELECT 1 FROM tbl_crew_member x WHERE x.crew_id=c.id AND x.member_id=m.id);
+
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'partner'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Frank'
+WHERE c.crew_name='뉴욕 크루'
+  AND NOT EXISTS (SELECT 1 FROM tbl_crew_member x WHERE x.crew_id=c.id AND x.member_id=m.id);
+
+-- 파리: Alice(leader), Charlie(partner)
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'leader'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Alice'
+WHERE c.crew_name='파리 크루'
+  AND NOT EXISTS (SELECT 1 FROM tbl_crew_member x WHERE x.crew_id=c.id AND x.member_id=m.id);
+
+INSERT INTO tbl_crew_member (crew_role, crew_id, member_id)
+SELECT 'partner'::crew_role, c.id, m.id
+FROM tbl_crew c JOIN tbl_member m ON m.member_name='Charlie'
+WHERE c.crew_name='파리 크루'
+  AND NOT EXISTS (SELECT 1 FROM tbl_crew_member x WHERE x.crew_id=c.id AND x.member_id=m.id);
+
+COMMIT;
+
+-- 후보 post / crew / file / country_path 하나씩 확인
+select id from tbl_post order by id desc limit 5;
+select id from tbl_crew order by id desc limit 5;
+select id, file_name, file_path from tbl_file order by id desc limit 5;
+
+insert into tbl_country (country_name) values
+                                           ('France'),
+                                           ('USA'),
+                                           ('Japan');
+
+insert into tbl_diary_country_path (country_id)
+values ( 1), (2), (3);
+
 insert into tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-values (1, 'public', 5, 2, 1)
-on conflict do nothing;
+values
+    (28, 'public', 12, 3, 1), -- 프랑스
+    (27, 'public', 8, 1, 2),  -- 미국
+    (26, 'public', 23, 5, 3); -- 일본
 
--- 4) 게시글 섹션 + 파일 (이미지)
-insert into tbl_post_section (id, post_content, post_id)
-values (1, '본문 내용입니다', 1)
-on conflict do nothing;
+insert into tbl_crew_diary (crew_id, diary_id) values
+                                                   (1, 28),
+                                                   (2, 27),
+                                                   (3, 26);
 
-insert into tbl_file (id, file_origin_name, file_path, file_name, created_datetime, updated_datetime)
-values (1, 'origin.png', '/2025/09/27/', 'file1.png', now(), now())
-on conflict do nothing;
+
+select id from tbl_post where id in (28,27,26);
+select id from tbl_crew where id in (1,2,3);
+select id, country_id from tbl_diary_country_path;
+
+insert into tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+values
+    ('2025-09-01', '2025-09-10', 1, 1), -- France
+    ('2025-10-05', '2025-10-12', 1, 2), -- USA
+    ('2025-11-01', '2025-11-07', 1, 3); -- Japan
+
+insert into tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+    overriding system value
+values
+    (28, 'public', 12, 3, 1),
+    (27, 'public', 8, 1, 2),
+    (26, 'public', 23, 5, 3);
+
+
 
 insert into tbl_post_section_file (file_id, post_section_id, image_type)
-values (1, 1, 'main')
-on conflict do nothing;
-
--- 5) 크루 + 크루 다이어리
-insert into tbl_crew (id, crew_name, crew_description, crew_member_count, created_datetime, updated_datetime)
-values (1, '여행크루', '테스트 크루입니다', 10, now(), now())
-on conflict do nothing;
-
-insert into tbl_crew_diary (crew_id, diary_id)
-values (1, 1)
-on conflict do nothing;
-
--- 6) 좋아요
-insert into tbl_like (post_id, member_id)
-values (1, 1)
-on conflict do nothing;
-
-
-insert into tbl_post (post_title, member_id)
-values ('test1', 1),
-       ('test2', 1),
-       ('test3', 2),
-       ('test4', 2),
-       ('test5', 2),
-       ('test6', 1),
-       ('test7', 2),
-       ('test8', 2),
-       ('test9', 2),
-       ('test10', 1),
-       ('test11', 2),
-       ('test12', 2),
-       ('test13', 2),
-       ('test14', 1);
-
-insert into tbl_post_section (post_content, post_id)
-values ('test1', 1),
-       ('test2', 2),
-       ('test3', 3),
-       ('test4', 4),
-       ('test5', 5),
-       ('test6', 6),
-       ('test7', 7),
-       ('test8', 8),
-       ('test9', 9),
-       ('test10', 10),
-       ('test11', 11),
-       ('test12', 12),
-       ('test13', 13),
-       ('test14', 14);
-
-insert into tbl_file(file_origin_name, file_path, file_name)
-values ('origin1', 'path1', 'name1'),
-       ('origin2', 'path2', 'name2'),
-       ('origin3', 'path3', 'name3'),
-       ('origin4', 'path4', 'name4'),
-       ('origin5', 'path5', 'name5'),
-       ('origin6', 'path6', 'name6'),
-       ('origin7', 'path7', 'name7'),
-       ('origin8', 'path8', 'name8'),
-       ('origin9', 'path9', 'name9'),
-       ('origin10', 'path10', 'name10'),
-       ('origin11', 'path11', 'name11'),
-       ('origin12', 'path12', 'name12'),
-       ('origin13', 'path13', 'name13'),
-       ('origin14', 'path14', 'name14');
-
-insert into tbl_post_section_file(post_section_id, image_type)
-values ( 1, 'main'),
-       ( 2, 'main'),
-       ( 3, 'main'),
-       ( 4, 'main'),
-       ( 5, 'main'),
-       ( 6, 'main'),
-       ( 7, 'main'),
-       ( 8, 'main');
-
-
-insert into tbl_purchase (post_id, purchase_limit_time, purchase_product_count, purchase_country,
-                          purchase_product_price, purchase_delivery_method)
-values (1, 24, 10, '호주', 10000, 'direct'),
-       (2, 24, 10, '미국', 10000, 'parcel'),
-       (3, 24, 10, '한국', 10000, 'direct'),
-       (4, 24, 10, '일본', 10000, 'parcel'),
-       (5, 24, 10, '필리핀', 10000, 'direct'),
-       (6, 24, 10, '캐나다', 10000, 'parcel'),
-       (7, 24, 10, '보라카이', 10000, 'direct'),
-       (8, 24, 10, '화와이', 10000, 'parcel'),
-       (9, 24, 10, '런던', 10000, 'direct'),
-       (10, 24, 10, '영국', 10000, 'parcel'),
-       (11, 24, 10, '중국', 10000, 'direct'),
-       (12, 24, 10, '대만', 10000, 'parcel'),
-       (13, 24, 10, '홍콩', 10000, 'direct'),
-       (14, 24, 10, '러시아', 10000, 'parcel');
-set timezone = 'Asia/Seoul';
-select now();
-
-select purchase_limit_time, created_datetime
-from tbl_post p
-         join tbl_purchase tp on p.id = tp.post_id
-WHERE p.created_datetime + (tp.purchase_limit_time || 'hour')::interval > NOW();
-;
-select p.created_datetime + (tp.purchase_limit_time || 'hour')::interval, now()
-from tbl_post p
-         join tbl_purchase tp on p.id = tp.post_id;
+values
+    (24, 32, 'main'),  -- 파리 (post 28 → section 32 → file 24)
+    (23, 33, 'main'),  -- 뉴욕 (post 27 → section 33 → file 23)
+    (22, 34, 'main');  -- 오사카 (post 26 → section 34 → file 22)
 
 
 
-insert into tbl_file(file_origin_name, file_path, file_name,file_size)
-values ('1qweasd123cs.png', '2025/09/25/1qweasd123cs.png', '1qweasd123cs.png',1000),
-       ('ansnaxxc.png', '2025/09/25/ansnaxxc.png', 'ansnaxxc.png',1000);
-
-
-insert into tbl_post_section (post_content, post_id)
-values ('multi',3),('multi',4),('multi',5);
-
-select * from tbl_member;
-
-insert into tbl_address(address_zip_code, address_detail, address, member_id)
-values (06226,'서울특별시 강남구 역삼동 771','서울특별시 강남구 역삼로 234 (역삼동)',2);
-
-insert into tbl_crew (crew_name, crew_description, crew_member_count, created_datetime, updated_datetime)
-values ('test', '테스트 입니다1', '5', '2025-09-26','2025-09-27');
-
-insert into tbl_crew (crew_name, crew_description, crew_member_count, created_datetime, updated_datetime)
-values ('test1', '테스트 입니다1', '3', '2025-09-24','2025-09-27');
-
-select * from tbl_crew_file;
-select * from tbl_crew;
-select * from tbl_file;
-select * from tbl_diary;
-select * from view_file_post_section_file;
-select * from view_file_post_section_file;
-
-
-select d.post_id,
-       f.file_path
-
-
-
-from tbl_diary d
-        join tbl_file f
-            on f.id = d.post_id;
-
-
-
-
-
-
-
-insert into tbl_like (post_id, member_id)
-values ('1','1');
-
-insert into tbl_diary (diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-values ('public','')
-
-
-select * from tbl_member;
-select * from tbl_diary;
-select * from tbl_like;
-select * from tbl_post_section;
-select * from tbl_file;
-select * from tbl_post_section_file;
-select * from view_post_purchase;
-select * from view_file_post_section_file;
-
-
--- 1. 회원 (일기 작성자 & 좋아요 누르는 사람)
-INSERT INTO tbl_member (member_name, member_email, member_password, social_img_url)
-VALUES ('lisa', 'lisa@tes.com', 'pass023', 'https://dummyimage.com/100x100/000/fff&text=lisa');
-
--- 2. 게시글 (Alice가 작성한 다이어리 글)
-INSERT INTO tbl_post (post_title, member_id)
-VALUES ('My First Diary', 1);
-
-INSERT INTO tbl_country (country_name)
-VALUES ('Korea');
-
-INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
-VALUES ('2025-01-01', '2025-01-31', 1, 1);
-
--- 3. 일기 (게시글과 1:1 연결)
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
-VALUES (1, 'public', 5, 2, 1);
-
--- 4. 좋아요 (Alice 본인이 자기 글 좋아요 누른 상황)
-INSERT INTO tbl_like (post_id, member_id)
-VALUES (1, 1);
-
--- 5. 게시글 섹션 (본문 작성)
-INSERT INTO tbl_post_section (post_content, post_id)
-VALUES ('This is my first diary content', 2);
-
--- 6. 파일 (대표 이미지)
-INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES (
-           'diary1.png',
-           '/images/diary1.png',
-           'diary1_20240926.png',
-           '2048'
-       );
-
--- 7. 섹션-파일 연결 (대표 이미지 = main)
-INSERT INTO tbl_post_section_file (post_section_id, image_type)
-VALUES (5,  'main');
-
-insert into tbl_crew_diary ( crew_id, diary_id)
-values ('4', '1');
-
-insert into tbl_banner ( banner_order)
-values ('7');
-
-select * from tbl_member;
-select * from tbl_crew;
-select * from tbl_file;
-select * from tbl_crew_file;
-
-select * from tbl_crew_member;
-
-insert into tbl_crew_file (file_id, crew_id)
-values (5,3);
-
-insert into tbl_crew_member (crew_role, crew_id, member_id)
-values ('partner', 3, 2);
-
-select * from view_file_crew_file;
-
--- 멤버
-insert into tbl_member(member_name, social_img_url)
-values ('test1', 'https://example.com/img/test1.png'),
-       ('test2', 'https://example.com/img/test2.png');
-
--- 파일
-insert into tbl_file(file_origin_name, file_path, file_name, file_size)
-values ('crew1.png', '/upload/crew', 'crew1.png', '100kb'),
-       ('crew2.png', '/upload/crew', 'crew2.png', '120kb');
-
--- 크루
-insert into tbl_crew(crew_name, crew_description, crew_member_count)
-values ('여행크루A', '즐거운 여행 함께해요', 2);
-
--- 크루 멤버 (멤버 1,2를 크루에 연결)
-insert into tbl_crew_member(crew_role, crew_id, member_id)
-values ('leader', 1, 1),
-       ('partner', 1, 2);
-
--- 크루 파일 (첫 번째 파일을 크루에 연결)
-insert into tbl_crew_file(file_id, crew_id)
-values (2, 2);
-
-select * from tbl_crew_file;
-
--- 게시글 (카드리스트 4개)
-insert into tbl_post(post_title, post_read_count, post_status, member_id)
-values ('일본 오사카 여행 모집', 0, 'active', 1),
-       ('유럽 투어 동행 구해요', 0, 'active', 2),
-       ('베트남 다낭 힐링', 0, 'active', 1),
-       ('미국 서부 로드트립', 0, 'active', 2);
-
--- accompany (게시글과 1:1)
-insert into tbl_accompany(accompany_status, accompany_age_range, post_id)
-values ('short', 20, 2),
-       ('long', 30, 2),
-       ('short', 25, 3),
-       ('long', 35, 4);
-
-insert into tbl_accompany(accompany_status, accompany_age_range, post_id)
-values ('short', 20, 1);
-
-insert into tbl_accompany(accompany_status, accompany_age_range, post_id)
+-- 필요한 섹션 id들(예: 32,33,34)에 맞춰 더미 배너 생성
+insert into tbl_banner (id, banner_order)
     overriding system value
-select v.status::accompany_status, v.age, p.id
-from tbl_post p
-         join (
-    values
-        ('일본 오사카 여행 모집', 'short', 20),
-        ('유럽 투어 동행 구해요', 'long',  30),
-        ('베트남 다낭 힐링',     'short', 25),
-        ('미국 서부 로드트립',   'long',  35)
-) as v(title, status, age)
-              on p.post_title = v.title;
+values (32, 1), (33, 2), (34, 3);
+
+select id from tbl_banner where id in (32,33,34);
+
+-- 예시: post_section_id = 32,33,34 / file_id = 24,23,22 / 대표이미지 main
+insert into tbl_post_section_file (file_id, post_section_id, image_type)
+values
+    (24, 32, 'main'),
+    (23, 33, 'main'),
+    (22, 34, 'main');
+
+select ps.post_id, ps.id as post_section_id, psf.file_id, psf.image_type
+from tbl_post_section ps
+         join tbl_post_section_file psf on psf.post_section_id = ps.id
+where ps.id in (32,33,34);
 
 
-select * from tbl_post;
-select * from tbl_accompany;
+begin;
 
--- 나라
-insert into tbl_country(country_name)
-values ('일본'),
-       ('프랑스'),
-       ('베트남'),
-       ('미국');
+-- 0) 국가 (view에서 country 조인)
+insert into tbl_country (id, country_name) overriding system value values
+                                                                       (1, 'France'),
+                                                                       (2, 'United States'),
+                                                                       (3, 'Japan')
+on conflict (id) do nothing;
 
--- accompany_path (각 게시글에 나라 연결)
-insert into tbl_accompany_path(country_start_date, country_end_date, accompany_id, country_id)
-values ('2025-10-01', '2025-10-05', 1, 1), -- 일본
-       ('2025-11-10', '2025-11-20', 2, 2), -- 프랑스
-       ('2025-12-01', '2025-12-07', 3, 3), -- 베트남
-       ('2026-01-05', '2026-01-20', 4, 4); -- 미국
+-- 1) 멤버 (AccompanyMapper가 member 조인)
+--    실제 컬럼 구성이 다를 수 있으니, 필요한 컬럼만 골라서 사용하세요.
+insert into tbl_member (id, member_name, member_description, social_img_url)
+    overriding system value
+values
+    (101, 'alice', '파리 좋아하는 멤버', 'https://dummyimage.com/100x100/000/fff&text=A'),
+    (102, 'bob',   '뉴욕 좋아하는 멤버', 'https://dummyimage.com/100x100/000/fff&text=B'),
+    (103, 'coco',  '오사카 좋아하는 멤버', 'https://dummyimage.com/100x100/000/fff&text=C'),
+    (104, 'dave',  '서울 좋아하는 멤버', 'https://dummyimage.com/100x100/000/fff&text=D')
+on conflict (id) do nothing;
+
+-- 2) post (view의 뿌리. member_id 필수)
+--    기본적으로 post_status='active'가 뷰에 걸려 있을 가능성이 높습니다.
+insert into tbl_post (id, post_title, post_status, member_id)
+    overriding system value
+values
+    (201, '파리 브런치 투어', 'active', 101),
+    (202, '뉴욕 야경 동행',   'active', 102),
+    (203, '오사카 미식 투어', 'active', 103),
+    (204, '서울 베이커리 투어','active', 104)
+on conflict (id) do nothing;
+
+-- 3) accompany (post_id FK)
+insert into tbl_accompany (post_id, accompany_status, accompany_age_range)
+values
+    (201, 'short', 20),
+    (202, 'short', 25),
+    (203, 'short', 30),
+    (204, 'short', 22)
+on conflict (post_id) do nothing;
+
+-- 4) accompany_path (view에서 기간/국가 조인)
+--    스키마가 보통: id(identity), accompany_id(FK to tbl_accompany.post_id), country_start_date, country_end_date, country_id
+insert into tbl_accompany_path (accompany_id, country_start_date, country_end_date, country_id)
+values
+    (201, '2025-10-01', '2025-10-05', 1),  -- France
+    (202, '2025-10-10', '2025-10-12', 2),  -- United States
+    (203, '2025-10-15', '2025-10-20', 3),  -- Japan
+    (204, '2025-10-22', '2025-10-23', 1)   -- France (예시)
+on conflict do nothing;
+
+-- 5) crew (AccompanyMapper에서 조인)
+insert into tbl_crew (id, crew_name, crew_description, crew_member_count)
+    overriding system value
+values
+    (1, '파리 크루', '파리 같이 가요', 3),
+    (2, '뉴욕 크루', '뉴욕 같이 가요', 4),
+    (3, '오사카 크루', '오사카 같이 가요', 2)
+on conflict (id) do nothing;
+
+-- 6) crew_member (멤버-크루 연결)
+insert into tbl_crew_member (crew_id, member_id, crew_role)
+values
+    (1, 101, 'leader'),
+    (2, 102, 'partner'),
+    (3, 103, 'partner'),
+    (1, 104, 'partner')
+on conflict do nothing;
+
+-- 7) file (크루 썸네일용. file_size NOT NULL 주의!)
+insert into tbl_file (id, file_origin_name, file_path, file_name, file_size)
+    overriding system value
+values
+    (301, 'paris_main.png',  '/images/accompany/paris_main.png',  'paris_main.png',  '12345'),
+    (302, 'ny_main.png',     '/images/accompany/ny_main.png',     'ny_main.png',     '12345'),
+    (303, 'osaka_main.png',  '/images/accompany/osaka_main.png',  'osaka_main.png',  '12345')
+on conflict (id) do nothing;
+
+-- 8) crew_file (크루-파일 연결)
+insert into tbl_crew_file (file_id, crew_id)
+values
+    (301, 1),
+    (302, 2),
+    (303, 3)
+on conflict (file_id) do nothing;
+
+commit;
 
 
-insert into tbl_accompany_path(country_start_date, country_end_date, accompany_id, country_id)
-select d.start_date, d.end_date, p.id, c.id
-from (values
-          ('일본 오사카 여행 모집','일본','2025-10-01','2025-10-05'),
-          ('유럽 투어 동행 구해요','프랑스','2025-11-10','2025-11-20'),
-          ('베트남 다낭 힐링','베트남','2025-12-01','2025-12-07'),
-          ('미국 서부 로드트립','미국','2026-01-05','2026-01-20')
-     ) as d(post_title, country_name, start_date, end_date)
-         join tbl_post    p on p.post_title    = d.post_title
-         join tbl_country c on c.country_name  = d.country_name;
-
-select * from tbl_file;
-select * from tbl_banner;
-select * from tbl_banner_file;
-
-insert into tbl_banner_file (file_id, banner_id)
-values (7,5);
-
-select * from view_file_banner_file;
