@@ -58,26 +58,69 @@ VALUES ('Diary Post 2', 1),
        ('Diary Post 8', 1),
        ('Diary Post 9', 1);
 INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 4);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 5);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
 VALUES ('2025-01-01', '2025-01-10', 1, 1);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 2);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 3);
+INSERT INTO tbl_diary_country_path (country_start_date, country_end_date, member_id, country_id)
+VALUES ('2025-01-01', '2025-01-10', 1, 4);
+
 INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
 VALUES (29, 'public', 0, 0, 1),
-(30, 'public', 0, 0, 1),
-(31, 'public', 0, 0, 1),
-(32, 'public', 0, 0, 1),
-(33, 'public', 0, 0, 1),
-(34, 'public', 0, 0, 1),
-(35, 'public', 0, 0, 1),
-(36, 'public', 0, 0, 1),
-(37, 'public', 0, 0, 1);
+(30, 'public', 0, 0, 2),
+(31, 'public', 0, 0, 3),
+(32, 'public', 0, 0, 4),
+(33, 'public', 0, 0, 5),
+(34, 'public', 0, 0, 6),
+(35, 'public', 0, 0, 7),
+(36, 'public', 0, 0, 8),
+(37, 'public', 0, 0, 9);
 
 INSERT INTO tbl_like (post_id, member_id)
-VALUES (1, 1);
+VALUES (30, 1);
+INSERT INTO tbl_like (post_id, member_id)
+VALUES (31, 2);
 INSERT INTO tbl_post_section (post_content, post_id)
-VALUES ('Diary content 1', 1);
+VALUES ('Diary content 1-1', 29),
+       ('Diary content 2', 30),
+       ('Diary content 3', 31),
+       ('Diary content 4', 32),
+       ('Diary content 5', 33),
+       ('Diary content 6', 34),
+       ('Diary content 7', 35),
+       ('Diary content 8', 36),
+       ('Diary content 9', 37);
+
 INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)
-VALUES ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527');
+VALUES ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527'),
+       ('Unknown.png', '2025/09/29/ce60db51-01e3-4484-bdda-7d11c2a710eb.png', '9745f486-b55a-436d-b387-9ae738ab7d20.png', '3527');
+
 INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type)
-VALUES (1, 1, 'main');
+VALUES (57, 53, 'main'),
+       (58, 54, 'main'),
+       (59, 55, 'main'),
+       (60, 56, 'main'),
+       (61, 57, 'main'),
+       (62, 58, 'main'),
+       (63, 59, 'main'),
+       (64, 60, 'main'),
+       (65, 61, 'main');
 
 -- 2
 INSERT INTO tbl_post (post_title, member_id)
@@ -566,3 +609,17 @@ VALUES ('좋은 글이네요!', 1, 3),
        ('좋은 글 감사합니다.', 10, 2),
        ('나도 그곳 다녀왔었는데 반갑네요.', 11, 5),
        ('추천 감사합니다!', 12, 6);
+
+
+
+INSERT INTO tbl_crew (crew_name, crew_description)
+values ('shake','크루 소개글 입니다 안녕하세요');
+
+insert into tbl_crew_member(crew_role, crew_id, member_id)
+values ('leader',1,1);
+
+insert into tbl_crew_diary(crew_id, diary_id)
+values (1,29);
+
+
+

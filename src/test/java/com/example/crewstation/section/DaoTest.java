@@ -48,4 +48,9 @@ public class DaoTest {
         sectionDAO.delete(35L);
     }
 
+    @Test
+    public void testFindSectionFileCount(){
+        log.info("findSectionFileCount {}", sectionDAO.findSectionFileCount(3L));
+    }
+
 }

@@ -13,16 +13,19 @@ public class DiaryDTO {
     private String diarySecret;
     private String diaryLikeCount;
     private int diaryReplyCount;
+    private int fileCount;
     private String diaryCountryPathId;
     private String postTitle;
     private Long diaryId;
     private Long crewId;
     private String crewName;
-    private String filePath;
-    private String fileName;
-    private String fileOriginName;
+    private String memberFilePath;
+    private String diaryFilePath;
     private Long memberId;
+    private String socialImgUrl;
     private String memberName;
     private String memberDescription;
     private String postContent;
+    private String createdDatetime;
+    private String updatedDatetime;
 }

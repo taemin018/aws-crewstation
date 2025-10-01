@@ -33,4 +33,20 @@ public class Criteria {
         hasNextPage = endPage < realEnd;
         hasPreviousPage = startPage > 1;
     }
+
+
+    public Criteria(int page, int total,int rowCount ,int pageCount) {
+        this.rowCount = rowCount;
+        this.pageCount = pageCount;
+        count = rowCount + 1;
+        this.page = Math.max(1, page);
+        endPage = (int)(Math.ceil(this.page / (double)this.pageCount) * this.pageCount);
+        startPage = endPage - this.pageCount + 1;
+        realEnd = (int)(Math.ceil(total / (double)rowCount));
+        endPage = Math.min(realEnd, endPage);
+        endPage = Math.max(1, endPage);
+        offset = (this.page - 1) * this.rowCount;
+        hasNextPage = endPage < realEnd;
+        hasPreviousPage = startPage > 1;
+    }
 }

@@ -1,10 +1,12 @@
 package com.example.crewstation.service.diary;
 
 
+import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +30,7 @@ public interface DiaryService {
     //  내가 답글 단 일기 개수 조회
     public int getCountReplyDiariesByMemberId (Long memberId);
 
+
+//    다이어리 목록들 가져오기(다이어리 서비스 쪽)
+    public DiaryCriteriaDTO getDiaries(Search search);
 }

@@ -21,4 +21,7 @@ public interface SectionMapper {
 
 //  섹션 삭제하기
     public void delete(Long id);
+
+//  섹션에 이미지 개수 세기
+    public int selectSectionFileCount(Long postId);
 }

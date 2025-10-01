@@ -1,12 +1,10 @@
 package com.example.crewstation.controller.diary;
 
-import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
-import com.example.crewstation.dto.diary.LikedDiaryDTO;
-import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
-import com.example.crewstation.dto.diary.ReplyDiaryDTO;
+import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.service.diary.DiaryService;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -76,5 +74,13 @@ public class DiaryRestController {
     public ResponseEntity<Integer> getReplyDiaryCount(@PathVariable Long memberId) {
         int count = diaryService.getCountReplyDiariesByMemberId(memberId);
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getDiaries(Search search) {
+        log.info("search: {}", search);
+        DiaryCriteriaDTO diaries = diaryService.getDiaries(search);
+        log.info("diaries::::::::::::::::::::::::::::::::::::: {}", diaries);
+        return ResponseEntity.ok(diaries);
     }
 }

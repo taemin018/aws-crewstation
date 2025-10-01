@@ -17,7 +17,7 @@ public class DiaryController {
         return "mypage/my-activities";
     }
 
-    @GetMapping()
+    @GetMapping
     public String list(){
         return "diary/list";
     }

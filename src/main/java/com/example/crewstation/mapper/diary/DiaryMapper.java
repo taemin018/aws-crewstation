@@ -6,6 +6,7 @@ import com.example.crewstation.dto.diary.LikedDiaryDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryDTO;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import io.lettuce.core.Limit;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,8 @@ public interface DiaryMapper {
 
     // 전체 개수 (hasMore 계산용)
     public int countReplyDiariesByMemberId(@Param("memberId") Long memberId);
+//  다이어리 목록(다이어리 서비스쪽)
+    public List<DiaryDTO> selectAllByKeyword(@Param("criteria") Criteria criteria, @Param("search") Search search);
+// 다이리 목록 개수(다이어리 서비스쪽)
+    public int selectCountAllByKeyword(@Param("search") Search search);
 }
