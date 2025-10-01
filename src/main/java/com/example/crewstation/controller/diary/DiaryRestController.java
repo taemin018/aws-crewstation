@@ -1,5 +1,6 @@
 package com.example.crewstation.controller.diary;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.service.diary.DiaryService;
 import com.example.crewstation.util.Criteria;
@@ -8,6 +9,7 @@ import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,9 +79,10 @@ public class DiaryRestController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getDiaries(Search search) {
+    public ResponseEntity<DiaryCriteriaDTO> getDiaries(Search search,
+                                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         log.info("search: {}", search);
-        DiaryCriteriaDTO diaries = diaryService.getDiaries(search);
+        DiaryCriteriaDTO diaries = diaryService.getDiaries(search, customUserDetails);
         log.info("diaries::::::::::::::::::::::::::::::::::::: {}", diaries);
         return ResponseEntity.ok(diaries);
     }

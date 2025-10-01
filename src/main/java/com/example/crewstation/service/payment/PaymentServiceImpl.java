@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
             return Map.of("guest" ,true,"message",message);
         }
         paymentStatusDAO.save(paymentStatusDTO);
-        alarmDAO.save(paymentStatusDTO.getId());
+        alarmDAO.savePaymentAlarm(paymentStatusDTO.getId());
         message = "판매요청 완료되었습니다.";
         return Map.of("message",message);
     }
