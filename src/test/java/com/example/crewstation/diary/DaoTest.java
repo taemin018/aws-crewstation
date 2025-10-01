@@ -1,5 +1,6 @@
 package com.example.crewstation.diary;
 
+import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
 import com.example.crewstation.repository.diary.DiaryDAO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
@@ -37,5 +38,25 @@ public class DaoTest {
     public void testCountLikedDiaries() {
         Long memberId = 1L;
         int count = diaryDAO.countDiariesLikedByMemberId(memberId);
+    }
+
+    @Test
+    public void testSelectAllByKeyword(){
+        Search search = new Search();
+        search.setKeyword("호주");
+        Criteria criteria = new Criteria(1,2);
+        String order = "diary_like_count";
+        List<DiaryDTO> diaryDTOS = diaryDAO.findAllByKeyword(criteria, search);
+        diaryDTOS.stream().map(DiaryDTO::toString).forEach(log::info);
+    }
+
+    @Test
+    public void testSelectCountAllByKeyword(){
+        Search search = new Search();
+        search.setKeyword("");
+        search.setCategory("null");
+        String order = "diary_like_count";
+        int count = diaryDAO.findCountAllByKeyword(search);
+        log.info("{}",count);
     }
 }

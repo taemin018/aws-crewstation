@@ -6,6 +6,7 @@ import com.example.crewstation.dto.diary.ReplyDiaryDTO;
 import com.example.crewstation.mapper.diary.DiaryMapper;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -51,5 +52,12 @@ public class DiaryDAO {
         return diaryMapper.countReplyDiariesByMemberId(memberId);
     }
 
-
+    //  다이어리 목록(다이어리 서비스쪽)
+    public List<DiaryDTO> findAllByKeyword(@Param("criteria") Criteria criteria, @Param("search") Search search){
+        return diaryMapper.selectAllByKeyword(criteria, search);
+    }
+    // 다이리 목록 개수(다이어리 서비스쪽)
+    public int findCountAllByKeyword(@Param("search") Search search){
+        return diaryMapper.selectCountAllByKeyword(search);
+    }
 }

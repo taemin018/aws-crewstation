@@ -34,4 +34,9 @@ public class SectionDAO {
     public void delete(Long id){
         sectionMapper.delete(id);
     }
+
+    //  섹션에 이미지 개수 세기
+    public int findSectionFileCount(Long postId){
+        return sectionMapper.selectSectionFileCount(postId);
+    }
 }

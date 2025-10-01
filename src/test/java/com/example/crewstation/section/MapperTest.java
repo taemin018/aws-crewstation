@@ -47,4 +47,9 @@ public class MapperTest {
     public void testDelete(){
         sectionMapper.delete(35L);
     }
+
+    @Test
+    public void testSelectSectionFileCount(){
+        log.info("selectSectionFileCount {}", sectionMapper.selectSectionFileCount(3L));
+    }
 }

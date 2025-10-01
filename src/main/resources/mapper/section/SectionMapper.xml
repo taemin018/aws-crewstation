@@ -33,4 +33,11 @@
         delete from tbl_post_section
         where id = #{id}
     </delete>
+
+    <select id="selectSectionFileCount">
+        select count(vfpf.id)
+        from view_file_post_section_file vfpf
+                 join tbl_post_section tps
+                      on vfpf.post_section_id = tps.id and tps.post_id = #{postId}
+    </select>
 </mapper>

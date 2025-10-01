@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         modal.classList.add("active");
                     }
                 }
+                else if(modalId === "reportModal"){
+                    modal.classList.add("active");
+                }
             });
         });
 
@@ -242,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmReportModal.style.display = "none";
         document.getElementById("reportModal").style.display = "none";
         toastModal(message);
-        if (status !== 404) {
+        if (status === 404) {
             location.href = "/gifts"
         }
     });

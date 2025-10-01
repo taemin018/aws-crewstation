@@ -1,5 +1,6 @@
 package com.example.crewstation.diary;
 
+import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
 import com.example.crewstation.mapper.diary.DiaryMapper;
 import com.example.crewstation.util.Criteria;
@@ -37,4 +38,27 @@ public class MapperTest {
 
     }
 
+
+    @Test
+    public void testSelectAllByKeyword(){
+        Search search = new Search();
+        search.setKeyword("");
+        search.setCategory("null");
+        Criteria criteria = new Criteria(1,2);
+
+        String order = "diary_like_count";
+        List<DiaryDTO> diaryDTOS = diaryMapper.selectAllByKeyword(criteria, search);
+        diaryDTOS.stream().map(DiaryDTO::toString).forEach(log::info);
+    }
+
+    @Test
+    public void testSelectCountAllByKeyword(){
+        Search search = new Search();
+        search.setKeyword("");
+        search.setCategory("null");
+
+        String order = "diary_like_count";
+        int count = diaryMapper.selectCountAllByKeyword(search);
+        log.info("{}",count);
+    }
 }

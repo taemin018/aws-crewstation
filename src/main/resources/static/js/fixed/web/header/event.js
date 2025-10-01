@@ -197,6 +197,33 @@ window.addEventListener("wheel", (e) => {
 
 
 
+let btnCheck = true;
+let prevCategory = "total"
+// 서브 카테고리 클릭 시 active 클래스 추가
+const items = document.querySelectorAll(".header-category");
+items.forEach((item) => {
+    item.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        if (!btnCheck) return;
+        if(prevCategory !== item.id){
+            category = item.id;
+            page = 1;
+        }
+        btnCheck = false;
+        await showList(page, keyword, orderType, category,prevCategory !== item.id);
+        prevCategory = category;
+        items.forEach((e) => e.classList.remove("active"));
+        item.classList.add("active");
+        setTimeout(() => {
+            btnCheck = true
+            checkMore = true;
+            checkScroll = true;
+        }, 1500);
+    });
+});
+
+
 // 로그아웃
 
 const logoutLink = document.querySelector("a.logout-btn");
