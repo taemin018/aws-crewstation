@@ -448,6 +448,184 @@ html{
     margin: 16px 0;
 }
 
+/* 별점 모달 */
+
+.modal-wrapper {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1300;
+    background-color: rgba(33, 38, 41, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    padding-bottom: 0px;
+}
+
+.modal-wrappe::before {
+    content: "";
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.modal-wrap {
+    max-height: 96%;
+    margin: 0px;
+    vertical-align: middle;
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    color: rgb(47, 52, 56);
+    background-color: rgb(255, 255, 255);
+    max-width: 700px;
+    width: 100%
+}
+
+.modal-header {
+    padding: 16px 16px 10px;
+    line-height: 0;
+}
+
+.header {
+    font-size: 20px;
+    line-height: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 700;
+    text-align: center;
+    width: calc(100% - 68px);
+    margin-left: 24px;
+    margin-right: 10px;
+    white-space: pre-line;
+}
+
+.close-button {
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    background: none;
+    font: inherit;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+}
+
+.close {
+    display: inline-block;
+    font-size: 24px;
+    line-height: 1;
+    color: rgb(47, 52, 56);
+}
+
+.close::before {
+    font-family: OhouseIcon;
+    vertical-align: top;
+    content: "\e9ba";
+}
+
+.modal-content {
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    word-break: break-all;
+    overflow-y: auto;
+    padding-bottom: 9px;
+}
+
+.modal-content-wrap {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.product-info {
+    margin-left: 0px;
+    margin-right: 0px;
+    gap: 12px;
+    margin: 20px 15px;
+    display: flex
+;
+    flex-direction: row;
+}
+
+.info-img {
+    width: 78px;
+    height: 78px;
+    border-radius: 4px;
+}
+
+.product-info-name {
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.name-span {
+    font-size: 14px;
+    line-height: 18px;
+    position: relative;
+    top: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.product-star {
+    position: relative;
+    margin-bottom: 32px;
+    width: 100%;
+}
+
+.star-title {
+    margin-bottom: 12px;
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.star-title-text {
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: 600;
+}
+
+.star-content {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.star {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    color: rgb(234, 237, 239);
+    transition: color 0.2s cubic-bezier(0.33, 1, 0.68, 1);
+    transform: scale(1);
+    touch-action: manipulation;
+    user-select: none;
+}
+
+.star input {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.star.full .star {
+    color: rgb(255, 247, 10);
+}
+
 .button-submit {
     user-select: none;
     display: inline-block;

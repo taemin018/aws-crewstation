@@ -54,98 +54,9 @@
     <div class="main">
         <div class="main-wrapper">
             <div class="main-wrap">
+
+            <!--레이아웃 부분-->
                 <div id="order-detail"></div>
-                <div class="main-title"> 주문번호
-                    <span class="title-section">I</span>
-                    <span class="order-number"></span>
-                </div>
-                <section class="header">
-                    <section class="header-wrapper">
-                        <h1 class="header-title">
-                            <span class="date"></span>
-                            <!-- 상태쓰기 -->
-                            <span></span>
-                        </h1>
-                    </section>
-                    <div class="line fill">
-                        <h3 class="status">수락 대기</h3>
-                    </div>
-                    <div class="line fill">
-                        <h3 class="status">결제 대기</h3>
-                    </div>
-                    <div class="line">
-                        <!-- 현재 있는곳 까지 -->
-                        <span class="now">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" data-testid="arrow-down-icon">
-                                    <path fill="#2F3438" fill-rule="evenodd" d="M1.201 3.182a.6.6 0 0 1 .847.05l3.996 4.495 3.997-4.496a.6.6 0 1 1 .896.798l-4.07 4.58a1.1 1.1 0 0 1-1.645 0l-4.07-4.58a.6.6 0 0 1 .05-.847" clip-rule="evenodd"></path>
-                                </svg>
-                            </span>
-                        <h3 class="status">결제 완료</h3>
-                    </div>
-                    <div class="line">
-                        <h3 class="status">수령 완료</h3>
-                    </div>
-
-                    <!-- 상태에 따라 업데이트 -->
-                    <button class="status-btn cancel-btn active">주문 취소</button>
-
-
-                    <button class="status-btn receive-btn">수령 완료</button>
-
-                    <button class="status-btn review-btn">
-                        <img class="manner-icon" src="/images/manner.png">
-                        별점 주기</button>
-
-                </section>
-                <hr class="bar">
-                <div class="product">
-                    <section class="header-wrapper">
-                        <h1 class="header-title">
-                            <!-- 상태쓰기 -->
-                            <span>결제 정보</span>
-                        </h1>
-                    </section>
-                    <div class="product-wrapper">
-                        <img src="" alt="">
-                        <div class="purchase-info">
-                                <span class="badge-list-container">
-                                    </span>
-                            <p class="info-title"></p>
-                            <span class="badge-list-container amount">
-                                    수량 </span>
-                            <span class="info-amount">1개</span>
-                            <p class="info-price"></p>
-                        </div>
-                    </div>
-
-                    <!-- 직거래 일 때 -->
-                    <div class="info-container">
-                        <h2 class="address-wrap">판매자 정보</h2>
-                        <div class="seller-info-category">
-                            <span class="seller-info">배송방법</span>
-
-                        </div>
-                        <div class="seller-info-category">
-                            <span class="seller-info">판매자명</span>
-
-                        </div>
-                        <div class="seller-info-category">
-                            <span class="seller-info">전화번호</span>
-
-                        </div>
-                    </div>
-
-                    <hr class="divider">
-
-                    <div class="info-container">
-                        <h2 class="address-wrap">구매자 정보</h2>
-                        <div class="buyer-info-category">
-                            <span class="buyer-info">주소</span>
-                        </div>
-                        <div class="buyer-info-category">
-                            <span class="buyer-info">전화번호</span>
-                        </div>
-                    </div>
 
                     <div class="modal-wrapper">
                         <div class="modal-wrap">
@@ -250,6 +161,6 @@
 </div>
 </body>
 <script src="/js/guest/order-detail/module/service.js"></script>
-<script src="/js/guest/order-detail/module/layout.js.js"></script>
+<script src="/js/guest/order-detail/module/layout.js"></script>
 <script src="/js/guest/order-detail/event.js"></script>
 </html>

@@ -6,7 +6,7 @@ const orderService = (() => {
         return fetch(`/api/guest/order-detail/${guestOrderNumber}`)
             .then(res => res.json())
             .catch(err => {
-                console.error("❌ 주문 상세 조회 실패:", err);
+                console.error("주문 상세 조회 실패:", err);
                 return null;
             });
     };
