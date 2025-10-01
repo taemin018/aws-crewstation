@@ -1,8 +1,4 @@
-/* 1) 잘못된 선택자 교정: body.html → body, .html → html */
-body {
-    font-size: 13px;       /* 두 군데 선언되어 있던 값 중 더 작은 쪽으로 일원화 */
-    line-height: 1;
-}
+/* Base */
 html {
     font-family: 'Pretendard Variable', sans-serif;
     letter-spacing: -0.3px;
@@ -10,33 +6,42 @@ html {
     color: #070707;
     background: #fff;
 }
+body {
+    font-size: 13px;
+    line-height: 1;
+    margin: 0;
+}
 
-/* 2) 링크 밑줄 전역 제거 (요청사항) */
+/* Links */
 a {
     text-decoration: none;
     color: inherit;
 }
 
-/* 3) 내비게이션 리스트 기본값 리셋 + 가운데 정렬 유지 */
+/* Nav (공통) */
+.myhome-nav {
+    text-align: center;
+    margin: 20px 0;
+}
 .myhome-nav__owner ul {
+    /* 하나로 통일: flex 중심 정렬 */
+    display: flex;
+    justify-content: center;
+    gap: 40px;
     list-style: none;
     padding: 0;
     margin: 0;
-    text-align: center;   /* 기존 white-space 기반 가운데 정렬 보완 */
-    white-space: nowrap;
 }
-.page-navigation__item {
-    display: inline-block;
-}
+.page-navigation__item { display: inline-block; }
 .page-navigation__item > a {
     padding: 0 10px;
     font-weight: 700;
     height: 60px;
     line-height: 60px;
-    display: inline-block; /* 주석 처리되어 있던 display 복구 */
+    display: inline-block;
 }
+.myhome-nav__owner a:hover { color: #007bff; }
 
-/* 4) 페이지 상단 보더 유지 */
 .page-navigation {
     border-bottom: 1px solid #ededed;
     width: 100%;
@@ -45,7 +50,7 @@ a {
     white-space: nowrap;
 }
 
-/* 5) 레이아웃/리스트 영역은 기존 유지 */
+/* List layout */
 .notice-list__content {
     margin: 60px auto 20px;
     width: 100%;
@@ -60,7 +65,7 @@ a {
     color: #292929;
 }
 
-/* 6) 목록 아이템 스타일 유지 */
+/* List items */
 .feed-item {
     display: block;
     margin: 0 -15px;
@@ -84,6 +89,3 @@ a {
     line-height: 17px;
     font-weight: 500;
 }
-
-/* 7) 선택적: 불필요한 전역 div 강제 블록/isolated 제거 (브라우저 기본값과 동일) */
-/* div { display:block; unicode-bidi:isolate; }  ← 이 줄은 삭제 또는 주석 처리 권장 */

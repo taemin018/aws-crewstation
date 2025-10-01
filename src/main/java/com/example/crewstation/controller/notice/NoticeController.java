@@ -19,11 +19,11 @@ public class NoticeController {
 
     @GetMapping("/notice")
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        log.info("📌 /notice/notice 요청 들어옴, page={}", page);
+        log.info(" /notice/notice 요청 들어옴, page={}", page);
 
 
         model.addAttribute("noticeCriteriaDTO", noticeService.getNotices(page));
-        log.info("📌 noticeCriteriaDTO 추가됨, 데이터={}", model.getAttribute("noticeCriteriaDTO"));
+        log.info(" noticeCriteriaDTO 추가됨, 데이터={}", model.getAttribute("noticeCriteriaDTO"));
 
         return "notice/notice";
     }
