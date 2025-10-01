@@ -5,4 +5,9 @@
         insert into tbl_report (report_content, member_id)
         values (#{reportContent},#{memberId})
     </insert>
+
+    <insert id="insertReportPost">
+        insert into tbl_post_report(report_id, post_id)
+        values (#{reportId},#{postId})
+    </insert>
 </mapper>
