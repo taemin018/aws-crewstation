@@ -1,7 +1,6 @@
 package com.example.crewstation.alarm;
 
 import com.example.crewstation.mapper.alarm.AlarmMapper;
-import com.example.crewstation.mapper.post.PostMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,16 @@ public class MapperTest {
     private AlarmMapper alarmMapper;
 
     @Test
-//    @Transactional
+    @Transactional
     public void testInsert() {
-        alarmMapper.insert(2L);
+        alarmMapper.insertPaymentAlarm(2L);
+    }
+
+
+
+    @Test
+    @Transactional
+    public void testInsertLike() {
+        alarmMapper.insertLikeAlarm(2L);
     }
 }

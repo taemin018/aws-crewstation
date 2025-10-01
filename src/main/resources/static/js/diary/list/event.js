@@ -16,11 +16,11 @@ if (toggleBtn && dropdown) {
             if (!btnCheck) return;
             btnCheck = false;
             toggleBtn.childNodes[0].nodeValue = item.textContent + " ";
-            if(orderType === item.dataset.value){
+            if (orderType === item.dataset.value) {
                 return;
             }
             orderType = item.dataset.value
-            await showList(page, keyword, orderType, category,true);
+            await showList(page, keyword, orderType, category, true);
             dropdown.style.display = "none";
             setTimeout(() => {
                 btnCheck = true
@@ -84,8 +84,8 @@ let category = "total"
 let checkMore = true;
 let checkScroll = true;
 
-const showList = async (page, keyword, orderType, category,check=false) => {
-    diaries = await diaryListService.getDiaries(diariesListLayout.showDiaries, page, keyword, orderType, category,check);
+const showList = async (page, keyword, orderType, category, check = false) => {
+    diaries = await diaryListService.getDiaries(diariesListLayout.showDiaries, page, keyword, orderType, category, check);
     console.log(diaries);
     checkMore = diaries.criteria.hasMore;
     ({page, keyword, orderType, category} = diaries.search);
@@ -132,5 +132,40 @@ window.addEventListener("scroll", async (e) => {
 })
 
 
+document.querySelector("div.diary-card-feed").addEventListener("click", async (e) => {
+    const button = e.target.closest("button.card-item-action-btn.like");
+    if (button) {
+        const svg = button.firstElementChild;
+        console.log(button.dataset.post);
+        const {message,status} = await diaryListService.like({postId: Number(button.dataset.post)}, svg.classList.contains("active"))
+        toast.style.display = "block";
+        toast.querySelector("p.toast-text").textContent = message;
+        toast.classList.remove("hide");
+        toast.classList.add("show");
+        if(status === 200){
+            const likeCount = Number(svg.nextElementSibling.textContent);
+            if (svg.classList.contains("active")) {
+                svg.classList.remove("active");
+                svg.nextElementSibling.textContent = likeCount -1;
+            } else {
+                svg.classList.add("active");
+                svg.nextElementSibling.textContent = likeCount + 1;
+            }
+        }
+        // 토스트 애니메이션 처리
+        setTimeout(() => {
+            toast.classList.remove("show");
+            toast.classList.add("hide");
 
+            setTimeout(() => {
+                toast.style.display = "none";
+                if(status === 404){
+                    console.log(message)
+                    location.reload();
+                }
+                likeClickable = true;
+            }, 1000);
+        }, 2000);
+    }
+});
 

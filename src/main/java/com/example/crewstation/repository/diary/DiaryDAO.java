@@ -60,4 +60,8 @@ public class DiaryDAO {
     public int findCountAllByKeyword(@Param("search") Search search){
         return diaryMapper.selectCountAllByKeyword(search);
     }
+
+    public void changeLikeCount(int diff,Long postId){
+        diaryMapper.updateLikeCount(diff,postId);
+    }
 }

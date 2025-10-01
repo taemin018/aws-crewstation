@@ -22,10 +22,12 @@ public class DiaryDTO {
     private String memberFilePath;
     private String diaryFilePath;
     private Long memberId;
+    private Long userId;
     private String socialImgUrl;
     private String memberName;
     private String memberDescription;
     private String postContent;
     private String createdDatetime;
+    private Long likeId;
     private String updatedDatetime;
 }
