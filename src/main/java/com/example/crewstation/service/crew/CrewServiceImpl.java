@@ -35,13 +35,13 @@ public class CrewServiceImpl implements CrewService {
         List<CrewDTO> crews = (List<CrewDTO>) redisTemplate.opsForValue().get("crews");
         if (crews != null) {
             crews.forEach(crew -> {
-                String originalPath = crew.getFilePath();
-                String presignedUrl = s3Service.getPreSignedUrl(originalPath, Duration.ofMinutes(5));
+                String filePath = crew.getFilePath();
+                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
 
                 log.info("Crew ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
-                        crew.getId(), originalPath, presignedUrl);
+                        crew.getId(), filePath, presignedUrl);
                 crew.setFilePath(s3Service.getPreSignedUrl(crew.getFilePath(),
-                        Duration.ofMinutes(15)));
+                        Duration.ofMinutes(5)));
             });
             return crews;
         }
