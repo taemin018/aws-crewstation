@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Getter
 @Setter
@@ -34,4 +36,5 @@ public class AccompanyDTO {
     private String crewName;
     private String crewDescription;
     private String socialImgUrl;
+    private List<AccompanyPathDTO> accompanyPathDTO;
 }
