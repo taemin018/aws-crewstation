@@ -24,7 +24,7 @@
                                         <div class="banner-slide">
                                             <div th:each="banner : ${banners}">
                                                 <div>
-<!--                                                    <img th:src="${banner.imagePath}" alt="">-->
+                                                    <img th:src="@{${banner.imagePath}}" alt="">
                                                 </div>
                                             </div>
 
@@ -43,7 +43,7 @@
                                             </button>
                                         </div>
                                         <span class="banner-page">
-                                            <span class="banner-count" th:text="${'1 / ' + #lists.size(banners)}">
+                                            <span class="banner-count" th:text="${'1 / ' + banner.bannerOrder}">
                                                 1 / 5
                                             </span>
                                         </span>
@@ -84,9 +84,9 @@
                                             <div class="crew-item-wrap">
                                                 <div class="crew-img-wrap">
                                                     <img
-                                                    th:src="${crew.filePath}" alt="crew"
+                                                    th:src="@{${crew.filePath}}" alt="crew"
                                                     >
-                                                    <span class="crew-top-text" th:text="${'크루인원' + crew.crewMemberCount}">크루인원 4</span>
+                                                    <span class="crew-top-text" th:text="${'크루인원' + crew.crewMemberCount}"></span>
                                                     <div class="crew-short-description crew-info-cnt-wrap">
 
 
