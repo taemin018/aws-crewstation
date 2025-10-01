@@ -1,9 +1,13 @@
 package com.example.crewstation.diary;
 
+import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
+import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.service.diary.DiaryService;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +46,20 @@ public class ServiceTest {
         int count = diaryService.getCountDiariesLikedByMemberId(memberId);
         log.info("좋아요 일기 개수 = {}", count);
         assertThat(count).isGreaterThanOrEqualTo(0);
+    }
+
+
+    @Test
+    public void testGetDiaries(){
+        Search search = new Search();
+        search.setPage(1);
+        search.setKeyword("호주");
+        search.setCategory("");
+        search.setOrderType("");
+        MemberDTO m = new MemberDTO();
+        m.setId(1L);
+        CustomUserDetails c = new CustomUserDetails(m);
+        DiaryCriteriaDTO diaries = diaryService.getDiaries(search, c);
+        log.info(diaries.toString());
     }
 }

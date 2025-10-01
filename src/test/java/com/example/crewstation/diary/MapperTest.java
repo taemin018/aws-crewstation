@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -60,5 +61,11 @@ public class MapperTest {
         String order = "diary_like_count";
         int count = diaryMapper.selectCountAllByKeyword(search);
         log.info("{}",count);
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateLikeCount(){
+        diaryMapper.updateLikeCount(+1,30L);
     }
 }

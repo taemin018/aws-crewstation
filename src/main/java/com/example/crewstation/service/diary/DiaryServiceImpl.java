@@ -1,7 +1,9 @@
 package com.example.crewstation.service.diary;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.repository.diary.DiaryDAO;
+import com.example.crewstation.repository.like.LikeDAO;
 import com.example.crewstation.repository.section.SectionDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
@@ -28,6 +30,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryDAO diaryDAO;
     private final S3Service s3Service;
     private final SectionDAO sectionDAO;
+    private final LikeDAO likeDAO;
     private static final Map<String,String> ORDER_TYPE_MAP = Map.of("좋아요순","diary_like_count","최신순","post_id");
     private static final Map<String,String> CATEGORY_MAP = Map.of("crew","not null","individual","null");
 
@@ -105,18 +108,19 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public DiaryCriteriaDTO getDiaries(Search search) {
+    public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails) {
         DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
+        Search newSearch = new Search();
         int page = search.getPage();
+        dto.setSearch(search);
 
         String category = search.getCategory();
         String orderType = search.getOrderType();
-        search.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
-        search.setCategory(CATEGORY_MAP.getOrDefault(category,""));
-        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(search),3,3);
-        log.info("count:::::::::::::::::{}",diaryDAO.findCountAllByKeyword(search));
-        List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, search);
-        log.info("diaries:::::::::::::::::{}",diaries.size());
+        newSearch.setKeyword(search.getKeyword());
+        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
+        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category,""));
+        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch),3,3);
+        List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
         diaries.forEach(diary -> {
             if(diary.getMemberFilePath()!= null){
                 diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
@@ -124,7 +128,12 @@ public class DiaryServiceImpl implements DiaryService {
             if(diary.getDiaryFilePath()!= null){
                 diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(), Duration.ofMinutes(5)));
             }
-
+            if(customUserDetails != null){
+                diary.setUserId(customUserDetails.getId());
+                diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
+            }
+//            diary.setUserId(1L); // 임시
+//            diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
             diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
         });
         criteria.setHasMore(diaries.size() > criteria.getRowCount());
@@ -132,10 +141,8 @@ public class DiaryServiceImpl implements DiaryService {
         if (criteria.isHasMore()) {
             diaries.remove(diaries.size() - 1);
         }
-        log.info("criteria: ::::::::::::::::::::::::::::{}", criteria);
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
-        dto.setSearch(search);
         return dto;
     }
 }

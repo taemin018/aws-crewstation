@@ -13,7 +13,17 @@ public class AlarmDAO {
     private final AlarmMapper alarmMapper;
 
     //    결제 알람 보내기
-    public void save(Long paymentStatusId){
-        alarmMapper.insert(paymentStatusId);
+    public void savePaymentAlarm(Long paymentStatusId) {
+        alarmMapper.insertPaymentAlarm(paymentStatusId);
+    }
+
+    //    좋아요 알람 보내기
+    public void saveLikeAlarm(Long likeId) {
+        alarmMapper.insertLikeAlarm(likeId);
+    }
+
+    //   좋아요 알람 삭제
+    public void deleteLikeAlarm(Long likeId){
+        alarmMapper.deleteLikeAlarm(likeId);
     }
 }
