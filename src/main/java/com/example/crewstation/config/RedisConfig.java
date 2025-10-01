@@ -1,5 +1,6 @@
 package com.example.crewstation.config;
 
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,4 +55,20 @@ public class RedisConfig {
     public SessionRepositoryCustomizer<RedisIndexedSessionRepository> customizeSessionTimeout() {
         return (repository) -> repository.setDefaultMaxInactiveInterval(Duration.ofMinutes(10));
     }
+
+    @Bean
+    public RedisTemplate<String, PurchaseDTO> purchaseRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, PurchaseDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<PurchaseDTO> serializer =
+                new Jackson2JsonRedisSerializer<>(PurchaseDTO.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
 }
