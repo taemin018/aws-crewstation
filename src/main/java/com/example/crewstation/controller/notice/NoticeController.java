@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/notice")
 @RequiredArgsConstructor
-@Slf4j   // ✅ log 객체 자동 생성
+@Slf4j   //
 public class NoticeController {
 
     private final NoticeService noticeService;
