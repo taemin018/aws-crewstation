@@ -17,4 +17,9 @@ public class PaymentStatusDAO {
     public void save(PaymentStatusDTO paymentStatusDTO) {
         paymentStatusMapper.insert(paymentStatusDTO);
     }
+
+    //    구매 내역 조회
+    public PaymentStatusDTO findByPurchaseId(Long purchaseId) {
+        return paymentStatusMapper.selectByPurchaseId(purchaseId);
+    }
 }

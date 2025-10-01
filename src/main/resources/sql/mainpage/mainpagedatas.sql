@@ -864,4 +864,25 @@ on conflict (file_id) do nothing;
 
 commit;
 
+insert into tbl_post (post_title, post_read_count, post_status, member_id)
+values ('테스트1','50','active','7');
 
+insert into tbl_post_section(post_content, post_id)
+values ('동행크루1 테스트','35');
+
+insert into tbl_post_section_file(file_id, post_section_id, image_type)
+values ('30', '47','main');
+
+insert into tbl_file(file_origin_name, file_path, file_name, file_size)
+values ('accompanytest4.png','2025/10/01/accompanytest4.png','accompanytest4.png',1000);
+
+select * from tbl_post;
+
+insert into tbl_accompany(post_id, accompany_status, accompany_age_range)
+values ('35','short','20');
+
+insert into tbl_accompany_path(country_start_date, country_end_date, accompany_id, country_id)
+values (2025-10-01,'2025-10-05','35','5');
+
+insert into tbl_crew (crew_name, crew_description, crew_member_count)
+values ('불꽃크루','크루모집합니다1','3');

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.ask.AskMapper">
     <!--    추가-->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert">
         insert into tbl_inquiry(inquiry_title, inquiry_content, member_id)
         values (#{inquiryTitle}, #{inquiryContent}, #{memberId})
     </insert>

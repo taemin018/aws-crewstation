@@ -6,6 +6,8 @@ import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 @Mapper
 public interface PostMapper {
 //    게시글 신고 추가해주기
@@ -20,4 +22,8 @@ public interface PostMapper {
 
 //   게시글 삭제 소프트 딜리트
     public void updatePostStatus(Long id);
+
+//  게시글 대표이미지 조회
+    public PostDTO selectPostMainImageById(Long postId);
+
 }

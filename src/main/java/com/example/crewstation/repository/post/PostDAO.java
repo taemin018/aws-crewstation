@@ -37,4 +37,9 @@ public class PostDAO {
     public void updatePostStatus(Long id){
         postMapper.updatePostStatus(id);
     }
+
+    //    게시글 조회
+    public PostDTO findPostMainImage(Long postId) {
+        return postMapper.selectPostMainImageById(postId);
+    }
 }
