@@ -2,41 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.accompany.AccompanyMapper">
     <select id="getAccompanies">
-        select
-            v.post_id            as postId,
-            v.post_title         as postTitle,
-            v.member_id          as memberId,
-            v.created_datetime   as createdDatetime,
-            v.updated_datetime   as updatedDatetime,
-            v.accompany_status   as accompanyStatus,
-            v.accompany_age_range as accompanyAgeRange,
-            v.accompany_path_id  as accompanyPathId,
-            v.country_start_date as countryStartDate,
-            v.country_end_date   as countryEndDate,
-            v.country_id         as countryId,
-            v.country_name       as countryName,
+        select vpc.post_title,
+               vpc.created_datetime,
+               vpc.updated_datetime,
+               vpc.country_name,
+               vpc.country_start_date,
+               vpc.country_end_date,
+               vpc.post_id,
+               vpc.post_title,
+               vpc.accompany_status,
+               vpc.post_id,
+                vpc.member_id,
+                tm.social_img_url,
+                vfpsf.file_origin_name,
+                vfpsf.file_path,
+                vfpsf.file_id,
+                c.crew_name
 
-            (
-                select vfcf.file_path
-                from view_file_crew_file vfcf
-                where vfcf.crew_id = (
-                    select cm.crew_id
-                    from tbl_crew_member cm
-                    where cm.member_id = v.member_id
-                    order by cm.created_datetime desc
-                    limit 1
-                )
-                order by vfcf.updated_datetime desc, vfcf.id desc
-                limit 1
-            ) as filePath
 
-        from (
-                 select  *
-                 from view_post_accompany_accompany_path_country
-                 order by post_id, created_datetime desc, accompany_path_id desc
-             ) v
-        order by v.created_datetime desc
+
+
+        from view_post_accompany_accompany_path_country vpc
+        join tbl_member tm on vpc.member_id = tm.id
+        join tbl_post_section tps
+                on tps.post_id = vpc.post_id
+        join view_file_post_section_file vfpsf
+                on vfpsf.post_section_id = tps.id
+        left join tbl_crew_file cf
+                on cf.file_id = vfpsf.id
+        left join tbl_crew c
+                on c.id = cf.crew_id
+
+        order by vpc.created_datetime desc
         limit 4;
+
     </select>
 
 </mapper>
