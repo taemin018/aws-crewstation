@@ -189,3 +189,14 @@ modalDown.addEventListener("click", (e) => {
 
     modalDown.classList.remove("open");
 });
+
+// 로그아웃
+
+const logoutLink = document.querySelector("a.logout-menu-footer");
+
+logoutLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await memberService.logout()
+    location.href = "/member/mobile/login";
+    console.log("fsdfdssafsdfsdfsdfasdfdfdfdfddsfsd")
+});
