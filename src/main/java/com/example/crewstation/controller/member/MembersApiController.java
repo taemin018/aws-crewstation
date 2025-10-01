@@ -51,9 +51,12 @@ public class MembersApiController {
         }
     }
 
+//    핸드폰 인증 메세지 발송
     @PostMapping("/phone-check")
     public ResponseEntity<Map<String, String>> checkPhone(@RequestParam String phone) {
         String code = joinSmsService.send(phone);
         return ResponseEntity.ok(Map.of("code", code));
     }
+
+//    로그아웃
 }
