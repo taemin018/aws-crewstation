@@ -12,10 +12,15 @@ if (toggleBtn && dropdown) {
 
     // 메뉴 클릭 시 버튼 텍스트 변경
     dropdown.querySelectorAll("li").forEach((item) => {
-        item.addEventListener("click", () => {
+        item.addEventListener("click", async () => {
             if (!btnCheck) return;
             btnCheck = false;
             toggleBtn.childNodes[0].nodeValue = item.textContent + " ";
+            if(orderType === item.dataset.value){
+                return;
+            }
+            orderType = item.dataset.value
+            await showList(page, keyword, orderType, category,true);
             dropdown.style.display = "none";
             setTimeout(() => {
                 btnCheck = true

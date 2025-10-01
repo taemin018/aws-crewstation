@@ -211,6 +211,7 @@ items.forEach((item) => {
             page = 1;
         }
         btnCheck = false;
+        console.log(page, keyword, orderType, category);
         await showList(page, keyword, orderType, category,prevCategory !== item.id);
         prevCategory = category;
         items.forEach((e) => e.classList.remove("active"));

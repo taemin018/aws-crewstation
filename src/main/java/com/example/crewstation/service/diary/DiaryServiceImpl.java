@@ -107,16 +107,16 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public DiaryCriteriaDTO getDiaries(Search search) {
         DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
+        Search newSearch = new Search();
         int page = search.getPage();
-
+        dto.setSearch(search);
         String category = search.getCategory();
         String orderType = search.getOrderType();
-        search.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
-        search.setCategory(CATEGORY_MAP.getOrDefault(category,""));
-        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(search),3,3);
-        log.info("count:::::::::::::::::{}",diaryDAO.findCountAllByKeyword(search));
-        List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, search);
-        log.info("diaries:::::::::::::::::{}",diaries.size());
+        newSearch.setKeyword(search.getKeyword());
+        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
+        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category,""));
+        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch),3,3);
+        List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
         diaries.forEach(diary -> {
             if(diary.getMemberFilePath()!= null){
                 diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
@@ -132,10 +132,8 @@ public class DiaryServiceImpl implements DiaryService {
         if (criteria.isHasMore()) {
             diaries.remove(diaries.size() - 1);
         }
-        log.info("criteria: ::::::::::::::::::::::::::::{}", criteria);
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
-        dto.setSearch(search);
         return dto;
     }
 }

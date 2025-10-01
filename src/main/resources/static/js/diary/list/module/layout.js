@@ -73,6 +73,5 @@ const diariesListLayout = (() => {
         tbody.innerHTML += text;
 
     }
-
     return {showDiaries: showDiaries};
 })();
