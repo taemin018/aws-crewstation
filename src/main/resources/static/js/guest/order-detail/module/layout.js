@@ -1,6 +1,20 @@
 // ===================== Order Layout =====================
 const orderLayout = (() => {
 
+    // 상태 매핑
+    const mapStatusText = (status) => {
+        switch (status) {
+            case "request":
+                return "수락 대기";
+            case "pending":
+                return "결제 대기";
+            case "success":
+                return "결제 완료";
+            default:
+                return status || "";
+        }
+    };
+
     // 상세 정보 렌더링
     const renderOrderDetail = (container, order) => {
         container.innerHTML = `
@@ -12,10 +26,13 @@ const orderLayout = (() => {
                 <section class="header-wrapper">
                     <h1 class="header-title">
                         <span class="date">${order.createdDatetime || ""}</span>
-                        <span>${order.paymentStatus}</span>
+                        <span>${mapStatusText(order.paymentStatus)}</span>
                     </h1>
                 </section>
-                <div class="line"><h3 class="status">${order.paymentStatus}</h3></div>
+                <div class="line fill"><h3 class="status">수락 대기</h3></div>
+                <div class="line"><h3 class="status">결제 대기</h3></div>
+                <div class="line"><h3 class="status">결제 완료</h3></div>
+                <div class="line"><h3 class="status">수령 완료</h3></div>
 
                 <button class="status-btn cancel-btn active">주문 취소</button>
                 <button class="status-btn receive-btn">수령 완료</button>
@@ -44,15 +61,16 @@ const orderLayout = (() => {
                 <div class="info-container">
                     <h2 class="address-wrap">판매자 정보</h2>
                     <div class="seller-info-category"><span class="seller-info">배송방법</span>${order.purchaseDeliveryMethod}</div>
-                    <div class="seller-info-category"><span class="seller-info">판매자명</span>${order.memberName}</div>
-                    <div class="seller-info-category"><span class="seller-info">전화번호</span>${order.memberPhone}</div>
+                    <div class="seller-info-category"><span class="seller-info">판매자명</span>${order.sellerName}</div>
+                    <div class="seller-info-category"><span class="seller-info">전화번호</span>${order.sellerPhone}</div>
                 </div>
 
                 <hr class="divider">
 
                 <div class="info-container">
                     <h2 class="address-wrap">구매자 정보</h2>
-                    <div class="buyer-info-category"><span class="buyer-info">주소</span>${order.address} ${order.addressDetail}</div>
+                    <div class="buyer-info-category"><span class="buyer-info">구매자명</span>${order.guestName}</div>
+                    <div class="buyer-info-category"><span class="buyer-info">주소</span>${order.guestAddress} ${order.guestAddressDetail}</div>
                     <div class="buyer-info-category"><span class="buyer-info">전화번호</span>${order.guestPhone}</div>
                 </div>
             </div>

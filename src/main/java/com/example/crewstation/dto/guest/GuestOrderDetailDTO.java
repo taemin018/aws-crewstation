@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 public class GuestOrderDetailDTO {
     // 주문(게스트) 정보
     private Long id;
+    private String guestName;
     private String guestPhone;
     private String addressZipCode;
-    private String address;
-    private String addressDetail;
+    private String guestAddress;
+    private String guestAddressDetail;
     private String guestOrderNumber;
 
     // 결제
@@ -32,8 +33,8 @@ public class GuestOrderDetailDTO {
 
     // 판매자
     private Long memberId;
-    private String memberName;
-    private String memberPhone;
+    private String sellerName;
+    private String sellerPhone;
     private String createdDatetime;
     private String updatedDatetime;
 }
