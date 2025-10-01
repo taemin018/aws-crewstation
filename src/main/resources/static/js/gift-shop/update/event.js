@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!selectWrap.contains(e.target)) dropdown.style.display = "none";
         });
     });
-
+    const deleteFiles = [];
     // === 가격/수량/시간 ===
     const form = document.querySelector("form");
     const priceInput = document.getElementById("price");
@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const thumbAddBtn = thumbnailContainer.querySelector(".write-content-img-add-btn");
 
     let fileBuffer = [];
+    let mainImage = document.querySelector("img.main-image").dataset.section;
     const toKey = (f) => `${f.name}|${f.size}|${f.lastModified}`;
     const syncInput = () => {
         const dt = new DataTransfer();
@@ -176,10 +177,42 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 
-    let hasCover = false;
-    let currentCoverThumb = null; // 현재 대표 썸네일 기억
-    thumbAddBtn.style.display = "none"; // 처음엔 작은 + 숨김
+    let hasCover = true;
+    let currentCoverThumb = document.querySelector("div.write-content-thumbnail"); // 현재 대표 썸네일 기억
+    coverPreview.querySelector(".write-content-img-delete-btn").addEventListener("click", () => {
+        const image = coverPreview.querySelector("img.main-image");
+        const index = image.dataset.index;
+        const sectionId = image.dataset.section;
+        console.log(index)
+        index && fileBuffer.splice(Number(index), 1);
+        sectionId && deleteFiles.push(sectionId);
+        // 현재 대표 썸네일까지 삭제
+        console.log(currentCoverThumb);
+        if (currentCoverThumb && currentCoverThumb.isConnected) {
+            currentCoverThumb.remove();
+            currentCoverThumb = null;
+        }
+        let count = 0
+        thumbnailContainer.querySelectorAll("div.write-content-thumbnail img").forEach((img, idx) => {
+            if(img.dataset.section) return;
+            img.dataset.index = String(count++);
+        });
 
+        coverInput.value = "";
+        coverPreview.innerHTML = "";
+        console.log(fileBuffer);
+        // 다음 승격할 썸네일 찾기
+        const nextThumb = thumbnailContainer.querySelector(".write-content-thumbnail");
+        if (nextThumb) {
+            const nextSrc = nextThumb.querySelector("img").src;
+            setAsCover(nextSrc, nextThumb);
+        } else {
+            coverAdd.style.display = "flex";   // 커버 큰 + 다시 보이기
+            hasCover = false;
+        }
+
+        updateThumbAddBtn(); // 작은 + 버튼 상태 갱신
+    }, {once: true});
 // 전체 이미지 개수 (대표는 썸네일 중 하나이므로 썸네일만 카운트)
     function getTotalImageCount() {
         return document.querySelectorAll(".write-content-thumbnail").length;
@@ -206,15 +239,19 @@ document.addEventListener("DOMContentLoaded", () => {
     function setAsCover(src, fromThumb) {
         // 대표 미리보기 갱신
         coverAdd.style.display = "none";
-        const index = fromThumb.firstElementChild.dataset.index;
-        document.getElementById("mainImg").value = index;
+
+        console.log(fromThumb.firstElementChild);
+        const index = fromThumb.firstElementChild.dataset?.index;
+        const postSectionId = fromThumb.firstElementChild.dataset?.section;
+        document.getElementById("nextMainImg").value = index ? index : postSectionId;
+        document.getElementById("checkPrevNext").value = !index;
         console.log("대표 이미지 생성");
         console.log(fromThumb);
         console.log(index);
         coverPreview.innerHTML = `
     <div class="write-content-cover-img">
       <div class="cover-img-label">대표 이미지</div>
-      <img src="${src}" alt="대표 이미지" class="main-image" data-index="${index}">
+      <img src="${src}" alt="대표 이미지" class="main-image" data-index="${index}" data-section="${postSectionId}">
       <div class="write-content-img-btn-wrapper">
         <button type="button" class="write-content-img-delete-btn">
           <svg class="icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -237,17 +274,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 대표 삭제 버튼 이벤트
         coverPreview.querySelector(".write-content-img-delete-btn").addEventListener("click", () => {
-
-            const index = coverPreview.querySelector("img.main-image").dataset.index;
+            const image = coverPreview.querySelector("img.main-image");
+            const index = image.dataset.index;
+            const sectionId = image.dataset.section;
             console.log(index)
-            fileBuffer.splice(Number(index), 1);
+            index && fileBuffer.splice(Number(index), 1);
+            sectionId && deleteFiles.push(sectionId);
             // 현재 대표 썸네일까지 삭제
+            console.log(currentCoverThumb);
             if (currentCoverThumb && currentCoverThumb.isConnected) {
                 currentCoverThumb.remove();
                 currentCoverThumb = null;
             }
+            let count = 0
             thumbnailContainer.querySelectorAll("div.write-content-thumbnail img").forEach((img, idx) => {
-                img.dataset.index = String(idx)
+                if(img.dataset.section) return;
+                img.dataset.index = String(count++);
             });
 
             coverInput.value = "";
@@ -273,9 +315,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const thumbDiv = document.createElement("div");
         thumbDiv.classList.add("write-content-thumbnail");
         thumbDiv.innerHTML = `<img class="write-content-thumbnail-img" src="${src}" data-index="${count}">`;
-
         // 클릭 시 대표 승격
         thumbDiv.addEventListener("click", () => {
+            console.log("썸네일 클릭")
             setAsCover(src, thumbDiv);
         });
 
@@ -306,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             files.forEach((file, idx) => {
+                console.log(idx+"인덱스 출력")
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     createThumbnail(ev.target.result, idx, idx === 0);
@@ -331,10 +374,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            files.forEach((file) => {
+            files.forEach((file,idx) => {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    createThumbnail(ev.target.result, false);
+                    createThumbnail(ev.target.result, idx,false);
                 };
                 reader.readAsDataURL(file);
             });
@@ -391,7 +434,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             deliveryInput.value = deliveryInput.value === "직접전달" ? "direct" : "parcel";
-
+            let text = ``;
+            const deleteWrap = document.getElementById("deleteFiles")
+            deleteFiles.forEach(id=>{
+                text+= `<input type="hidden" name="deleteFiles" value="${id}" form="purchase">`
+            })
+            deleteWrap.innerHTML = text;
+            console.log(deleteFiles);
             console.log(coverInput.files.length);
             if (priceInput) priceInput.value = getNumericValue(priceInput.value);
             if (timeInput) timeInput.value = getNumericValue(timeInput.value);
@@ -399,12 +448,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 const qty = getNumericValue(quantityInput.value);
                 if (qty) quantityInput.value = qty;
             }
-            // e.preventDefault()
+            // e.preventDefault();
         });
     }
+
+
+    const divImage = document.querySelectorAll("div.write-content-thumbnail");
+    // 클릭 시 대표 승격
+    console.log(divImage)
+    divImage.forEach( div=>{
+        console.log(div)
+        div.addEventListener("click", () => {
+            console.log(div.firstElementChild)
+            console.log("썸네일 클릭")
+            setAsCover(div.firstElementChild.src, div);
+        });
+    })
 });
 
 
 // 선택된 파일을 유지/재구성하기 위한 버퍼
+
+const imageWrap = document.querySelector("div.write-content-thumbnail-container").firstElementChild;
+
+sections.forEach((s)=>{
+
+})
+
+
 
 

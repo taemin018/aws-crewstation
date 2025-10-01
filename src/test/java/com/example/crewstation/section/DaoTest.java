@@ -1,5 +1,6 @@
 package com.example.crewstation.section;
 
+import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.repository.section.SectionDAO;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +30,22 @@ public class DaoTest {
         sectionDAO.save(purchaseDTO);
         log.info("purchaseDTO postSectionId:{}", purchaseDTO.getPostSectionId());
     }
+
+    @Test
+    @Transactional
+    public void testUpdate(){
+        PostSectionVO vo = PostSectionVO.builder()
+                .postContent("수정 내용")
+                .id(33L)
+                .postId(25L)
+                .build();
+        sectionDAO.update(vo);
+    }
+
+    @Test
+    @Transactional
+    public void testDelete(){
+        sectionDAO.delete(35L);
+    }
+
 }

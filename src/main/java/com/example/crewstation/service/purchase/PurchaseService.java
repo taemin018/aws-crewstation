@@ -1,14 +1,13 @@
 package com.example.crewstation.service.purchase;
 
-import com.example.crewstation.domain.file.FileVO;
-import com.example.crewstation.domain.file.section.PostSectionFileVO;
+import com.example.crewstation.domain.file.section.FilePostSectionVO;
+import com.example.crewstation.domain.post.PostVO;
+import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.domain.purchase.PurchaseVO;
-import com.example.crewstation.dto.file.FileDTO;
-import com.example.crewstation.dto.file.section.PostSectionFileDTO;
+import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
-import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.util.Search;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,13 +19,30 @@ public interface PurchaseService {
     public PurchaseCriteriaDTO getPurchases(Search search);
 
 // 기프트 상품 상세 내용 가져오기
-    public Optional<PurchaseDetailDTO> getPurchase(Long postId);
+    public PurchaseDTO getPurchase(Long postId);
 
 // 기프트 상품 작성하기
     public void write(PurchaseDTO purchaseDTO,List<MultipartFile> files);
 
-    default PostSectionFileVO toSectionFileVO(PostSectionFileDTO sectionFileDTO) {
-        return PostSectionFileVO.builder()
+
+//  기프트 상품 업데이트
+    public PurchaseDTO update(PurchaseDTO purchaseDTO,Long[] deleteFiles,List<MultipartFile> multipartFiles);
+
+//  기프트 삭제
+    public void softDelete(Long id);
+
+
+    default PostSectionVO toPostSectionVO(PurchaseDTO purchaseDTO){
+        return PostSectionVO.builder()
+                .id(purchaseDTO.getThumbnail())
+                .createdDatetime(purchaseDTO.getCreatedDatetime())
+                .updatedDatetime(purchaseDTO.getUpdatedDatetime())
+                .postId(purchaseDTO.getPostId())
+                .postContent(purchaseDTO.getPurchaseContent())
+                .build();
+    }
+    default FilePostSectionVO toSectionFileVO(FilePostSectionDTO sectionFileDTO) {
+        return FilePostSectionVO.builder()
                 .fileId(sectionFileDTO.getFileId())
                 .postSectionId(sectionFileDTO.getPostSectionId())
                 .imageType(sectionFileDTO.getImageType())
@@ -47,4 +63,14 @@ public interface PurchaseService {
                 .purchaseProductPrice(purchaseDTO.getPrice())
                 .build();
     }
+    default PostVO toPostVO(PurchaseDTO purchaseDTO) {
+        return PostVO.builder()
+                .id(purchaseDTO.getPostId())
+                .createdDatetime(purchaseDTO.getCreatedDatetime())
+                .updatedDatetime(purchaseDTO.getUpdatedDatetime())
+                .postTitle(purchaseDTO.getPostTitle())
+                .memberId(purchaseDTO.getMemberId())
+                .build();
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.crewstation.mapper.post;
 
+import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,4 +15,9 @@ public interface PostMapper {
 
 //    게시글 작성
     public void insert(PurchaseDTO purchaseDTO);
+//    게시글 수정
+    public void update(PostVO postVO);
+
+//   게시글 삭제 소프트 딜리트
+    public void updatePostStatus(Long id);
 }

@@ -13,10 +13,15 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @EqualsAndHashCode(of="fileId")
-public class PostSectionFileDTO {
+public class FilePostSectionDTO {
     private Long fileId;
     private Long postSectionId;
     private Type imageType;
+    private Long id;
+    private String fileOriginName;
+    private String filePath;
+    private String fileName;
+    private String fileSize;
     private String createDatetime;
     private String updateDatetime;
 }

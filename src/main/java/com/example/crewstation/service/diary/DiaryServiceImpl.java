@@ -24,7 +24,6 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @Cacheable(value = "diaries", key="'diaries_' + #post_id")
     public List<DiaryDTO> selectDiaryList(int limit) {
         List<DiaryDTO> diaries = diaryDAO.selectDiaryList(limit);
         diaries.forEach(diary -> {

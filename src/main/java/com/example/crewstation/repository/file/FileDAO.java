@@ -21,4 +21,9 @@ public class FileDAO {
         fileMapper.insert(fileDTO);
     }
 
+    //  파일 삭제
+    public void delete(Long id){
+        fileMapper.delete(id);
+    }
+
 }

@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.crew.CrewMapper">
-<select id="getCrews">
-    select
-            tc.id as id,
-            tc.crew_name as crewName,
-            tc.crew_description as crewDescription,
+    <select id="getCrews">
+        select
+            tc.id,
+            tc.crew_name         as crewName,
+            tc.crew_description  as crewDescription,
             tc.crew_member_count as crewMemberCount,
-            tc.created_datetime as createdDatetime,
-            tc.updated_datetime as updatedDatetime,
+            tc.created_datetime  as createdDatetime,
+            tc.updated_datetime  as updatedDatetime,
+            vf.file_path         as filePath,
+            vf.file_name         as fileName,
+            vf.file_origin_name  as fileOriginName
+        from tbl_crew tc
+                 left join (
+            select crew_id, file_path, file_name, file_origin_name
+            from (
+                     select
+                         crew_id, file_path, file_name, file_origin_name,
+                         row_number() over(partition by crew_id order by file_id desc) rn
+                     from view_file_crew_file
+                 ) t
+            where t.rn = 1
+        ) vf on vf.crew_id = tc.id
+        order by tc.id desc
 
-            tcm.crew_role as crewRole,
-            tcm.member_id as memberId,
+    </select>
 
-            tm.member_name as memberName,
-            tm.member_social_url as memberSocialUrl,
-            tm.social_img_url as socialImgUrl,
-
-            vfcf.file_path as filePath,
-            vfcf.file_name as fileName,
-            vfcf.file_origin_name as fileOriginName,
-            vfcf.file_id as fileId
-
-    from  tbl_crew tc
-        left join tbl_crew_member tcm
-            on tc.id = tcm.crew_id
-        join tbl_member tm
-             on tm.id = tcm.member_id
-        left join view_file_crew_file vfcf
-                  on tc.id = vfcf.crew_id
-
-
-    ORDER BY tc.id DESC
-</select>
 </mapper>

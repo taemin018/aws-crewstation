@@ -40,4 +40,10 @@ public class FileDAOTests {
         fileDAO.saveFile(fileDTO);
         log.info("fileDTO {}",fileDTO.getId());
     }
+
+    @Test
+    @Transactional
+    public void testDelete(){
+        fileDAO.delete(39L);
+    }
 }

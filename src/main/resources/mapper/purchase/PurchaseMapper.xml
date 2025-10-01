@@ -79,4 +79,14 @@
                                  purchase_country, purchase_delivery_method)
         values (#{postId},#{purchaseProductPrice},#{purchaseLimitTime},#{purchaseProductCount},#{purchaseCountry},#{deliveryMethod})
     </insert>
+
+    <update id="update">
+        update tbl_purchase
+        set purchase_country         = #{purchaseCountry},
+            purchase_delivery_method = #{deliveryMethod},
+            purchase_limit_time      = #{purchaseLimitTime},
+            purchase_product_price   = #{purchaseProductPrice},
+            purchase_product_count   = #{purchaseProductCount}
+        where post_id = #{postId}
+    </update>
 </mapper>

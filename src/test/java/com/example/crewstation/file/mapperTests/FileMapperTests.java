@@ -38,4 +38,10 @@ public class FileMapperTests {
         fileMapper.insert(fileDTO);
         log.info("fileDTO {}",fileDTO.getId());
     }
+
+    @Test
+    @Transactional
+    public void testDelete(){
+        fileMapper.delete(39L);
+    }
 }

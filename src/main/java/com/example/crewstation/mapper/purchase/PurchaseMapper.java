@@ -20,11 +20,14 @@ public interface PurchaseMapper {
     public int selectCountAllByKeyWord(@Param("search") Search search);
 
 //  기프트 상세 보기
-    public Optional<PurchaseDetailDTO> selectByPostId(Long postId);
+    public Optional<PurchaseDTO> selectByPostId(Long postId);
 
 //  조회 수 증가
     public void updateReadCount(Long postId);
 
 //  기프트 추가
     public void insert(PurchaseVO purchaseVO);
+
+//  상품 수정
+    public void update(PurchaseVO purchaseVO);
 }

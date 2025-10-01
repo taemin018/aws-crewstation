@@ -2,38 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.diary.DiaryMapper">
     <select id="selectDiaryList">
-        select vpd.member_id,
-               vpd.updated_datetime,
-               vpd.created_datetime,
-               vpd.diary_like_count,
-               vpd.diary_reply_count,
-               vpd.diary_secret,
-               d.diary_reply_count,
-               d.diary_like_count,
-               m.member_name,
-               m.member_description,
-               m.social_img_url,
-              f.file_path,
-              f.file_name,
-              f.file_origin_name,
-              ps.post_content,
-              ps.post_id
+        select
+            vpd.id                as diaryId,
+            vpd.member_id         as memberId,
+            vpd.updated_datetime  as updatedDatetime,
+            vpd.created_datetime  as createdDatetime,
+            vpd.diary_like_count  as diaryLikeCount,
+            vpd.diary_reply_count as diaryReplyCount,
+            m.member_name         as memberName,
+            m.member_description  as memberDescription,
+            m.social_img_url      as socialImgUrl
         from view_post_diary vpd
-            join tbl_diary d
-                on vpd.id = d.post_id
-            join tbl_member m
-                on vpd.member_id = m.id
-            join tbl_file f
-                on vpd.id = f.id
-            join tbl_post_section ps
-                on ps.post_id = vpd.id
-            left join tbl_crew_diary cd
-                on cd.diary_id = vpd.id
-
+                 join tbl_member m
+                     on vpd.member_id = m.id
 
         where vpd.diary_secret = 'public'
         order by vpd.created_datetime desc
         limit 4;
+
     </select>
 
     <!-- 내가 좋아요 한 일기 -->
