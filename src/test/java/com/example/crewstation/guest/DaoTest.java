@@ -2,6 +2,7 @@ package com.example.crewstation.guest;
 
 import com.example.crewstation.domain.guest.GuestVO;
 import com.example.crewstation.dto.guest.GuestDTO;
+import com.example.crewstation.dto.guest.GuestOrderDetailDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.repository.guest.GuestDAO;
@@ -48,5 +49,14 @@ public class DaoTest {
         guestDAO.findGuest(guestDTO);
         log.info("guest {}", guestDAO.findGuest(guestDTO));
     }
+
+    @Test
+    void testFindOrderDetails() {
+        Long guestId = 1L;
+
+        guestDAO.findOrderDetails(guestId);
+        log.info("guest {}", guestDAO.findOrderDetails(guestId));
+    }
+
 
 }

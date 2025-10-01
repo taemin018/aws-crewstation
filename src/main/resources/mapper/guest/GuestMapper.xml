@@ -10,4 +10,51 @@
         from tbl_guest
         where guest_phone = #{guestPhone} and guest_order_number = #{guestOrderNumber}
     </select>
+
+    <!-- 게스트 정보 단순 조회-->
+    <select id="selectById">
+        SELECT id, member_id AS memberId, guest_phone AS guestPhone,
+               guest_order_number AS guestOrderNumber, address_zip_code AS addressZipCode,
+               address_detail AS addressDetail, address
+        FROM tbl_guest
+        WHERE id = #{guestId}
+    </select>
+
+    <!-- 게스트 주문 상세 조회 -->
+    <select id="selectOrderDetails">
+        SELECT g.id                           AS guestId,
+               g.guest_phone                  AS guestPhone,
+               g.address_zip_code             AS guestZipCode,
+               g.address                      AS guestAddress,
+               g.address_detail               AS guestAddressDetail,
+               g.guest_order_number           AS guestOrderNumber,
+
+               ps.payment_phase               AS paymentStatus,
+               ps.created_datetime            AS paymentCreated,
+               ps.updated_datetime            AS paymentUpdated,
+
+               p.id                           AS postId,
+               p.post_title                   AS postTitle,
+
+               pu.purchase_product_price      AS purchaseProductPrice,
+               pu.purchase_country            AS purchaseCountry,
+               pu.purchase_delivery_method    AS purchaseDeliveryMethod,
+
+               m.id                           AS memberId,
+               m.member_name                  AS memberName,
+               m.member_phone                 AS memberPhone,
+               m.member_email                 AS memberEmail,
+
+               f.file_path || '/' || f.file_name AS mainImage
+        FROM tbl_guest g
+                 JOIN tbl_payment_status ps   ON g.id = ps.guest_id
+                 JOIN tbl_purchase pu         ON ps.purchase_id = pu.post_id
+                 JOIN tbl_post p              ON pu.post_id = p.id
+                 JOIN tbl_member m            ON ps.member_id = m.id
+                 LEFT JOIN tbl_post_section s ON p.id = s.post_id
+                 LEFT JOIN tbl_post_section_file sf
+                           ON s.id = sf.post_section_id AND sf.image_type = 'main'
+                 LEFT JOIN tbl_file f         ON sf.file_id = f.id
+        WHERE g.guest_order_number = #{guestOrderNumber}
+    </select>
 </mapper>

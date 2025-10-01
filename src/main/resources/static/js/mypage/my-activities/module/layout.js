@@ -112,7 +112,7 @@ const replyLayout = (() => {
           </article>
         </div>
         `;
-    };
+};
 
     const renderReplyList = (container, diaries) => {
         if (!diaries || diaries.length === 0) {

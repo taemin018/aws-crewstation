@@ -30,4 +30,7 @@ public interface PurchaseMapper {
 
 //  상품 수정
     public void update(PurchaseVO purchaseVO);
+
+// 구매 상세 조회
+    public Optional<PurchaseDetailDTO> selectPurchaseDetailByPostId(Long postId);
 }

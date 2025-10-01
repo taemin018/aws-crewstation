@@ -8,4 +8,7 @@ import org.apache.ibatis.annotations.Param;
 public interface PaymentStatusMapper {
 //    판매 요청 신청
     public void insert(PaymentStatusDTO paymentStatusDTO);
+
+//  구매 내역 조회
+    public  PaymentStatusDTO selectByPurchaseId(Long purchaseId);
 }
