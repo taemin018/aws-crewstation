@@ -1,5 +1,6 @@
 package com.example.crewstation.service.diary;
 
+import com.example.crewstation.dto.accompany.AccompanyDTO;
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.repository.diary.DiaryDAO;
@@ -13,6 +14,7 @@ import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,20 +32,31 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryDAO diaryDAO;
     private final S3Service s3Service;
     private final SectionDAO sectionDAO;
+    private final DiaryTransactionService diaryTransactionService;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final LikeDAO likeDAO;
     private static final Map<String,String> ORDER_TYPE_MAP = Map.of("좋아요순","diary_like_count","최신순","post_id");
     private static final Map<String,String> CATEGORY_MAP = Map.of("crew","not null","individual","null");
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
-        List<DiaryDTO> diaries = diaryDAO.selectDiaryList(limit);
-        diaries.forEach(diary -> {
-            log.info("Selected diary: {}", diary);
-//            diary.setFilePath(s3Service.getPreSignedUrl(diary.getFilePath(),
-//                    Duration.ofMinutes(5)));
-        });
-        return diaries;
+        List<DiaryDTO> diaries = (List<DiaryDTO>) redisTemplate.opsForValue().get("diaries");
+        if (diaries != null) {
+            diaries.forEach(diary -> {
+                String filePath = diary.getDiaryFilePath();
+                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+
+                log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+                        diary, filePath, presignedUrl);
+                diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(),
+                        Duration.ofMinutes(5)));
+            });
+            return diaries;
+
+        }
+        return diaryTransactionService.selectDiaryList(limit);
     }
 
     @Override

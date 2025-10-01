@@ -1,7 +1,10 @@
 package com.example.crewstation.config;
 
 import com.example.crewstation.dto.accompany.AccompanyDTO;
+import com.example.crewstation.dto.banner.BannerDTO;
 import com.example.crewstation.dto.crew.CrewDTO;
+import com.example.crewstation.dto.diary.DiaryDTO;
+import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -95,6 +98,51 @@ public class RedisConfig {
 
         Jackson2JsonRedisSerializer<AccompanyDTO> serializer =
                 new Jackson2JsonRedisSerializer<>(AccompanyDTO.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, GiftDTO> GiftRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, GiftDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<GiftDTO> serializer =
+                new Jackson2JsonRedisSerializer<>(GiftDTO.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, DiaryDTO> DiaryRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, DiaryDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<DiaryDTO> serializer =
+                new Jackson2JsonRedisSerializer<>(DiaryDTO.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, BannerDTO> BannerRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, BannerDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<BannerDTO> serializer =
+                new Jackson2JsonRedisSerializer<>(BannerDTO.class);
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);

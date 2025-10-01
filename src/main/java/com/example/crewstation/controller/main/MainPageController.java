@@ -34,7 +34,7 @@ public class MainPageController {
     public String getMainPage(Model model) {
 
         List<CrewDTO> crews = crewService.getCrews();
-//        List<DiaryDTO> diaries = diaryService.selectDiaryList(4);
+        List<DiaryDTO> diaries = diaryService.selectDiaryList(4);
         List<BannerDTO> banners = bannerService.getBanners(5);
         List<GiftDTO> gifts = giftService.getGift(4);
         List<AccompanyDTO> accompanies = accompanyService.getAccompanies(4);
@@ -45,8 +45,8 @@ public class MainPageController {
         log.info("banners = {}", banners);
         model.addAttribute("crews", crews);
         log.info("crews = {}", crews);
-//        model.addAttribute("diaries", diaries);
-//        log.info("diaries = {}", diaries);
+        model.addAttribute("diaries", diaries);
+        log.info("diaries = {}", diaries);
         model.addAttribute("accompanies", accompanies);
         log.info("accompanies = {}", accompanies);
         model.addAttribute("gifts", gifts);
