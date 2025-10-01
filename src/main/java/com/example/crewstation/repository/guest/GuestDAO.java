@@ -2,11 +2,13 @@ package com.example.crewstation.repository.guest;
 
 import com.example.crewstation.domain.guest.GuestVO;
 import com.example.crewstation.dto.guest.GuestDTO;
+import com.example.crewstation.dto.guest.GuestOrderDetailDTO;
 import com.example.crewstation.mapper.guest.GuestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,5 +26,11 @@ public class GuestDAO {
     public Optional<GuestDTO> findGuest(GuestDTO guestDTO) {
         return guestMapper.select(guestDTO);
     }
+
+    // 게스트 주문 상세 조회 (주문번호로 단건 조회)
+    public Optional<GuestOrderDetailDTO> findOrderDetail(String guestOrderNumber) {
+        return Optional.ofNullable(guestMapper.selectOrderDetails(guestOrderNumber));
+    }
+
 
 }

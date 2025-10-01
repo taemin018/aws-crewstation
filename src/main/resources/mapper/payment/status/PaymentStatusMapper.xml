@@ -5,4 +5,16 @@
         insert into tbl_payment_status (purchase_id,member_id)
         values (#{purchaseId},#{memberId});
     </insert>
+
+    <select id="selectByPurchaseId">
+        select id,
+               purchase_id,
+               member_id,
+               payment_phase,
+               created_datetime,
+               updated_datetime
+        from tbl_payment_status
+        where purchase_id = #{purchaseId}
+    </select>
+
 </mapper>

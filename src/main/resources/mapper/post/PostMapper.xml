@@ -28,4 +28,19 @@
         set post_status = 'inactive'
         where id =#{id}
     </update>
+
+    <select id="selectPostMainImageById">
+        SELECT ps.id AS postSectionId,
+               ps.post_id AS postId,
+               vf.file_id AS fileId,
+               vf.file_origin_name AS fileOriginName,
+               vf.file_path AS filePath,
+               vf.file_name AS fileName,
+               vf.image_type AS imageType
+        FROM tbl_post_section ps
+                 LEFT JOIN view_file_post_section_file vf
+                           ON ps.id = vf.post_section_id
+        WHERE ps.post_id = #{postId}
+          AND vf.image_type = 'main'
+    </select>
 </mapper>

@@ -44,4 +44,9 @@ public class PurchaseDAO {
     public void update(PurchaseVO purchaseVO){
         purchaseMapper.update(purchaseVO);
     };
+
+    // 구매 상세
+    public Optional<PurchaseDetailDTO> findByPurchaseDetail(Long postId){
+        return purchaseMapper.selectPurchaseDetailByPostId(postId);
+    }
 }
