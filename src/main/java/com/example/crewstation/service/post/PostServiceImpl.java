@@ -29,6 +29,8 @@ public class PostServiceImpl implements PostService {
             throw new PostNotActiveException("이미 삭제된 상품입니다.");
         }
         reportDAO.saveReport(reportDTO);
+
+        reportDAO.saveReportPost(toReportPostVO(reportDTO));
     }
 
 
