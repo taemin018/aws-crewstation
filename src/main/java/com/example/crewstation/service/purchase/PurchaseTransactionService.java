@@ -35,7 +35,7 @@ public class PurchaseTransactionService {
         purchaseDAO.increaseReadCount(id);
         purchaseDTO.setPurchaseProductPrice(PriceUtils.formatMoney(purchaseDTO.getPrice()));
         purchaseDTO.setLimitDateTime(DateUtils.calcLimitDateTime(purchaseDTO.getUpdatedDatetime(), purchaseDTO.getPurchaseLimitTime()));
-        purchaseRedisTemplate.opsForValue().set("purchase_" + id, purchaseDTO, Duration.ofMinutes(10));
+        purchaseRedisTemplate.opsForValue().set("purchase::purchases_" + id, purchaseDTO, Duration.ofMinutes(10));
         List<SectionDTO> sections = sectionDAO.findSectionsByPostId(id);
         if(purchaseDTO.getFilePath() != null){
             purchaseDTO.setFilePath(s3Service.getPreSignedUrl(purchaseDTO.getFilePath(), Duration.ofMinutes(5)));
