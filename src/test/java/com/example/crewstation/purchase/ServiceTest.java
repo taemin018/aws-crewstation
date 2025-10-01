@@ -63,4 +63,28 @@ public class ServiceTest {
         List<MultipartFile> multipartFiles = Arrays.asList(multipartFile);
         purchaseService.write(purchase,multipartFiles);
     }
+    @Test
+    @Transactional
+    public void testUpdate(){
+        PurchaseDTO purchase = purchaseDTO;
+        purchase.setPurchaseContent("test content");
+        purchase.setPurchaseLimitTime(12);
+        purchase.setPostTitle("test title");
+        purchase.setPurchaseCountry("호주");
+        purchase.setPurchaseProductCount(1);
+        purchase.setPurchaseProductPrice("1000");
+        purchase.setPurchaseDeliveryMethod(DeliveryMethod.DIRECT);
+        purchase.setThumbnail(1L);
+        purchase.setPostId(1L);
+        purchase.setMemberId(1L);
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "file",                          // 필드 이름
+                "test.png",                      // 파일명
+                "image/png",                     // MIME 타입
+                "dummy image content".getBytes() // 파일 내용
+        );
+        Long[] id = new Long[]{1L,2L,3L,4L,5L,6L,7L,8L,9L};
+        List<MultipartFile> multipartFiles = Arrays.asList(multipartFile);
+        purchaseService.update(purchase,id,multipartFiles);
+    }
 }

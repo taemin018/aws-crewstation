@@ -78,7 +78,7 @@ public class MemberController {
         guestService.login(guestDTO);
         log.info(guestService.login(guestDTO).toString());
 
-        return new RedirectView("/guest/purchase-detail");
+        return new RedirectView("/guest/order-detail");
     }
 
     @PostMapping("mobile/login")

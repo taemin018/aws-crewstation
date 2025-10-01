@@ -181,4 +181,10 @@
         <include refid="diarySearch"/>
     </select>
 
+
+    <update id="updateLikeCount">
+        update  tbl_diary
+        set diary_like_count = diary_like_count + #{diff}
+        where post_id = #{postId}
+    </update>
 </mapper>

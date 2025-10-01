@@ -40,21 +40,23 @@
                pu.purchase_country            AS purchaseCountry,
                pu.purchase_delivery_method    AS purchaseDeliveryMethod,
 
-               m.id                           AS memberId,
-               m.member_name                  AS memberName,
-               m.member_phone                 AS memberPhone,
-               m.member_email                 AS memberEmail,
+               seller.id                      AS sellerId,
+               seller.member_name             AS sellerName,
+               seller.member_phone            AS sellerPhone,
+
+               guest.member_name              AS guestName,
 
                f.file_path || '/' || f.file_name AS mainImage
         FROM tbl_guest g
-                 JOIN tbl_payment_status ps   ON g.id = ps.guest_id
-                 JOIN tbl_purchase pu         ON ps.purchase_id = pu.post_id
-                 JOIN tbl_post p              ON pu.post_id = p.id
-                 JOIN tbl_member m            ON ps.member_id = m.id
-                 LEFT JOIN tbl_post_section s ON p.id = s.post_id
-                 LEFT JOIN tbl_post_section_file sf
-                           ON s.id = sf.post_section_id AND sf.image_type = 'main'
-                 LEFT JOIN tbl_file f         ON sf.file_id = f.id
-        WHERE g.guest_order_number = #{guestOrderNumber}
+                 JOIN tbl_payment pay             ON g.member_id = pay.member_id
+                 JOIN tbl_payment_status ps       ON ps.payment_id = pay.id
+                 JOIN tbl_purchase pu             ON ps.purchase_id = pu.post_id
+                 JOIN tbl_post p                  ON pu.post_id = p.id
+                 JOIN tbl_member seller           ON p.member_id = seller.id             -- 판매자
+                 JOIN tbl_member guest            ON g.member_id = guest.id              -- 구매자
+                 LEFT JOIN tbl_post_section s     ON p.id = s.post_id
+                 LEFT JOIN tbl_post_section_file sf ON s.id = sf.post_section_id AND sf.image_type = 'main'
+                 LEFT JOIN tbl_file f             ON sf.file_id = f.id
+        WHERE g.guest_order_number = #{guestOrderNumber};
     </select>
 </mapper>

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -58,5 +59,11 @@ public class DaoTest {
         String order = "diary_like_count";
         int count = diaryDAO.findCountAllByKeyword(search);
         log.info("{}",count);
+    }
+
+    @Test
+    @Transactional
+    public void testChangeLikeCount(){
+        diaryDAO.changeLikeCount(+1,30L);
     }
 }

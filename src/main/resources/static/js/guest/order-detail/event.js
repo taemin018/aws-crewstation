@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("order-detail");
 
-    const guestOrderNumber = "2025092820400653926";
+    const guestOrderNumber = "2025093022321855389"; // 나중에 토큰에서 꺼내와야함
 
     // 상세 조회
     orderService.getOrderDetail(guestOrderNumber)

@@ -1,6 +1,7 @@
 package com.example.crewstation.service.diary;
 
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
@@ -32,5 +33,5 @@ public interface DiaryService {
 
 
 //    다이어리 목록들 가져오기(다이어리 서비스 쪽)
-    public DiaryCriteriaDTO getDiaries(Search search);
+    public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails);
 }

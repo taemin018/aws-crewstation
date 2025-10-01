@@ -42,4 +42,7 @@ public interface DiaryMapper {
     public List<DiaryDTO> selectAllByKeyword(@Param("criteria") Criteria criteria, @Param("search") Search search);
 // 다이리 목록 개수(다이어리 서비스쪽)
     public int selectCountAllByKeyword(@Param("search") Search search);
+//    좋아요 증가
+    public void updateLikeCount(@Param("diff") int diff,@Param("postId")Long postId);
+
 }
