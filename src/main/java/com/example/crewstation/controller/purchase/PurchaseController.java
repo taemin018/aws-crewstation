@@ -104,6 +104,7 @@ public class PurchaseController {
     @GetMapping("{postId}")
     public String goToModifyForm(@PathVariable Long postId, Model model) {
         PurchaseDTO purchase = purchaseService.getPurchase(postId);
+        log.info("purchase {}", purchase);
         model.addAttribute("purchase", purchase);
         return "gift-shop/update";
     }

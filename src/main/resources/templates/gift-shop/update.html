@@ -100,6 +100,11 @@
                 <input type="hidden" id="prevMainImg" name="prevMainImg" th:value="${purchase.sections[0].postSectionId}">
                 <input type="hidden" id="nextMainImg" name="thumbnail">
                 <input type="hidden" id="checkPrevNext" name="prev" value="false">
+                <input type="hidden" name="chemistryScore" th:value="${purchase.chemistryScore}">
+                <input type="hidden" name="address" th:value="${purchase.address}">
+                <input type="hidden" name="memberName" th:value="${purchase.memberName}">
+
+
                 <input type="file" id="coverImageInput" name="files" accept="image/*" style="display:none;" multiple>
                 <button type="button" class="write-content-img-add-btn large">+</button>
                 <p class="write-content-add-desc">업로드할 이미지를 최대 8장까지 선택해주세요.<br>(대표 이미지 등록은 필수입니다.)</p>

@@ -11,6 +11,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.stereotype.Component;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Component
@@ -18,7 +20,10 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode(of="postId")
-public class PurchaseDTO{
+public class PurchaseDTO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private Long memberId;
     private Long postId;
     private Long fileId;
