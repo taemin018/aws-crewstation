@@ -871,7 +871,7 @@ insert into tbl_post_section(post_content, post_id)
 values ('동행크루1 테스트','35');
 
 insert into tbl_post_section_file(file_id, post_section_id, image_type)
-values ('30', '47','main');
+values ('9', '9','main');
 
 insert into tbl_file(file_origin_name, file_path, file_name, file_size)
 values ('accompanytest4.png','2025/10/01/accompanytest4.png','accompanytest4.png',1000);
@@ -886,3 +886,193 @@ values (2025-10-01,'2025-10-05','35','5');
 
 insert into tbl_crew (crew_name, crew_description, crew_member_count)
 values ('불꽃크루','크루모집합니다1','3');
+
+BEGIN;
+
+-- 기본 12명 더미 (중복 메일 회피: ON CONFLICT DO NOTHING)
+INSERT INTO tbl_member (
+    member_name, member_phone, member_email,
+    member_social_url, member_birth, member_gender, member_mbti,
+    member_password, member_status, member_provider,
+    social_img_url, member_social_email, member_description,
+    member_role, chemistry_score
+)
+
+VALUES
+('test3', '01011132003', 'fqjn@crewstation',
+ 'https://facebook.com/jiwoo', '19990421', 'female', 'ISTJ',
+ 'pw_hsh_3', 'active', 'google',
+ 'https://img.crewstation.dev/members/u03.png', 'jiwowqr.social@googlemail.com', '테스트', 'member', 72);
+
+insert into tbl_diary (post_id,diary_secret,diary_like_count, diary_reply_count, diary_country_path_id)
+values ('18','active',60,90,'10');
+
+SELECT id, post_title FROM tbl_post WHERE id IN (26,27,28);
+SELECT id FROM tbl_diary_country_path WHERE id IN (1,2,3);
+
+SELECT
+    d.post_id,
+    p.post_title,
+    d.diary_secret,
+    d.diary_like_count,
+    d.diary_reply_count,
+    d.diary_country_path_id,
+    c.country_name,
+    dcp.country_start_date,
+    dcp.country_end_date
+FROM tbl_diary d
+         JOIN tbl_post p
+              ON p.id = d.post_id
+         JOIN tbl_diary_country_path dcp
+              ON dcp.id = d.diary_country_path_id
+         JOIN tbl_country c
+              ON c.id = dcp.country_id
+WHERE d.post_id IN (26,27,28)
+ORDER BY d.post_id DESC;
+
+
+-- 파일 더미 데이터
+insert into tbl_file (id, file_name, file_origin_name, file_path, created_datetime)
+values (100, 'dummy.jpg', 'dummy.jpg', '/images/dummy.jpg', now());
+
+-- 멤버 프로필 파일 매핑
+insert into tbl_member_file (id, member_id, file_id)
+values (1, 1, 100);
+
+-- 다이어리 섹션 파일 매핑 (대표 이미지)
+insert into tbl_post_section_file (post_section_id, file_id, image_type)
+values ( 10, 100, 'main');
+
+insert into tbl_post (member_id, post_title, post_status, post_read_count, created_datetime, updated_datetime)
+values
+    (1, 'Diary Post 19', 'active', 0, now(), now()),
+    (1, 'Diary Post 20', 'active', 0, now(), now()),
+    (1, 'Diary Post 21', 'active', 0, now(), now()),
+    (1, 'Diary Post 22', 'active', 0, now(), now());
+
+INSERT INTO tbl_post_section (post_id, post_content)
+VALUES
+    (19, '더미 본문 19 입니다.'),
+    (20, '더미 본문 20 입니다.'),
+    (21, '더미 본문 21 입니다.'),
+    (22, '더미 본문 22 입니다.');
+
+INSERT INTO tbl_file (file_name, file_origin_name, file_path, file_size, created_datetime, updated_datetime)
+VALUES ('dummy-main.jpg', 'dummy-main.jpg', '/images/dummy-main.jpg', 1024, NOW(), NOW());
+
+INSERT INTO tbl_file (file_name, file_origin_name, file_path, file_size, created_datetime, updated_datetime)
+VALUES
+    ('dummy-19.jpg','dummy-19.jpg','/images/dummy-19.jpg', 1024, NOW(), NOW()),
+    ('dummy-20.jpg','dummy-20.jpg','/images/dummy-20.jpg', 1024, NOW(), NOW()),
+    ('dummy-21.jpg','dummy-21.jpg','/images/dummy-21.jpg', 1024, NOW(), NOW()),
+    ('dummy-22.jpg','dummy-22.jpg','/images/dummy-22.jpg', 1024, NOW(), NOW()),
+    ('dummy-14.jpg','dummy-14.jpg','/images/dummy-14.jpg', 1024, NOW(), NOW());
+
+
+BEGIN;
+
+-- 1) 파일명 ↔ post_id 매핑해서 섹션 대표이미지로 연결
+WITH map(file_name, post_id) AS (
+    VALUES
+        ('dummy-19.jpg', 19),
+        ('dummy-20.jpg', 20),
+        ('dummy-21.jpg', 21),
+        ('dummy-22.jpg', 22),
+        ('dummy-14.jpg', 14)
+),
+     f AS (
+         SELECT id AS file_id, file_name
+         FROM tbl_file
+         WHERE file_name IN ('dummy-19.jpg','dummy-20.jpg','dummy-21.jpg','dummy-22.jpg','dummy-14.jpg')
+     ),
+     s AS (
+         SELECT id AS section_id, post_id
+         FROM tbl_post_section
+         WHERE post_id IN (19,20,21,22,14)
+     )
+INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type)
+SELECT f.file_id, s.section_id, 'main'
+FROM map
+         JOIN f ON f.file_name = map.file_name
+         JOIN s ON s.post_id   = map.post_id
+-- 이미 매핑이 있다면 중복 방지 (옵션)
+ON CONFLICT (file_id) DO NOTHING;
+
+-- 2) 다이어리 메타 생성 (공개 + 경로 매핑)
+--    스샷에 있던 걸 기준으로 예시 매핑: 19→18, 20→19, 21→20, 22→1
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES
+    (19, 'public', 0, 0, 18),
+    (20, 'public', 0, 0, 19),
+    (21, 'public', 0, 0, 20),
+    (22, 'public', 0, 0, 1)
+ON CONFLICT (post_id) DO NOTHING;
+
+COMMIT;
+
+
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (19, 'public', 0, 0, 18);
+
+-- post_id 19번에 diary 연결
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (19, 'public', 0, 0, 18);
+
+-- post_id 20번에 diary 연결
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES (20, 'public', 0, 0, 19);
+
+SELECT * FROM tbl_diary WHERE post_id = 19;
+
+UPDATE tbl_diary
+SET diary_secret = 'public',
+    diary_like_count = 0,
+    diary_reply_count = 0,
+    diary_country_path_id = 18
+WHERE post_id = 19;
+
+INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count, diary_country_path_id)
+VALUES
+    (19, 'public', 12, 3, 18),
+    (20, 'public', 8, 1, 19),
+    (21, 'public', 23, 5, 20),
+    (22, 'public', 5, 0, 1)
+ON CONFLICT (post_id) DO UPDATE
+    SET diary_secret = EXCLUDED.diary_secret,
+        diary_like_count = EXCLUDED.diary_like_count,
+        diary_reply_count = EXCLUDED.diary_reply_count,
+        diary_country_path_id = EXCLUDED.diary_country_path_id;
+
+INSERT INTO tbl_post_section (post_id, post_content)
+VALUES
+    (19, '더미 본문 19'),
+    (20, '더미 본문 20'),
+    (21, '더미 본문 21'),
+    (22, '더미 본문 22');
+
+INSERT INTO tbl_file (file_name, file_origin_name, file_path, file_size, created_datetime, updated_datetime)
+VALUES
+    ('dummy-19.jpg','dummy-19.jpg','/images/dummy-19.jpg', 1024, now(), now()),
+    ('dummy-20.jpg','dummy-20.jpg','/images/dummy-20.jpg', 1024, now(), now()),
+    ('dummy-21.jpg','dummy-21.jpg','/images/dummy-21.jpg', 1024, now(), now()),
+    ('dummy-22.jpg','dummy-22.jpg','/images/dummy-22.jpg', 1024, now(), now());
+
+SELECT id, file_name FROM tbl_file
+WHERE file_name IN ('dummy-19.jpg','dummy-20.jpg','dummy-21.jpg','dummy-22.jpg');
+
+SELECT id, post_id, post_content FROM tbl_post_section
+WHERE post_id IN (19,20,21,22);
+
+UPDATE tbl_post  SET post_status='active' WHERE id IN (19,20,21,22);
+UPDATE tbl_diary SET diary_secret='public' WHERE post_id IN (19,20,21,22);
+
+-- 파일 더미 데이터 (id는 identity면 자동 증가라면 빼고 넣어야 함)
+INSERT INTO tbl_file (file_path, file_name, file_origin_name,file_size)
+VALUES
+    ('2025/10/01/banner4.png', 'banner4.png', '배너4.png',1000),
+    ('2025/10/01/banner5.png', 'banner5.png', '배너5.png',1000);
+
+INSERT INTO tbl_banner_file (file_id, banner_id)
+VALUES
+    (46, 1),
+    (47, 2);

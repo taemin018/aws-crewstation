@@ -14,8 +14,8 @@
         vpp.created_datetime as createdDatetime,
         vpp.updated_datetime as updatedDatetime,
 
-        vfps.file_path as filePath,
-        vfps.file_name as fileName,
+        vfps.file_path,
+        vfps.file_name,
 
         tm.member_name as memberName,
         tm.chemistry_score as chemistryScore,
@@ -24,12 +24,9 @@
         from tbl_member tm
         join view_post_purchase vpp
             on tm.id = vpp.member_id
-        join tbl_post_section tps
-            on vpp.id = tps.post_id
-                   and vpp.post_status = 'active'
-        join view_file_post_section_file vfps
-            on tps.id = vfps.post_section_id
-                   and vfps.image_type = 'main'
+        join tbl_post_section tps on vpp.id = tps.post_id and vpp.post_status = 'active'
+        join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
+
         limit 4;
     </select>
 </mapper>
