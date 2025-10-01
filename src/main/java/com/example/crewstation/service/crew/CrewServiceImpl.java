@@ -27,21 +27,21 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @Cacheable(value = "crews", key="'crews_' + #postid")
+    @Cacheable(value="crews_", key="'all'")
     @LogReturnStatus
     public List<CrewDTO> getCrews() {
-        List<CrewDTO> crews = crewDAO.getCrews(crewDTO);
+        List<CrewDTO> crews = crewDAO.getCrews();
         crews.forEach(crew -> {
+            String originalPath = crew.getFilePath();
+            String presignedUrl = s3Service.getPreSignedUrl(originalPath, Duration.ofMinutes(5));
+
+            log.info("Crew ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+                    crew.getId(), originalPath, presignedUrl);
             crew.setFilePath(s3Service.getPreSignedUrl(crew.getFilePath(),
-                    Duration.ofMinutes(5)));
+                    Duration.ofMinutes(15)));
 
         });
         return crews;
-
-
-
-
-
 
     }
 }

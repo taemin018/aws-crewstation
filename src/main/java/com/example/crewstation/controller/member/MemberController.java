@@ -166,7 +166,8 @@ public class MemberController {
         memberService.resetPassword(memberEmail, memberPassword); // 서비스에서 Mapper 호출
         return new RedirectView("/member/web/reset-password-success"); // 변경 후 로그인 페이지로
     }
-
+    
+    // 비밀벌호 변경 성공
     @GetMapping("web/reset-password-success")
     public String resetPasswordSuccess() {
         return "member/web/reset-password-success";
@@ -189,6 +190,7 @@ public class MemberController {
         return new RedirectView("/member/mobile/reset-password-success"); // 변경 후 로그인 페이지로
     }
 
+    // 비밀벌호 변경 성공
     @GetMapping("mobile/reset-password-success")
     public String mobileResetPasswordSuccess() {
         return "member/mobile/reset-password-success";

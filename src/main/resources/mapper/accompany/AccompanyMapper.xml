@@ -3,47 +3,40 @@
 <mapper namespace="com.example.crewstation.mapper.accompany.AccompanyMapper">
     <select id="getAccompanies">
         select
-            v.post_id             as postId,
-            v.post_title          as postTitle,
-            v.created_datetime    as createdDatetime,
-            v.updated_datetime    as updatedDatetime,
-            v.accompany_status    as accompanyStatus,
+            v.post_id            as postId,
+            v.post_title         as postTitle,
+            v.member_id          as memberId,
+            v.created_datetime   as createdDatetime,
+            v.updated_datetime   as updatedDatetime,
+            v.accompany_status   as accompanyStatus,
             v.accompany_age_range as accompanyAgeRange,
+            v.accompany_path_id  as accompanyPathId,
+            v.country_start_date as countryStartDate,
+            v.country_end_date   as countryEndDate,
+            v.country_id         as countryId,
+            v.country_name       as countryName,
 
-            v.accompany_path_id   as accompanyPathId,
-            v.country_start_date  as countryStartDate,
-            v.country_end_date    as countryEndDate,
-            v.country_id          as countryId,
-            v.country_name        as countryName,
+            (
+                select vfcf.file_path
+                from view_file_crew_file vfcf
+                where vfcf.crew_id = (
+                    select cm.crew_id
+                    from tbl_crew_member cm
+                    where cm.member_id = v.member_id
+                    order by cm.created_datetime desc
+                    limit 1
+                )
+                order by vfcf.updated_datetime desc, vfcf.id desc
+                limit 1
+            ) as filePath
 
-            m.id                  as memberId,
-            m.member_name         as memberName,
-            m.member_description  as memberDescription,
-            m.social_img_url      as socialImgUrl,
-
-            tc.id                 as crewId,
-            tc.crew_name          as crewName,
-            tc.crew_description   as crewDescription,
-            cf.file_id            as fileId,
-
-            tf.file_origin_name   as fileOriginName,
-            tf.file_name          as fileName,
-            tf.file_path          as filePath
-
-        from view_post_accompany_accompany_path_country v
-            join tbl_member m
-                on m.id = v.member_id
-            left join tbl_crew_member cm
-                on cm.member_id = m.id
-            left join tbl_crew tc
-                on tc.id = cm.crew_id
-            left join tbl_crew_file cf
-                on cf.crew_id = tc.id
-            left join tbl_file tf
-                on tf.id = cf.file_id
-
-        order by v.post_id, v.created_datetime desc
-            limit 4;
+        from (
+                 select  *
+                 from view_post_accompany_accompany_path_country
+                 order by post_id, created_datetime desc, accompany_path_id desc
+             ) v
+        order by v.created_datetime desc
+        limit 4;
     </select>
 
 </mapper>

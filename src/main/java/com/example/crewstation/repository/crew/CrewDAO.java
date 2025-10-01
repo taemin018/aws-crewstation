@@ -14,9 +14,9 @@ public class CrewDAO {
     private final CrewMapper crewMapper;
 
 //    크루 목록
-    public List<CrewDTO> getCrews(CrewDTO crewDTO) {
+    public List<CrewDTO> getCrews() {
 
-        return crewMapper.getCrews(crewDTO);
+        return crewMapper.getCrews();
     }
 
 }

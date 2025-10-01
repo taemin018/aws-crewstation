@@ -52,7 +52,7 @@ public class ServiceTest {
         purchase.setPurchaseProductCount(1);
         purchase.setPurchaseProductPrice("1000");
         purchase.setPurchaseDeliveryMethod(DeliveryMethod.DIRECT);
-        purchase.setThumbnail(1);
+        purchase.setThumbnail(1L);
         purchase.setMemberId(1L);
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file",                          // 필드 이름

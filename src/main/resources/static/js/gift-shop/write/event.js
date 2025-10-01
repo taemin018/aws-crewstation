@@ -331,10 +331,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            files.forEach((file) => {
+            files.forEach((file,idx) => {
                 const reader = new FileReader();
+                const count = getTotalImageCount();
                 reader.onload = (ev) => {
-                    createThumbnail(ev.target.result, false);
+                    createThumbnail(ev.target.result,idx + count, false);
                 };
                 reader.readAsDataURL(file);
             });

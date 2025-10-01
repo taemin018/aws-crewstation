@@ -10,4 +10,9 @@
         insert into tbl_file (file_origin_name, file_path, file_name, file_size)
         values (#{fileOriginName}, #{filePath}, #{fileName}, #{fileSize})
     </insert>
+
+    <delete id="delete">
+        delete from tbl_file
+        where id = #{id}
+    </delete>
 </mapper>

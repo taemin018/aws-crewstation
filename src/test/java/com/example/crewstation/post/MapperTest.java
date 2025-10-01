@@ -1,5 +1,6 @@
 package com.example.crewstation.post;
 
+import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.mapper.post.PostMapper;
@@ -42,5 +43,16 @@ public class MapperTest {
         purchaseDTO.setPostTitle("post title");
         postMapper.insert(purchaseDTO);
         log.info("purchaseDTO postId:{}", purchaseDTO.getPostId());
+    }
+
+    @Test
+    @Transactional
+    public void testUpdate(){
+        PostVO vo = PostVO.builder()
+                .id(1L)
+                .memberId(1L)
+                .postTitle("test update")
+                .build();
+        postMapper.update(vo);
     }
 }

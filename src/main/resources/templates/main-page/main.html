@@ -83,8 +83,8 @@
                                          <li class="crew-item-card" th:each="crew : ${crews}">
                                             <div class="crew-item-wrap">
                                                 <div class="crew-img-wrap">
-                                                    <img src="https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=256&amp;h=342&amp;c=c" srcset="https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=384&amp;h=513&amp;c=c 1.5x,https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=512&amp;h=684&amp;c=c 2x,https://prs.ohousecdn.com/apne2/content/community/v1-412335369662464.jpg?w=768&amp;h=1026&amp;c=c 3x"
-                                                    th:src="${crew.filePath}"
+                                                    <img
+                                                    th:src="${crew.filePath}" alt="crew"
                                                     >
                                                     <span class="crew-top-text" th:text="${'크루인원' + crew.crewMemberCount}">크루인원 4</span>
                                                     <div class="crew-short-description crew-info-cnt-wrap">
@@ -420,5 +420,6 @@
     </div>
 
 </body>
+<script src="/js/fixed/web/header/event.js"></script>
 <script src="/js/main-page/main/event.js"></script>
 </html>

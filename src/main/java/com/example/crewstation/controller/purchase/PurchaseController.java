@@ -23,12 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/gifts/**")
@@ -70,17 +68,21 @@ public class PurchaseController {
 //        }
 
 
-        Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
-//        purchase.ifPresent(purchaseDetailDTO -> {
-//            purchaseDetailDTO.setFilePath(null);
-//            purchaseDetailDTO.setSocialImgUrl("https://prs.ohousecdn.com/apne2/content/community/v1-385639845687296.jpg?w=768&h=1026&c=c");
-//        });
-        model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
+        PurchaseDTO purchase = purchaseService.getPurchase(postId);
+/*
+        purchase.ifPresent(purchaseDetailDTO -> {
+            purchaseDetailDTO.setWriter(true);
+            purchaseDetailDTO.setFilePath(null);
+            purchaseDetailDTO.setSocialImgUrl("https://prs.ohousecdn.com/apne2/content/community/v1-385639845687296.jpg?w=768&h=1026&c=c");
+        });*/
+        log.info("purchase {}", purchase);
+        model.addAttribute("purchase", purchase);
+        model.addAttribute("writer", true);
         return "gift-shop/detail";
     }
 
     @GetMapping("write")
-    public String goToWriteForm(PurchaseDTO purchaseDTO,Model model) {
+    public String goToWriteForm(PurchaseDTO purchaseDTO, Model model) {
         model.addAttribute("purchase", purchaseDTO);
         return "gift-shop/write";
     }
@@ -92,18 +94,35 @@ public class PurchaseController {
         log.info("purchaseDTO {}", purchaseDTO);
         log.info("files {}", files.size());
         purchaseDTO.setMemberId(1L);
-        purchaseService.write(purchaseDTO,files);
+        purchaseService.write(purchaseDTO, files);
 
 //        purchaseDTO.setMemberId(customUserDetails.getId());
 
-        return new RedirectView("/gifts/" + purchaseDTO.getPostId());
+        return new RedirectView("/gifts/detail/" + purchaseDTO.getPostId());
     }
 
     @GetMapping("{postId}")
     public String goToModifyForm(@PathVariable Long postId, Model model) {
-        Optional<PurchaseDetailDTO> purchase = purchaseService.getPurchase(postId);
-        model.addAttribute("purchase", purchase.orElseThrow(PurchaseNotFoundException::new));
+        PurchaseDTO purchase = purchaseService.getPurchase(postId);
+        model.addAttribute("purchase", purchase);
         return "gift-shop/update";
     }
 
+    @PostMapping("{postId}")
+    public RedirectView modify(@PathVariable Long postId,
+                         PurchaseDTO purchaseDTO,
+                         Long[] deleteFiles,
+                         @RequestParam("files") List<MultipartFile> files,
+                         @AuthenticationPrincipal UserDetails userDetails) {
+        purchaseDTO.setPostId(postId);
+        log.info("purchaseDTO {}", purchaseDTO);
+        purchaseService.update(purchaseDTO, deleteFiles, files);
+        return  new RedirectView("/gifts/detail/" + postId);
+    }
+
+    @GetMapping("delete/{id}")
+    public RedirectView delete(@PathVariable Long id) {
+        purchaseService.softDelete(id);
+        return new RedirectView("/gifts");
+    }
 }

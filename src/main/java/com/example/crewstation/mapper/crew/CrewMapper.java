@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface CrewMapper {
 //    크루 정보 조회
-    public List<CrewDTO> getCrews(CrewDTO crewDTO);
+    public List<CrewDTO> getCrews();
 
 
 }
