@@ -1,5 +1,6 @@
 package com.example.crewstation.config;
 
+import com.example.crewstation.dto.crew.CrewDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -63,6 +64,21 @@ public class RedisConfig {
 
         Jackson2JsonRedisSerializer<PurchaseDTO> serializer =
                 new Jackson2JsonRedisSerializer<>(PurchaseDTO.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, CrewDTO> CrewRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, CrewDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<CrewDTO> serializer =
+                new Jackson2JsonRedisSerializer<>(CrewDTO.class);
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);
