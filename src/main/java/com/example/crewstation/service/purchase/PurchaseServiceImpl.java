@@ -8,6 +8,7 @@ import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +49,9 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final PostDAO postDAO;
     private final FileDAO fileDAO;
     private final FilePostSectionDAO filePostSectionDAO;
+
+    private final PurchaseTransactionService purchaseTransactionService;
+    private final RedisTemplate<String, PurchaseDTO> purchaseRedisTemplate;
 
     @Override
     @LogReturnStatus
@@ -70,29 +75,52 @@ public class PurchaseServiceImpl implements PurchaseService {
         return purchaseCriteriaDTO;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    @Cacheable(value = "purchases", key = "'purchases_' + #postId")
-    @LogReturnStatus
-        public PurchaseDTO getPurchase(Long postId) {
-        purchaseDAO.increaseReadCount(postId);
-        Optional<PurchaseDTO> purchaseDetail = purchaseDAO.findByPostId(postId);
-        List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
-        sections.forEach(section -> {
-            section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
-        });
-        sections.sort(Comparator.comparing(SectionDTO::getImageType));
-        log.info(sections.toString());
-        purchaseDetail.ifPresent(purchase -> {
-            log.info("::::::{}", purchase.getPostId());
-            log.info("::::::{}", purchase.getMemberId());
-            purchase.setPurchaseProductPrice(PriceUtils.formatMoney(purchase.getPrice()));
-            purchase.setFilePath(s3Service.getPreSignedUrl(purchase.getFilePath(), Duration.ofMinutes(5)));
-            purchase.setLimitDateTime(DateUtils.calcLimitDateTime(purchase.getCreatedDatetime(), purchase.getPurchaseLimitTime()));
-            purchase.setSections(sections);
-        });
-        return purchaseDetail.orElseThrow(PurchaseNotFoundException::new);
+//    @Override
+//    @Transactional(rollbackFor = Exception.class)
+//    @Cacheable(value = "purchases", key = "'purchases_' + #postId")
+//    @LogReturnStatus
+//    public PurchaseDTO getPurchase(Long postId) {
+//        purchaseDAO.increaseReadCount(postId);
+//        Optional<PurchaseDTO> purchaseDetail = purchaseDAO.findByPostId(postId);
+//        PurchaseDTO purchaseDTO = purchaseDetail.orElseThrow(PurchaseNotFoundException::new);
+////
+////        List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
+////        sections.forEach(section -> {
+////            section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
+////        });
+////
+////        sections.sort(Comparator.comparing(SectionDTO::getImageType));
+////        log.info(sections.toString());
+//        log.info("{}",purchaseDTO.getPrice());
+//        purchaseDTO.setPurchaseProductPrice(PriceUtils.formatMoney(purchaseDTO.getPrice()));
+//        purchaseDTO.setLimitDateTime(DateUtils.calcLimitDateTime(purchaseDTO.getUpdatedDatetime(), purchaseDTO.getPurchaseLimitTime()));
+////        purchaseDTO.setSections(sections);
+//        return purchaseDTO;
+//    }
+
+    public PurchaseDTO getPurchase(Long id) {
+        // 캐시 먼저 확인
+        log.info(":::::::::::::::{}",purchaseRedisTemplate.opsForValue().get("purchase_" + id));
+            PurchaseDTO cached = purchaseRedisTemplate.opsForValue().get("purchase_" + id);
+        if (cached != null) {
+            // 트랜잭션 시작하면서 조회수만 증가
+            List<SectionDTO> sections = sectionDAO.findSectionsByPostId(cached.getPostId());
+            if(cached.getFilePath() != null){
+                cached.setFilePath(s3Service.getPreSignedUrl(cached.getFilePath(), Duration.ofMinutes(5)));
+            }
+            sections.forEach(section -> {
+                section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
+            });
+            sections.sort(Comparator.comparing(SectionDTO::getImageType));
+            cached.setSections(sections);
+            return cached;
+        }
+
+        // 캐시에 없으면 트랜잭션으로 조회 + 증가 + 캐시 저장
+        return purchaseTransactionService.getPurchaseFromDbAndCache(id);
     }
+
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -147,7 +175,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         FileDTO fileDTO = new FileDTO();
         Long section = -1L;
         FilePostSectionDTO sectionFileDTO = new FilePostSectionDTO();
-        FilePostSectionDTO prevImageSection = new FilePostSectionDTO();
         PurchaseVO purchaseVO = toPurchaseVO(purchaseDTO);
         PostVO postVO = toPostVO(purchaseDTO);
 //      일단 상품 정보 업데이트
@@ -175,7 +202,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             }
             Type type = Type.SUB;
 //           추가된 이미지에서 썸네일이 있을 때
-            if (!purchaseDTO.isPrev() && purchaseDTO.getThumbnail()!= null && purchaseDTO.getThumbnail().equals((long)i) ) {
+            if (!purchaseDTO.isPrev() && purchaseDTO.getThumbnail() != null && purchaseDTO.getThumbnail().equals((long) i)) {
                 type = Type.MAIN;
                 filePostSectionDAO.updateImageType(purchaseDTO.getPrevMainImg(), Type.SUB);
             }
@@ -205,8 +232,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         });
 
-//      기존에서 대표 이미지 변경시
-        if(purchaseDTO.getThumbnail() == null){
+//      대표 이미지 변경 없을 시
+        if (purchaseDTO.getThumbnail() == null) {
             section = purchaseDTO.getPrevMainImg();
             purchaseDTO.setThumbnail(section);
             sectionDAO.update(toPostSectionVO(purchaseDTO));
