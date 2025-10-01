@@ -223,3 +223,4 @@ likeBtns.forEach((likeBtn) => {
         }, 2000);
     });
 });
+

@@ -82,6 +82,8 @@ public class SecurityConfig {
 
         return http.build();
     }
+//
+
     @Bean
     public PasswordEncoder passwordEncoder() {
 //        회원가입 시 비밀번호를 저장할 때, 이 PasswordEncoder로 암호화해서 저장하고,

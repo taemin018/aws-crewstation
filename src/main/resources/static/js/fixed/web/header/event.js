@@ -182,7 +182,7 @@ const secondaryHeaders = document.querySelectorAll(
 window.addEventListener("wheel", (e) => {
     if (e.wheelDeltaY < 0) {
         secondaryHeaders.forEach((secondaryHeader) => {
-            // console.log(secondaryHeader);
+            console.log(secondaryHeader);
 
             secondaryHeader.classList.add("scroll-down");
             secondaryHeader.style.top = "29px";
@@ -221,4 +221,15 @@ items.forEach((item) => {
             checkScroll = true;
         }, 1500);
     });
+});
+
+
+// 로그아웃
+
+const logoutLink = document.querySelector("a.logout-btn");
+
+logoutLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await memberService.logout()
+    location.href = "/member/web/login";
 });
