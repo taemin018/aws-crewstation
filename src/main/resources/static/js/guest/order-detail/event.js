@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 버튼들
             const cancelBtn = container.querySelector(".cancel-btn");
-            const payBtn = container.querySelector(".pay-btn");
+            const paymentBtn = container.querySelector(".payment-btn");
             const receiveBtn = container.querySelector(".receive-btn");
             const reviewBtn = container.querySelector(".review-btn");
 
@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // === 결제하기 ===
-            if (payBtn && payBtn.classList.contains("active")) {
-                payBtn.addEventListener("click", () => {
+            if (paymentBtn && paymentBtn.classList.contains("active")) {
+                paymentBtn.addEventListener("click", () => {
                     orderService.payOrder(guestOrderNumber)
                         .then(() => {
                             orderLayout.updateOrderStatus("결제 완료");
@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         .catch(() => orderLayout.showToast("결제 실패. 다시 시도해주세요."));
                 });
             }
+
 
             // === 수령 완료 ===
             if (receiveBtn && receiveBtn.classList.contains("active")) {
