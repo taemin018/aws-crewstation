@@ -10,6 +10,7 @@ import com.example.crewstation.service.banner.BannerService;
 import com.example.crewstation.service.crew.CrewService;
 import com.example.crewstation.service.diary.DiaryService;
 import com.example.crewstation.service.gift.GiftService;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,8 @@ public class MainPageController {
         log.info("accompanies = {}", accompanies);
         model.addAttribute("gifts", gifts);
         log.info("gifts = {}", gifts);
+
+
 
 
         return "main-page/main";

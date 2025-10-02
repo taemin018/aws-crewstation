@@ -64,4 +64,9 @@ public class DiaryDAO {
     public void changeLikeCount(int diff,Long postId){
         diaryMapper.updateLikeCount(diff,postId);
     }
+
+//    다이어리 검색 목록 개수
+    public int searchDiaryCount(@Param("Search") Search search){
+        return diaryMapper.searchDiaryCount(search);
+    }
 }

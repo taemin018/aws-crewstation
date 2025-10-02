@@ -27,4 +27,5 @@ public class CrewDTO {
     private String memberName;
     private String memberSocialUrl;
     private String socialImgUrl;
+    private int fileCount;
 }

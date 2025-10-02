@@ -37,16 +37,20 @@ public class DiaryServiceImpl implements DiaryService {
     private final LikeDAO likeDAO;
     private static final Map<String,String> ORDER_TYPE_MAP = Map.of("좋아요순","diary_like_count","최신순","post_id");
     private static final Map<String,String> CATEGORY_MAP = Map.of("crew","not null","individual","null");
+    private final DiaryDTO diaryDTO;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
         List<DiaryDTO> diaries = (List<DiaryDTO>) redisTemplate.opsForValue().get("diaries");
+
         if (diaries != null) {
             diaries.forEach(diary -> {
                 String filePath = diary.getDiaryFilePath();
                 String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+
+                diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
 
                 log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
                         diary, filePath, presignedUrl);
@@ -147,6 +151,47 @@ public class DiaryServiceImpl implements DiaryService {
             }
 //            diary.setUserId(1L); // 임시
 //            diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
+            diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
+        });
+        criteria.setHasMore(diaries.size() > criteria.getRowCount());
+
+        if (criteria.isHasMore()) {
+            diaries.remove(diaries.size() - 1);
+        }
+        dto.setDiaryDTOs(diaries);
+        dto.setCriteria(criteria);
+        return dto;
+    }
+
+    @Override
+    public DiaryCriteriaDTO countDiaryImg(Search search, CustomUserDetails customUserDetails) {
+        DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
+        Search newSearch = new Search();
+        int page = search.getPage();
+        dto.setSearch(search);
+
+        String category = search.getCategory();
+        String orderType = search.getOrderType();
+
+        newSearch.setKeyword(search.getKeyword());
+        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
+        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category,""));
+
+        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch),4,4);
+
+        List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
+        diaries.forEach(diary -> {
+            if(diary.getMemberFilePath()!= null){
+                diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
+            }
+            if(diary.getDiaryFilePath()!= null){
+                diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(), Duration.ofMinutes(5)));
+            }
+            if(customUserDetails != null){
+                diary.setUserId(customUserDetails.getId());
+                diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
+            }
+
             diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
         });
         criteria.setHasMore(diaries.size() > criteria.getRowCount());

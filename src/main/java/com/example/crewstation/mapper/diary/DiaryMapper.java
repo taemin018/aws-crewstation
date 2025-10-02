@@ -19,6 +19,9 @@ public interface DiaryMapper {
     //    다이러리 목록 (메인)
     public List<DiaryDTO> selectDiaryList(@Param("limit") int limit);
 
+//   다이어리 이미지 개수
+    public int countDiaryImg(@Param("postId") Long postId);
+
     //  해당 회원이 좋아요 한 다이어리 목록(마이페이지)
     public List<LikedDiaryDTO> findDiariesLikedByMemberId(
             @Param("memberId") Long memberId,
@@ -44,5 +47,8 @@ public interface DiaryMapper {
     public int selectCountAllByKeyword(@Param("search") Search search);
 //    좋아요 증가
     public void updateLikeCount(@Param("diff") int diff,@Param("postId")Long postId);
+
+//   다이어리 목록 검색 개수
+    public int searchDiaryCount(@Param("Search") Search search);
 
 }
