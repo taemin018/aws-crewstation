@@ -27,20 +27,26 @@ const orderService = (() => {
         return await res.text();
     };
 
-    // 별점 주기 -> 케미지수 업데이트
-    const submitReview = async (guestOrderNumber, score) => {
-        const res = await fetch(`/api/guest/order/${guestOrderNumber}/status?paymentPhase=REVIEWED&score=${score}`, {
-            method: "PUT"
+    // 별점 주기 -> 케미지수 업데이트 + 주문 상태 변경
+    const submitReview = async (sellerId, purchaseId, score) => {
+        const res = await fetch(`/api/member/rating`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                sellerId: sellerId,
+                purchaseId: purchaseId,
+                rating: score
+            })
         });
         if (!res.ok) throw new Error("리뷰 등록 실패");
-        return await res.text();
+        return await res.json();
     };
 
     return {
         getOrderDetail : getOrderDetail,
         cancelOrder : cancelOrder,
         completeReceive : completeReceive,
-        submitReview : submitReview
+        submitReview : submitReview,
     };
 
 })();

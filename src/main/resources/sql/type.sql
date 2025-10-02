@@ -17,3 +17,4 @@ drop type member_role;
 drop type procee;
 
 ALTER TYPE phase ADD VALUE 'received';
+ALTER TYPE phase ADD VALUE 'reviewed';

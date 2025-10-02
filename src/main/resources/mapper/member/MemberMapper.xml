@@ -56,4 +56,26 @@
         set member_password = #{memberPassword}
         where member_email = #{memberEmail}
     </update>
+
+    <!-- 별점 등록 시 케미지수 업데이트 -->
+    <update id="updateChemistryScore">
+        UPDATE tbl_member
+        SET chemistry_score = LEAST(
+                100,
+                GREATEST(
+                        0,
+                        chemistry_score +
+                        CASE #{rating}
+                            WHEN 5 THEN 2
+                            WHEN 4 THEN 1
+                            WHEN 3 THEN 0
+                            WHEN 2 THEN -1
+                            WHEN 1 THEN -2
+                            ELSE 0
+                            END
+                )
+                              ),
+            updated_datetime = NOW()
+        WHERE id = #{sellerId}
+    </update>
 </mapper>

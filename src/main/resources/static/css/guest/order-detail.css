@@ -668,3 +668,7 @@ html{
 .status-wrapper {
     margin-top: 50px;
 }
+
+* {
+    caret-color: transparent !important;
+}

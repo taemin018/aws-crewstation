@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 주문 상세 조회
     orderService.getOrderDetail(guestOrderNumber)
         .then(order => {
+            console.log("주문 상세:", order);
             if (!order) {
                 container.innerHTML = "<p>주문 내역이 없습니다.</p>";
                 return;
@@ -79,14 +80,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         };
                     });
 
-                    // 제출 버튼
+                    // 별점 제출
                     submitBtn.onclick = (e) => {
                         e.preventDefault();
                         if (selectedScore >= 1 && selectedScore <= 5) {
-                            orderService.submitReview(guestOrderNumber, selectedScore)
+                            orderService.submitReview(order.sellerId, order.purchaseId, selectedScore)  //
                                 .then(() => {
                                     modal.style.display = "none";
-                                    orderLayout.showToast("리뷰가 등록되었습니다.");
+                                    orderLayout.showToast("별점이 정상적으로 등록되었습니다.", true);
+                                    if (reviewBtn) reviewBtn.remove();
                                 })
                                 .catch(() => orderLayout.showToast("리뷰 등록 실패. 다시 시도해주세요."));
                         } else {

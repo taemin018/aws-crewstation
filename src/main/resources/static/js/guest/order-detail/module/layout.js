@@ -12,6 +12,8 @@ const orderLayout = (() => {
                 return "결제 완료";
             case "received":
                 return "수령 완료";
+            case "reviewed":
+                return "리뷰 완료";
             case "refund":
                 return "주문 취소";
             default:
@@ -30,6 +32,7 @@ const orderLayout = (() => {
             case "pending":
             case "success":
             case "received":
+            case "reviewed":
             case "refund":
                 baseDate = order.updatedDatetime;
                 break;
@@ -55,26 +58,25 @@ const orderLayout = (() => {
             request: 0,   // 수락 대기
             pending: 1,   // 결제 대기
             success: 2,   // 결제 완료
-            received: 3   // 수령 완료
+            received: 3,  // 수령 완료
+            reviewed: 4   // ⭐ 리뷰 완료
         };
 
-        const labels = ["수락 대기", "결제 대기", "결제 완료", "수령 완료"];
-        const currentIndex = statusOrder[status] ?? 0; // 없는 경우 기본 0
+        const labels = ["수락 대기", "결제 대기", "결제 완료", "수령 완료", "리뷰 완료"];
+        const currentIndex = statusOrder[status] ?? 0;
 
         return labels.map((label, idx) => {
             if (idx < currentIndex) {
-                // 지난 단계
                 return `
                 <div class="line fill">
                     <h3 class="status">${label}</h3>
                 </div>
             `;
             } else if (idx === currentIndex) {
-                // 현재 단계
                 return `
                 <div class="line">
                     <span class="now">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" data-testid="arrow-down-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none">
                             <path fill="#2F3438" fill-rule="evenodd" d="M1.201 3.182a.6.6 0 0 1 .847.05l3.996 4.495 3.997-4.496a.6.6 0 1 1 .896.798l-4.07 4.58a1.1 1.1 0 0 1-1.645 0l-4.07-4.58a.6.6 0 0 1 .05-.847" clip-rule="evenodd"></path>
                         </svg>
                     </span>
@@ -82,7 +84,6 @@ const orderLayout = (() => {
                 </div>
             `;
             } else {
-                // 이후 단계
                 return `
                 <div class="line">
                     <h3 class="status">${label}</h3>
@@ -101,7 +102,7 @@ const orderLayout = (() => {
         } else if (digits.length === 11) {
             return digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
         }
-        return phone; // 길이 에러 시 그대로 반환
+        return phone;
     }
 
     // 배송 방법 포맷
@@ -187,7 +188,7 @@ const orderLayout = (() => {
     const showToast = (message, reload = false) => {
         alert(message);
         if (reload) {
-            location.reload(); // 확인 버튼 누르고 난 뒤 새로고침
+            location.reload();
         }
     };
 

@@ -39,6 +39,7 @@ SELECT * FROM tbl_payment_status WHERE purchase_id = 1;
 
 
 select * from tbl_payment_status;
+select * from tbl_member;
 
 SELECT DISTINCT payment_phase FROM tbl_payment_status;
 

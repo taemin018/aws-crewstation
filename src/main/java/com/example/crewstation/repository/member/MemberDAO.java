@@ -50,6 +50,7 @@ public class MemberDAO {
         memberMapper.insertGuest(memberDTO);
     }
 
+//  멤버 프로필 조회
     public Optional<MemberProfileDTO> selectProfileById(Long memberId) {
         return memberMapper.selectProfileById(memberId);
     }
@@ -57,6 +58,11 @@ public class MemberDAO {
 //    비밀번호 업데이트
     public void updatePassword(String memberEmail, String memberPassword) {
         memberMapper.updatePassword(memberEmail, memberPassword);
+    }
+
+//    별점 등록 시 케미지수 업데이트
+    public void updateChemistryScore(Long sellerId, int rating) {
+        memberMapper.updateChemistryScore(sellerId, rating);
     }
 
 }

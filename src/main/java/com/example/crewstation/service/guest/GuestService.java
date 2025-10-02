@@ -15,4 +15,5 @@ public interface GuestService {
 
 //  결제 상태 업데이트
     public void updatePaymentStatus(Long purchaseId, PaymentPhase paymentPhase);
+
 }

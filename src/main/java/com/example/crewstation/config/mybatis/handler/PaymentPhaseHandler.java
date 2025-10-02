@@ -20,6 +20,7 @@ public class PaymentPhaseHandler implements TypeHandler<PaymentPhase> {
             case "refund" -> PaymentPhase.REFUND;
             case "success" -> PaymentPhase.SUCCESS;
             case "received" -> PaymentPhase.RECEIVED;
+            case "reviewed" -> PaymentPhase.REVIEWED;
             default -> null;
         };
     }
@@ -31,6 +32,7 @@ public class PaymentPhaseHandler implements TypeHandler<PaymentPhase> {
             case "refund" -> PaymentPhase.REFUND;
             case "success" -> PaymentPhase.SUCCESS;
             case "received" -> PaymentPhase.RECEIVED;
+            case "reviewed" -> PaymentPhase.REVIEWED;
             default -> null;
         };
     }
@@ -42,6 +44,7 @@ public class PaymentPhaseHandler implements TypeHandler<PaymentPhase> {
             case "refund" -> PaymentPhase.REFUND;
             case "success" -> PaymentPhase.SUCCESS;
             case "received" -> PaymentPhase.RECEIVED;
+            case "reviewed" -> PaymentPhase.REVIEWED;
             default -> null;
         };
     }
