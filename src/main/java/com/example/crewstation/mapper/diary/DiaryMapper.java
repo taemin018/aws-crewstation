@@ -19,6 +19,9 @@ public interface DiaryMapper {
     //    다이러리 목록 (메인)
     public List<DiaryDTO> selectDiaryList(@Param("limit") int limit);
 
+//   다이어리 이미지 개수
+    public int countDiaryImg(@Param("postId") Long postId);
+
     //  해당 회원이 좋아요 한 다이어리 목록(마이페이지)
     public List<LikedDiaryDTO> findDiariesLikedByMemberId(
             @Param("memberId") Long memberId,

@@ -15,7 +15,8 @@
         </where>
     </sql>
     <select id="selectDiaryList">
-        select vpd.id as post_id,
+        select
+        vpd.id as post_id,
         vpd.created_datetime,
         vpd.updated_datetime,
         vpd.post_read_count,
@@ -27,7 +28,6 @@
         tm.member_description,
         tm.social_img_url,
         tps.post_content,
-        vfmf.file_path,
         tc.crew_name,
         tc.id as crew_id
         from tbl_member tm
@@ -187,4 +187,10 @@
         set diary_like_count = diary_like_count + #{diff}
         where post_id = #{postId}
     </update>
+
+    <select id="countDiaryImg">
+        select count(*)
+        from view_post_diary vpd
+        where vpd.id = #{postId}
+    </select>
 </mapper>
