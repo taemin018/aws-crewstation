@@ -86,7 +86,7 @@ public class MemberController {
         guestService.login(guestDTO);
 
 
-        return new RedirectView("/member/mobile/login");
+        return new RedirectView("/guest/order-detail");
     }
 
 //    web sns 회원가입

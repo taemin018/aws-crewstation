@@ -10,13 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/diaries/**")
 public class DiaryController {
 
-    // 마이페이지 -> 내가 좋아요한 일기 목록 화면 & 내가 댓글 단 일기 목록 화면
-    @GetMapping("/mypage/my-activities")
-    public String loadMyActivitiesPage() {
-        log.info("마이페이지 - 좋아요한 일기 화면 요청");
-        return "mypage/my-activities";
-    }
-
     @GetMapping
     public String list(){
         return "diary/list";

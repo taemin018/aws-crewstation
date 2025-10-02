@@ -1,5 +1,6 @@
 package com.example.crewstation.controller.guest;
 
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.dto.guest.GuestOrderDetailDTO;
@@ -27,6 +28,25 @@ public class GuestRestController {
     public ResponseEntity<GuestOrderDetailDTO> getOrderDetail(@PathVariable String guestOrderNumber) {
         GuestOrderDetailDTO orderDetail = guestService.getOrderDetail(guestOrderNumber);
         return ResponseEntity.ok(orderDetail);
+    }
+
+    // 결제 상태 업데이트
+    @PutMapping("/order/{guestOrderNumber}/status")
+    public ResponseEntity<Void> updatePaymentStatus(
+            @PathVariable String guestOrderNumber,
+            @RequestParam PaymentPhase paymentPhase) {
+
+        log.info("PUT /order/{}/status called with phase={}", guestOrderNumber, paymentPhase);
+
+        GuestOrderDetailDTO order = guestService.getOrderDetail(guestOrderNumber);
+        if (order == null) {
+            log.warn("Order not found: {}", guestOrderNumber);
+            return ResponseEntity.notFound().build();
+        }
+
+        guestService.updatePaymentStatus(order.getPurchaseId(), paymentPhase);
+        log.info("Order status updated for purchaseId={}", order.getPurchaseId());
+        return ResponseEntity.ok().build();
     }
 
 }

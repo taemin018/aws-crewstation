@@ -17,4 +17,12 @@
         where purchase_id = #{purchaseId}
     </select>
 
+    <!-- 결제 상태 업데이트-->
+    <update id="updatePaymentStatus">
+        UPDATE tbl_payment_status
+        SET payment_phase = #{paymentPhase},
+            updated_datetime = now()
+        WHERE purchase_id = #{purchaseId}
+    </update>
+
 </mapper>

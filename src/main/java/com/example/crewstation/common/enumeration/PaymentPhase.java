@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum PaymentPhase {
-    PENDING("pending"),REFUND("refund"),SUCCESS("success");
+    PENDING("pending"),REFUND("refund"),SUCCESS("success"), RECEIVED("received");
 
     private final String value;
     private static final Map<String, PaymentPhase> PAYMENT_STATUS_MAP_MAP =

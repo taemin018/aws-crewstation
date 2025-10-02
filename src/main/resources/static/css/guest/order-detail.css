@@ -141,6 +141,10 @@ html{
     padding: 24px 16px;
 }
 
+.header.refund-bg {
+    background-color: #b2b2b2;
+}
+
 .header-wrapper {
     margin-bottom: 20px;
     color: #2F3438;
@@ -248,7 +252,7 @@ html{
     font-size: 16px;
     line-height: 20px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .seller-info-category {
@@ -349,6 +353,16 @@ html{
 .cancel-btn:hover {
     background-color: #dbdbdb;
     color: #333;
+}
+
+/* 결제하기 버튼 */
+.payment-btn {
+    border-color: #db7373;
+    color: #db7373;
+}
+.payment-btn:hover {
+    background-color: #db7373;
+    color: #fff;
 }
 
 /* 수령 완료 버튼 */
@@ -500,7 +514,6 @@ html{
     width: calc(100% - 68px);
     margin-left: 24px;
     margin-right: 10px;
-    white-space: pre-line;
 }
 
 .close-button {
@@ -650,4 +663,8 @@ html{
     line-height: 43px;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+
+.status-wrapper {
+    margin-top: 50px;
 }

@@ -25,6 +25,7 @@ public class GuestOrderDetailDTO {
 
     // 구매(상품)
     private Long postId;
+    private Long purchaseId;
     private String postTitle;
     private int purchaseProductPrice;
     private String purchaseCountry;

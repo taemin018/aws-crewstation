@@ -30,12 +30,14 @@
                g.guest_order_number           AS guestOrderNumber,
 
                ps.payment_phase               AS paymentStatus,
-               ps.created_datetime            AS paymentCreated,
-               ps.updated_datetime            AS paymentUpdated,
+
+               ps.created_datetime AS createdDatetime,
+               ps.updated_datetime AS updatedDatetime,
 
                p.id                           AS postId,
                p.post_title                   AS postTitle,
 
+               pu.post_id AS purchaseId,
                pu.purchase_product_price      AS purchaseProductPrice,
                pu.purchase_country            AS purchaseCountry,
                pu.purchase_delivery_method    AS purchaseDeliveryMethod,
@@ -48,15 +50,15 @@
 
                f.file_path || '/' || f.file_name AS mainImage
         FROM tbl_guest g
-                 JOIN tbl_payment pay             ON g.member_id = pay.member_id
-                 JOIN tbl_payment_status ps       ON ps.payment_id = pay.id
+                 JOIN tbl_payment_status ps       ON ps.member_id = g.member_id
                  JOIN tbl_purchase pu             ON ps.purchase_id = pu.post_id
                  JOIN tbl_post p                  ON pu.post_id = p.id
-                 JOIN tbl_member seller           ON p.member_id = seller.id             -- 판매자
-                 JOIN tbl_member guest            ON g.member_id = guest.id              -- 구매자
+                 JOIN tbl_member seller           ON p.member_id = seller.id
+                 JOIN tbl_member guest            ON g.member_id = guest.id
                  LEFT JOIN tbl_post_section s     ON p.id = s.post_id
                  LEFT JOIN tbl_post_section_file sf ON s.id = sf.post_section_id AND sf.image_type = 'main'
                  LEFT JOIN tbl_file f             ON sf.file_id = f.id
-        WHERE g.guest_order_number = #{guestOrderNumber};
+        WHERE g.guest_order_number = #{guestOrderNumber}
     </select>
+
 </mapper>
