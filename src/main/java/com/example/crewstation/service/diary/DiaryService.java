@@ -36,5 +36,5 @@ public interface DiaryService {
     public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails);
 
 //    다이어리 이미지 개수
-    public int countDiaryImg(Long postId);
+    public DiaryCriteriaDTO countDiaryImg(Search search, CustomUserDetails customUserDetails);
 }

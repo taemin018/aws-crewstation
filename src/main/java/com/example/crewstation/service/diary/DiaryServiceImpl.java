@@ -162,4 +162,45 @@ public class DiaryServiceImpl implements DiaryService {
         dto.setCriteria(criteria);
         return dto;
     }
+
+    @Override
+    public DiaryCriteriaDTO countDiaryImg(Search search, CustomUserDetails customUserDetails) {
+        DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
+        Search newSearch = new Search();
+        int page = search.getPage();
+        dto.setSearch(search);
+
+        String category = search.getCategory();
+        String orderType = search.getOrderType();
+
+        newSearch.setKeyword(search.getKeyword());
+        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
+        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category,""));
+
+        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch),4,4);
+
+        List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
+        diaries.forEach(diary -> {
+            if(diary.getMemberFilePath()!= null){
+                diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
+            }
+            if(diary.getDiaryFilePath()!= null){
+                diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(), Duration.ofMinutes(5)));
+            }
+            if(customUserDetails != null){
+                diary.setUserId(customUserDetails.getId());
+                diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
+            }
+
+            diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
+        });
+        criteria.setHasMore(diaries.size() > criteria.getRowCount());
+
+        if (criteria.isHasMore()) {
+            diaries.remove(diaries.size() - 1);
+        }
+        dto.setDiaryDTOs(diaries);
+        dto.setCriteria(criteria);
+        return dto;
+    }
 }
