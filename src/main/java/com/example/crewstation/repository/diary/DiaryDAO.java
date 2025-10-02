@@ -64,4 +64,8 @@ public class DiaryDAO {
     public void changeLikeCount(int diff,Long postId){
         diaryMapper.updateLikeCount(diff,postId);
     }
+
+    public int countDiaryImg(@Param("postId") Long postId) {
+        return diaryMapper.countDiaryImg(postId);
+    }
 }

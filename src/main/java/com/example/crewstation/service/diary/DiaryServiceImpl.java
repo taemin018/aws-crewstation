@@ -37,6 +37,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final LikeDAO likeDAO;
     private static final Map<String,String> ORDER_TYPE_MAP = Map.of("좋아요순","diary_like_count","최신순","post_id");
     private static final Map<String,String> CATEGORY_MAP = Map.of("crew","not null","individual","null");
+    private final DiaryDTO diaryDTO;
 
 
     @Override
@@ -47,6 +48,8 @@ public class DiaryServiceImpl implements DiaryService {
             diaries.forEach(diary -> {
                 String filePath = diary.getDiaryFilePath();
                 String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+
+                diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
 
                 log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
                         diary, filePath, presignedUrl);
@@ -157,5 +160,12 @@ public class DiaryServiceImpl implements DiaryService {
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
         return dto;
+    }
+
+    @Override
+    public int countDiaryImg(Long postId) {
+        log.info("postId: {}", postId);
+
+        return diaryDAO.countDiaryImg(postId);
     }
 }
