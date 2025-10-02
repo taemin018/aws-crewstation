@@ -43,12 +43,14 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
         List<DiaryDTO> diaries = (List<DiaryDTO>) redisTemplate.opsForValue().get("diaries");
+
         if (diaries != null) {
             diaries.forEach(diary -> {
                 String filePath = diary.getDiaryFilePath();
                 String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
 
-                log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+
+                log.info("Diary ID={}, 원본 DiaryfilePath={}, 발급된 presignedUrl={}",
                         diary, filePath, presignedUrl);
                 diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(),
                         Duration.ofMinutes(5)));

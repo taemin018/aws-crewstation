@@ -10,6 +10,7 @@
             tc.created_datetime  as createdDatetime,
             tc.updated_datetime  as updatedDatetime,
             vf.file_path         as filePath,
+
             vf.file_name         as fileName,
             vf.file_origin_name  as fileOriginName
         from tbl_crew tc
@@ -24,6 +25,22 @@
             where t.rn = 1
         ) vf on vf.crew_id = tc.id
         order by tc.id desc
+
+    </select>
+
+    <select id="searchCountCrews">
+        select count(tc.id)
+        from tbl_crew tc
+                 left join (
+            select crew_id, file_path, file_name, file_origin_name
+            from (
+                     select
+                         crew_id, file_path, file_name, file_origin_name,
+                         row_number() over(partition by crew_id order by file_id desc) rn
+                     from view_file_crew_file
+                 ) t
+            where t.rn = 1
+        ) vf on vf.crew_id = tc.id
 
     </select>
 

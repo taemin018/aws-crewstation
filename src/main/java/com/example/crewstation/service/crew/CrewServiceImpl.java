@@ -6,6 +6,7 @@ import com.example.crewstation.dto.crew.CrewDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.repository.crew.CrewDAO;
 import com.example.crewstation.service.s3.S3Service;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,6 +38,8 @@ public class CrewServiceImpl implements CrewService {
             crews.forEach(crew -> {
                 String filePath = crew.getFilePath();
                 String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+
+                crew.setFileCount(crewDAO.searchCountCrews(crew.getId()));
 
                 log.info("Crew ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
                         crew.getId(), filePath, presignedUrl);
