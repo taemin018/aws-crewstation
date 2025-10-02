@@ -1,9 +1,12 @@
 package com.example.crewstation.service.guest;
 
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.common.exception.MemberLoginFailException;
 import com.example.crewstation.dto.guest.GuestDTO;
 import com.example.crewstation.dto.guest.GuestOrderDetailDTO;
 import com.example.crewstation.repository.guest.GuestDAO;
+import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
+import com.example.crewstation.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class GuestServiceImpl implements GuestService {
     private final GuestDAO guestDAO;
+    private final PaymentStatusDAO paymentStatusDAO;
 
     @Override
     public GuestDTO login(GuestDTO guestDTO) {
@@ -25,5 +29,11 @@ public class GuestServiceImpl implements GuestService {
     public GuestOrderDetailDTO getOrderDetail(String guestOrderNumber) {
         return guestDAO.findOrderDetail(guestOrderNumber)
                 .orElseThrow(() -> new RuntimeException(" 주문 내역을 찾을 수 없습니다. 주문번호=" + guestOrderNumber));
+    }
+
+    // 비회원이 주문번호로 조회한 후 결제 상태 변경
+    @Override
+    public void updatePaymentStatus(Long purchaseId, PaymentPhase paymentPhase) {
+        paymentStatusDAO.updatePaymentStatus(purchaseId, paymentPhase);
     }
 }

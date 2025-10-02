@@ -1,5 +1,6 @@
 package com.example.crewstation.mapper.payment.status;
 
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,4 +12,7 @@ public interface PaymentStatusMapper {
 
 //  구매 내역 조회
     public  PaymentStatusDTO selectByPurchaseId(Long purchaseId);
+
+//  결제 상태 업데이트
+    public void updatePaymentStatus(@Param("purchaseId") Long purchaseId, @Param("paymentPhase") PaymentPhase paymentPhase);
 }

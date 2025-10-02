@@ -15,3 +15,5 @@ drop type gender;
 drop type member_provider;
 drop type member_role;
 drop type procee;
+
+ALTER TYPE phase ADD VALUE 'received';

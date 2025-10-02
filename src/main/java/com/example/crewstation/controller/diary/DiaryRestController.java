@@ -1,9 +1,10 @@
 package com.example.crewstation.controller.diary;
 
 import com.example.crewstation.auth.CustomUserDetails;
-import com.example.crewstation.dto.diary.*;
+import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
+import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
+import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.service.diary.DiaryService;
-import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

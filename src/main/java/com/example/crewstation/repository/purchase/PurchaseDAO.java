@@ -49,4 +49,5 @@ public class PurchaseDAO {
     public Optional<PurchaseDetailDTO> findByPurchaseDetail(Long postId){
         return purchaseMapper.selectPurchaseDetailByPostId(postId);
     }
+
 }
