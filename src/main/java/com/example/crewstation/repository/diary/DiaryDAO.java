@@ -65,7 +65,8 @@ public class DiaryDAO {
         diaryMapper.updateLikeCount(diff,postId);
     }
 
-    public int countDiaryImg(@Param("postId") Long postId) {
-        return diaryMapper.countDiaryImg(postId);
+//    다이어리 검색 목록 개수
+    public int searchDiaryCount(@Param("Search") Search search){
+        return diaryMapper.searchDiaryCount(search);
     }
 }

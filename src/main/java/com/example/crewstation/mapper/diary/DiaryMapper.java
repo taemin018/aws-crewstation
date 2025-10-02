@@ -48,4 +48,7 @@ public interface DiaryMapper {
 //    좋아요 증가
     public void updateLikeCount(@Param("diff") int diff,@Param("postId")Long postId);
 
+//   다이어리 목록 검색 개수
+    public int searchDiaryCount(@Param("Search") Search search);
+
 }

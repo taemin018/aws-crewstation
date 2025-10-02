@@ -44,6 +44,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
         List<DiaryDTO> diaries = (List<DiaryDTO>) redisTemplate.opsForValue().get("diaries");
+
         if (diaries != null) {
             diaries.forEach(diary -> {
                 String filePath = diary.getDiaryFilePath();
@@ -160,12 +161,5 @@ public class DiaryServiceImpl implements DiaryService {
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
         return dto;
-    }
-
-    @Override
-    public int countDiaryImg(Long postId) {
-        log.info("postId: {}", postId);
-
-        return diaryDAO.countDiaryImg(postId);
     }
 }
