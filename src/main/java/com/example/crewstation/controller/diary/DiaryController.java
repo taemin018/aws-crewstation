@@ -21,4 +21,9 @@ public class DiaryController {
     public String list(){
         return "diary/list";
     }
+
+    @GetMapping("write")
+    public String goWriteForm(){
+        return "mypage/my-diary/write";
+    }
 }
