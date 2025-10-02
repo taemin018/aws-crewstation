@@ -34,4 +34,7 @@ public interface DiaryService {
 
 //    다이어리 목록들 가져오기(다이어리 서비스 쪽)
     public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails);
+
+//    다이어리 이미지 개수
+    public int countDiaryImg(Long postId);
 }
