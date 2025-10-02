@@ -59,4 +59,21 @@ public class MembersApiController {
     }
 
 //    로그아웃
+
+    
+//  별점 등록 시 케미지수 + 상태 업데이트
+    @PostMapping("/rating")
+    public ResponseEntity<?> giveRating(@RequestBody Map<String, Object> body) {
+        Long sellerId = Long.valueOf(body.get("sellerId").toString());
+        Long purchaseId = Long.valueOf(body.get("purchaseId").toString()); // ⭐ 추가
+        int rating = Integer.parseInt(body.get("rating").toString());
+
+        memberService.submitReview(sellerId, purchaseId, rating);
+
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "별점이 반영되고 주문 상태가 reviewed로 변경되었습니다."
+        ));
+    }
+
 }

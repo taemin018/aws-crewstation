@@ -1,5 +1,6 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.common.exception.MemberLoginFailException;
 import com.example.crewstation.common.exception.MemberNotFoundException;
 import com.example.crewstation.domain.file.FileVO;
@@ -9,6 +10,8 @@ import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.mapper.payment.PaymentMapper;
+import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.member.AddressDAO;
 import com.example.crewstation.repository.member.MemberDAO;
@@ -37,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
     private final FileDAO fileDAO;
     private final PasswordEncoder passwordEncoder;
     private final S3Service s3Service;
+    private final PaymentStatusMapper paymentStatusMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -195,6 +199,16 @@ public class MemberServiceImpl implements MemberService {
 
     public Optional<MemberProfileDTO> getMember(Long memberId) {
         return Optional.empty();
+    }
+
+//  별점 등록 시 케미점수 및 상태 갱신
+    @Transactional
+    public void submitReview(Long sellerId, Long purchaseId, int rating) {
+        // 판매자 케미 점수 갱신
+        memberDAO.updateChemistryScore(sellerId, rating);
+
+        // 주문 상태 reviewed 로 변경
+        paymentStatusMapper.updatePaymentStatus(purchaseId, PaymentPhase.REVIEWED);
     }
 
 }

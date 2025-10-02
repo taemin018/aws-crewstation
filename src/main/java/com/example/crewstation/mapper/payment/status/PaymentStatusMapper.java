@@ -4,6 +4,7 @@ import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface PaymentStatusMapper {
@@ -15,4 +16,5 @@ public interface PaymentStatusMapper {
 
 //  결제 상태 업데이트
     public void updatePaymentStatus(@Param("purchaseId") Long purchaseId, @Param("paymentPhase") PaymentPhase paymentPhase);
+
 }

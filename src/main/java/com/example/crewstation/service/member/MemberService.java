@@ -29,11 +29,14 @@ public interface MemberService {
 // sns 가입
     public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
 
-//
+//  멤버 프로필 조회
     public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
 
 //  비밀번호 변경
     public void resetPassword(String memberEmail, String memberPassword);
+
+//  별점 등록 시 상태 및 케미지수 업데이트
+    public void submitReview(Long sellerId, Long purchaseId, int rating);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

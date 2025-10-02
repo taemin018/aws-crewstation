@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 public class GuestOrderDetailDTO {
     // 주문(게스트) 정보
-    private Long id;
+    private Long guestId;
     private String guestName;
     private String guestPhone;
     private String addressZipCode;
@@ -33,7 +32,7 @@ public class GuestOrderDetailDTO {
     private String mainImage;
 
     // 판매자
-    private Long memberId;
+    private Long sellerId;
     private String sellerName;
     private String sellerPhone;
     private String createdDatetime;

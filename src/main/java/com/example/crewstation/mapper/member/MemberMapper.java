@@ -36,4 +36,9 @@ public interface MemberMapper {
 
 //    비밀번호 업데이트
     public void updatePassword(@Param("memberEmail") String memberEmail,@Param("memberPassword") String memberPassword);
+
+//   별점 등록 시 케미지수 업데이트
+    public void updateChemistryScore(@Param("sellerId") Long sellerId, @Param("rating") int rating);
 }
+
+
