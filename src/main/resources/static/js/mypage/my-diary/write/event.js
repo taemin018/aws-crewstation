@@ -1,4 +1,3 @@
-// 나라 자동완성
 const countries = [
     "가나",
     "가봉",
@@ -194,7 +193,7 @@ const countries = [
 
 const countryInput = document.querySelector(".input-tag-wrap");
 const countryDropdown = document.getElementById("countryDropdown");
-
+let checkDrop = false;
 if (countryInput && countryDropdown) {
     countryInput.addEventListener("input", () => {
         console.log("들어옴");
@@ -215,6 +214,7 @@ if (countryInput && countryDropdown) {
                 li.addEventListener("click", () => {
                     countryInput.value = country;
                     countryDropdown.style.display = "none";
+                    checkDrop = true;
                 });
                 countryDropdown.appendChild(li);
             });
@@ -231,6 +231,15 @@ if (countryInput && countryDropdown) {
         }
     });
 }
+
+const tagPin = `
+                          <button class="tag-add-btn" type="button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" class="plus-img">
+                              <circle cx="12" cy="12" r="12" fill="#647FBC"></circle>
+                              <path stroke="#FFF" stroke-width="2" d="M12 16V8m-4 4h8"></path>
+                            </svg>
+                          </button>
+                        `;
 
 const pickFile = () => {
     const input = document.createElement("input");
@@ -254,7 +263,7 @@ let currentBlock = null;
 // 편집 버튼 초기 라벨 통일
 const editButtons = document.querySelectorAll(".edit-button");
 editButtons.forEach((btn) => {
-    btn.textContent = "+ 맨션 태그 추가";
+    btn.textContent = "+ 상품 태그 추가";
 });
 
 // 왼쪽 + 는 하나만 남기기
@@ -267,9 +276,11 @@ if (leftList) {
 const resetBlock = (block) => {
     block.dataset.idx = "";
     block.querySelector(".img-add-container img")?.remove();
-
+    const split = block.id.split("_");
+    block.id = split[0] + "_" + +split[1];
     show(block.querySelector(".dropzone"));
     hide(block.querySelector(".post-img-bottom"));
+    hide(block.querySelector(".img-tag-container"));
 
     const btn = block.querySelector(".edit-button");
     if (btn) btn.textContent = "+ 상품 태그 추가";
@@ -278,12 +289,10 @@ const resetBlock = (block) => {
     if (ta) ta.value = "";
 
     block.dataset.armed = "0";
-    block.dataset.tx = "";
-    block.dataset.ty = "";
 };
 
 const previewIn = (block, url) => {
-    const box = block.querySelector(".img-container");
+    const box = block.querySelector(".img-add-container");
     let img = box.querySelector("img");
     if (!img) {
         img = document.createElement("img");
@@ -296,7 +305,7 @@ const previewIn = (block, url) => {
 };
 
 // 인덱스: 빈 슬롯 먼저 사용
-let nextIdx = 0;
+let nextIdx = 1;
 const freeIdx = [];
 const takeIdx = () => (freeIdx.length ? freeIdx.shift() : nextIdx++);
 const giveIdx = (i) => {
@@ -320,37 +329,33 @@ const findBlockBefore = (idx) => {
 };
 
 // 파일로 한 쌍 만들기 (왼쪽 썸네일 + 오른쪽 블록)
-const addPairWithFile = (file) => {
-    if (!file || !file.type?.startsWith("image/")) return;
-    const url = URL.createObjectURL(file);
+const addPairWithFile = () => {
     const idx = takeIdx();
-
     // 블록: 첫 템플릿이 비어있고 idx==0이면 재사용, 아니면 복제
     let block;
-    const firstIsEmpty =
-        sampleBlock &&
-        !sampleBlock.dataset.idx &&
-        !sampleBlock.querySelector(".img-add-container img");
-    if (firstIsEmpty && idx === 0) {
-        block = sampleBlock;
-    } else {
-        block = sampleBlock.cloneNode(true);
-        resetBlock(block);
-    }
+
+    // if (firstIsEmpty && idx === 0) {
+    //     block = sampleBlock;
+    // } else {
+    // if (idx === 0) return;
+    block = sampleBlock.cloneNode(true);
+    resetBlock(block);
+    // }
+
     block.dataset.idx = String(idx);
-    previewIn(block, url);
 
     const beforeBlk = findBlockBefore(idx);
     beforeBlk
         ? contentList.insertBefore(block, beforeBlk)
         : contentList.appendChild(block);
-
     // 왼쪽 썸네일
     const thumb = document.importNode(thumbTpl.content, true).firstElementChild;
     thumb.dataset.idx = String(idx);
-    thumb.querySelector(".img-view").src = url;
-
+    thumb.style.display = "none"; // list-item
+    const imgView = thumb.querySelector(".img-view");
+    if (imgView) imgView.src = "/images/noImage.png";
     const beforeThumb = findThumbBefore(idx);
+    // 왼쪽 썸네일 추가
     leftList.insertBefore(thumb, beforeThumb);
 };
 
@@ -358,118 +363,14 @@ const addPairWithFile = (file) => {
 // + 버튼 → 파일 선택 → 쌍 추가
 leftList?.addEventListener("click", (e) => {
     if (!e.target.closest(".sub-img-plus-btn-container")) return;
-    const input = pickFile();
-    input.onchange = () => {
-        const f = input.files?.[0];
-        if (f) addPairWithFile(f);
-        input.remove();
-    };
-    input.click();
-});
-
-const imgPlusBtn = document.querySelector(".sub-img-plus-btn-container");
-const postContainer = document.querySelector(".post-img-content-container");
-
-imgPlusBtn.addEventListener("click", (e) => {
-    postContainer.innerHTML += `
-        <li class="post-img-content-wrapper">
-            <div class="post-img-content">
-            <div class="post-img">
-                <div class="img-add-container" style="position:relative; padding-bottom:100%;">
-                <!-- 초기 드롭존 -->
-                <div class="dropzone">
-                    <!-- <div class="dz-title">사진을 드래그해서 놓으세요</div>
-                    <div class="dz-sub">10장까지 올릴 수 있어요.</div> -->
-                    <button type="button" class="pc-upload-btn">사진 불러오기</button>
-                </div>
-                <!-- 하단 오버레이/파란+ 는 처음엔 hidden -->
-                <div class="post-img-bottom" hidden>
-                    <button class="return-img" type="button" title="다시 올리기" aria-label="다시 올리기">
-                        <svg class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">
-                        <path d="M17.9 10a6.4 6.4 0 0 0-6-4.5c-3.6 0-6.4 2.9-6.4 6.5s2.8 6.5 6.3 6.5c2.2 0 4.1-1 5.3-2.9a.7.7 0 1 1 1.2.8 7.8 7.8 0 0 1-6.5 3.6C7.5 20 4 16.4 4 12s3.5-8 7.8-8c3.4 0 6.3 2.2 7.4 5.3l.7-1.4a.7.7 0 1 1 1.3.7l-1.8 3.1a.7.7 0 0 1-1 .3l-3-1.8a.7.7 0 1 1 .7-1.3l1.8 1z"></path>
-                        </svg>
-                    </button>
-                    
-                    <button class="delete-img" type="button" title="삭제" aria-label="삭제">
-                        <svg class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">
-                        <path d="M6 19V7h12v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2zM19 4v2H5V4h3.5l1-1h5l1 1H19z"></path>
-                        </svg>
-                    </button>
-                    
-                    <button class="edit-button" type="button">맨션 편집 완료</button>
-                    </div>
-                    <div class="tags-container">
-                    <div class="img-tag-container tag" hidden>
-                        <button class="tag-add-btn" type="button">
-                        <svg width="18" height="18" viewBox="0 0 24 24" class="plus-img">
-                            <circle cx="12" cy="12" r="12" fill="#647FBC"></circle>
-                            <path stroke="#FFF" stroke-width="2" d="M12 16V8m-4 4h8"></path>
-                        </svg>
-                        </button>
-                        <div class="mention-window">
-                        <div class="triangle"></div>
-                        <div class="mention-profile">
-                            <a class="profile-a">
-                                <div class="mention-profile-img">
-                                    <img src="/static/images/crew-station-icon-profile.png">
-                                </div>
-                                <span id="mention-name">CREW2</span>
-                            </a>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="img-tag-container tag" hidden>
-                        <button class="tag-add-btn" type="button">
-                        <svg width="18" height="18" viewBox="0 0 24 24" class="plus-img">
-                            <circle cx="12" cy="12" r="12" fill="#647FBC"></circle>
-                            <path stroke="#FFF" stroke-width="2" d="M12 16V8m-4 4h8"></path>
-                        </svg>
-                        </button>
-                        <div class="mention-window">
-                        <div class="triangle"></div>
-                        <div class="mention-profile">
-                            <a class="profile-a">
-                                <div class="mention-profile-img">
-                                    <img src="/static/images/crew-station-icon-profile.png">
-                                </div>
-                                <span id="mention-name">CREW2</span>
-                            </a>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="img-tag-container tag" hidden>
-                        <button class="tag-add-btn" type="button">
-                        <svg width="18" height="18" viewBox="0 0 24 24" class="plus-img">
-                            <circle cx="12" cy="12" r="12" fill="#647FBC"></circle>
-                            <path stroke="#FFF" stroke-width="2" d="M12 16V8m-4 4h8"></path>
-                        </svg>
-                        </button>
-                        <div class="mention-window">
-                        <div class="triangle"></div>
-                        <div class="mention-profile">
-                            <a class="profile-a">
-                                <div class="mention-profile-img">
-                                    <img src="/static/images/crew-station-icon-profile.png">
-                                </div>
-                                <span id="mention-name">CREW2</span>
-                            </a>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
-                    <div class="img-container"></div>
-                </div>
-            </div>
-            <div class="img-post-term">
-                <div class="post-write-container">
-                <div class="post-write-wrapper">
-                    <textarea placeholder="일기를 작성해 주세요." rows="6" class="post-input"></textarea>
-                </div>
-                </div>
-            </div>
-            </div>
-        </li>
-    `;
+    addPairWithFile();
+    // const input = pickFile();
+    // input.onchange = () => {
+    //     const f = input.files?.[0];
+    //     if (f)
+    //     input.remove();
+    // };
+    // input.click();
 });
 
 // 썸네일 삭제
@@ -519,32 +420,24 @@ contentList?.addEventListener("click", (e) => {
                 input.remove();
                 return;
             }
-
             const url = URL.createObjectURL(f);
             previewIn(block, url);
-
-            // 처음 업로드면 인덱스 배정 + 썸네일 생성
-            if (!block.dataset.idx) {
-                const i = takeIdx();
-                block.dataset.idx = String(i);
-
-                const thumb = document.importNode(
-                    thumbTpl.content,
-                    true
-                ).firstElementChild;
-                thumb.dataset.idx = String(i);
-                thumb.querySelector(".img-view").src = url;
-
-                const beforeThumb = findThumbBefore(i);
-                leftList.insertBefore(thumb, beforeThumb);
-            } else {
-                // 이미 idx 있으면 기존 썸네일만 갱신
-                const iv = leftList?.querySelector(
-                    `.post-sub-img[data-idx="${block.dataset.idx}"] .img-view`
-                );
-                if (iv) iv.src = url;
+            console.log("asdasdasd");
+            console.log(block.dataset.idx);
+            const iv = leftList?.querySelector(
+                `.post-sub-img[data-idx="${+block.dataset.idx}"] .img-view`
+            );
+            if (iv) {
+                console.log(iv);
+                leftList.querySelector(
+                    `.post-sub-img[data-idx="${+block.dataset.idx}"]`
+                ).style.display = "list-item";
+                iv.src = url;
+                if (e.target.closest(".return-img")) {
+                    fileBuffer.splice(+block.dataset.idx, 1);
+                }
+                addFiles(input.files);
             }
-
             input.remove();
         };
         input.click();
@@ -554,6 +447,8 @@ contentList?.addEventListener("click", (e) => {
     // 삭제(오른쪽)
     if (e.target.closest(".delete-img")) {
         const i = +idx;
+        render(i);
+        fileBuffer.splice(i, 1);
         leftList?.querySelector(`.post-sub-img[data-idx="${i}"]`)?.remove();
         block.remove();
         giveIdx(i);
@@ -570,7 +465,7 @@ contentList?.addEventListener("click", (e) => {
         const btn = e.target.closest(".edit-button");
         const armed = block.dataset.armed === "1";
         block.dataset.armed = armed ? "0" : "1";
-        btn.textContent = armed ? "+ 맨션 태그 추가" : "맨션 편집 완료";
+        btn.textContent = armed ? "+ 상품 태그 추가" : "태그 편집 완료";
         return;
     }
 
@@ -585,6 +480,9 @@ contentList?.addEventListener("click", (e) => {
         const yPct = ((e.clientY - r.top) / r.height) * 100;
         block.dataset.tx = xPct.toFixed(2);
         block.dataset.ty = yPct.toFixed(2);
+        console.log(xPct);
+        console.log(yPct);
+        console.log(block);
 
         currentBlock = block;
         openModalAt(e.pageX, e.pageY);
@@ -620,8 +518,6 @@ closeModalBtn?.addEventListener(
     (e) => (tagModal.style.display = "none")
 );
 
-const tagsContainer = document.querySelector(".tags-container");
-
 tagModal?.addEventListener("click", (e) => {
     // 바깥 클릭 → 닫기
     if (!e.target.closest(".modal-view")) {
@@ -629,49 +525,28 @@ tagModal?.addEventListener("click", (e) => {
         return;
     }
 
-    // "선택" 버튼 눌렀을 때
+    // "선택" → 현재 블록에 파란 + 고정
     if (e.target.closest(".tag-select-btn")) {
         if (currentBlock) {
             const { tx, ty } = currentBlock.dataset;
             if (tx && ty) {
-                // 아직 숨겨져 있는 태그 찾기
-                const hiddenPin = currentBlock.querySelector(
-                    ".img-tag-container[hidden]"
-                );
-                if (hiddenPin) {
-                    hiddenPin.style.left = `${tx}%`;
-                    hiddenPin.style.top = `${ty}%`;
-                    hiddenPin.hidden = false; // 보여주기
+                const div = document.createElement("div");
 
-                    // 버튼 호버 했을 때 멘션한 사람 보이게
-
-                    const mentionProfile = e.target.closest(
-                        ".tag-profile-container"
-                    );
-
-                    const profileImg =
-                        mentionProfile.querySelector(".ymDK1").src;
-                    const profileName =
-                        mentionProfile.querySelector(".member-name").innerText;
-
-                    hiddenPin.querySelector(".mention-profile-img img").src =
-                        profileImg;
-                    hiddenPin.querySelector("#mention-name").innerText =
-                        profileName;
-                } else {
-                    alert("태그는 최대 3개까지만 추가할 수 있어요!");
-                }
+                div.classList.add("img-tag-container");
+                div.classList.add("tag");
+                div.style.left = `${tx}%`;
+                div.style.top = `${ty}%`;
+                div.dataset.memberId = `${
+                    e.target.closest(".tag-select-btn").dataset.memberId
+                }`;
+                div.dataset.idx = currentBlock.dataset.idx;
+                div.innerHTML = tagPin;
+                currentBlock
+                    .querySelector(".img-add-container")
+                    .appendChild(div);
             }
         }
         tagModal.style.display = "none";
-    }
-});
-
-// 태그 클릭하면 다시 숨기기
-tagsContainer.addEventListener("click", (e) => {
-    const pin = e.target.closest(".img-tag-container");
-    if (pin && !pin.hidden) {
-        pin.hidden = true;
     }
 });
 
@@ -708,10 +583,12 @@ document.addEventListener("keydown", (e) => {
         input.value = "";
     };
 
-    form.addEventListener("click", (e) => {
+    form.addEventListener("submit", (e) => {
+        ev.preventDefault();
         addChip();
     });
     btn?.addEventListener("click", (e) => {
+        ev.preventDefault();
         addChip();
     });
 
@@ -723,8 +600,132 @@ document.addEventListener("keydown", (e) => {
     });
 })();
 
+const inputCountry = document.querySelector(".input-tag-wrap");
+const btn = document.querySelector(".input-tag-btn");
+let tagList = document.querySelector(".input-tag");
+list = document.createElement("div");
+list.className = "tag-list";
+tagList.appendChild(list);
+const addChip = () => {
+    const v = (inputCountry.value || "").trim();
+    if (!v) return;
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "tag-chip";
+    chip.textContent = v;
+
+    chip.addEventListener("click", (e) => chip.remove());
+
+    list.appendChild(chip);
+    inputCountry.value = "";
+    countryDropdown.innerHTML = "";
+};
+
+btn?.addEventListener("click", (e) => {
+    if (countries.includes(inputCountry.value)) {
+        addChip();
+    }
+});
+
+inputCountry?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.isComposing) {
+        if (countries.includes(inputCountry.value)) {
+            addChip();
+        }
+    }
+});
+
 // 작성(트리거만)
 const complteBtn = document.querySelector(".complete-btn");
 complteBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    console.log(document.querySelector(".secret-checkbox").value);
+
+    const test = document.querySelectorAll(
+        `.post-img-content-wrapper[data-armed="1"]`
+    );
+    console.log(test);
+
+    if (test) {
+        toastModal();
+        const a = document.createElement("a");
+        // a.href = `#${test.id}`;
+        // console.log(a.href);
+
+        // a.click();
+        console.log("태그 편집 완료 눌러주세요.");
+    }
+    fileBuffer.forEach((file, index) => {
+        const form = document.getElementById("diary");
+        const image = document.createElement("input");
+        image.type = "file";
+        image.name = `imageDTO[${index}].file`;
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        image.files = dt.files;
+        const imgItem = document.querySelector(
+            `.post-img-content-wrapper[data-idx="${index}"]`
+        );
+        const tags = imgItem.querySelectorAll(".img-tag-container.tag");
+        tags.forEach((tag, tagIndex) => {
+            const inputTagX = document.createElement("input");
+            const inputTagY = document.createElement("input");
+            const inputTagMemberId = document.createElement("input");
+            inputTagX.name = `imageDTO[${index}].tagLeft`;
+            inputTagY.name = `imageDTO[${index}].tagLeft`;
+            inputTagX.value = tag.style.left;
+            inputTagY.value = tag.style.top;
+            inputTagMemberId.value = tag.dataset.memberId;
+            console.log(inputTagX.value);
+            console.log(inputTagY.value);
+        });
+        console.log(image);
+    });
+    console.log(123);
     console.log("작성 클릭");
+});
+
+let fileBuffer = [];
+const toKey = (f) => `${f.name}|${f.size}|${f.lastModified}`;
+
+const addFiles = (files) => {
+    // map(toKey): 기존 파일객체를 "a.jpg|1000|1690000000000" 문자열 형태로 변경
+    const existingKeys = new Set(fileBuffer.map(toKey));
+    const arFile = Array.from(files);
+    for (const f of arFile) {
+        fileBuffer.push(f);
+        existingKeys.add(toKey(f));
+    }
+};
+
+const toast = document.querySelector(".toast");
+const toastText = document.querySelector("p.toast-text");
+
+function toastModal() {
+    toast.style.display = "block";
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 500);
+    }, 3000);
+}
+
+const secretCheckbox = document.querySelector(".secret-checkbox");
+const secretToggle = document.querySelector(".secret-toggle");
+const lockIcon = document.querySelector(".lock");
+const unlockIcon = document.querySelector(".unlock");
+
+secretToggle.addEventListener("click", (e) => {
+    secretCheckbox.checked = secretToggle.classList.toggle("active");
+    if (secretCheckbox.checked) {
+        lockIcon.classList.remove("hidden");
+        unlockIcon.classList.add("hidden");
+    } else {
+        lockIcon.classList.add("hidden");
+        unlockIcon.classList.remove("hidden");
+    }
 });

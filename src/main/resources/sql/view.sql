@@ -11,6 +11,20 @@ from tbl_file tf
          join tbl_member_file tmf on tf.id = tmf.file_id
     );
 
+create view view_file_inquiry_file as
+(
+select id,
+       file_origin_name,
+       file_path,
+       file_name,
+       created_datetime,
+       updated_datetime,
+       file_size,
+       inquiry_id
+from tbl_file tf
+         join tbl_inquiry_file tif on tf.id = tif.file_id
+    );
+
 
 create view view_file_banner_file as
 (
@@ -148,7 +162,6 @@ select id,
 from tbl_report tr
          join tbl_reply_report trr on tr.id = trr.report_id
     );
-
 
 
 
