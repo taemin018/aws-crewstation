@@ -3,7 +3,11 @@
 <mapper namespace="com.example.crewstation.mapper.post.file.tag.PostFileTagMapper">
     <insert id="insert">
         insert into tbl_post_file_tag(tag_left, tag_top, member_id, post_section_file_id)
-        VALUES (#{tagLeft},#{tagTop},#{memberId},#{postSectionFileId})
+        VALUES (#{tagLeft}, #{tagTop}, #{memberId}, #{postSectionFileId})
     </insert>
 
+    <select id="selectByFileId">
+        select id, tag_left, tag_top, member_id, post_section_file_id
+        from tbl_post_file_tag
+    </select>
 </mapper>

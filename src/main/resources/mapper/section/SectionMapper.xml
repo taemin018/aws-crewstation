@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.section.SectionMapper">
     <select id="selectSectionsByPostId">
-        select
-               post_content,
+        select post_content,
                post_id,
                file_id,
                post_section_id,
@@ -11,12 +10,13 @@
                file_origin_name,
                file_path,
                file_name,
+               file_size,
                created_datetime,
-               updated_datetime,
-               file_size
+               updated_datetime
         from tbl_post_section tps
-                 join tbl_post_section_file tpsf on tps.id = tpsf.post_section_id and tps.post_id = #{postId}
-                 join tbl_file tf on tpsf.file_id = tf.id
+                 left join view_file_post_section_file vfpsf on tps.id = vfpsf.post_section_id
+        where post_id = #{postId}
+
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="postSectionId">

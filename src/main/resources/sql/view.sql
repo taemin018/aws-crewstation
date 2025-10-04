@@ -65,7 +65,8 @@ select id,
        updated_datetime,
        file_id,
        post_section_id,
-       image_type
+       image_type,
+       file_size
 from tbl_file tf
          join tbl_post_section_file tpsf on tf.id = tpsf.file_id
     );
