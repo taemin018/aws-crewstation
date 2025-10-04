@@ -495,11 +495,12 @@ html{
     flex-direction: column;
     color: rgb(47, 52, 56);
     background-color: rgb(255, 255, 255);
-    max-width: 700px;
+    max-width: 400px;
     width: 100%
 }
 
 .modal-header {
+    position: relative;
     padding: 16px 16px 10px;
     line-height: 0;
 }
@@ -517,15 +518,15 @@ html{
 }
 
 .close-button {
-    display: inline-block;
-    margin: 0px;
-    padding: 0px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
     border: none;
     background: none;
     font: inherit;
-    vertical-align: middle;
     width: 24px;
     height: 24px;
+    cursor: pointer;
 }
 
 .close {
@@ -614,6 +615,8 @@ html{
 .star-content {
     display: inline-flex;
     gap: 4px;
+    justify-content: center;
+    width: 100%;
 }
 
 .star {
