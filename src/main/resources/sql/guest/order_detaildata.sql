@@ -20,7 +20,7 @@ VALUES (1, 12000,10,3, '대한민국', 'direct');
 
 -- 6. 결제 상태 (payment_status)
 INSERT INTO tbl_payment_status (payment_phase, purchase_id, member_id, created_datetime, updated_datetime)
-VALUES ('success', 1,2, now(), now());
+VALUES ('pending', 1,2, now(), now());
 
 -- 7. 파일 (file)
 INSERT INTO tbl_file (file_origin_name, file_path, file_name, file_size)

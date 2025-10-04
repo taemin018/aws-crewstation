@@ -59,7 +59,7 @@ const orderLayout = (() => {
             pending: 1,   // 결제 대기
             success: 2,   // 결제 완료
             received: 3,  // 수령 완료
-            reviewed: 4   // ⭐ 리뷰 완료
+            reviewed: 4   // 리뷰 완료
         };
 
         const labels = ["수락 대기", "결제 대기", "결제 완료", "수령 완료", "리뷰 완료"];
@@ -133,7 +133,8 @@ const orderLayout = (() => {
             <div class="status-wrapper">
                 ${renderStatusLines(order.paymentStatus)}
             
-                <button class="status-btn cancel-btn ${order.paymentStatus === "request" || order.paymentStatus === "pending" ? "active" : ""}">주문 취소</button>
+                <button class="status-btn cancel-btn ${order.paymentStatus === "request"  ? "active" : ""}">주문 취소</button>
+                <button class="status-btn payment-btn ${order.paymentStatus === "pending" ? "active" : ""}">결제하기</button>
                 <button class="status-btn receive-btn ${order.paymentStatus === "success" ? "active" : ""}">수령 완료</button>
                 <button class="status-btn review-btn ${order.paymentStatus === "received" ? "active" : ""}">
                     <img class="manner-icon" src="/images/manner.png"> 별점 주기

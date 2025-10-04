@@ -20,6 +20,13 @@ const orderService = (() => {
         return await res.text();
     };
 
+    // 결제하기
+    const payOrder = async (guestOrderNumber) => {
+        const res = await fetch(`/api/guest/order/${guestOrderNumber}/status?paymentPhase=SUCCESS`, { method: "PUT" });
+        if (!res.ok) throw new Error("결제 실패");
+        return await res.text();
+    };
+
     // 수령 완료
     const completeReceive = async (guestOrderNumber) => {
         const res = await fetch(`/api/guest/order/${guestOrderNumber}/status?paymentPhase=RECEIVED`, { method: "PUT" });
@@ -45,6 +52,7 @@ const orderService = (() => {
     return {
         getOrderDetail : getOrderDetail,
         cancelOrder : cancelOrder,
+        payOrder : payOrder,
         completeReceive : completeReceive,
         submitReview : submitReview,
     };

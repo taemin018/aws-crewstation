@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 버튼들
             const cancelBtn = container.querySelector(".cancel-btn");
-            const payBtn = container.querySelector(".pay-btn");
+            const paymentBtn = container.querySelector(".payment-btn");
             const receiveBtn = container.querySelector(".receive-btn");
             const reviewBtn = container.querySelector(".review-btn");
 
@@ -35,16 +35,80 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // === 결제하기 ===
-            if (payBtn && payBtn.classList.contains("active")) {
-                payBtn.addEventListener("click", () => {
-                    orderService.payOrder(guestOrderNumber)
-                        .then(() => {
-                            orderLayout.updateOrderStatus("결제 완료");
-                            orderLayout.showToast("결제가 완료되었습니다.", true);
-                        })
-                        .catch(() => orderLayout.showToast("결제 실패. 다시 시도해주세요."));
+            if (paymentBtn && paymentBtn.classList.contains("active")) {
+                paymentBtn.addEventListener("click", async () => {
+                    try {
+                        const itemName = order.postTitle || "중고거래 결제";   // 게시글 제목
+                        const amount = order.purchaseProductPrice || 1000;     // 결제 금액
+
+                        // 부트페이 결제창 호출
+                        const response = await Bootpay.requestPayment({
+                            application_id: "68affb6d836e97280fee7f28",
+                            price: amount,
+                            order_name: "중고거래 - " + itemName,
+                            order_id: "ORDER_" + order.guestOrderNumber,
+                            pg: "토스페이",
+                            user: {
+                                id: order.guestOrderNumber,          // 주문번호 기반
+                                username: order.guestName || "손님",
+                                phone: order.guestPhone || "01000000000",
+                                email: order.guestEmail || "test@test.com",
+                            },
+                            items: [
+                                {
+                                    id: "trade_" + order.postId,
+                                    name: itemName,
+                                    qty: 1,
+                                    price: amount,
+                                },
+                            ],
+                            extra: { open_type: "iframe" }
+                        });
+
+                        switch (response.event) {
+                            case "done":
+                                console.log("결제 완료:", response);
+
+                                // 서버에 결제 완료 전달
+                                await fetch("/api/payment/complete", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        orderNumber: order.guestOrderNumber,
+                                        receiptId: response.receipt_id,
+                                        amount: amount,
+                                        method: "tossPay",
+                                        status: "success"
+                                    })
+                                });
+
+                                // UI 업데이트
+                                orderLayout.updateOrderStatus("결제 완료");
+                                orderLayout.showToast("결제가 완료되었습니다.", true);
+                                break;
+
+                            case "confirm":
+                                // 최종 승인 (재고, 상태 검증 등)
+                                await Bootpay.confirm();
+                                break;
+
+                            case "issued":
+                                console.log("가상계좌 발급:", response);
+                                break;
+                        }
+                    } catch (e) {
+                        console.error("결제 오류:", e);
+                        if (e.event === "cancel") {
+                            orderLayout.showToast("결제가 취소되었습니다.");
+                        } else {
+                            orderLayout.showToast("결제 처리 중 오류가 발생했습니다.");
+                        }
+                    }
                 });
             }
+
+
+
 
             // === 수령 완료 ===
             if (receiveBtn && receiveBtn.classList.contains("active")) {
