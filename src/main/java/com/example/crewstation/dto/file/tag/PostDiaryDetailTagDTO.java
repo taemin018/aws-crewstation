@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 public class PostDiaryDetailTagDTO {
     private Long memberId;
+    private Long crewId;
     private String[] countries;
     private String postTitle;
     private boolean secret;

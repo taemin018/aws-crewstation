@@ -2,6 +2,7 @@ package com.example.crewstation.post.file.tag;
 
 import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.post.file.tag.PostFileTagVO;
+import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.mapper.post.PostMapper;
 import com.example.crewstation.mapper.post.file.tag.PostFileTagMapper;
@@ -27,5 +28,10 @@ public class MapperTest {
                 .memberId(1L)
                 .build();
         postFileTagMapper.insert(postFileTagVO);
+    }
+
+    @Test
+    public void tesSelectByFileId(){
+        postFileTagMapper.selectByFileId(73L).stream().map(PostFileTagDTO::toString).forEach(log::info);
     }
 }

@@ -9,5 +9,6 @@
     <select id="selectByFileId">
         select id, tag_left, tag_top, member_id, post_section_file_id
         from tbl_post_file_tag
+        where post_section_file_id = #{fileId}
     </select>
 </mapper>

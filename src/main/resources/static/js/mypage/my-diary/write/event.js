@@ -779,6 +779,15 @@ complteBtn.addEventListener("click", (e) => {
     );
     const imageCount = document.querySelectorAll(".dropzone[hidden]");
 
+    const crewInput = document.createElement("input");
+    crewInput.name = `crewId`;
+    crewInput.value = crew;
+    form.appendChild(crewInput);
+
+    const pathInput = document.createElement("input");
+    pathInput.name = `diaryPathId`;
+    pathInput.value = path;
+    form.appendChild(pathInput);
     if (!imageCount.length) {
         e.preventDefault();
         toastModal("이미지를 최소 한 장 추가해주세요.");

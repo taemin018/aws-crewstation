@@ -2,6 +2,7 @@ package com.example.crewstation.post.file.tag;
 
 import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.post.file.tag.PostFileTagVO;
+import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.post.file.tag.PostFileTagDAO;
@@ -27,5 +28,10 @@ public class DaoTest {
                 .memberId(1L)
                 .build();
         postFileTagDAO.save(postFileTagVO);
+    }
+
+    @Test
+    public void testFindByFileId(){
+        postFileTagDAO.findByFileId(73L).stream().map(PostFileTagDTO::toString).forEach(log::info);
     }
 }

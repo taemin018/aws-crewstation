@@ -3,6 +3,7 @@ package com.example.crewstation.service.diary;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
 import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.domain.crew.CrewDiaryVO;
 import com.example.crewstation.domain.diary.country.DiaryCountryVO;
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
@@ -13,6 +14,8 @@ import com.example.crewstation.dto.file.tag.ImageDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
+import com.example.crewstation.mapper.crew.diary.CrewDiaryMapper;
+import com.example.crewstation.repository.crew.diary.CrewDiaryDAO;
 import com.example.crewstation.repository.diary.DiaryDAO;
 import com.example.crewstation.repository.diary.country.DiaryCountryDAO;
 import com.example.crewstation.repository.diary.diary.path.DiaryDiaryPathDAO;
@@ -63,6 +66,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final FileDAO fileDAO;
     private final FilePostSectionDAO filePostSectionDAO;
     private final PostFileTagDAO postFileTagDAO;
+    private final CrewDiaryDAO crewDiaryDAO;
 
 
     @Override
@@ -244,6 +248,7 @@ public class DiaryServiceImpl implements DiaryService {
         List<DiaryCountryVO> diaryCountryVOs = null;
         List<PostFileTagDTO> postFileTagDTOs = null;
 
+
         post.setPostTitle(request.getPostTitle());
         post.setMemberId(request.getMemberId());
         post.setSecret(request.isSecret() ? Secret.PRIVATE : Secret.PUBLIC);
@@ -262,7 +267,9 @@ public class DiaryServiceImpl implements DiaryService {
         diaryCountryVOs = toDiaryCountryVO(request);
         diaryCountryVOs.forEach(diaryCountryDAO::save);
         diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
-
+        if(request.getCrewId() != null) {
+            crewDiaryDAO.save(CrewDiaryVO.builder().diaryId(request.getPostId()).crewId(request.getCrewId()).build());
+        }
         images.forEach(image -> {
             MultipartFile file = image.getImage();
             log.info(":::::::::::::{}", image.toString());

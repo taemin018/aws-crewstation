@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crewstation.mapper.reply.ReplyMapper">
+
+    <select id="selectAllByPostId">
+        select id, reply_content, diary_id, member_id, created_datetime, updated_datetime
+        from tbl_reply
+        where diary_id = #{postId}
+    </select>
+</mapper>
