@@ -23,6 +23,7 @@ public class GuestOrderDetailDTO {
     private String paymentStatus;
 
     // 구매(상품)
+    private Long buyerMemberId;
     private Long postId;
     private Long purchaseId;
     private String postTitle;

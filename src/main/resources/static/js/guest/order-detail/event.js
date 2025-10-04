@@ -18,43 +18,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 버튼들
             const cancelBtn = container.querySelector(".cancel-btn");
-            const payBtn = container.querySelector(".pay-btn");
+            const paymentBtn = container.querySelector(".payment-btn");
             const receiveBtn = container.querySelector(".receive-btn");
             const reviewBtn = container.querySelector(".review-btn");
 
             // === 주문 취소 ===
             if (cancelBtn && cancelBtn.classList.contains("active")) {
                 cancelBtn.addEventListener("click", () => {
-                    orderService.cancelOrder(guestOrderNumber)
-                        .then(() => {
-                            orderLayout.updateOrderStatus("주문 취소");
-                            orderLayout.showToast("주문이 취소되었습니다.", true);
-                        })
-                        .catch(() => orderLayout.showToast("주문 취소 실패. 다시 시도해주세요."));
+                    if (confirm("정말 주문을 취소하시겠습니까?")) {
+                        orderService.cancelOrder(guestOrderNumber)
+                            .then(() => {
+                                orderLayout.updateOrderStatus("주문 취소");
+                                orderLayout.showToast("주문이 취소되었습니다.", true);
+                            })
+                            .catch(() => orderLayout.showToast("주문 취소 실패. 다시 시도해주세요."));
+                    }
                 });
             }
 
             // === 결제하기 ===
-            if (payBtn && payBtn.classList.contains("active")) {
-                payBtn.addEventListener("click", () => {
-                    orderService.payOrder(guestOrderNumber)
-                        .then(() => {
-                            orderLayout.updateOrderStatus("결제 완료");
-                            orderLayout.showToast("결제가 완료되었습니다.", true);
-                        })
-                        .catch(() => orderLayout.showToast("결제 실패. 다시 시도해주세요."));
+            if (paymentBtn && paymentBtn.classList.contains("active")) {
+                paymentBtn.addEventListener("click", async () => {
+                    try {
+                        const itemName = order.postTitle || "기프트샵 결제";   // 게시글 제목
+                        const amount = order.purchaseProductPrice || 1000;     // 결제 금액
+
+                        // 부트페이 결제창 호출
+                        const response = await Bootpay.requestPayment({
+                            application_id: "68de1c1f00d008657455bbbf",
+                            price: amount,
+                            order_name: "기프트샵 - " + itemName,
+                            order_id: "ORDER_" + order.guestOrderNumber,
+                            pg: "토스",
+                            user: {
+                                id: order.guestOrderNumber,          // 주문번호 기반
+                                username: order.guestName || "손님",
+                                phone: order.guestPhone || "01000000000",
+                                email: order.guestEmail || "test@test.com",
+                            },
+                            items: [
+                                {
+                                    id: "trade_" + order.postId,
+                                    name: itemName,
+                                    qty: 1,
+                                    price: amount,
+                                },
+                            ],
+                            extra: { open_type: "iframe" }
+                        });
+
+                        switch (response.event) {
+                            case "done":
+                                console.log("Bootpay done 응답:", response);
+                                try {
+                                    const res = await fetch("/api/payment/complete", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            purchaseId: order.purchaseId,
+                                            guestOrderNumber: order.guestOrderNumber,
+                                            receiptId: response.data.receipt_id,
+                                            amount: response.data.price,
+                                            method: response.data.method,
+                                            status: "success",
+                                            memberId: order.buyerMemberId
+                                        })
+                                    });
+                                    console.log("서버 응답 상태:", res.status);
+                                    const responseText = await res.text();
+                                    console.log("서버 응답 전문:", responseText);
+
+                                    if (!res.ok) {
+                                        throw new Error("서버 응답 오류: " + responseText);
+                                    }
+
+                                    orderLayout.updateOrderStatus("결제 완료");
+                                    orderLayout.showToast("결제가 완료되었습니다.", true);
+
+                                } catch (err) {
+                                    console.error("결제 완료 처리 실패:", err);
+                                    orderLayout.showToast("결제 처리 중 서버 오류가 발생했습니다.");
+                                }
+                                break;
+
+
+                            case "confirm":
+                                // 최종 승인 (재고, 상태 검증 등)
+                                await Bootpay.confirm();
+                                break;
+
+                            case "issued":
+                                console.log("가상계좌 발급:", response);
+                                break;
+                        }
+                    } catch (e) {
+                        console.error("결제 오류 발생:", e, JSON.stringify(e));
+                        if (e.event === "cancel") {
+                            orderLayout.showToast("결제가 취소되었습니다.");
+                        } else {
+                            orderLayout.showToast("결제 처리 중 오류가 발생했습니다.");
+                        }
+                    }
                 });
             }
 
             // === 수령 완료 ===
             if (receiveBtn && receiveBtn.classList.contains("active")) {
                 receiveBtn.addEventListener("click", () => {
-                    orderService.completeReceive(guestOrderNumber)
-                        .then(() => {
-                            orderLayout.updateOrderStatus("수령 완료");
-                            orderLayout.showToast("수령 확인이 완료되었습니다.", true);
-                        })
-                        .catch(() => orderLayout.showToast("수령 처리 실패. 다시 시도해주세요."));
+                    if (confirm("상품을 수령 완료 처리하시겠습니까?")) {
+                        orderService.completeReceive(guestOrderNumber)
+                            .then(() => {
+                                orderLayout.updateOrderStatus("수령 완료");
+                                orderLayout.showToast("수령 확인이 완료되었습니다.", true);
+                            })
+                            .catch(() => orderLayout.showToast("수령 처리 실패. 다시 시도해주세요."));
+                    }
                 });
             }
 
@@ -84,13 +162,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     submitBtn.onclick = (e) => {
                         e.preventDefault();
                         if (selectedScore >= 1 && selectedScore <= 5) {
-                            orderService.submitReview(order.sellerId, order.purchaseId, selectedScore)  //
-                                .then(() => {
-                                    modal.style.display = "none";
-                                    orderLayout.showToast("별점이 정상적으로 등록되었습니다.", true);
-                                    if (reviewBtn) reviewBtn.remove();
-                                })
-                                .catch(() => orderLayout.showToast("리뷰 등록 실패. 다시 시도해주세요."));
+                            if (confirm("별점을 등록하시겠습니까?")) {
+                                orderService.submitReview(order.sellerId, order.purchaseId, selectedScore)
+                                    .then(() => {
+                                        modal.style.display = "none";
+                                        orderLayout.showToast("별점이 정상적으로 등록되었습니다.", true);
+                                        if (reviewBtn) reviewBtn.remove();
+                                    })
+                                    .catch(() => orderLayout.showToast("리뷰 등록 실패. 다시 시도해주세요."));
+                            }
                         } else {
                             orderLayout.showToast("별점을 선택해주세요.");
                         }

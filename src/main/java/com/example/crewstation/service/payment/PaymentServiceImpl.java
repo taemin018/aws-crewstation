@@ -1,13 +1,16 @@
 package com.example.crewstation.service.payment;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.domain.guest.GuestVO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.payment.PaymentDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.repository.alarm.AlarmDAO;
 import com.example.crewstation.repository.guest.GuestDAO;
 import com.example.crewstation.repository.member.MemberDAO;
+import com.example.crewstation.repository.payment.PaymentDAO;
 import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.service.sms.SmsService;
@@ -22,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
+    private final PaymentDAO paymentDAO;
     private final PaymentStatusDAO paymentStatusDAO;
     private final AlarmDAO alarmDAO;
     private final PostDAO postDAO;
@@ -61,4 +65,17 @@ public class PaymentServiceImpl implements PaymentService {
         message = "판매요청 완료되었습니다.";
         return Map.of("message",message);
     }
+
+    @Transactional
+    @Override
+    public void completePayment(Long purchaseId, PaymentDTO paymentDTO) {
+
+        // 결제 내역 저장
+        paymentDAO.insertPayment(paymentDTO);
+
+        // 결제 상태 업데이트
+        paymentStatusDAO.updatePaymentStatus(purchaseId, PaymentPhase.SUCCESS);
+    }
+
+
 }
