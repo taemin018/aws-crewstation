@@ -1,28 +1,46 @@
 package com.example.crewstation.service.diary;
 
-import com.example.crewstation.dto.accompany.AccompanyDTO;
+import com.example.crewstation.aop.aspect.annotation.LogStatus;
+import com.example.crewstation.common.enumeration.Secret;
+import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.domain.diary.country.DiaryCountryVO;
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.domain.file.section.FilePostSectionVO;
 import com.example.crewstation.dto.diary.*;
+import com.example.crewstation.dto.file.FileDTO;
+import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.file.tag.ImageDTO;
+import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
+import com.example.crewstation.dto.post.PostDTO;
+import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import com.example.crewstation.repository.diary.DiaryDAO;
+import com.example.crewstation.repository.diary.country.DiaryCountryDAO;
+import com.example.crewstation.repository.diary.diary.path.DiaryDiaryPathDAO;
+import com.example.crewstation.repository.file.FileDAO;
+import com.example.crewstation.repository.file.section.FilePostSectionDAO;
 import com.example.crewstation.repository.like.LikeDAO;
+import com.example.crewstation.repository.post.PostDAO;
+import com.example.crewstation.repository.post.file.tag.PostFileTagDAO;
 import com.example.crewstation.repository.section.SectionDAO;
 import com.example.crewstation.service.s3.S3Service;
+import com.example.crewstation.service.tag.TagTransactionService;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,10 +52,17 @@ public class DiaryServiceImpl implements DiaryService {
     private final SectionDAO sectionDAO;
     private final DiaryTransactionService diaryTransactionService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Map<String, Long>> countryRedisTemplate;
     private final LikeDAO likeDAO;
-    private static final Map<String,String> ORDER_TYPE_MAP = Map.of("좋아요순","diary_like_count","최신순","post_id");
-    private static final Map<String,String> CATEGORY_MAP = Map.of("crew","not null","individual","null");
-    private final DiaryDTO diaryDTO;
+    private final TagTransactionService tagTransactionService;
+    private static final Map<String, String> ORDER_TYPE_MAP = Map.of("좋아요순", "diary_like_count", "최신순", "post_id");
+    private static final Map<String, String> CATEGORY_MAP = Map.of("crew", "not null", "individual", "null");
+    private final DiaryCountryDAO diaryCountryDAO;
+    private final DiaryDiaryPathDAO diaryDiaryPathDAO;
+    private final PostDAO postDAO;
+    private final FileDAO fileDAO;
+    private final FilePostSectionDAO filePostSectionDAO;
+    private final PostFileTagDAO postFileTagDAO;
 
 
     @Override
@@ -134,18 +159,18 @@ public class DiaryServiceImpl implements DiaryService {
         String category = search.getCategory();
         String orderType = search.getOrderType();
         newSearch.setKeyword(search.getKeyword());
-        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
-        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category,""));
-        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch),3,3);
+        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType, "post_id"));
+        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category, ""));
+        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch), 3, 3);
         List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
         diaries.forEach(diary -> {
-            if(diary.getMemberFilePath()!= null){
+            if (diary.getMemberFilePath() != null) {
                 diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
             }
-            if(diary.getDiaryFilePath()!= null){
+            if (diary.getDiaryFilePath() != null) {
                 diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(), Duration.ofMinutes(5)));
             }
-            if(customUserDetails != null){
+            if (customUserDetails != null) {
                 diary.setUserId(customUserDetails.getId());
                 diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
             }
@@ -174,20 +199,20 @@ public class DiaryServiceImpl implements DiaryService {
         String orderType = search.getOrderType();
 
         newSearch.setKeyword(search.getKeyword());
-        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType,"post_id"));
-        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category,""));
+        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType, "post_id"));
+        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category, ""));
 
-        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch),4,4);
+        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch), 4, 4);
 
         List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
         diaries.forEach(diary -> {
-            if(diary.getMemberFilePath()!= null){
+            if (diary.getMemberFilePath() != null) {
                 diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
             }
-            if(diary.getDiaryFilePath()!= null){
+            if (diary.getDiaryFilePath() != null) {
                 diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(), Duration.ofMinutes(5)));
             }
-            if(customUserDetails != null){
+            if (customUserDetails != null) {
                 diary.setUserId(customUserDetails.getId());
                 diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
             }
@@ -202,5 +227,98 @@ public class DiaryServiceImpl implements DiaryService {
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
         return dto;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+//    @LogStatus
+    public void write(PostDiaryDetailTagDTO request) {
+        FileDTO fileDTO = new FileDTO();
+        FilePostSectionDTO sectionFileDTO = new FilePostSectionDTO();
+        Map<String, Long> cached = countryRedisTemplate.opsForValue().get("country::countries");
+        PostDTO post = new PostDTO();
+        AtomicBoolean check = new AtomicBoolean(false);
+        List<Long> countryIds = null;
+        List<ImageDTO> images = request.getImages();
+        String[] arCountry = null;
+        List<DiaryCountryVO> diaryCountryVOs = null;
+        List<PostFileTagDTO> postFileTagDTOs = null;
+
+        post.setPostTitle(request.getPostTitle());
+        post.setMemberId(request.getMemberId());
+        post.setSecret(request.isSecret() ? Secret.PRIVATE : Secret.PUBLIC);
+        log.info("{}", cached);
+        if (cached == null) {
+            cached = tagTransactionService.getCountries();
+        }
+        arCountry = request.getCountries();
+        countryIds = Arrays.stream(arCountry)
+                .map(cached::get)
+                .collect(Collectors.toList());
+        request.setCountryIds(countryIds);
+        postDAO.savePost(post);
+        request.setPostId(post.getPostId());
+        diaryDAO.save(toDiaryVO(post));
+        diaryCountryVOs = toDiaryCountryVO(request);
+        diaryCountryVOs.forEach(diaryCountryDAO::save);
+        diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
+
+        images.forEach(image -> {
+            MultipartFile file = image.getImage();
+            log.info(":::::::::::::{}", image.toString());
+            if((file == null || Objects.equals(file.getOriginalFilename(), "")) && (image.getPostContent() == null || image.getPostContent().isEmpty())) {
+                log.info("다 여기로 오니?");
+                return;
+            }
+            try{
+                if (file != null && !Objects.equals(file.getOriginalFilename(), "")) {
+                    log.info("어디로 들어오니1");
+                    Type type = Type.SUB;
+                    if(!check.get()){
+                        type = Type.MAIN;
+                        check.set(true);
+                    }
+                    String s3Key = s3Service.uploadPostFile(file,getPath());
+                    String originalFileName = file.getOriginalFilename();
+                    String extension = "";
+                    if (originalFileName != null && originalFileName.contains(".")) {
+                        extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    }
+                    fileDTO.setFileName(UUID.randomUUID() + extension);
+                    fileDTO.setFilePath(s3Key);
+                    fileDTO.setFileSize(String.valueOf(file.getSize()));
+                    fileDTO.setFileOriginName(originalFileName);
+                    fileDAO.saveFile(fileDTO);
+                    image.setPostId(post.getPostId());
+                    sectionDAO.saveDiary(image);
+                    sectionFileDTO.setFileId(fileDTO.getId());
+                    sectionFileDTO.setImageType(type);
+                    sectionFileDTO.setPostSectionId(image.getPostSectionId());
+                    FilePostSectionVO vo = toSectionFileVO(sectionFileDTO);
+                    filePostSectionDAO.save(vo);
+                    if(image.getTags() != null){
+                        log.info("태그가 없어");
+                        image.getTags().forEach((tag)->{
+                            tag.setPostSectionFileId(fileDTO.getId());
+                            postFileTagDAO.save(toPostFileTagVO(tag));
+                        });
+                    }
+
+                }else {
+                    log.info("어디로 들어오니2");
+                    image.setPostId(post.getPostId());
+                    sectionDAO.saveDiary(image);
+                }
+            }catch (Exception e){
+                throw new RuntimeException(e);
+            }
+        });
+
+
+    }
+    public String getPath() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return today.format(formatter);
     }
 }

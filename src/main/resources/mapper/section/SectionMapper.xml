@@ -24,6 +24,11 @@
         values (#{purchaseContent},#{postId})
     </insert>
 
+
+    <insert id="insertDiary" useGeneratedKeys="true" keyProperty="postSectionId">
+        insert into tbl_post_section(post_content, post_id)
+        values (#{postContent},#{postId})
+    </insert>
     <update id="update">
         update tbl_post_section
         set post_content = #{postContent}

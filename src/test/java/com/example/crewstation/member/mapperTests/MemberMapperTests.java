@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @SpringBootTest
 @Slf4j
 public class MemberMapperTests {
@@ -81,5 +83,11 @@ public class MemberMapperTests {
     @Transactional
     public void passwordUpdateTest() {
         memberMapper.updatePassword("test@gmail.com", "1234");
+    }
+
+    @Test
+    public void testSelectSearchMember(){
+        List<MemberDTO> test = memberMapper.selectSearchMember("test");
+        test.stream().map(MemberDTO::toString).forEach(log::info);
     }
 }

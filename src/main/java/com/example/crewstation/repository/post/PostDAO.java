@@ -25,8 +25,8 @@ public class PostDAO {
     }
 
     //    게시글 작성
-    public void savePost(PurchaseDTO purchaseDTO) {
-        postMapper.insert(purchaseDTO);
+    public void savePost(Object object) {
+        postMapper.insert(object);
     }
 
     //    게시글 수정

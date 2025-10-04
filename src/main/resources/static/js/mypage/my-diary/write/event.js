@@ -239,6 +239,17 @@ const tagPin = `
                               <path stroke="#FFF" stroke-width="2" d="M12 16V8m-4 4h8"></path>
                             </svg>
                           </button>
+                          <div class="mention-window">
+                                <div class="triangle"></div>
+                                <div class="mention-profile">
+                                    <a class="profile-a">
+                                        <div class="mention-profile-img">
+                                            <img src="https://prs.ohousecdn.com/apne2/any/uploads/productions/v1-356976242864128.jpg?c=c&amp;w=320&amp;h=320">
+                                        </div>
+                                        <span id="mention-name">크루원 이름</span>
+                                    </a>
+                                </div>
+                            </div>
                         `;
 
 const pickFile = () => {
@@ -255,10 +266,11 @@ const hide = (el) => el && (el.hidden = true);
 const leftList = document.querySelector(".left-img-add-container");
 const contentList = document.querySelector(".post-img-content-container");
 const thumbTpl = document.querySelector("#thumb-tpl");
-const sampleBlock = document.querySelector(".post-img-content-wrapper");
+let sampleBlock = document.querySelector(".post-img-content-wrapper");
 const tagModal = document.querySelector(".modal-popout");
 const closeModalBtn = document.querySelector(".close-btn");
 let currentBlock = null;
+console.log(sampleBlock);
 
 // 편집 버튼 초기 라벨 통일
 const editButtons = document.querySelectorAll(".edit-button");
@@ -273,26 +285,51 @@ if (leftList) {
 }
 
 //  블록 초기화/미리보기/인덱스
+const delImageNone = (msg) => {
+    console.log("입장했어");
+    console.log(msg);
+
+    if (
+        document.querySelectorAll(".post-img-content-wrapper .content-del")
+            .length <= 2
+    ) {
+        console.log("delImageNone 확인");
+
+        document
+            .querySelectorAll(".post-img-content-wrapper .content-del")
+            .forEach((data) => {
+                data.style.display = "none";
+            });
+    }
+};
 const resetBlock = (block) => {
     block.dataset.idx = "";
     block.querySelector(".img-add-container img")?.remove();
+    // block.querySelector(".content-del").style.display = "none";
     const split = block.id.split("_");
     block.id = split[0] + "_" + +split[1];
     show(block.querySelector(".dropzone"));
     hide(block.querySelector(".post-img-bottom"));
     hide(block.querySelector(".img-tag-container"));
-
+    block.querySelectorAll(".img-tag-container").forEach((data) => {
+        data.remove();
+    });
     const btn = block.querySelector(".edit-button");
     if (btn) btn.textContent = "+ 상품 태그 추가";
 
     const ta = block.querySelector(".post-input");
     if (ta) ta.value = "";
+    block.dataset.idx = "0";
+    console.log(123131321313);
 
     block.dataset.armed = "0";
 };
 
 const previewIn = (block, url) => {
     const box = block.querySelector(".img-add-container");
+    console.log(box.previousElementSibling);
+    box.previousElementSibling.style.display = "none";
+
     let img = box.querySelector("img");
     if (!img) {
         img = document.createElement("img");
@@ -330,7 +367,12 @@ const findBlockBefore = (idx) => {
 
 // 파일로 한 쌍 만들기 (왼쪽 썸네일 + 오른쪽 블록)
 const addPairWithFile = () => {
-    const idx = takeIdx();
+    console.log(sampleBlock.querySelector(".content-del"));
+    fileBuffer.push("")
+    const idx = document.querySelectorAll(".post-img-content-wrapper").length;
+    console.log(idx + "확인부탁");
+    console.log(freeIdx);
+
     // 블록: 첫 템플릿이 비어있고 idx==0이면 재사용, 아니면 복제
     let block;
 
@@ -338,12 +380,20 @@ const addPairWithFile = () => {
     //     block = sampleBlock;
     // } else {
     // if (idx === 0) return;
+    sampleBlock = document.querySelector(
+        `.post-img-content-wrapper[data-idx="0"]`
+    );
+    if (!sampleBlock.querySelector(".img-add-container img")) {
+        sampleBlock.querySelector(".content-del").style.display = "block";
+    } else {
+        sampleBlock.querySelector(".content-del").style.display = "none";
+    }
     block = sampleBlock.cloneNode(true);
+    block.querySelector(".content-del").style.display = "block";
     resetBlock(block);
+    fileBuffer.push("");
     // }
-
     block.dataset.idx = String(idx);
-
     const beforeBlk = findBlockBefore(idx);
     beforeBlk
         ? contentList.insertBefore(block, beforeBlk)
@@ -353,10 +403,13 @@ const addPairWithFile = () => {
     thumb.dataset.idx = String(idx);
     thumb.style.display = "none"; // list-item
     const imgView = thumb.querySelector(".img-view");
-    if (imgView) imgView.src = "/images/noImage.png";
+    if (imgView)
+        imgView.src =
+            "https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/cards/project/172422271039389131.JPG?w=1700&h=1020&c=c";
     const beforeThumb = findThumbBefore(idx);
     // 왼쪽 썸네일 추가
     leftList.insertBefore(thumb, beforeThumb);
+    console.log(sampleBlock);
 };
 
 // 왼쪽 영역 (추가/삭제/스크롤)
@@ -377,21 +430,55 @@ leftList?.addEventListener("click", (e) => {
 leftList?.addEventListener("click", (e) => {
     const del = e.target.closest(".delete-sub-img");
     if (!del) return;
-
-    const li = del.closest(".post-sub-img");
+    const li = del.closest(".post-sub-img:not(.add)");
     const idx = +li.dataset.idx;
-    li.remove();
+    console.log(idx + "뭐냐 이거는 ");
+    //  0이고 길이도 0이야
+    if (
+        !idx &&
+        document.querySelectorAll(".post-sub-img:not(.add)").length === 1
+    ) {
+        console.log(123);
+        li.style.display = "none";
+        // contentList
+        //     .querySelector(`.post-img-content-wrapper[data-idx="${idx}"] img`)
+        //     .remove();
+        contentList
+            .querySelector(`.post-img-content-wrapper[data-idx="${idx}"] img`)
+            .remove();
 
-    contentList
-        .querySelector(`.post-img-content-wrapper[data-idx="${idx}"]`)
-        ?.remove();
-    giveIdx(idx);
+        contentList.appendChild(sampleBlock);
+        resetBlock(sampleBlock);
+        sampleBlock.querySelector(".content-del").style.display = "none";
+    } else {
+        // 0이거나 길이가 1이상이거나
+        li.remove();
+        delImageNone("왼쪽에서 삭제");
+        contentList
+            .querySelector(`.post-img-content-wrapper[data-idx="${idx}"]`)
+            ?.remove();
+    }
+    document
+        .querySelectorAll(".post-img-content-wrapper")
+        .forEach((data, idx) => {
+            data.dataset.idx = idx;
+        });
+    document
+        .querySelectorAll(".post-sub-img:not(.add)")
+        .forEach((data, index) => {
+            console.log(data);
+            data.dataset.idx = index;
+        });
+    // contentList
+    //     .querySelector(`.post-img-content-wrapper[data-idx="${idx}"]`)
+    //     ?.remove();
+    // giveIdx(idx);
 
     // 모두 지워졌으면 초기화
-    if (!leftList.querySelector(".post-sub-img:not(.add)")) {
-        if (!sampleBlock.isConnected) contentList.appendChild(sampleBlock);
-        resetBlock(sampleBlock);
-    }
+    // if (!leftList.querySelector(".post-sub-img:not(.add)")) {
+    //     if (!sampleBlock.isConnected) contentList.appendChild(sampleBlock);
+    //     resetBlock(sampleBlock);
+    // }
 });
 
 // 썸네일 클릭 → 해당 블록으로 스크롤
@@ -401,11 +488,10 @@ leftList?.addEventListener("click", (e) => {
     const block = contentList.querySelector(
         `.post-img-content-wrapper[data-idx="${thumb.dataset.idx}"]`
     );
-    block?.scrollIntoView({ behavior: "smooth", block: "center" });
+    block?.scrollIntoView({behavior: "smooth", block: "center"});
 });
 
 // 오른쪽 블록 내부 (업로드/삭제/태그)
-
 contentList?.addEventListener("click", (e) => {
     const block = e.target.closest(".post-img-content-wrapper");
     if (!block) return;
@@ -421,6 +507,9 @@ contentList?.addEventListener("click", (e) => {
                 return;
             }
             const url = URL.createObjectURL(f);
+            block.querySelectorAll(".img-tag-container").forEach((data) => {
+                data.remove();
+            });
             previewIn(block, url);
             console.log("asdasdasd");
             console.log(block.dataset.idx);
@@ -436,7 +525,7 @@ contentList?.addEventListener("click", (e) => {
                 if (e.target.closest(".return-img")) {
                     fileBuffer.splice(+block.dataset.idx, 1);
                 }
-                addFiles(input.files);
+                addFiles(input.files, +block.dataset.idx);
             }
             input.remove();
         };
@@ -447,16 +536,56 @@ contentList?.addEventListener("click", (e) => {
     // 삭제(오른쪽)
     if (e.target.closest(".delete-img")) {
         const i = +idx;
-        render(i);
         fileBuffer.splice(i, 1);
-        leftList?.querySelector(`.post-sub-img[data-idx="${i}"]`)?.remove();
-        block.remove();
-        giveIdx(i);
+        console.log(i);
+        console.log(
+            document.querySelectorAll(".post-sub-img:not(.add)").length
+        );
+        console.log(
+            !i &&
+            !(
+                document.querySelectorAll(".post-sub-img:not(.add)")
+                    .length === 1
+            )
+        );
+        console.log(
+            document.querySelectorAll(".post-sub-img:not(.add)").length === 1
+        );
 
-        if (!leftList?.querySelector(".post-sub-img:not(.add)")) {
-            if (!sampleBlock.isConnected) contentList.appendChild(sampleBlock);
-            resetBlock(sampleBlock);
+        if (
+            !i &&
+            document.querySelectorAll(".post-sub-img:not(.add)").length === 1
+        ) {
+            leftList.querySelector(
+                `.post-sub-img[data-idx="${i}"]`
+            ).style.display = "none";
+            // contentList.appendChild(sampleBlock);
+            resetBlock(block);
+            console.log("0이고 길이가 1이야");
+            sampleBlock.querySelector(".content-del").style.display = "none";
+            console.log(sampleBlock.querySelector(".content-del"));
+        } else {
+            console.log("0이 아니거나  길이가 2이상이야");
+            leftList.querySelector(`.post-sub-img[data-idx="${i}"]`)?.remove();
+            delImageNone("오른쪽에서 삭제");
+            block.remove();
         }
+
+        giveIdx(i);
+        document
+            .querySelectorAll(".post-img-content-wrapper")
+            .forEach((data, idx) => {
+                data.dataset.idx = idx;
+            });
+        document
+            .querySelectorAll(".post-sub-img:not(.add)")
+            .forEach((data, index) => {
+                data.dataset.idx = index;
+            });
+        // if (!leftList?.querySelector(".post-sub-img:not(.add)")) {
+        //     if (!sampleBlock.isConnected) contentList.appendChild(sampleBlock);
+        //     resetBlock(sampleBlock);
+        // }
         return;
     }
 
@@ -472,6 +601,9 @@ contentList?.addEventListener("click", (e) => {
     // 이미지 클릭 → 편집 중일 때만 좌표 저장 + 모달
     const box = e.target.closest(".img-add-container");
     if (box && box.querySelector("img") && block.dataset.armed === "1") {
+        if (e.target.closest(".img-tag-container.tag")) {
+            return;
+        }
         const r = box.getBoundingClientRect();
         const relY = (e.clientY - r.top) / r.height;
         if (relY > 0.85) return; // 하단 영역 무시
@@ -528,7 +660,7 @@ tagModal?.addEventListener("click", (e) => {
     // "선택" → 현재 블록에 파란 + 고정
     if (e.target.closest(".tag-select-btn")) {
         if (currentBlock) {
-            const { tx, ty } = currentBlock.dataset;
+            const {tx, ty} = currentBlock.dataset;
             if (tx && ty) {
                 const div = document.createElement("div");
 
@@ -638,62 +770,104 @@ inputCountry?.addEventListener("keydown", (e) => {
 // 작성(트리거만)
 const complteBtn = document.querySelector(".complete-btn");
 complteBtn.addEventListener("click", (e) => {
+    const form = document.forms["diary"];
+    console.log(fileBuffer);
+    console.log(document.querySelector(".secret-checkbox").checked);
     e.preventDefault();
-    console.log(document.querySelector(".secret-checkbox").value);
-
-    const test = document.querySelectorAll(
+    const tagEdit = document.querySelectorAll(
         `.post-img-content-wrapper[data-armed="1"]`
     );
-    console.log(test);
+    const imageCount = document.querySelectorAll(".dropzone[hidden]");
 
-    if (test) {
-        toastModal();
+    if (!imageCount.length) {
+        e.preventDefault();
+        toastModal("이미지를 최소 한 장 추가해주세요.");
+        return;
+    }
+    if (tagEdit.length) {
+        e.preventDefault();
+        toastModal("태그편집 완료버튼을 눌러주세요.");
         const a = document.createElement("a");
+        tagEdit[0].scrollIntoView({behavior: "smooth"});
+
         // a.href = `#${test.id}`;
         // console.log(a.href);
 
         // a.click();
         console.log("태그 편집 완료 눌러주세요.");
+        return;
     }
-    fileBuffer.forEach((file, index) => {
-        const form = document.getElementById("diary");
+    const countries = document.querySelectorAll(".tag-chip");
+    if(!countries.length){
+        toastModal("나라를 추가해줴요.")
+        return;
+    }
+    countries.forEach((country,countryIndex) => {
+        const countryInput = document.createElement("input");
+        countryInput.name = `countries[${countryIndex}]`;
+        countryInput.value = country.textContent;
+        form.appendChild(countryInput);
+    });
+    console.log(fileBuffer.length);
+    let count = 0;
+    document.querySelectorAll(".post-img-content-wrapper").forEach((data) => {
+        const idx = +data.dataset.idx;
+        const file = fileBuffer[idx];
+        const textarea = data.querySelector("textarea");
+        textarea.name = `images[${idx}].postContent`;
         const image = document.createElement("input");
         image.type = "file";
-        image.name = `imageDTO[${index}].file`;
+        image.name = `images[${idx}].image`;
         const dt = new DataTransfer();
-        dt.items.add(file);
-        image.files = dt.files;
+        if (file === '') {
+            image.value = ''; // 파일 input 초기화
+        } else {
+            dt.items.add(file);
+            image.files = dt.files;
+        }
         const imgItem = document.querySelector(
-            `.post-img-content-wrapper[data-idx="${index}"]`
+            `.post-img-content-wrapper[data-idx="${idx}"]`
         );
+        form.appendChild(image);
+        console.log(imgItem);
+
         const tags = imgItem.querySelectorAll(".img-tag-container.tag");
         tags.forEach((tag, tagIndex) => {
             const inputTagX = document.createElement("input");
             const inputTagY = document.createElement("input");
             const inputTagMemberId = document.createElement("input");
-            inputTagX.name = `imageDTO[${index}].tagLeft`;
-            inputTagY.name = `imageDTO[${index}].tagLeft`;
-            inputTagX.value = tag.style.left;
-            inputTagY.value = tag.style.top;
+            inputTagX.name = `images[${idx}].tags[${tagIndex}].tagLeft`;
+            inputTagY.name = `images[${idx}].tags[${tagIndex}].tagTop`;
+            inputTagMemberId.name = `images[${idx}].tags[${tagIndex}].memberId`;
+            inputTagX.value = tag.style.left.replace("%","");
+            inputTagY.value = tag.style.top.replace("%","");
             inputTagMemberId.value = tag.dataset.memberId;
             console.log(inputTagX.value);
             console.log(inputTagY.value);
+            form.appendChild(inputTagX);
+            form.appendChild(inputTagY);
+            form.appendChild(inputTagMemberId);
         });
+        console.log(tags);
+        console.log(countries);
         console.log(image);
+    });
+    fileBuffer.forEach((file, index) => {
     });
     console.log(123);
     console.log("작성 클릭");
+    form.submit();
 });
 
 let fileBuffer = [];
 const toKey = (f) => `${f.name}|${f.size}|${f.lastModified}`;
 
-const addFiles = (files) => {
+const addFiles = (files, index) => {
     // map(toKey): 기존 파일객체를 "a.jpg|1000|1690000000000" 문자열 형태로 변경
     const existingKeys = new Set(fileBuffer.map(toKey));
     const arFile = Array.from(files);
     for (const f of arFile) {
-        fileBuffer.push(f);
+        fileBuffer[index] = f;
         existingKeys.add(toKey(f));
     }
 };
@@ -701,10 +875,11 @@ const addFiles = (files) => {
 const toast = document.querySelector(".toast");
 const toastText = document.querySelector("p.toast-text");
 
-function toastModal() {
+function toastModal(msg) {
     toast.style.display = "block";
     toast.classList.remove("hide");
     toast.classList.add("show");
+    toastText.textContent = msg;
     setTimeout(() => {
         toast.classList.remove("show");
         toast.classList.add("hide");
@@ -729,3 +904,19 @@ secretToggle.addEventListener("click", (e) => {
         unlockIcon.classList.remove("hidden");
     }
 });
+
+contentList?.addEventListener("dblclick", (e) => {
+    if (e.target.closest(".img-tag-container.tag")) {
+        console.log("더블클릭");
+        e.target.closest(".img-tag-container.tag").remove();
+        return;
+    }
+});
+
+
+const memberSearch = document.getElementById("memberSearch")
+memberSearch.addEventListener("keydown",async (e)=>{
+    if(e.key ==="Enter"){
+        await diaryWriteService.search(diaryWriteLayout.showList,memberSearch.value.trim());
+    }
+})

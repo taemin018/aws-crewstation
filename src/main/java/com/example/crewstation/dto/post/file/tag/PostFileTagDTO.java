@@ -1,12 +1,10 @@
-package com.example.crewstation.dto.file.tag;
+package com.example.crewstation.dto.post.file.tag;
 
-import com.example.crewstation.common.enumeration.Status;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
-
 
 @Component
 @Getter
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class PostFileTagDTO {
     private Long id;
     private float tagLeft;
-    private float tagRight;
+    private float tagTop;
     private Long memberId;
     private Long postSectionFileId;
     private String createdDatetime;

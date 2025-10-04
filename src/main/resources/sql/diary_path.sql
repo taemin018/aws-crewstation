@@ -10,3 +10,13 @@ create table tbl_diary_country_path
     constraint fk_diary_country_path_country foreign key (country_id)
         references tbl_country (id)
 );
+
+ALTER TABLE tbl_diary_country_path
+    DROP CONSTRAINT fk_diary_country_path_country;
+
+
+ALTER TABLE tbl_diary_country_path
+    DROP COLUMN country_id;
+
+ALTER TABLE tbl_diary_country_path RENAME TO tbl_diary_path;
+

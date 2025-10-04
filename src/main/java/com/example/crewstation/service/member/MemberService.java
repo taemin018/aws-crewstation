@@ -11,6 +11,7 @@ import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
@@ -34,6 +35,9 @@ public interface MemberService {
 
 //  비밀번호 변경
     public void resetPassword(String memberEmail, String memberPassword);
+
+//  회원 검색
+    public List<MemberDTO> searchMember(String search);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

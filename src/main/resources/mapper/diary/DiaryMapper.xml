@@ -199,4 +199,29 @@
                  left join tbl_crew_diary tcd on tcd.diary_id = vpd.id
                  left join tbl_crew tc on tcd.crew_id = tc.id
     </select>
+
+
+    <select id="insert">
+        insert into tbl_diary(post_id, diary_secret)
+        values (#{postId}, #{diarySecret})
+    </select>
+
+
+    <select id="selectByPostId">
+        select tm.id  as member_id,
+               tm.member_name,
+               tm.social_img_url,
+               vpd.id as post_id,
+               vpd.post_title,
+               vpd.post_read_count,
+               vpd.created_datetime,
+               vpd.updated_datetime,
+               vpd.diary_secret,
+               vpd.diary_like_count,
+               vpd.diary_reply_count,
+               vfmf.file_path
+        from tbl_member tm
+                 join view_post_diary vpd on tm.id = vpd.member_id and vpd.id = #{postId}
+                 left join view_file_member_file vfmf on tm.id = vfmf.member_id
+    </select>
 </mapper>

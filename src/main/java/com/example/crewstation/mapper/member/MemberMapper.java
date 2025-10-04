@@ -6,6 +6,7 @@ import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -36,4 +37,7 @@ public interface MemberMapper {
 
 //    비밀번호 업데이트
     public void updatePassword(@Param("memberEmail") String memberEmail,@Param("memberPassword") String memberPassword);
+
+//    회원 검색
+    public List<MemberDTO> selectSearchMember(String search);
 }

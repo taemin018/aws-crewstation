@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -57,6 +58,11 @@ public class MemberDAO {
 //    비밀번호 업데이트
     public void updatePassword(String memberEmail, String memberPassword) {
         memberMapper.updatePassword(memberEmail, memberPassword);
+    }
+
+    //    회원 검색
+    public List<MemberDTO> findSearchMember(String search){
+        return memberMapper.selectSearchMember(search);
     }
 
 }
