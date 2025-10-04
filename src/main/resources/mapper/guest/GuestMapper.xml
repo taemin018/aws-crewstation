@@ -45,7 +45,7 @@
                seller.id                      AS sellerId,
                seller.member_name             AS sellerName,
                seller.member_phone            AS sellerPhone,
-
+               guest.id                       AS buyerMemberId,
                guest.member_name              AS guestName,
 
                f.file_path || '/' || f.file_name AS mainImage
@@ -55,7 +55,8 @@
                  JOIN tbl_post p                  ON pu.post_id = p.id
                  JOIN tbl_member seller           ON p.member_id = seller.id
                  JOIN tbl_member guest            ON g.member_id = guest.id
-                 LEFT JOIN tbl_post_section s     ON p.id = s.post_id
+                 LEFT JOIN tbl_post_section s     ON
+                     p.id = s.post_id
                  LEFT JOIN tbl_post_section_file sf ON s.id = sf.post_section_id AND sf.image_type = 'main'
                  LEFT JOIN tbl_file f             ON sf.file_id = f.id
         WHERE g.guest_order_number = #{guestOrderNumber}

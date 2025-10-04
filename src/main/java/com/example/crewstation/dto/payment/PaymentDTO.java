@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 public class PaymentDTO {
     private Long id;
     private Long memberId;
+    private Long purchaseId;
+    private String receiptId;
+    private Integer amount;
     private String createdDatetime;
     private String updatedDatetime;
 }
