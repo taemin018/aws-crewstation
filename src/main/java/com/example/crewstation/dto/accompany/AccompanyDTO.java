@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -16,8 +17,8 @@ import java.util.List;
 public class AccompanyDTO {
     private Long postId;
     private String postTitle;
-    private String createdDatetime;
-    private String updatedDatetime;
+    private LocalDateTime createdDatetime;
+    private LocalDateTime updatedDatetime;
     private String accompanyStatus;
     private String accompanyAgeRange;
     private String countryStartDate;
@@ -36,5 +37,8 @@ public class AccompanyDTO {
     private String crewName;
     private String crewDescription;
     private String socialImgUrl;
+    private String postContent;
+    private int fileCount;
+    private String relativeCreated;
     private List<AccompanyPathDTO> accompanyPathDTO;
 }
