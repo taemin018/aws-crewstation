@@ -1,7 +1,9 @@
 package com.example.crewstation.controller.diary;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
+import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
 import com.example.crewstation.service.diary.DiaryService;
@@ -9,6 +11,7 @@ import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -85,5 +88,20 @@ public class DiaryRestController {
         DiaryCriteriaDTO diaries = diaryService.getDiaries(search, customUserDetails);
         log.info("diaries::::::::::::::::::::::::::::::::::::: {}", diaries);
         return ResponseEntity.ok(diaries);
+    }
+
+    @PostMapping("secret")
+    public ResponseEntity<String> changeSecret(@RequestBody DiaryDTO diaryDTO) {
+        try {
+            String message = diaryService.changeSecret(diaryDTO);
+            return ResponseEntity.ok(message);
+        } catch (PostNotActiveException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
+        }
+
+
     }
 }

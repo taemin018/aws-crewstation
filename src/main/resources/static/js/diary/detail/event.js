@@ -5,8 +5,15 @@ const secretToggle = document.querySelector(".secret-toggle");
 const lockIcon = document.querySelector(".lock");
 const unlockIcon = document.querySelector(".unlock");
 
-secretToggle.addEventListener("click", (e) => {
+secretToggle.addEventListener("click", async (e) => {
     secretCheckbox.checked = secretToggle.classList.toggle("active");
+    console.log(secretCheckbox.checked)
+    console.log(document.getElementById("postId").dataset.post);
+    const {message,status}= await diaryDetailService.changeSecret({"check":secretCheckbox.checked,"postId":+document.getElementById("postId").dataset.post});
+    toastModal(message);
+    if(status ===404){
+        location.href="/diaries";
+    }
     if (secretCheckbox.checked) {
         lockIcon.classList.remove("hidden");
         unlockIcon.classList.add("hidden");
@@ -14,6 +21,7 @@ secretToggle.addEventListener("click", (e) => {
         lockIcon.classList.add("hidden");
         unlockIcon.classList.remove("hidden");
     }
+
 });
 
 // 이미지 팝업
@@ -346,3 +354,5 @@ function clip() {
     document.execCommand("copy"); // 선택된 내용을 클립보드에 복사합니다.
     document.body.removeChild(textarea); // 텍스트 영역을 제거합니다.
 }
+
+

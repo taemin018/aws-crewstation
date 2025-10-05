@@ -49,17 +49,17 @@
                     <span id="name" th:text="${diary.diary.memberName}">CREW_STATION</span>
                 </a>
                 <th:block th:if="diary.diary.userId !=null">
-                    <div class="lock hidden">
+                    <div class="lock" th:classappend="${diary.diary.diarySecret == 'public' ? 'hidden' : ''}">
                         <img src="/images/lock.png" class="lock-img">
                         <span class="secret-title">비공개 중</span>
                     </div>
-                    <div class="unlock">
+                    <div class="unlock" th:classappend="${diary.diary.diarySecret == 'private' ? 'hidden' : ''}">
                         <img src="/images/unlock.png" class="lock-img">
                         <span class="secret-title">공개 중</span>
                     </div>
                     <div class="secret">
-                        <div class="secret-toggle">
-                            <input type="checkbox" class="secret-checkbox">
+                        <div class="secret-toggle" th:classappend="${diary.diary.diarySecret == 'private' ? 'active' : ''}">
+                            <input type="checkbox" class="secret-checkbox" th:checked="${diary.diary.diarySecret == 'private'}">
                         </div>
                     </div>
                 </th:block>
@@ -158,7 +158,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="reply">
+                            <div class="reply" id="replyWrap">
                                 <div class="reply-item">
                                     <div class="profile-image">
                                         <img src="/images/lock.png" class="reply-profile-img">
@@ -190,7 +190,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="pageing-contianer">
+                            <div class="pageing-contianer" id="replyPageWrap">
                                 <button class="prev-next-button">
                                     <span class="prev-next prev"></span>
                                 </button>
@@ -375,6 +375,9 @@
     </div>
 </div>
 
+<script src="/js/reply/module/service.js"></script>
+<script src="/js/reply/module/layout.js"></script>
+<script src="/js/reply/event.js"></script>
 <script src="/js/diary/detail/module/service.js"></script>
 <script src="/js/diary/detail/module/layout.js"></script>
 <script src="/js/diary/detail/event.js"></script>

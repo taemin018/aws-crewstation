@@ -33,4 +33,5 @@ public class DiaryDTO {
     private Long likeId;
     private String updatedDatetime;
     private String relativeDate;
+    private boolean check;
 }

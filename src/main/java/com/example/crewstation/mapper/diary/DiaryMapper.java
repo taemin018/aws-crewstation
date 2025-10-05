@@ -1,5 +1,6 @@
 package com.example.crewstation.mapper.diary;
 
+import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.domain.diary.DiaryVO;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
@@ -10,6 +11,7 @@ import com.example.crewstation.util.Search;
 import io.lettuce.core.Limit;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,5 +59,6 @@ public interface DiaryMapper {
 
 //  다이어리 상세
     public Optional<DiaryDTO> selectByPostId(Long postId);
-
+//  다이어리 공개/비공개 변경
+    public void updateSecret(@Param("postId") Long postId,@Param("secret") Secret secret);
 }

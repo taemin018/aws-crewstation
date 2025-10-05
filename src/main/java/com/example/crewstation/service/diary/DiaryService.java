@@ -54,7 +54,8 @@ public interface DiaryService {
     // 다이어리 상세 내용 가져오기
     public DiaryDetailDTO getDiary(Long postId,CustomUserDetails customUserDetails);
 
-
+//    다이어리 공개 비공개 변경
+    public String changeSecret(DiaryDTO diaryDTO);
 
     default DiaryVO toDiaryVO(PostDTO postDTO) {
         return DiaryVO.builder()
