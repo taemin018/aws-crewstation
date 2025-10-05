@@ -3,18 +3,78 @@ const replyService = (() => {
 
     const getList = async (postId, callback, page=1) => {
         const response = await fetch(`/api/replies/${postId}?page=${page}`)
-        const repliesCriteria = await response.json();
+        let repliesCriteria = null;
 
-        if(callback){
-            callback(repliesCriteria);
+        if(response.ok) {
+            console.log("댓글 작성 성공");
+            repliesCriteria = await response.json();
+            if(callback){
+                callback(repliesCriteria);
+            }
+
+        } else{
+            const errorMessage = await response.text();
+            console.log(errorMessage)
         }
+        return repliesCriteria;
 
+    }
+
+    const write = async(reply) =>{
+        const response = await fetch("/api/replies/write", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reply)
+        });
+
+        if(response.ok) {
+            console.log("댓글 작성 성공");
+        } else{
+            const errorMessage = await response.text();
+            console.log(errorMessage)
+        }
+    return {status : response.status}
+    }
+
+    const modify = async (reply)  =>{
+        const response = await  fetch("/api/replies",{
+            method:"PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reply)
+        });
+        if(response.ok) {
+            console.log("댓글 작성 성공");
+        } else{
+            const errorMessage = await response.text();
+            console.log(errorMessage)
+        }
+        return {status : response.status}
+    }
+    const remove = async (reply)=>{
+        const response = await  fetch("/api/replies",{
+            method:"DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reply)
+        });
+        if(response.ok) {
+            console.log("댓글 삭제 성공");
+        } else{
+            const errorMessage = await response.text();
+            console.log(errorMessage)
+        }
+        return {status : response.status}
     }
     const report = async (report) => {
         let status = null;
         let message = null;
         let result = null;
-        const response = await fetch("/api/post/report", {
+        const response = await fetch("/api/post/report/replies", {
             method: 'POST',
             body: JSON.stringify(report),
             headers: {
@@ -34,5 +94,5 @@ const replyService = (() => {
     }
 
 
-    return {getList:getList,report: report}
+    return {getList:getList,report: report,write:write,modify:modify,remove:remove}
 })();

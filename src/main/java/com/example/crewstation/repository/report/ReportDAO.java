@@ -2,6 +2,7 @@ package com.example.crewstation.repository.report;
 
 import com.example.crewstation.domain.report.ReportVO;
 import com.example.crewstation.domain.report.post.ReportPostVO;
+import com.example.crewstation.domain.report.reply.ReportReplyVO;
 import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.mapper.report.ReportMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,7 @@ public class ReportDAO {
     public void saveReportPost(ReportPostVO reportPostVO){
         reportMapper.insertReportPost(reportPostVO);
     }
-
+    public void saveReportReply(ReportReplyVO reportReplyVO){
+        reportMapper.insertReportReply(reportReplyVO);
+    }
 }

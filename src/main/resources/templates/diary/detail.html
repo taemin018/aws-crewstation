@@ -136,7 +136,7 @@
                                 <dt class="view" th:text="${'좋아요 ' +diary.diary.diaryLikeCount}">좋아요 30</dt>
                                 <dt class="view" th:text="${'조회 ' + diary.diary.postReadCount}">조회 78</dt>
                             </div>
-                            <button class="reply-report-button reply-button">신고하기</button>
+                            <button class="report-button">신고하기</button>
                         </div>
                         <section class="reply-container">
                             <div class="reply-container-header">
@@ -220,7 +220,7 @@
                                 <span class="go-reply-icon">
                                     <span class="go-reply-icon-span"></span>
                                 </span>
-                            <span class="like-total">11</span>
+                            <span class="like-total" th:text="${diary.diary.diaryReplyCount}">11</span>
                         </button>
                         <button class="sticky-share-button">
                                 <span class="go-share-icon">
@@ -357,7 +357,7 @@
         <div class="remove-modal">
             <div class="remove-modal-win">
                 <div class="remove-head">
-                    <p class="head-text">댓글을 삭제하시겠습니까? 삭제한 댓글은 되돌릴 수 없습니다.</p>
+                    <p class="head-text">댓글을 삭제하시겠습니까?<br>삭제한 댓글은 되돌릴 수 없습니다.</p>
                 </div>
                 <div class="remove-buttons-wrap">
                     <div class="remove-buttons">

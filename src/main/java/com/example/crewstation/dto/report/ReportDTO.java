@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class ReportDTO {
     private Long id;
     private String reportContent;
+    private Long replyId;
     private ProcessStatus processStatus;
     private Long memberId;
     private Long postId;

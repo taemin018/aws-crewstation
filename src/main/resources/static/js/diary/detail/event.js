@@ -59,7 +59,9 @@ const reportBtn = document.querySelector(".report-button");
 const reportModal = document.querySelector(".report-modal");
 const replyReporyBtn = document.querySelector(".reply-report-button");
 
-replyReporyBtn.addEventListener("click", (e) => {
+reportBtn.addEventListener("click", (e) => {
+    console.log("asdasds")
+    isReply = false;
     reportModal.classList.add("active");
 });
 
@@ -95,10 +97,7 @@ reportOptions.forEach((reportOption) => {
 
 // 신고하기 창 제출 버튼
 
-const submitReportBtn = document.querySelector(".report-button-send");
-const confirmReportYes = document.getElementById("confirmReportYes");
-const confirmReportModal = document.getElementById("confirmReportModal");
-const confirmReportNo = document.getElementById("confirmReportNo");
+
 submitReportBtn.addEventListener("click", (e) => {
     // reportModal.classList.remove("active");
     confirmReportModal.style.display = "flex";
@@ -106,37 +105,36 @@ submitReportBtn.addEventListener("click", (e) => {
 });
 
 // 신고하기 창 제출/끄기 후 첫번째 라디오 버튼 선택
-function selectFirstReportRadio() {
-    const radioBtns = document.querySelectorAll(".radio-button");
-    radioBtns.forEach((radioBtn, idx) => {
-        const btn = radioBtn.querySelector(".radio");
-        if (idx === 0) {
-            radioBtn.classList.add("active");
-            if (btn) btn.checked = true;
-        } else {
-            radioBtn.classList.remove("active");
-            if (btn) btn.checked = false;
-        }
-    });
-}
+
 
 confirmReportYes.addEventListener("click", async (e) => {
+
     const reportContent = document.querySelector("input[name='reason']:checked").value;
     console.log(reportContent);
-    // const memberId = document.getElementById("memberId").value;
     const postId = document.getElementById("postId").dataset.post;
-    const {message, status} = await diaryDetailService.report({
-        reportContent: reportContent,
-        postId: postId
-    })
-    console.log(message)
-    console.log(status)
-    confirmReportModal.style.display = "none";
-    document.getElementById("reportModal").style.display = "none";
-    toastModal(message);
-    if (status === 404) {
-        location.href = "/diaries"
+    // const memberId = document.getElementById("memberId").value;
+    if(!isReply){
+
+        const {message, status} = await diaryDetailService.report({
+            reportContent: reportContent,
+            postId: postId
+        })
+        console.log(message)
+        console.log(status)
+
+        toastModal(message);
+        if (status === 404) {
+            location.href = "/diaries"
+        }
+    }else{
+        const{message,status} = await  replyService.report({postId:postId,reportContent:reportContent,replyId:confirmReportYes.dataset.id})
+        toastModal(message);
+        if (status === 404) {
+            location.href = "/diaries"
+        }
     }
+    confirmReportModal.style.display = "none";
+    document.getElementById("reportModal").classList.remove("active");
 });
 
 confirmReportNo.addEventListener("click", () => {
@@ -164,7 +162,7 @@ const input = document.querySelector(".input");
 const enterButton = document.querySelector(".enter-button");
 
 input.addEventListener("input", (e) => {
-    if (e.target.value.length > 0) {
+    if (e.target.value.length > 0 && e.target.value.trim()!=="") {
         enterButton.classList.add("active");
         enterButton.disabled = false;
     } else {
@@ -228,36 +226,36 @@ document
         });
     });
 
-// 댓글 삭제
-
-const replyRemoveButtons = document.querySelectorAll(".remove-reply-button");
-const removeModal = document.querySelector(".remove-modal");
-const removeNoButton = removeModal.querySelector(".remove-no");
-const removeOkButton = removeModal.querySelector(".remove-ok");
-
-let targetReply = null; // 삭제 대상 reply-item 저장용
-
-replyRemoveButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        removeModal.style.display = "block";
-        targetReply = btn.closest(".reply-item"); // 삭제할 대상 저장
-    });
-});
-
-// 취소 버튼 클릭 시 모달 닫기
-removeNoButton.addEventListener("click", () => {
-    removeModal.style.display = "none";
-    targetReply = null;
-});
-
-// 확인 버튼 클릭 시 reply-item 삭제 후 모달 닫기
-removeOkButton.addEventListener("click", () => {
-    if (targetReply) {
-        targetReply.remove();
-        targetReply = null;
-    }
-    removeModal.style.display = "none";
-});
+// // 댓글 삭제
+//
+// const replyRemoveButtons = document.querySelectorAll(".remove-reply-button");
+// const removeModal = document.querySelector(".remove-modal");
+// const removeNoButton = removeModal.querySelector(".remove-no");
+// const removeOkButton = removeModal.querySelector(".remove-ok");
+//
+// let targetReply = null; // 삭제 대상 reply-item 저장용
+//
+// replyRemoveButtons.forEach((btn) => {
+//     btn.addEventListener("click", (e) => {
+//         removeModal.style.display = "block";
+//         targetReply = btn.closest(".reply-item"); // 삭제할 대상 저장
+//     });
+// });
+//
+// // 취소 버튼 클릭 시 모달 닫기
+// removeNoButton.addEventListener("click", () => {
+//     removeModal.style.display = "none";
+//     targetReply = null;
+// });
+//
+// // 확인 버튼 클릭 시 reply-item 삭제 후 모달 닫기
+// removeOkButton.addEventListener("click", () => {
+//     if (targetReply) {
+//         targetReply.remove();
+//         targetReply = null;
+//     }
+//     removeModal.style.display = "none";
+// });
 
 // 페이지 클릭
 

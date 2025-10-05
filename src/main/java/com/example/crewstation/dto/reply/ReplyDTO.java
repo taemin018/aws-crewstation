@@ -15,6 +15,8 @@ public class ReplyDTO {
     private Long id;
     private String replyContent;
     private Long diaryId;
+    private Long postId;
+    private String memberName;
     private Long memberId;
     private String filePath;
     private String socialImgUrl;

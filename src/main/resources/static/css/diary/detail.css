@@ -1816,3 +1816,14 @@ div.modal-content{
 .prev-next-button.active:hover {
     background-color: rgb(247, 249, 250);;
 }
+
+.report-button{
+    color: rgb(130, 140, 148);
+    padding: 0px;
+    background-color: transparent;
+    border: none;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+
+}

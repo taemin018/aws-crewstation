@@ -15,4 +15,9 @@
         delete from tbl_like_alarm
         where like_id = #{likeId}
     </delete>
+
+    <insert id="insertReplyAlarm">
+        insert into tbl_diary_alarm(diary_id)
+        values (#{postId})
+    </insert>
 </mapper>
