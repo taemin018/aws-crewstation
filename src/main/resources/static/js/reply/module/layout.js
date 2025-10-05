@@ -23,6 +23,8 @@ const replyLayout = (() => {
                                                 <div class="point">・</div>
                                                 <button class="remove-reply-button reply-button">삭제</button>
                                             </div>`
+            }else{
+                checkUser=``;
             }
             text += `
                 <div class="reply-item">
@@ -51,23 +53,28 @@ const replyLayout = (() => {
                                 </div>
             `;
         });
+        checkUser = ``;
         replyWrap.innerHTML = text;
 
         text = ``;
         let criteria = repliesCriteria.criteria;
-
+        console.log(criteria)
         if(criteria.hasPreviousPage){
-            text = `<a data-page="${criteria.startPage - 1}" class="paging">이전</a>`
+            text = `<button class="number-button prev-next-button active" data-page="${criteria.startPage - 1}" class="paging">
+    <span class="prev-next prev"></span>
+</button>`
         }
 
         for(let i = criteria.startPage; i <= criteria.endPage; i++){
             text += `
-            <a data-page="${i}" class="paging">${i}</a>
+            <button data-page="${i}" class="number-button ${criteria.page === i ? 'active' : ''}">${i}</button>
         `;
         }
 
         if(criteria.hasNextPage){
-            text += `<a data-page="${criteria.endPage + 1}" class="paging">다음</a>`
+            text += `<button  data-page="${criteria.endPage + 1}" class="number-button prev-next-button active">
+<span class="prev-next next"></span>
+</button>`
         }
 
         replyPageWrap.innerHTML = text;

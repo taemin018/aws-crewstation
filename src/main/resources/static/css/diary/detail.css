@@ -968,7 +968,7 @@ input, textarea, select {
 }
 
 .number-button.active {
-    margin: 0px 10px 0px 0px;
+    margin: 0px 10px 0px 10px;
     border: none;
     background: none #647FBC;
     font-size: 14px;
@@ -994,7 +994,7 @@ input, textarea, select {
 .number-button {
     background-color: rgb(247, 249, 250);
     display: inline-block;
-    margin: 0px 10px 0px 0px;
+    margin: 0px 10px 0px 10px;
     border: none;
     background: none;
     height: 32px;
@@ -1771,4 +1771,48 @@ div.modal-content{
 }
 .target{
     cursor: pointer;
+}
+
+.prev-next-button {
+    margin: 0px 10px 0px 0px;
+    background: none rgb(247, 249, 250);
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(194, 200, 204);
+    border: 1px solid rgb(234, 237, 239);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.prev-next-button.active {
+    margin: 0px;
+    background: none;
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(47, 52, 56);
+    border: 1px solid rgb(230, 230, 230);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.prev-next-button.active:hover {
+    background-color: rgb(247, 249, 250);;
 }

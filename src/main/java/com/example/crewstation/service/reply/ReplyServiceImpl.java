@@ -36,8 +36,11 @@ public class ReplyServiceImpl implements ReplyService {
             if (customUserDetails != null) {
                 reply.setWriter(reply.getMemberId().equals(customUserDetails.getId()));
             }
+//            임시로 합니다
+            reply.setWriter(reply.getMemberId().equals(1L));
         });
         replyCriteriaDTO.setReplies(replies);
+        replyCriteriaDTO.setCriteria(criteria);
         return replyCriteriaDTO;
     }
 }

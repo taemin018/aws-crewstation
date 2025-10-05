@@ -15,6 +15,7 @@
                  join tbl_reply tr on tm.id = tr.member_id and tr.reply_status = 'active'
                  left join view_file_member_file vfmf on vfmf.member_id = tm.id and tm.member_status = 'active'
         where diary_id = #{postId}
+        order by tr.id desc
         limit #{criteria.count} offset #{criteria.offset}
     </select>
 
