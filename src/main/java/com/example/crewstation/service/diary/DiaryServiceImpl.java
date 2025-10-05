@@ -340,6 +340,9 @@ public class DiaryServiceImpl implements DiaryService {
         byPostId.ifPresent(diaryDTO ->{
             diaryDTO.setMemberFilePath(s3Service.getPreSignedUrl(diaryDTO.getMemberFilePath(),Duration.ofMinutes(5)));
             diaryDTO.setRelativeDate(DateUtils.toRelativeTime(diaryDTO.getCreatedDatetime()));
+            diaryDTO.setUserId(1L);
+            Long likeId = likeDAO.isLikeByPostIdAndMemberId(diaryDTO);
+            diaryDTO.setLikeId(likeId);
             if(customUserDetails != null) {
                 diaryDTO.setUserId(Objects.equals(customUserDetails.getId(), diaryDTO.getMemberId()) ?  customUserDetails.getId() : null );
             }else{
@@ -360,6 +363,7 @@ public class DiaryServiceImpl implements DiaryService {
             });
 
         });
+
         diaryDetailDTO.setDiary(byPostId.orElseThrow(DiaryNotFoundException::new));
         diaryDetailDTO.setSections(sections);
         return diaryDetailDTO;

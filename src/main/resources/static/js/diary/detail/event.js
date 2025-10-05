@@ -223,10 +223,45 @@ numberButtons.forEach((numberButton) => {
 // 게시물 좋아요 버튼
 
 const likeButton = document.querySelector(".sticky-like-button");
-
-likeButton.addEventListener("click", (e) => {
+// const toast = document.querySelector("div.toast");
+const toastText = document.querySelector("p.toast-text");
+let likeClickable = true; // 광클 방지용 플래그
+likeButton.addEventListener("click", async (e) => {
+    if(!likeClickable) return;
+    likeClickable = false;
     const likeIcon = likeButton.querySelector(".like-before");
-    likeIcon.classList.toggle("active");
+    const span = document.querySelector(".like-total");
+
+    const {message,status} = await diaryDetailService.like({postId: Number(likeButton.dataset.post)}, likeIcon.classList.contains("active"))
+    toast.style.display = "block";
+    toastText.textContent = message;
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+
+    if(status === 200){
+        const likeCount = Number(span.textContent);
+        if (likeIcon.classList.contains("active")) {
+            span.textContent = likeCount -1;
+        } else {
+            span.textContent = likeCount + 1;
+        }
+        likeIcon.classList.toggle("active");
+    }
+    // 토스트 애니메이션 처리
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+
+        setTimeout(() => {
+            toast.style.display = "none";
+            if(status === 404){
+                console.log(message)
+                location.reload();
+            }
+            likeClickable = true;
+        }, 1000);
+    }, 2000);
+
 });
 
 // 댓글로가기 버튼
@@ -244,9 +279,11 @@ const shareButton = document.querySelector(".sticky-share-button");
 const toast = document.querySelector(".toast");
 
 shareButton.addEventListener("click", (e) => {
+    if(!likeClickable) return
     toast.style.display = "block";
     toast.classList.remove("hide");
     toast.classList.add("show");
+    toastText.textContent ="클립보드에 복사되었습니다."
     setTimeout(() => {
         toast.classList.remove("show");
         toast.classList.add("hide");

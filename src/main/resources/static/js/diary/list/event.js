@@ -49,6 +49,7 @@ likeBtns.forEach((likeBtn) => {
         likeClickable = false;
         console.log("클릭됨");
         setTimeout(() => {
+            likeClickable = true
             btnCheck = true
         }, 1500);
         toast.style.display = "block";

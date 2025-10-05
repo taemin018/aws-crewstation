@@ -31,14 +31,14 @@ public class LikeServiceImpl implements LikeService {
     @Transactional(rollbackFor = Exception.class)
     public void like(LikeDTO likeDTO, CustomUserDetails customUserDetails) {
 //        임시방편
-        if (customUserDetails == null) {
-            throw new MemberNotFoundException("로그인 후 사용 가능");
-        }
-        if (!postDAO.isActivePost(likeDTO.getPostId())) {
-            throw new PostNotFoundException("이미 삭제된 게시글입니다.");
-        }
+//        if (customUserDetails == null) {
+//            throw new MemberNotFoundException("로그인 후 사용 가능");
+//        }
+//        if (!postDAO.isActivePost(likeDTO.getPostId())) {
+//            throw new PostNotFoundException("이미 삭제된 게시글입니다.");
+//        }
 //        likeDTO.setMemberId(customUserDetails.getId());
-//        likeDTO.setMemberId(1L);
+        likeDTO.setMemberId(1L);
         diaryDAO.changeLikeCount(+1,likeDTO.getPostId());
         likeDAO.saveLike(likeDTO);
         alarmDAO.saveLikeAlarm(likeDTO.getId());
@@ -51,15 +51,17 @@ public class LikeServiceImpl implements LikeService {
 //        customUserDetails = new CustomUserDetails(new MemberDTO()); // 임시
         DiaryDTO diaryDTO = new DiaryDTO();
         diaryDTO.setPostId(postId);
-//        diaryDTO.setMemberId(1L);
-        if (customUserDetails == null) {
-            throw new MemberNotFoundException("로그인 후 사용 가능");
-        }
-        if (!postDAO.isActivePost(postId)) {
-            throw new PostNotFoundException("이미 삭제된 게시글입니다.");
-        }
+        diaryDTO.setMemberId(1L);
+        diaryDTO.setUserId(1L);
+//        if (customUserDetails == null) {
+//            throw new MemberNotFoundException("로그인 후 사용 가능");
+//        }
+//        if (!postDAO.isActivePost(postId)) {
+//            throw new PostNotFoundException("이미 삭제된 게시글입니다.");
+//        }
         diaryDAO.changeLikeCount(-1,postId);
         Long likeId = likeDAO.isLikeByPostIdAndMemberId(diaryDTO);
+        log.info("{}",likeId);
         alarmDAO.deleteLikeAlarm(likeId);
         likeDAO.deleteLike(likeId);
 
