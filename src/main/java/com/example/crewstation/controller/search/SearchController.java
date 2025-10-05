@@ -1,10 +1,15 @@
 package com.example.crewstation.controller.search;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.dto.accompany.AccompanyCriteriaDTO;
+import com.example.crewstation.dto.crew.CrewCriteriaDTO;
 import com.example.crewstation.dto.crew.CrewDTO;
 import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
+import com.example.crewstation.dto.gift.GiftCriteriaDTO;
+import com.example.crewstation.service.accompany.AccompanyService;
 import com.example.crewstation.service.crew.CrewService;
 import com.example.crewstation.service.diary.DiaryService;
+import com.example.crewstation.service.gift.GiftService;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,18 +28,24 @@ import java.util.List;
 public class SearchController {
     private final CrewService crewService;
     private final DiaryService diaryService;
+    private final GiftService giftService;
+    private final AccompanyService accompanyService;
 
     @GetMapping()
     public String getSearch(Search search,
                             @AuthenticationPrincipal CustomUserDetails customUserDetails,
                             Model model) {
 
-        List<CrewDTO> crews = crewService.getCrews();
+        CrewCriteriaDTO crews = crewService.getSearchCrews(search);
         DiaryCriteriaDTO diaries = diaryService.countDiaryImg(search,customUserDetails);
+        AccompanyCriteriaDTO accompanies = accompanyService.getSearchAccompanies(search);
+        GiftCriteriaDTO gifts = giftService.getGifts(search,customUserDetails);
 
 
         model.addAttribute("crews", crews);
         model.addAttribute("diaries", diaries);
+        model.addAttribute("accompanies", accompanies);
+        model.addAttribute("gifts", gifts);
 
 
 
