@@ -2,6 +2,7 @@ package com.example.crewstation.repository.crew;
 
 import com.example.crewstation.dto.crew.CrewDTO;
 import com.example.crewstation.mapper.crew.CrewMapper;
+import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
@@ -21,8 +22,14 @@ public class CrewDAO {
         return crewMapper.getCrews();
     }
 
-    public int searchCountCrews(Long id) {
-        return crewMapper.searchCountCrews(id);
+//    크루 목록 개수
+    public int countCrews(Search search) {
+        return crewMapper.countCrews(search);
+    }
+
+//    크루 검색 목록
+    public List<CrewDTO> findCrews(Criteria criteria, Search search) {
+        return crewMapper.findCrews(criteria, search);
     }
 
 }
