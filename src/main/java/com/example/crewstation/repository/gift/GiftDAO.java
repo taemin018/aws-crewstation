@@ -2,6 +2,7 @@ package com.example.crewstation.repository.gift;
 
 import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.mapper.gift.GiftMapper;
+import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
@@ -20,8 +21,14 @@ public class GiftDAO {
     }
 
 //    기프트 목록 개수
-    public int countMainGifts(@Param("Search") Search search) {
+    public int countGifts(Search search) {
         return giftMapper.countGifts(search);
     }
+
+//    기프트 검색 목록
+    public List<GiftDTO> findGifts(Criteria criteria, Search search) {
+        return giftMapper.findGifts(criteria, search);
+    }
+
 }
 
