@@ -26,6 +26,7 @@ const closeBtn = document.querySelector(".img-close-button");
 
 targets.forEach((target, i) => {
     target.addEventListener("click", () => {
+        console.log("클릭이벤트")
         const imgSrc = images[i].getAttribute("src");
         modalImg.setAttribute("src", imgSrc);
         modal.style.display = "flex";
@@ -87,10 +88,13 @@ reportOptions.forEach((reportOption) => {
 // 신고하기 창 제출 버튼
 
 const submitReportBtn = document.querySelector(".report-button-send");
-
+const confirmReportYes = document.getElementById("confirmReportYes");
+const confirmReportModal = document.getElementById("confirmReportModal");
+const confirmReportNo = document.getElementById("confirmReportNo");
 submitReportBtn.addEventListener("click", (e) => {
-    reportModal.classList.remove("active");
-    selectFirstReportRadio();
+    // reportModal.classList.remove("active");
+    confirmReportModal.style.display = "flex";
+
 });
 
 // 신고하기 창 제출/끄기 후 첫번째 라디오 버튼 선택
@@ -106,6 +110,44 @@ function selectFirstReportRadio() {
             if (btn) btn.checked = false;
         }
     });
+}
+
+confirmReportYes.addEventListener("click", async (e) => {
+    const reportContent = document.querySelector("input[name='reason']:checked").value;
+    console.log(reportContent);
+    // const memberId = document.getElementById("memberId").value;
+    const postId = document.getElementById("postId").dataset.post;
+    const {message, status} = await diaryDetailService.report({
+        reportContent: reportContent,
+        postId: postId
+    })
+    console.log(message)
+    console.log(status)
+    confirmReportModal.style.display = "none";
+    document.getElementById("reportModal").style.display = "none";
+    toastModal(message);
+    if (status === 404) {
+        location.href = "/diaries"
+    }
+});
+
+confirmReportNo.addEventListener("click", () => {
+    confirmReportModal.style.display = "none";
+});
+
+
+function toastModal(text) {
+    toast.style.display = "block";
+    toast.classList.remove("hide");
+    toastText.textContent = text;
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 500);
+    }, 3000);
 }
 
 // 댓글 입력 버튼 활성화/비활성화

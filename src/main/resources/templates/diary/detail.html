@@ -81,7 +81,7 @@
                     <div class="images">
                         <div class="images-inner">
                             <div class="image-items">
-                                <div class="image-wrap" th:each="section :${diary.sections}">
+                                <div class="image-wrap" th:each="section :${diary.sections}"  th:if="${section.filePath !=null}">
                                     <div class="image">
                                         <a href="">
                                             <img class="diary-img" th:src="@{${section.filePath}}">
@@ -209,7 +209,7 @@
             <div class="sticky-container">
                 <div style="position: relative;">
                     <div class="sticky-wrap">
-                        <button class="sticky-like-button" th:attr="data-post=${diary.diary.postId}">
+                        <button id="postId" class="sticky-like-button" th:attr="data-post=${diary.diary.postId}">
                                 <span class="like-icon">
                                     <span class="like-before" th:classappend="${diary.diary.likeId} ? 'active': ''" ></span>
                                 </span>
@@ -234,7 +234,7 @@
     </div>
 </div>
 <div>
-    <div class="report-modal">
+    <div class="report-modal" id="reportModal">
         <div class="modal-container">
             <div class="modal-header">
                     <span class="modal-title">
@@ -249,7 +249,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button active">
-                                <input type="radio" name="주제" class="radio">
+                                <input type="radio" name="reason" class="radio" value="주제에 맞지 않아요">
                             </div>
                             <span class="content">주제에 맞지 않아요</span>
                         </label>
@@ -257,7 +257,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="정보" class="radio">
+                                <input type="radio" name="reason" class="radio" value="정보가 부정확해요">
                             </div>
                             <span class="content">정보가 부정확해요</span>
                         </label>
@@ -265,7 +265,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="광고" class="radio">
+                                <input type="radio" name="reason" class="radio" value="지나치게 광고를 해요">
                             </div>
                             <span class="content">지나치게 광고를 해요</span>
                         </label>
@@ -273,7 +273,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="도배" class="radio">
+                                <input type="radio" name="reason" class="radio" value="이 글로 도배가 돼있어요">
                             </div>
                             <span class="content">이 글로 도배가 돼있어요</span>
                         </label>
@@ -281,7 +281,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="저작권" class="radio">
+                                <input type="radio" name="reason" class="radio" value="저작권 침해가 우려돼요">
                             </div>
                             <span class="content">저작권 침해가 우려돼요</span>
                         </label>
@@ -289,7 +289,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="명예" class="radio">
+                                <input type="radio" name="reason" class="radio" value="명예를 훼손하는 내용이에요">
                             </div>
                             <span class="content">명예를 훼손하는 내용이에요</span>
                         </label>
@@ -297,7 +297,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="욕설" class="radio">
+                                <input type="radio" name="reason" class="radio" value="욕설이나 비방이 심해요">
                             </div>
                             <span class="content">욕설이나 비방이 심해요</span>
                         </label>
@@ -305,7 +305,7 @@
                     <li class="report-content">
                         <label for="report" class="content-label">
                             <div class="radio-button">
-                                <input type="radio" name="외설" class="radio">
+                                <input type="radio" name="reason" class="radio" value="외설적인 내용이 포함돼있어요">
                             </div>
                             <span class="content">외설적인 내용이 포함돼있어요</span>
                         </label>
@@ -316,6 +316,32 @@
                 <div class="modal-button-wrap">
                     <button class="report-button-send">신고하기</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="confirmReportModal" class="modal">
+        <div class="modal-content">
+            <h3 style="font-size: 25px;">신고 요청 확인</h3>
+            <p style="margin-top: 12px; font-size: 20px">
+                정말 신고하시겠습니까?
+            </p>
+            <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                <button type="button" id="confirmReportYes" class="confirm-btn yes">확인
+                </button>
+                <button id="confirmReportNo" class="confirm-btn no">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delconfirmModal" class="modal">
+        <div class="modal-content">
+            <p style="margin-top: 12px; font-size: 20px">
+                정말 삭제하시겠습니까?
+            </p>
+            <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                <a class="confirm-btn yes" th:href="@{/gifts/delete/{id}(id=${diary.diary.postId})}">확인
+                </a>
+                <button id="cancelDel" class="confirm-btn no">취소</button>
             </div>
         </div>
     </div>
