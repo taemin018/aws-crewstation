@@ -1,12 +1,16 @@
 package com.example.crewstation.service.diary;
 
+import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
 import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.common.exception.DiaryNotFoundException;
+import com.example.crewstation.common.exception.PostNotFoundException;
 import com.example.crewstation.domain.crew.CrewDiaryVO;
 import com.example.crewstation.domain.diary.country.DiaryCountryVO;
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
+import com.example.crewstation.dto.country.CountryDTO;
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
@@ -14,6 +18,7 @@ import com.example.crewstation.dto.file.tag.ImageDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
+import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.mapper.crew.diary.CrewDiaryMapper;
 import com.example.crewstation.repository.crew.diary.CrewDiaryDAO;
 import com.example.crewstation.repository.diary.DiaryDAO;
@@ -267,25 +272,25 @@ public class DiaryServiceImpl implements DiaryService {
         diaryCountryVOs = toDiaryCountryVO(request);
         diaryCountryVOs.forEach(diaryCountryDAO::save);
         diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
-        if(request.getCrewId() != null) {
+        if (request.getCrewId() != null) {
             crewDiaryDAO.save(CrewDiaryVO.builder().diaryId(request.getPostId()).crewId(request.getCrewId()).build());
         }
         images.forEach(image -> {
             MultipartFile file = image.getImage();
             log.info(":::::::::::::{}", image.toString());
-            if((file == null || Objects.equals(file.getOriginalFilename(), "")) && (image.getPostContent() == null || image.getPostContent().isEmpty())) {
+            if ((file == null || Objects.equals(file.getOriginalFilename(), "")) && (image.getPostContent() == null || image.getPostContent().isEmpty())) {
                 log.info("다 여기로 오니?");
                 return;
             }
-            try{
+            try {
                 if (file != null && !Objects.equals(file.getOriginalFilename(), "")) {
                     log.info("어디로 들어오니1");
                     Type type = Type.SUB;
-                    if(!check.get()){
+                    if (!check.get()) {
                         type = Type.MAIN;
                         check.set(true);
                     }
-                    String s3Key = s3Service.uploadPostFile(file,getPath());
+                    String s3Key = s3Service.uploadPostFile(file, getPath());
                     String originalFileName = file.getOriginalFilename();
                     String extension = "";
                     if (originalFileName != null && originalFileName.contains(".")) {
@@ -303,26 +308,81 @@ public class DiaryServiceImpl implements DiaryService {
                     sectionFileDTO.setPostSectionId(image.getPostSectionId());
                     FilePostSectionVO vo = toSectionFileVO(sectionFileDTO);
                     filePostSectionDAO.save(vo);
-                    if(image.getTags() != null){
+                    if (image.getTags() != null) {
                         log.info("태그가 없어");
-                        image.getTags().forEach((tag)->{
+                        image.getTags().forEach((tag) -> {
                             tag.setPostSectionFileId(fileDTO.getId());
                             postFileTagDAO.save(toPostFileTagVO(tag));
                         });
                     }
 
-                }else {
+                } else {
                     log.info("어디로 들어오니2");
                     image.setPostId(post.getPostId());
                     sectionDAO.saveDiary(image);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
 
 
     }
+
+    @Override
+    @LogReturnStatus
+    @Transactional(rollbackFor = Exception.class)
+    public DiaryDetailDTO getDiary(Long postId, CustomUserDetails customUserDetails) {
+        DiaryDetailDTO diaryDetailDTO = new DiaryDetailDTO();
+        postDAO.updateReadCount(postId);
+        List<CountryDTO> countries = diaryCountryDAO.findCountryByPostId(postId);
+        Optional<DiaryDTO> byPostId = diaryDAO.findByPostId(postId);
+        List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
+        byPostId.ifPresent(diaryDTO -> {
+            diaryDTO.setMemberFilePath(s3Service.getPreSignedUrl(diaryDTO.getMemberFilePath(), Duration.ofMinutes(5)));
+            diaryDTO.setRelativeDate(DateUtils.toRelativeTime(diaryDTO.getCreatedDatetime()));
+            diaryDTO.setUserId(1L);
+            Long likeId = likeDAO.isLikeByPostIdAndMemberId(diaryDTO);
+            diaryDTO.setLikeId(likeId);
+            if (customUserDetails != null) {
+                diaryDTO.setUserId(Objects.equals(customUserDetails.getId(), diaryDTO.getMemberId()) ? customUserDetails.getId() : null);
+            } else {
+                diaryDTO.setUserId(1L);
+            }
+        });
+        diaryDetailDTO.setCountries(countries);
+        sections.forEach(section -> {
+            log.info("{}", section.getFileId());
+            List<PostFileTagDTO> tags = postFileTagDAO.findByFileId(section.getFileId());
+            log.info("{}:::::::::::::::::::::::::", tags);
+            section.setTags(tags);
+            if (section.getFilePath() != null) {
+                section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(), Duration.ofMinutes(5)));
+            }
+            tags.forEach((tag) -> {
+                tag.setFilePath(s3Service.getPreSignedUrl(tag.getFilePath(), Duration.ofMinutes(5)));
+            });
+
+        });
+
+        diaryDetailDTO.setDiary(byPostId.orElseThrow(DiaryNotFoundException::new));
+        diaryDetailDTO.setSections(sections);
+        return diaryDetailDTO;
+    }
+
+    @Override
+    @LogReturnStatus
+    public String changeSecret(DiaryDTO diaryDTO) {
+        Secret secret = diaryDTO.isCheck() ? Secret.PRIVATE : Secret.PUBLIC;
+        String message = diaryDTO.isCheck() ? "비공개 설정되었습니다." : "공개 설정되었습니다.";
+
+        if (!postDAO.isActivePost(diaryDTO.getPostId())) {
+            throw new PostNotFoundException("이미 삭제된 게시글입니다.");
+        }
+        diaryDAO.updateSecret(diaryDTO.getPostId(), secret);
+        return message;
+    }
+
     public String getPath() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");

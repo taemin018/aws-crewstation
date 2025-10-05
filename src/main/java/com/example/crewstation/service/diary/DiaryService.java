@@ -7,14 +7,12 @@ import com.example.crewstation.domain.diary.country.DiaryCountryVO;
 import com.example.crewstation.domain.diary.diary.path.DiaryDiaryPathVO;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
 import com.example.crewstation.domain.post.file.tag.PostFileTagVO;
-import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
-import com.example.crewstation.dto.diary.DiaryDTO;
-import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
-import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
+import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
+import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.repository.diary.diary.path.DiaryDiaryPathDAO;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
@@ -52,6 +50,12 @@ public interface DiaryService {
 
 //    다이어리 작성
     public void write(PostDiaryDetailTagDTO request);
+
+    // 다이어리 상세 내용 가져오기
+    public DiaryDetailDTO getDiary(Long postId,CustomUserDetails customUserDetails);
+
+//    다이어리 공개 비공개 변경
+    public String changeSecret(DiaryDTO diaryDTO);
 
     default DiaryVO toDiaryVO(PostDTO postDTO) {
         return DiaryVO.builder()

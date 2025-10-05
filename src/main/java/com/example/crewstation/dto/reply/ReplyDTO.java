@@ -16,6 +16,10 @@ public class ReplyDTO {
     private String replyContent;
     private Long diaryId;
     private Long memberId;
+    private String filePath;
+    private String socialImgUrl;
     private String createdDatetime;
+    private String relativeDate;
     private String updatedDatetime;
+    private boolean writer;
 }

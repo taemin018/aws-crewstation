@@ -3,10 +3,20 @@
 <mapper namespace="com.example.crewstation.mapper.reply.ReplyMapper">
 
     <select id="selectAllByPostId">
-        select id, reply_content, diary_id, member_id, created_datetime, updated_datetime
-        from tbl_reply
+        select tr.id,
+               reply_content,
+               diary_id,
+               tr.member_id,
+               tr.created_datetime,
+               tr.updated_datetime,
+               tm.social_img_url,
+               vfmf.file_path
+        from tbl_member tm
+                 join tbl_reply tr on tm.id = tr.member_id and tr.reply_status = 'active'
+                 left join view_file_member_file vfmf on vfmf.member_id = tm.id and tm.member_status = 'active'
         where diary_id = #{postId}
-        limit #{crieria.count} offset #{criteria.offset}
+        order by tr.id desc
+        limit #{criteria.count} offset #{criteria.offset}
     </select>
 
     <select id="selectAllCountByPostId">

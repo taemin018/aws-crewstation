@@ -11,3 +11,7 @@ create table tbl_reply
     constraint fk_reply_diary foreign key (diary_id)
         references tbl_diary (post_id)
 );
+
+
+ALTER TABLE tbl_reply
+    ADD COLUMN reply_status status NOT NULL DEFAULT 'active';

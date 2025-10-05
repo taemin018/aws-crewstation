@@ -968,7 +968,7 @@ input, textarea, select {
 }
 
 .number-button.active {
-    margin: 0px 10px 0px 0px;
+    margin: 0px 10px 0px 10px;
     border: none;
     background: none #647FBC;
     font-size: 14px;
@@ -994,7 +994,7 @@ input, textarea, select {
 .number-button {
     background-color: rgb(247, 249, 250);
     display: inline-block;
-    margin: 0px 10px 0px 0px;
+    margin: 0px 10px 0px 10px;
     border: none;
     background: none;
     height: 32px;
@@ -1623,4 +1623,196 @@ input, textarea, select {
     font-size: 12px;
     line-height: 1.4;
     white-space: nowrap;
+
   }
+
+div.country-wrap{
+    display: flex;
+    gap: 11px;
+}
+
+div#confirmReportModal{
+    z-index: 1500;
+    align-items: center;
+    justify-content: center;
+}
+div.modal-content{
+    position: fixed;
+}
+div.modify-wrap{
+    position: relative;
+}
+div.modify-wrap img{
+    width: 20px;
+    height: 20px;
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+div.modify-container{
+    display: none;
+    gap: 19px;
+    width: 92px;
+    z-index: 100;
+    height: 70px;
+    position: absolute;
+    /* background: blue; */
+    right: -5px;
+    top: 32px;
+    flex-direction: column;
+    align-content: flex-start;
+    border: 1px solid rgba(0, 0, 0, .06);
+    border-radius: 6px;
+    background: #FFF;
+    box-shadow: 0 1px 12px 0 rgba(0, 0, 0, .06);
+    justify-content: center;
+    padding: 10px;
+}
+
+.confirm-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.confirm-btn.yes {
+    background-color: #647FBC;
+    color: #fff;
+}
+
+.confirm-btn.no {
+    background-color: #ddd;
+    color: #333;
+}
+div.modal-content{
+    position: fixed;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    width: 300px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+/* 라벨 왼쪽 정렬 */
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0px;
+    text-align: left;
+}
+
+/* 인풋 */
+.form-group input {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.required-dot {
+    color: red;
+    margin-left: 2px;
+    font-size: 14px;
+}
+.target{
+    cursor: pointer;
+}
+
+.prev-next-button {
+    margin: 0px 10px 0px 0px;
+    background: none rgb(247, 249, 250);
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(194, 200, 204);
+    border: 1px solid rgb(234, 237, 239);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.prev-next-button.active {
+    margin: 0px;
+    background: none;
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(47, 52, 56);
+    border: 1px solid rgb(230, 230, 230);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.prev-next-button.active:hover {
+    background-color: rgb(247, 249, 250);;
+}

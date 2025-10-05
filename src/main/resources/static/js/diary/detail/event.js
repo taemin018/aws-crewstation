@@ -5,8 +5,15 @@ const secretToggle = document.querySelector(".secret-toggle");
 const lockIcon = document.querySelector(".lock");
 const unlockIcon = document.querySelector(".unlock");
 
-secretToggle.addEventListener("click", (e) => {
+secretToggle.addEventListener("click", async (e) => {
     secretCheckbox.checked = secretToggle.classList.toggle("active");
+    console.log(secretCheckbox.checked)
+    console.log(document.getElementById("postId").dataset.post);
+    const {message,status}= await diaryDetailService.changeSecret({"check":secretCheckbox.checked,"postId":+document.getElementById("postId").dataset.post});
+    toastModal(message);
+    if(status ===404){
+        location.href="/diaries";
+    }
     if (secretCheckbox.checked) {
         lockIcon.classList.remove("hidden");
         unlockIcon.classList.add("hidden");
@@ -14,6 +21,7 @@ secretToggle.addEventListener("click", (e) => {
         lockIcon.classList.add("hidden");
         unlockIcon.classList.remove("hidden");
     }
+
 });
 
 // 이미지 팝업
@@ -26,6 +34,7 @@ const closeBtn = document.querySelector(".img-close-button");
 
 targets.forEach((target, i) => {
     target.addEventListener("click", () => {
+        console.log("클릭이벤트")
         const imgSrc = images[i].getAttribute("src");
         modalImg.setAttribute("src", imgSrc);
         modal.style.display = "flex";
@@ -87,10 +96,13 @@ reportOptions.forEach((reportOption) => {
 // 신고하기 창 제출 버튼
 
 const submitReportBtn = document.querySelector(".report-button-send");
-
+const confirmReportYes = document.getElementById("confirmReportYes");
+const confirmReportModal = document.getElementById("confirmReportModal");
+const confirmReportNo = document.getElementById("confirmReportNo");
 submitReportBtn.addEventListener("click", (e) => {
-    reportModal.classList.remove("active");
-    selectFirstReportRadio();
+    // reportModal.classList.remove("active");
+    confirmReportModal.style.display = "flex";
+
 });
 
 // 신고하기 창 제출/끄기 후 첫번째 라디오 버튼 선택
@@ -106,6 +118,44 @@ function selectFirstReportRadio() {
             if (btn) btn.checked = false;
         }
     });
+}
+
+confirmReportYes.addEventListener("click", async (e) => {
+    const reportContent = document.querySelector("input[name='reason']:checked").value;
+    console.log(reportContent);
+    // const memberId = document.getElementById("memberId").value;
+    const postId = document.getElementById("postId").dataset.post;
+    const {message, status} = await diaryDetailService.report({
+        reportContent: reportContent,
+        postId: postId
+    })
+    console.log(message)
+    console.log(status)
+    confirmReportModal.style.display = "none";
+    document.getElementById("reportModal").style.display = "none";
+    toastModal(message);
+    if (status === 404) {
+        location.href = "/diaries"
+    }
+});
+
+confirmReportNo.addEventListener("click", () => {
+    confirmReportModal.style.display = "none";
+});
+
+
+function toastModal(text) {
+    toast.style.display = "block";
+    toast.classList.remove("hide");
+    toastText.textContent = text;
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 500);
+    }, 3000);
 }
 
 // 댓글 입력 버튼 활성화/비활성화
@@ -223,10 +273,45 @@ numberButtons.forEach((numberButton) => {
 // 게시물 좋아요 버튼
 
 const likeButton = document.querySelector(".sticky-like-button");
-
-likeButton.addEventListener("click", (e) => {
+// const toast = document.querySelector("div.toast");
+const toastText = document.querySelector("p.toast-text");
+let likeClickable = true; // 광클 방지용 플래그
+likeButton.addEventListener("click", async (e) => {
+    if(!likeClickable) return;
+    likeClickable = false;
     const likeIcon = likeButton.querySelector(".like-before");
-    likeIcon.classList.toggle("active");
+    const span = document.querySelector(".like-total");
+
+    const {message,status} = await diaryDetailService.like({postId: Number(likeButton.dataset.post)}, likeIcon.classList.contains("active"))
+    toast.style.display = "block";
+    toastText.textContent = message;
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+
+    if(status === 200){
+        const likeCount = Number(span.textContent);
+        if (likeIcon.classList.contains("active")) {
+            span.textContent = likeCount -1;
+        } else {
+            span.textContent = likeCount + 1;
+        }
+        likeIcon.classList.toggle("active");
+    }
+    // 토스트 애니메이션 처리
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+
+        setTimeout(() => {
+            toast.style.display = "none";
+            if(status === 404){
+                console.log(message)
+                location.reload();
+            }
+            likeClickable = true;
+        }, 1000);
+    }, 2000);
+
 });
 
 // 댓글로가기 버튼
@@ -244,9 +329,11 @@ const shareButton = document.querySelector(".sticky-share-button");
 const toast = document.querySelector(".toast");
 
 shareButton.addEventListener("click", (e) => {
+    if(!likeClickable) return
     toast.style.display = "block";
     toast.classList.remove("hide");
     toast.classList.add("show");
+    toastText.textContent ="클립보드에 복사되었습니다."
     setTimeout(() => {
         toast.classList.remove("show");
         toast.classList.add("hide");
@@ -267,3 +354,5 @@ function clip() {
     document.execCommand("copy"); // 선택된 내용을 클립보드에 복사합니다.
     document.body.removeChild(textarea); // 텍스트 영역을 제거합니다.
 }
+
+

@@ -1,5 +1,6 @@
 package com.example.crewstation.repository.diary;
 
+import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.domain.diary.DiaryVO;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
@@ -79,5 +80,10 @@ public class DiaryDAO {
 //    다이어리 상세 가져오기
     public Optional<DiaryDTO> findByPostId(Long postId) {
         return diaryMapper.selectByPostId(postId);
+    }
+
+    //  다이어리 공개/비공개 변경
+    public void updateSecret(Long postId, Secret secret){
+        diaryMapper.updateSecret(postId,secret);
     }
 }

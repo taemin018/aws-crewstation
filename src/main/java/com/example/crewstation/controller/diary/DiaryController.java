@@ -1,6 +1,7 @@
 package com.example.crewstation.controller.diary;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.dto.diary.DiaryDetailDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.service.diary.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -39,5 +37,14 @@ public class DiaryController {
         diaryService.write(request);
         log.info("{}",request);
         return new RedirectView("/diaries");
+    }
+
+
+    @GetMapping("detail/{postId}")
+    public String detail(@PathVariable Long postId, Model model,@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        DiaryDetailDTO diary = diaryService.getDiary(postId, customUserDetails);
+        model.addAttribute("diary",diary);
+
+        return "diary/detail";
     }
 }

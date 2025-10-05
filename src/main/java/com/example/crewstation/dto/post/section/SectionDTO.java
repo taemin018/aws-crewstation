@@ -1,11 +1,14 @@
 package com.example.crewstation.dto.post.section;
 
 import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @Getter
@@ -22,6 +25,7 @@ public class SectionDTO {
     private String fileName;
     private String filePath;
     private String fileSize;
+    private List<PostFileTagDTO> tags;
     private String createdDatetime;
     private String updatedDatetime;
 }

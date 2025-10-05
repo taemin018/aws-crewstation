@@ -43,4 +43,10 @@
         WHERE ps.post_id = #{postId}
           AND vf.image_type = 'main'
     </select>
+
+    <update id="updateReadCount">
+        update tbl_post
+        set post_read_count = post_read_count + 1
+        where id = #{postId}
+    </update>
 </mapper>

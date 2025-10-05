@@ -42,4 +42,9 @@ public class PostDAO {
     public PostDTO findPostMainImage(Long postId) {
         return postMapper.selectPostMainImageById(postId);
     }
+
+    //   게시글 조회수
+    public void updateReadCount(Long postId){
+        postMapper.updateReadCount(postId);
+    }
 }
