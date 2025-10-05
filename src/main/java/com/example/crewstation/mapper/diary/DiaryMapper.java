@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface DiaryMapper {
@@ -50,5 +51,11 @@ public interface DiaryMapper {
 
 //   다이어리 목록 검색 개수
     public int searchDiaryCount(@Param("Search") Search search);
+
+//  다이어리 저장
+    public void insert(DiaryVO diaryVO);
+
+//  다이어리 상세
+    public Optional<DiaryDTO> selectByPostId(Long postId);
 
 }

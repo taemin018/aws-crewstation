@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -63,6 +64,9 @@ public class MemberDAO {
 //    별점 등록 시 케미지수 업데이트
     public void updateChemistryScore(Long sellerId, int rating) {
         memberMapper.updateChemistryScore(sellerId, rating);
+    //    회원 검색
+    public List<MemberDTO> findSearchMember(String search){
+        return memberMapper.selectSearchMember(search);
     }
 
 }

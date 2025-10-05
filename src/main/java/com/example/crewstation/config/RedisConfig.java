@@ -21,6 +21,7 @@ import org.springframework.session.config.SessionRepositoryCustomizer;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 
 import java.time.Duration;
+import java.util.Map;
 
 @Configuration
 @EnableCaching
@@ -145,6 +146,20 @@ public class RedisConfig {
                 new Jackson2JsonRedisSerializer<>(BannerDTO.class);
 
         template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, Map<String,Long>> countryRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Map<String,Long>> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        // Key는 문자열
+        template.setKeySerializer(new StringRedisSerializer());
+        // Value는 Map<String, Long> 전용 직렬화
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
         template.setValueSerializer(serializer);
 
         template.afterPropertiesSet();

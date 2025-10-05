@@ -16,7 +16,7 @@ public interface PostMapper {
     public boolean existsActivePost(Long postId);
 
 //    게시글 작성
-    public void insert(PurchaseDTO purchaseDTO);
+    public void insert(Object object);
 //    게시글 수정
     public void update(PostVO postVO);
 

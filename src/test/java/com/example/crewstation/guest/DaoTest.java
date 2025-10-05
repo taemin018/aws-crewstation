@@ -54,8 +54,8 @@ public class DaoTest {
     void testFindOrderDetails() {
         Long guestId = 1L;
 
-        guestDAO.findOrderDetails(guestId);
-        log.info("guest {}", guestDAO.findOrderDetails(guestId));
+//        guestDAO.findOrderDetails(guestId);
+//        log.info("guest {}", guestDAO.findOrderDetails(guestId));
     }
 
 

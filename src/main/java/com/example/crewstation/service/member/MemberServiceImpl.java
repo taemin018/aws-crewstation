@@ -25,8 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -195,6 +197,19 @@ public class MemberServiceImpl implements MemberService {
         String newPassword = passwordEncoder.encode(memberPassword);
 
         memberDAO.updatePassword(memberEmail, newPassword);
+    }
+
+    @Override
+    public List<MemberDTO> searchMember(String search) {
+        List<MemberDTO> searchMember = memberDAO.findSearchMember(search);
+        searchMember.forEach(member->{
+            if(member.getFilePath() != null) {
+                member.setFilePath(s3Service.getPreSignedUrl(member.getFilePath(), Duration.ofMinutes(5)));
+            }
+
+        });
+//        return memberDAO.findSearchMember(search);
+        return searchMember;
     }
 
     public Optional<MemberProfileDTO> getMember(Long memberId) {

@@ -15,7 +15,9 @@ public interface SectionMapper {
     public List<SectionDTO> selectSectionsByPostId(Long postId);
 
 //  섹션 작성하기
-    public void insert(PurchaseDTO purchaseDTO);
+    public void insert(Object Object);
+    //  다이어리 섹션 작성하기
+    public void insertDiary(Object Object);
 //  섹션 수정하기
     public void update(PostSectionVO postSectionVO);
 

@@ -1,5 +1,6 @@
 package com.example.crewstation.repository.diary;
 
+import com.example.crewstation.domain.diary.DiaryVO;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryDTO;
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -68,5 +70,14 @@ public class DiaryDAO {
 //    다이어리 검색 목록 개수
     public int searchDiaryCount(@Param("Search") Search search){
         return diaryMapper.searchDiaryCount(search);
+    }
+
+    //  다이어리 저장
+    public void save(DiaryVO diaryVO){
+        diaryMapper.insert(diaryVO);
+    }
+//    다이어리 상세 가져오기
+    public Optional<DiaryDTO> findByPostId(Long postId) {
+        return diaryMapper.selectByPostId(postId);
     }
 }

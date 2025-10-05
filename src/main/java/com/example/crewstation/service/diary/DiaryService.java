@@ -2,15 +2,27 @@ package com.example.crewstation.service.diary;
 
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.domain.diary.DiaryVO;
+import com.example.crewstation.domain.diary.country.DiaryCountryVO;
+import com.example.crewstation.domain.diary.diary.path.DiaryDiaryPathVO;
+import com.example.crewstation.domain.file.section.FilePostSectionVO;
+import com.example.crewstation.domain.post.file.tag.PostFileTagVO;
 import com.example.crewstation.dto.diary.DiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
+import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
+import com.example.crewstation.dto.post.PostDTO;
+import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
+import com.example.crewstation.repository.diary.diary.path.DiaryDiaryPathDAO;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface DiaryService {
 
@@ -37,4 +49,48 @@ public interface DiaryService {
 
 //    다이어리 이미지 개수
     public DiaryCriteriaDTO countDiaryImg(Search search, CustomUserDetails customUserDetails);
+
+//    다이어리 작성
+    public void write(PostDiaryDetailTagDTO request);
+
+    default DiaryVO toDiaryVO(PostDTO postDTO) {
+        return DiaryVO.builder()
+                .diarySecret(postDTO.getSecret())
+                .postId(postDTO.getPostId())
+                .build();
+    }
+    default List<DiaryCountryVO> toDiaryCountryVO(PostDiaryDetailTagDTO postDiaryDetailTagDTO) {
+        return postDiaryDetailTagDTO.getCountryIds().stream()
+                .map(countryId -> DiaryCountryVO.builder()
+                        .countryId(countryId)
+                        .postId(postDiaryDetailTagDTO.getPostId())
+                        .build())
+                .collect(Collectors.toList());
+    }
+    default DiaryDiaryPathVO toDiaryDiaryPathVO(PostDiaryDetailTagDTO postDiaryDetailTagDTO) {
+        return DiaryDiaryPathVO.builder()
+                .diaryPathId(postDiaryDetailTagDTO.getDiaryPathId())
+                .postId(postDiaryDetailTagDTO.getPostId())
+                .build();
+    }
+    default PostFileTagVO toPostFileTagVO(PostFileTagDTO postFileTagDTO) {
+        return PostFileTagVO.builder()
+                .tagTop(postFileTagDTO.getTagTop())
+                .tagLeft(postFileTagDTO.getTagTop())
+                .postSectionFileId(postFileTagDTO.getPostSectionFileId())
+                .memberId(postFileTagDTO.getMemberId())
+                .createdDatetime(postFileTagDTO.getCreatedDatetime())
+                .updatedDatetime(postFileTagDTO.getUpdatedDatetime())
+                .build();
+    }
+
+    default FilePostSectionVO toSectionFileVO(FilePostSectionDTO sectionFileDTO) {
+        return FilePostSectionVO.builder()
+                .fileId(sectionFileDTO.getFileId())
+                .postSectionId(sectionFileDTO.getPostSectionId())
+                .imageType(sectionFileDTO.getImageType())
+                .createdDatetime(sectionFileDTO.getCreateDatetime())
+                .updatedDatetime(sectionFileDTO.getUpdateDatetime())
+                .build();
+    }
 }

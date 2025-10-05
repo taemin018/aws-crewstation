@@ -65,7 +65,8 @@ select id,
        updated_datetime,
        file_id,
        post_section_id,
-       image_type
+       image_type,
+       file_size
 from tbl_file tf
          join tbl_post_section_file tpsf on tf.id = tpsf.file_id
     );
@@ -126,8 +127,7 @@ select id,
        updated_datetime,
        diary_secret,
        diary_like_count,
-       diary_reply_count,
-       diary_country_path_id
+       diary_reply_count
 from tbl_post tp
          join tbl_diary td on tp.id = td.post_id
     );

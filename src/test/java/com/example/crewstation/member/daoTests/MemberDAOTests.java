@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @SpringBootTest
 @Slf4j
 public class MemberDAOTests {
@@ -71,5 +73,11 @@ public class MemberDAOTests {
     @Transactional
     public void passwordUpdateTest() {
         memberDAO.updatePassword("test@gmail.com", "1234");
+    }
+
+    @Test
+    public void testfindSearchMember() {
+        List<MemberDTO> test = memberDAO.findSearchMember("test");
+        test.stream().map(MemberDTO::toString).forEach(log::info);
     }
 }

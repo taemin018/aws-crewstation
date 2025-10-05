@@ -1,6 +1,7 @@
 package com.example.crewstation.service.purchase;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
+import com.example.crewstation.aop.aspect.annotation.LogStatus;
 import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
@@ -100,8 +101,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     public PurchaseDTO getPurchase(Long id) {
         // 캐시 먼저 확인
-        log.info(":::::::::::::::{}",purchaseRedisTemplate.opsForValue().get("purchase_" + id));
-            PurchaseDTO cached = purchaseRedisTemplate.opsForValue().get("purchase_" + id);
+        log.info(":::::::::::::::{}",purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + id));
+            PurchaseDTO cached = purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + id);
         if (cached != null) {
             // 트랜잭션 시작하면서 조회수만 증가
             List<SectionDTO> sections = sectionDAO.findSectionsByPostId(cached.getPostId());
@@ -124,7 +125,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @LogReturnStatus
+    @LogStatus
     public void write(PurchaseDTO purchaseDTO, List<MultipartFile> files) {
         FileDTO fileDTO = new FileDTO();
         FilePostSectionDTO sectionFileDTO = new FilePostSectionDTO();
