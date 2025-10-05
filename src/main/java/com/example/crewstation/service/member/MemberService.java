@@ -11,6 +11,7 @@ import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
@@ -37,6 +38,8 @@ public interface MemberService {
 
 //  별점 등록 시 상태 및 케미지수 업데이트
     public void submitReview(Long sellerId, Long purchaseId, int rating);
+//  회원 검색
+    public List<MemberDTO> searchMember(String search);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

@@ -78,4 +78,16 @@
             updated_datetime = NOW()
         WHERE id = #{sellerId}
     </update>
+
+<!-- 회원 검색-->
+    <select id="selectSearchMember">
+        select tm.id as id,
+               tm.member_name,
+               tm.member_email,
+               tm.social_img_url,
+               vfmf.file_path
+        from tbl_member tm left outer join view_file_member_file vfmf on tm.id = vfmf.member_id and member_status = 'active' and member_role = 'member'
+        where tm.member_email like '%' || #{search} || '%'
+        or tm.member_name like '%' || #{search} || '%'
+    </select>
 </mapper>

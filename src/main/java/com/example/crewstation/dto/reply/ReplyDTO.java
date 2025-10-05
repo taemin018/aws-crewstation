@@ -1,24 +1,21 @@
-package com.example.crewstation.dto.file.tag;
+package com.example.crewstation.dto.reply;
 
-import com.example.crewstation.common.enumeration.Status;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(of="id")
-public class PostFileTagDTO {
+public class ReplyDTO {
     private Long id;
-    private float tagLeft;
-    private float tagRight;
+    private String replyContent;
+    private Long diaryId;
     private Long memberId;
-    private Long postSectionFileId;
     private String createdDatetime;
     private String updatedDatetime;
 }

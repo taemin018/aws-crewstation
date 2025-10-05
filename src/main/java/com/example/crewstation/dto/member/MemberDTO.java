@@ -36,7 +36,7 @@ public class MemberDTO {
     private AddressDTO addressDTO;
     private MemberFileDTO memberFileDTO;
     private FileDTO fileDTO;
-
+    private String filePath;
     public MemberRole getMemberRole() {
         return memberRole != null ? memberRole : MemberRole.MEMBER;
     }

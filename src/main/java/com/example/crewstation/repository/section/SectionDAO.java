@@ -22,8 +22,12 @@ public class SectionDAO {
         return sectionMapper.selectSectionsByPostId(postId);
     }
 //    섹션 작성하기
-    public void save(PurchaseDTO purchaseDTO) {
-        sectionMapper.insert(purchaseDTO);
+    public void save(Object Object) {
+        sectionMapper.insert(Object);
+    }
+// 다이어리 섹션 저장하기
+    public void saveDiary(Object Object){
+        sectionMapper.insertDiary(Object);
     }
 
     //  섹션 수정하기

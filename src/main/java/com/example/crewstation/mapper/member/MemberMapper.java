@@ -6,6 +6,7 @@ import com.example.crewstation.dto.member.MemberProfileDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -39,6 +40,8 @@ public interface MemberMapper {
 
 //   별점 등록 시 케미지수 업데이트
     public void updateChemistryScore(@Param("sellerId") Long sellerId, @Param("rating") int rating);
+//    회원 검색
+    public List<MemberDTO> selectSearchMember(String search);
 }
 
 

@@ -10,3 +10,11 @@ create table tbl_diary
     constraint fk_diary_post foreign key (post_id)
         references tbl_post (id)
 );
+
+ALTER TABLE tbl_diary
+    DROP CONSTRAINT fk_diary_diary_country_path;
+
+
+ALTER TABLE tbl_diary
+    DROP COLUMN diary_country_path_id;
+
