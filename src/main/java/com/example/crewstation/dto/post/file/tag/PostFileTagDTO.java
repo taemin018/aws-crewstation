@@ -16,6 +16,9 @@ public class PostFileTagDTO {
     private float tagLeft;
     private float tagTop;
     private Long memberId;
+    private String filePath;
+    private String socialImgUrl;
+    private String memberName;
     private Long postSectionFileId;
     private String createdDatetime;
     private String updatedDatetime;

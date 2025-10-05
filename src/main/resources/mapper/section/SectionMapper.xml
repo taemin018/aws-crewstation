@@ -6,7 +6,7 @@
                post_id,
                file_id,
                post_section_id,
-               image_type,
+               COALESCE(image_type, 'sub') as image_type,
                file_origin_name,
                file_path,
                file_name,

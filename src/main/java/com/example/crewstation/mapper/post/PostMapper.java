@@ -26,4 +26,7 @@ public interface PostMapper {
 //  게시글 대표이미지 조회
     public PostDTO selectPostMainImageById(Long postId);
 
+//   게시글 조회수
+    public void updateReadCount(Long postId);
+
 }

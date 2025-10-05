@@ -1,12 +1,15 @@
 package com.example.crewstation.service.diary;
 
+import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
 import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.common.exception.DiaryNotFoundException;
 import com.example.crewstation.domain.crew.CrewDiaryVO;
 import com.example.crewstation.domain.diary.country.DiaryCountryVO;
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
+import com.example.crewstation.dto.country.CountryDTO;
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
@@ -14,6 +17,7 @@ import com.example.crewstation.dto.file.tag.ImageDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
+import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.mapper.crew.diary.CrewDiaryMapper;
 import com.example.crewstation.repository.crew.diary.CrewDiaryDAO;
 import com.example.crewstation.repository.diary.DiaryDAO;
@@ -322,6 +326,43 @@ public class DiaryServiceImpl implements DiaryService {
         });
 
 
+    }
+
+    @Override
+    @LogReturnStatus
+    @Transactional(rollbackFor = Exception.class)
+    public DiaryDetailDTO getDiary(Long postId,CustomUserDetails customUserDetails) {
+        DiaryDetailDTO diaryDetailDTO = new DiaryDetailDTO();
+        postDAO.updateReadCount(postId);
+        List<CountryDTO> countries = diaryCountryDAO.findCountryByPostId(postId);
+        Optional<DiaryDTO> byPostId = diaryDAO.findByPostId(postId);
+        List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
+        byPostId.ifPresent(diaryDTO ->{
+            diaryDTO.setMemberFilePath(s3Service.getPreSignedUrl(diaryDTO.getMemberFilePath(),Duration.ofMinutes(5)));
+            diaryDTO.setRelativeDate(DateUtils.toRelativeTime(diaryDTO.getCreatedDatetime()));
+            if(customUserDetails != null) {
+                diaryDTO.setUserId(Objects.equals(customUserDetails.getId(), diaryDTO.getMemberId()) ?  customUserDetails.getId() : null );
+            }else{
+                diaryDTO.setUserId(1L);
+            }
+        });
+        diaryDetailDTO.setCountries(countries);
+        sections.forEach(section -> {
+            log.info("{}",section.getFileId());
+            List<PostFileTagDTO> tags = postFileTagDAO.findByFileId(section.getFileId());
+            log.info("{}:::::::::::::::::::::::::",tags);
+            section.setTags(tags);
+            if(section.getFilePath() != null){
+                section.setFilePath(s3Service.getPreSignedUrl(section.getFilePath(),Duration.ofMinutes(5)));
+            }
+            tags.forEach((tag)->{
+                tag.setFilePath(s3Service.getPreSignedUrl(tag.getFilePath(),Duration.ofMinutes(5)));
+            });
+
+        });
+        diaryDetailDTO.setDiary(byPostId.orElseThrow(DiaryNotFoundException::new));
+        diaryDetailDTO.setSections(sections);
+        return diaryDetailDTO;
     }
     public String getPath() {
         LocalDate today = LocalDate.now();

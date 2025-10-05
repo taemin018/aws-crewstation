@@ -5,4 +5,9 @@
         insert into tbl_diary_country(post_id, country_id)
         values (#{postId},#{countryId})
     </insert>
+    <select id="selectCountryByPostId">
+        select tc.id,country_name
+        from tbl_diary_country tdc join tbl_country tc on  tdc.country_id = tc.id
+        and tdc.post_id = #{postId}
+    </select>
 </mapper>

@@ -16,12 +16,14 @@ public class DiaryDTO {
     private int fileCount;
     private String diaryCountryPathId;
     private String postTitle;
+    private String postReadCount;
     private Long diaryId;
     private Long crewId;
     private String crewName;
     private String memberFilePath;
     private String diaryFilePath;
     private Long memberId;
+    private Long diaryPathId;
     private Long userId;
     private String socialImgUrl;
     private String memberName;
@@ -30,4 +32,5 @@ public class DiaryDTO {
     private String createdDatetime;
     private Long likeId;
     private String updatedDatetime;
+    private String relativeDate;
 }

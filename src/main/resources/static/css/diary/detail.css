@@ -1623,4 +1623,10 @@ input, textarea, select {
     font-size: 12px;
     line-height: 1.4;
     white-space: nowrap;
+
   }
+
+div.country-wrap{
+    display: flex;
+    gap: 11px;
+}

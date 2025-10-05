@@ -16,57 +16,58 @@ import java.util.Optional;
 @Slf4j
 public class MemberDAO {
     private final MemberMapper memberMapper;
+
     //    회원가입
-    public void save(MemberVO memberVO){
+    public void save(MemberVO memberVO) {
         memberMapper.insert(memberVO);
     }
 
-//  이메일 중복 검사
-    public boolean checkEmail(String memberEmail){
+    //  이메일 중복 검사
+    public boolean checkEmail(String memberEmail) {
         return memberMapper.selectEmail(memberEmail);
     }
 
     //    로그인
-    public Optional<MemberDTO> findForLogin(MemberDTO memberDTO){
+    public Optional<MemberDTO> findForLogin(MemberDTO memberDTO) {
         return memberMapper.selectForLogin(memberDTO);
     }
 
     //    이메일로 회원 조회
-    public Optional<MemberDTO> findByMemberEmail(String memberEmail){
+    public Optional<MemberDTO> findByMemberEmail(String memberEmail) {
         return memberMapper.selectMemberByMemberEmail(memberEmail);
     }
 
-//    sns 회원가입
-    public void saveSns(MemberVO memberVO){
-    memberMapper.insertSns(memberVO);
-}
+    //    sns 회원가입
+    public void saveSns(MemberVO memberVO) {
+        memberMapper.insertSns(memberVO);
+    }
 
-//    sns 회원 조회
-    public Optional<MemberDTO> findBySnsEmail(String snsEmail){
+    //    sns 회원 조회
+    public Optional<MemberDTO> findBySnsEmail(String snsEmail) {
         return memberMapper.selectMemberBySnsEmail(snsEmail);
     }
 
     //  게스트 추가
-    public void saveGuest(MemberDTO memberDTO){
+    public void saveGuest(MemberDTO memberDTO) {
         memberMapper.insertGuest(memberDTO);
     }
 
-//  멤버 프로필 조회
+    //  멤버 프로필 조회
     public Optional<MemberProfileDTO> selectProfileById(Long memberId) {
         return memberMapper.selectProfileById(memberId);
     }
 
-//    비밀번호 업데이트
+    //    비밀번호 업데이트
     public void updatePassword(String memberEmail, String memberPassword) {
         memberMapper.updatePassword(memberEmail, memberPassword);
     }
 
-//    별점 등록 시 케미지수 업데이트
+    //    별점 등록 시 케미지수 업데이트
     public void updateChemistryScore(Long sellerId, int rating) {
         memberMapper.updateChemistryScore(sellerId, rating);
+    }
     //    회원 검색
     public List<MemberDTO> findSearchMember(String search){
         return memberMapper.selectSearchMember(search);
     }
-
 }

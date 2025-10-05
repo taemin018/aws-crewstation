@@ -28,6 +28,10 @@ public class GlobalExceptionHandler {
     public RedirectView handlePurchaseNotFoundException(PurchaseNotFoundException e) {
         return new RedirectView("/gifts");
     }
+    @ExceptionHandler(DiaryNotFoundException.class)
+    public RedirectView handleDiaryNotFoundException(DiaryNotFoundException e) {
+        return new RedirectView("/diaries");
+    }
 
     @ExceptionHandler({MemberNotFoundException.class})
     public RedirectView handleMemberNotFoundException(MemberNotFoundException e){

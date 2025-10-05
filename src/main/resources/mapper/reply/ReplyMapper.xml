@@ -6,7 +6,7 @@
         select id, reply_content, diary_id, member_id, created_datetime, updated_datetime
         from tbl_reply
         where diary_id = #{postId}
-        limit #{crieria.count} offset #{criteria.offset}
+        limit #{criteria.count} offset #{criteria.offset}
     </select>
 
     <select id="selectAllCountByPostId">
