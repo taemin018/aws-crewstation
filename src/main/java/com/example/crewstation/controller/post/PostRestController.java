@@ -33,4 +33,15 @@ public class PostRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    @PostMapping("report/replies")
+    public ResponseEntity<String> reportReply(@RequestBody ReportDTO reportDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try{
+            reportDTO.setMemberId(1L);
+            postService.reportReply(reportDTO);
+            log.info(reportDTO.toString());
+            return ResponseEntity.ok().body("신고 완료되었습니다.");
+        }catch (PostNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

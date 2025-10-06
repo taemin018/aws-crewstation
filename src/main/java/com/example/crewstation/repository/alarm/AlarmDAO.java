@@ -26,4 +26,9 @@ public class AlarmDAO {
     public void deleteLikeAlarm(Long likeId){
         alarmMapper.deleteLikeAlarm(likeId);
     }
+
+    //   댓글 알람 추가
+    public void saveReplyAlarm(Long postId){
+        alarmMapper.insertReplyAlarm(postId);
+    }
 }

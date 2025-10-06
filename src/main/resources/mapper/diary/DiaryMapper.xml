@@ -236,4 +236,10 @@
         set diary_secret = #{secret}
         where post_id = #{postId}
     </update>
+
+    <update id="updateReplyCount">
+        update tbl_diary
+        set diary_reply_count = diary_reply_count + #{count}
+        where post_id = #{postId}
+    </update>
 </mapper>

@@ -2,6 +2,7 @@ package com.example.crewstation.service.reply;
 
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.domain.reply.ReplyVO;
 import com.example.crewstation.dto.reply.ReplyCriteriaDTO;
 import com.example.crewstation.dto.reply.ReplyDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,4 +15,21 @@ public interface ReplyService {
     public ReplyCriteriaDTO getReplies(int page,
                                        Long postId,
                                        CustomUserDetails customUserDetails);
+
+    public void write(ReplyDTO replyDTO, CustomUserDetails customUserDetails);
+
+    public void upate(ReplyDTO replyDTO);
+
+    public void delete(ReplyDTO replyDTO);
+
+    default ReplyVO toReplyVO(ReplyDTO replyDTO){
+        return ReplyVO.builder()
+                .id(replyDTO.getId())
+                .createdDatetime(replyDTO.getCreatedDatetime())
+                .updatedDatetime(replyDTO.getUpdatedDatetime())
+                .memberId(replyDTO.getMemberId())
+                .diaryId(replyDTO.getPostId())
+                .replyContent(replyDTO.getReplyContent())
+                .build();
+    }
 }

@@ -27,13 +27,13 @@ const replyLayout = (() => {
                 checkUser=``;
             }
             text += `
-                <div class="reply-item">
+                <div class="reply-item" data-id="${reply.id}">
                                     <div class="profile-image">
                                         <img src="${src}" class="reply-profile-img">
                                     </div>
                                     <div class="reply-content">
                                         <div class="reply-name">
-                                            <div class="name-text">crew1</div>
+                                            <div class="name-text">${reply.memberName}</div>
                                         </div>
                                         <div style="display: flex;">
                                             <div class="reply-content-text">${reply.replyContent}</div>

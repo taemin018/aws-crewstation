@@ -308,6 +308,8 @@ const resetBlock = (block) => {
     // block.querySelector(".content-del").style.display = "none";
     const split = block.id.split("_");
     block.id = split[0] + "_" + +split[1];
+    delete block.dataset.postsectionid;
+    delete block.dataset.fileid;
     show(block.querySelector(".dropzone"));
     hide(block.querySelector(".post-img-bottom"));
     hide(block.querySelector(".img-tag-container"));
@@ -386,6 +388,7 @@ const addPairWithFile = () => {
     if (!sampleBlock.querySelector(".img-add-container img")) {
         sampleBlock.querySelector(".content-del").style.display = "block";
     } else {
+        console.log("이거니?")
         sampleBlock.querySelector(".content-del").style.display = "none";
     }
     block = sampleBlock.cloneNode(true);
@@ -433,6 +436,11 @@ leftList?.addEventListener("click", (e) => {
     const li = del.closest(".post-sub-img:not(.add)");
     const idx = +li.dataset.idx;
     console.log(idx + "뭐냐 이거는 ");
+    if(li.dataset.fileid){
+        deleteImages.push(li.dataset.fileid);
+        deleteSections.push(li.dataset.postsectionid);
+    }
+
     //  0이고 길이도 0이야
     if (
         !idx &&
@@ -536,6 +544,10 @@ contentList?.addEventListener("click", (e) => {
     // 삭제(오른쪽)
     if (e.target.closest(".delete-img")) {
         const i = +idx;
+        if(block.dataset.fileid){
+            deleteImages.push(block.dataset.fileid);
+            deleteSections.push(block.dataset.postsectionid);
+        }
         fileBuffer.splice(i, 1);
         console.log(i);
         console.log(
@@ -601,6 +613,7 @@ contentList?.addEventListener("click", (e) => {
     // 이미지 클릭 → 편집 중일 때만 좌표 저장 + 모달
     const box = e.target.closest(".img-add-container");
     if (box && box.querySelector("img") && block.dataset.armed === "1") {
+        console.log("이게 왜 실행이될까")
         if (e.target.closest(".img-tag-container.tag")) {
             return;
         }
@@ -621,6 +634,7 @@ contentList?.addEventListener("click", (e) => {
         return;
     }
 
+     // 파란 + 클릭 → 모달
 });
 
 // 태그 모달
@@ -769,15 +783,15 @@ complteBtn.addEventListener("click", (e) => {
     );
     const imageCount = document.querySelectorAll(".dropzone[hidden]");
 
-    const crewInput = document.createElement("input");
-    crewInput.name = `crewId`;
-    crewInput.value = crew;
-    form.appendChild(crewInput);
-
-    const pathInput = document.createElement("input");
-    pathInput.name = `diaryPathId`;
-    pathInput.value = path;
-    form.appendChild(pathInput);
+    // const crewInput = document.createElement("input");
+    // crewInput.name = `crewId`;
+    // crewInput.value = crew;
+    // form.appendChild(crewInput);
+    //
+    // const pathInput = document.createElement("input");
+    // pathInput.name = `diaryPathId`;
+    // pathInput.value = path;
+    // form.appendChild(pathInput);
     if (!imageCount.length) {
         e.preventDefault();
         toastModal("이미지를 최소 한 장 추가해주세요.");
@@ -802,6 +816,7 @@ complteBtn.addEventListener("click", (e) => {
         return;
     }
     countries.forEach((country,countryIndex) => {
+        if(country.dataset.countryid) return;
         const countryInput = document.createElement("input");
         countryInput.name = `countries[${countryIndex}]`;
         countryInput.value = country.textContent;
@@ -907,8 +922,10 @@ secretToggle.addEventListener("click", (e) => {
 contentList?.addEventListener("dblclick", (e) => {
     if (e.target.closest(".img-tag-container.tag")) {
         console.log("더블클릭");
+        if(e.target.closest(".img-tag-container.tag").dataset.tagId){
+            deleteTags.push(e.target.closest(".img-tag-container.tag").dataset.tagId);
+        }
         e.target.closest(".img-tag-container.tag").remove();
-        return;
     }
 });
 
@@ -919,3 +936,28 @@ memberSearch.addEventListener("keydown",async (e)=>{
         await diaryWriteService.search(diaryWriteLayout.showList,memberSearch.value.trim());
     }
 })
+
+const countryTagWrap = document.querySelector("div.tag-list")
+countryTagWrap.addEventListener("click",(e)=>{
+    console.log(e.target);
+    if(e.target.closest(".tag-chip")){
+
+        if(e.target.closest(".tag-chip").dataset.countryId){
+            deleteCountries.push(e.target.closest(".tag-chip").dataset.countryId)
+        }
+        e.target.closest(".tag-chip").remove();
+    }
+})
+
+const deleteCountries = [];
+const deleteSections = [];
+const deleteImages = [];
+const deleteTags = [];
+//
+// setInterval(()=>{
+//     console.log(deleteCountries);
+//     console.log(deleteSections);
+//     console.log(deleteImages);
+//     console.log(deleteTags);
+//
+// },2000)

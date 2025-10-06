@@ -56,11 +56,11 @@ public class DiaryDAO {
     }
 
     //  다이어리 목록(다이어리 서비스쪽)
-    public List<DiaryDTO> findAllByKeyword(@Param("criteria") Criteria criteria, @Param("search") Search search){
+    public List<DiaryDTO> findAllByKeyword(Criteria criteria,Search search){
         return diaryMapper.selectAllByKeyword(criteria, search);
     }
     // 다이리 목록 개수(다이어리 서비스쪽)
-    public int findCountAllByKeyword(@Param("search") Search search){
+    public int findCountAllByKeyword( Search search){
         return diaryMapper.selectCountAllByKeyword(search);
     }
 
@@ -69,7 +69,7 @@ public class DiaryDAO {
     }
 
 //    다이어리 검색 목록 개수
-    public int searchDiaryCount(@Param("Search") Search search){
+    public int searchDiaryCount( Search search){
         return diaryMapper.searchDiaryCount(search);
     }
 
@@ -85,5 +85,10 @@ public class DiaryDAO {
     //  다이어리 공개/비공개 변경
     public void updateSecret(Long postId, Secret secret){
         diaryMapper.updateSecret(postId,secret);
+    }
+
+    //   댓글 개수 증가 / 감소
+    public void changeReplyCount(int count,Long postId){
+        diaryMapper.updateReplyCount(count,postId);
     }
 }
