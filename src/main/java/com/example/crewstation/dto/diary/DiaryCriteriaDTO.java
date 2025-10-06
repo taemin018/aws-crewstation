@@ -18,4 +18,5 @@ public class DiaryCriteriaDTO {
     private List<DiaryDTO> diaryDTOs;
     private Criteria criteria;
     private Search search;
+    private int totalCount;
 }

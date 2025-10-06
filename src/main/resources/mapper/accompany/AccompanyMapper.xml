@@ -2,12 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.accompany.AccompanyMapper">
     <sql id="accompanySearch">
+        <where>
             <if test="search.keyword != null and search.keyword != ''">
-                and (
-                vpp.purchase_country like '%' || #{search.keyword} || '%'
-                or vpp.post_title like '%' || #{search.keyword} || '%'
+                (
+                vpc.country_name LIKE '%' || #{search.keyword} || '%'
+                OR vpc.post_title  LIKE '%' || #{search.keyword} || '%'
                 )
             </if>
+        </where>
     </sql>
 
     <select id="getAccompanies">
@@ -78,10 +80,10 @@
         vfpsf.file_id          as fileId,
         c.crew_name            as crewName,
         (
-        select count(*)
-        from view_file_post_section_file vf
-        join tbl_post_section tps on vf.post_section_id = tps.id
-        where tps.post_id = vpc.post_id
+            select count(*)
+            from view_file_post_section_file vf
+            join tbl_post_section tps on vf.post_section_id = tps.id
+            where tps.post_id = vpc.post_id
         ) as fileCount
 
         from view_post_accompany_accompany_path_country vpc

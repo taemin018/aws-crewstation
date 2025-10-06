@@ -66,8 +66,12 @@ public class AccompanyServiceImpl implements AccompanyService {
         dto.setSearch(search);
 
         String orderType = search.getOrderType();
+        String orderBy = ORDER_TYPE_MAP.getOrDefault(
+                orderType == null ? "" : orderType,
+                "vpc.created_datetime desc"
+        );
         newSearch.setKeyword(search.getKeyword());
-        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType, "vpc.created_datetime desc"));
+        newSearch.setOrderType(orderBy);
 
         int totalCount = accompanyDAO.countAccompanies(newSearch);
 
@@ -78,10 +82,6 @@ public class AccompanyServiceImpl implements AccompanyService {
         accompanies.forEach(accompany -> {
             if (accompany.getFilePath() != null) {
                 accompany.setFilePath(s3Service.getPreSignedUrl(accompany.getFilePath(), Duration.ofMinutes(5)));
-            }
-            if (accompany.getCreatedDatetime() != null) {
-                String base = accompany.getCreatedDatetime().format(DT_FMT);
-                accompany.setRelativeCreated(DateUtils.toRelativeTime(base));
             }
         });
 

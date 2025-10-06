@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/search/**")
+@RequestMapping("/search")
 @RequiredArgsConstructor
 @Slf4j
 public class SearchController {
@@ -31,10 +31,12 @@ public class SearchController {
     private final GiftService giftService;
     private final AccompanyService accompanyService;
 
-    @GetMapping()
+    @GetMapping("/total")
     public String getSearch(Search search,
                             @AuthenticationPrincipal CustomUserDetails customUserDetails,
                             Model model) {
+
+        log.info("통합 검색 요청 - keyword: {}", search.getKeyword());
 
         CrewCriteriaDTO crews = crewService.getSearchCrews(search);
         DiaryCriteriaDTO diaries = diaryService.countDiaryImg(search,customUserDetails);
@@ -42,6 +44,7 @@ public class SearchController {
         GiftCriteriaDTO gifts = giftService.getGifts(search,customUserDetails);
 
 
+        model.addAttribute("keyword", search.getKeyword());
         model.addAttribute("crews", crews);
         model.addAttribute("diaries", diaries);
         model.addAttribute("accompanies", accompanies);
@@ -49,7 +52,7 @@ public class SearchController {
 
 
 
-        return "search/list";
+        return "main-page/total-search";
 
 
     }
