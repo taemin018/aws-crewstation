@@ -204,14 +204,18 @@ public class DiaryServiceImpl implements DiaryService {
         int page = search.getPage();
         dto.setSearch(search);
 
-        String category = search.getCategory();
-        String orderType = search.getOrderType();
+        String category = (search.getCategory() == null) ? "" : search.getCategory();
+        String orderType = (search.getOrderType() == null) ? "" : search.getOrderType();
+
+        String orderBy = ORDER_TYPE_MAP.getOrDefault(orderType, "post_id");
+        String categoryValue = CATEGORY_MAP.getOrDefault(category, "");
 
         newSearch.setKeyword(search.getKeyword());
-        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType, "post_id"));
-        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category, ""));
+        newSearch.setOrderType(orderBy);
+        newSearch.setCategory(categoryValue);
 
-        Criteria criteria = new Criteria(page, diaryDAO.findCountAllByKeyword(newSearch), 4, 4);
+        int totalCount = diaryDAO.findCountAllByKeyword(newSearch);
+        Criteria criteria = new Criteria(page, totalCount, 4, 4);
 
         List<DiaryDTO> diaries = diaryDAO.findAllByKeyword(criteria, newSearch);
         diaries.forEach(diary -> {
@@ -235,6 +239,10 @@ public class DiaryServiceImpl implements DiaryService {
         }
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
+        dto.setTotalCount(totalCount);
+
+
+
         return dto;
     }
 

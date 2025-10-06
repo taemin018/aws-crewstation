@@ -17,8 +17,8 @@ import java.util.List;
 public class AccompanyDTO {
     private Long postId;
     private String postTitle;
-    private LocalDateTime createdDatetime;
-    private LocalDateTime updatedDatetime;
+    private String createdDatetime;
+    private String updatedDatetime;
     private String accompanyStatus;
     private String accompanyAgeRange;
     private String countryStartDate;
@@ -39,6 +39,6 @@ public class AccompanyDTO {
     private String socialImgUrl;
     private String postContent;
     private int fileCount;
-    private String relativeCreated;
     private List<AccompanyPathDTO> accompanyPathDTO;
+    private String relativeDate;
 }

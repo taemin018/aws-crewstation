@@ -7,6 +7,7 @@ import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.repository.gift.GiftDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +30,11 @@ public class GiftServiceImpl implements GiftService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final GiftTransactionService giftTransactionService;
     private static final Map<String, String> ORDER_TYPE_MAP = Map.of(
-            "좋아요순", "purchase_product_count desc",
-            "최신순", "created_datetime desc"
+            "좋아요순", "vpp.purchase_product_count desc",
+            "최신순",   "vpp.created_datetime desc"
     );
     private static final Map<String, String> CATEGORY_MAP = Map.of(
-            "crew", "not null",   // 필요시 XML에 맞춰 사용
+            "crew", "not null",
             "individual", "null"
     );
 
@@ -74,8 +75,13 @@ public class GiftServiceImpl implements GiftService {
         String orderType = search.getOrderType();
 
         newSearch.setKeyword(search.getKeyword());
-        newSearch.setOrderType(ORDER_TYPE_MAP.getOrDefault(orderType, "created_datetime desc"));
-        newSearch.setCategory(CATEGORY_MAP.getOrDefault(category, ""));
+        String orderBy   = ORDER_TYPE_MAP.getOrDefault(orderType == null ? "" : orderType,
+                "vpp.created_datetime desc");
+        String categoryDb = CATEGORY_MAP.getOrDefault(category == null ? "" : category, "");
+
+        newSearch.setKeyword(search.getKeyword());
+        newSearch.setOrderType(orderBy);
+        newSearch.setCategory(categoryDb);
 
         int totalCount = giftDAO.countGifts(newSearch);
         Criteria criteria = new Criteria(page, totalCount, 4, 4);
@@ -86,6 +92,10 @@ public class GiftServiceImpl implements GiftService {
             if (gift.getFilePath() != null) {
                 gift.setFilePath(s3Service.getPreSignedUrl(gift.getFilePath(), Duration.ofMinutes(5)));
             }
+            if (gift.getCreatedDatetime() != null) {
+                gift.setRelativeDate(DateUtils.toRelativeTime(gift.getCreatedDatetime()));
+            }
+
         });
 
         criteria.setHasMore(gifts.size() > criteria.getRowCount());

@@ -1,9 +1,9 @@
 
 @import "https://assets.ohou.se/design-system/bbf3fca1e650ee6d.css";@import "https://assets.ohou.se/fonts/pretendard/v1.3.8/pretendardvariable-dynamic-subset.css";@font-face {
-                        font-family: OhouseIcon;
-                        src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot);
-                        src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot#iefix) format("embedded-opentype"),url(https://assets.ohou.se/design-system/d8923b386a66fd50.woff2) format("woff2"),url(https://assets.ohou.se/design-system/9e79341d6a2fe0d2.woff) format("woff"),url(https://assets.ohou.se/design-system/5355f736e6a7bc5b.ttf) format("truetype"),url(https://assets.ohou.se/design-system/3ba7913eab100858.svg#OhouseIcon) format("svg");
-                    }
+    font-family: OhouseIcon;
+    src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot);
+    src: url(https://assets.ohou.se/design-system/3298ed52addbc709.eot#iefix) format("embedded-opentype"),url(https://assets.ohou.se/design-system/d8923b386a66fd50.woff2) format("woff2"),url(https://assets.ohou.se/design-system/9e79341d6a2fe0d2.woff) format("woff"),url(https://assets.ohou.se/design-system/5355f736e6a7bc5b.ttf) format("truetype"),url(https://assets.ohou.se/design-system/3ba7913eab100858.svg#OhouseIcon) format("svg");
+}
 a {
     color: inherit;
     text-decoration: none;
@@ -136,7 +136,7 @@ button.more.btn{
     line-height: 20px;
     font-weight: 700;
     color: #647FBC;
-    cursor: pointer;    
+    cursor: pointer;
 }
 button.more.btn:hover{
     opacity: 0.5;
@@ -226,7 +226,7 @@ div.crew-detail-text-wrap ,div.diary-detail-text-wrap{
     display: flex;
     align-items: center;
 }
-span.crew-name, span.diary-name, span.together-name{ 
+span.crew-name, span.diary-name, span.together-name{
     overflow: hidden;
     display: inline-block;
     max-width: 100px;
@@ -835,7 +835,7 @@ div.together-category-post{
 }
 
 div.together-category-post.long{
-background-color: #647FBC;
+    background-color: #647FBC;
 }
 
 span.category-name{
@@ -975,7 +975,7 @@ div.marker{
     flex-direction: column;
     align-items: center;
     z-index: 2;
-    
+
 }
 div.trip-path {
     display: flex;
@@ -993,7 +993,7 @@ div.trip-path::before {
     content: "";
     position: absolute;
     top: 36%;
-    left: 0;   
+    left: 0;
     right: 0;
     height: 20px;
     background: #8ec5ff;
@@ -1008,7 +1008,7 @@ div.trip-path::after {
     content: "";
     position: absolute;
     top: 36%;
-    left: 10px;   
+    left: 10px;
     right: 10px;
     width: 91%;
     border: 1px dashed #FFFFFF;
@@ -1031,8 +1031,8 @@ div.marker-circle {
 }
 
 @keyframes motion {
-	0% {margin-top: 0px;} /* 처음 위치 */
-	100% {margin-top: 10px;} /* 마지막 위치 */
+    0% {margin-top: 0px;} /* 처음 위치 */
+    100% {margin-top: 10px;} /* 마지막 위치 */
 }
 
 div.marker-circle.last{
@@ -1049,8 +1049,8 @@ div.marker-circle.last{
     background-color: rgba(0, 0, 0, 0);
     z-index: 3;
     animation: motion 0.3s /* 속도 */
-               linear 0s   /* 처음부터 끝까지 일정 속도로 진행 */
-               infinite alternate; /* 무한 반복 */
+    linear 0s   /* 처음부터 끝까지 일정 속도로 진행 */
+    infinite alternate; /* 무한 반복 */
 }
 
 /* 여행 경로 부분 */
@@ -1183,10 +1183,10 @@ div.gift-extra-info{
 
 div.badge-list-container {
     display: block;
-    width: fit-content;    
+    width: fit-content;
     background: #647FBC;
     color: #fff;
-    padding: 4px 7px;  
+    padding: 4px 7px;
     border-radius: 4px;
     font-weight: 700;
     font-size: 13px;
@@ -1281,15 +1281,15 @@ div.chemistry-div{
 div.prduct-info-wrap{
     display: none;
     position: absolute;
-	background: #fff;
-    border: 1px solid #ddd;;    
+    background: #fff;
+    border: 1px solid #ddd;;
     color: #333;
     top: -132px;
     left: -96px;
     width: 230px;
     padding: 10px;
     white-space : normal;
-	border-radius: .4em;
+    border-radius: .4em;
 }
 
 
@@ -1308,7 +1308,7 @@ div.gift-detail-text-wrap {
 
 
 
-button.card-item-action-btn.like > svg.icon.active{ 
+button.card-item-action-btn.like > svg.icon.active{
     fill: #FF6E6E;
     stroke: #FF6E6E;
 }
@@ -1393,13 +1393,13 @@ div.crew-name.together-category-post.long{
 
 div.card-writer-link {
     display: flex;
-    align-items: center; 
-    gap: 8px;           
+    align-items: center;
+    gap: 8px;
 }
 div.writer-info {
     display: flex;
-    flex-direction: column; 
-    align-items: flex-start; 
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 span.writer-name {
@@ -1668,7 +1668,7 @@ div.together-date{
 }
 
 span.crew-top-text,div.together-img-count{
-        position: absolute;
+    position: absolute;
     top: 18px;
     left: 12px;
     z-index: 3;
@@ -1681,9 +1681,9 @@ span.crew-top-text,div.together-img-count{
     line-height: 1.2;
     opacity: 0;
     transform: translateY(-6px);
-    transition: opacity .2s 
-ease, transform .2s 
-ease;
+    transition: opacity .2s
+    ease, transform .2s
+    ease;
     pointer-events: none;
 }
 
