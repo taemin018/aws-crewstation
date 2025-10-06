@@ -12,6 +12,7 @@ import io.lettuce.core.Limit;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
+import retrofit2.http.PartMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public interface DiaryMapper {
     public List<DiaryDTO> selectAllByKeyword(@Param("criteria") Criteria criteria, @Param("search") Search search);
 // 다이리 목록 개수(다이어리 서비스쪽)
     public int selectCountAllByKeyword(@Param("search") Search search);
-//    좋아요 증가
+//    좋아요 증가/감소
     public void updateLikeCount(@Param("diff") int diff,@Param("postId")Long postId);
 
 //   다이어리 목록 검색 개수
@@ -61,4 +62,6 @@ public interface DiaryMapper {
     public Optional<DiaryDTO> selectByPostId(Long postId);
 //  다이어리 공개/비공개 변경
     public void updateSecret(@Param("postId") Long postId,@Param("secret") Secret secret);
+//   댓글 개수 증가 / 감소
+    public void updateReplyCount(@Param("count") int count,@Param("postId") Long postId);
 }

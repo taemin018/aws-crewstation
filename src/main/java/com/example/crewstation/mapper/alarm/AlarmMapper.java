@@ -13,5 +13,8 @@ public interface AlarmMapper {
 
 //   좋아요 알람 삭제
     public void deleteLikeAlarm(Long likeId);
+
+//   댓글 알람 추가
+    public void insertReplyAlarm(Long postId);
 }
 

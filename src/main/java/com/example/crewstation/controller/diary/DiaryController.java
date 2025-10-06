@@ -47,4 +47,11 @@ public class DiaryController {
 
         return "diary/detail";
     }
+
+    @GetMapping("{postId}")
+    public String goToModifyForm(@PathVariable Long postId, Model model,@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        DiaryDetailDTO diary = diaryService.getDiary(postId, customUserDetails);
+        model.addAttribute("diary",diary);
+        return "mypage/my-diary/update";
+    }
 }

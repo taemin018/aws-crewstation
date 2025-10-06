@@ -10,4 +10,9 @@
         insert into tbl_post_report(report_id, post_id)
         values (#{reportId},#{postId})
     </insert>
+
+    <insert id="insertReportReply">
+        insert into tbl_reply_report(report_id, reply_id)
+        values (#{reportId},#{replyId})
+    </insert>
 </mapper>

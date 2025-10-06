@@ -18,8 +18,10 @@ public class Criteria {
     private boolean hasPreviousPage;
     private boolean hasMore;
     private int count;
+    private int total;
 
     public Criteria(int page, int total) {
+        this.total = total;
         rowCount = 10;
         pageCount = 10;
         count = rowCount + 1;
@@ -36,6 +38,7 @@ public class Criteria {
 
 
     public Criteria(int page, int total,int rowCount ,int pageCount) {
+        this.total = total;
         this.rowCount = rowCount;
         this.pageCount = pageCount;
         count = rowCount + 1;

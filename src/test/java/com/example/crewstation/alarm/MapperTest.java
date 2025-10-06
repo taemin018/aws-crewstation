@@ -27,4 +27,11 @@ public class MapperTest {
     public void testInsertLike() {
         alarmMapper.insertLikeAlarm(2L);
     }
+
+    @Test
+    @Transactional
+    public void testInsertReplyAlarm() {
+        alarmMapper.insertReplyAlarm(53L);
+    }
+
 }

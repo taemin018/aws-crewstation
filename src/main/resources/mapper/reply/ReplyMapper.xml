@@ -7,6 +7,7 @@
                reply_content,
                diary_id,
                tr.member_id,
+               tm.member_name,
                tr.created_datetime,
                tr.updated_datetime,
                tm.social_img_url,
@@ -22,6 +23,23 @@
     <select id="selectAllCountByPostId">
         select count(id)
         from tbl_reply
-        where diary_id =#{postId}
+        where diary_id =#{postId} and reply_status = 'active'
     </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_reply (reply_content, diary_id, member_id)
+        values (#{replyContent}, #{postId},#{memberId})
+    </insert>
+
+    <update id="update">
+        update tbl_reply
+        set reply_content = #{replyContent}, updated_datetime = now()
+        where id = #{id}
+    </update>
+
+    <update id="softDelete">
+        update tbl_reply
+        set reply_status = 'inactive'
+        where id =#{id}
+    </update>
 </mapper>

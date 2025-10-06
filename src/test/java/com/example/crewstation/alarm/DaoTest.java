@@ -24,4 +24,10 @@ public class DaoTest {
     public void testInsertLike() {
         alarmDAO.saveLikeAlarm(2L);
     }
+
+    @Test
+    @Transactional
+    public void testInsertReply() {
+        alarmDAO.saveReplyAlarm(53L);
+    }
 }
