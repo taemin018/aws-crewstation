@@ -621,3 +621,7 @@ div.alarm-count{
     line-height: 16px;
     border-radius: 50%;
 }
+
+.hidden {
+    display: none !important;
+}

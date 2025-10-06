@@ -20,4 +20,29 @@
         insert into tbl_diary_alarm(diary_id)
         values (#{postId})
     </insert>
+
+    <select id="selectUnreadCount">
+        select
+            (
+                (select count(*)
+                 from tbl_member_alarm ma
+                 where ma.member_id = #{memberId}
+                   and ma.alarm_status = 'unread')
+                    +
+                (select count(*)
+                 from tbl_diary_alarm da
+                          join tbl_diary d on d.post_id = da.diary_id
+                          join tbl_post p on p.id = d.post_id
+                 where p.member_id = #{memberId}
+                   and da.alarm_status = 'unread')
+                    +
+                (select count(*)
+                 from tbl_like_alarm la
+                          join tbl_like l on l.id = la.like_id
+                          join tbl_post p on p.id = l.post_id
+                 where p.member_id = #{memberId}
+                   and la.alarm_status = 'unread')
+                ) as unread_count
+
+    </select>
 </mapper>

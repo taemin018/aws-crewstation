@@ -3,6 +3,7 @@ package com.example.crewstation.repository.alarm;
 import com.example.crewstation.mapper.alarm.AlarmMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,4 +32,9 @@ public class AlarmDAO {
     public void saveReplyAlarm(Long postId){
         alarmMapper.insertReplyAlarm(postId);
     }
+
+//    안읽은 알람 갯수
+     public int selectUnreadCount(Long memberId){
+        return alarmMapper.selectUnreadCount(memberId);
+     }
 }

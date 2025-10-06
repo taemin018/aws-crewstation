@@ -1076,3 +1076,16 @@ INSERT INTO tbl_banner_file (file_id, banner_id)
 VALUES
     (46, 1),
     (47, 2);
+
+
+-- 좋아요 알람 더미
+insert into tbl_like_alarm (alarm_status, like_id)
+values ('unread', 1);
+
+-- 다이어리 알람 더미
+insert into tbl_diary_alarm (alarm_status, diary_id)
+values ('unread', 1);
+
+-- 멤버 알람 더미
+insert into tbl_member_alarm (alarm_status, member_id)
+values ('unread', 1);

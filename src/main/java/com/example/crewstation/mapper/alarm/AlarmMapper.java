@@ -1,6 +1,7 @@
 package com.example.crewstation.mapper.alarm;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AlarmMapper {
@@ -16,5 +17,8 @@ public interface AlarmMapper {
 
 //   댓글 알람 추가
     public void insertReplyAlarm(Long postId);
+
+//    안 읽은 알람 개수 조회
+    public int selectUnreadCount(@Param("memberId") Long memberId);
 }
 
