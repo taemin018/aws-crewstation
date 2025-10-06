@@ -214,7 +214,7 @@
                                                                     <span th:text="${acc.postTitle}">제목</span>
                                                                 </div>
                                                                 <div class="together-body-content">
-                                                                    <span th:text="${acc.postContent}">미닉스 식세기 쓰시는분 계세요~~!?  어때요?!! 삶의 질이 달라지나요!? 궁금해요 !!</span>
+                                                                    <span th:text="${acc.postContent}"></span>
                                                                 </div>
                                                                 <div class="together-date">
                                                                     <span th:text="${acc.countryStartDate}">25.08.15</span>
@@ -245,7 +245,7 @@
                                                                     <div class="together-post-writer-info">
                                                                         <span class="info info-name" th:text="${acc.memberName}">에스프레소말차라떼</span>
                                                                         <span class="info-split"></span>
-                                                                        <span class="info info-date" th:text="${acc.relativeCreated}">15분 전</span>
+                                                                        <span class="info info-date" th:text="${acc.relativeDate}">15분 전</span>
                                                                         <span class="info-split"></span>
 <!--                                                                        <span class="info info-cnt">7</span>-->
                                                                         
@@ -253,8 +253,11 @@
                                                                 </div>
                                                             </div>
                                                             <div class="together-post-img">
-                                                                <img src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/productions/160082304124619462.jpg?w=144" alt="">
-                                                                <div class="diary-img-count" th:text="${'+' + (acc.fileCount - 1)}">+5</div>
+                                                                <img th:src="@{${acc.filePath}}" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/productions/160082304124619462.jpg?w=144" alt="">
+                                                                <div class="diary-img-count"
+                                                                     th:if="${acc.fileCount != null and acc.fileCount > 1}"
+                                                                     th:text="${'+' + (acc.fileCount - 1)}"
+                                                                >+5</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -295,7 +298,7 @@
                                         <article class="today-gift-item">
                                             <a class="today-gift-item-overlay" th:href="@{/gifts/{id}(id=${gift.postId})}"></a>
                                             <div class="today-gift-item-img">
-                                                <div class="gift-limit-time" data-endtime="2025-10-06 20:57:27"
+                                                <div class="gift-limit-time"
                                                      th:attr="data-endtime=${gift.purchaseLimitTime}"
                                                      th:text="${gift.purchaseLimitTime + '남음'}"
                                                 >02:03:22 남음</div>

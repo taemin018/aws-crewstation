@@ -5,8 +5,11 @@
         <where>
             <if test="search.keyword != null and search.keyword != ''">
                 (
-                vpc.country_name LIKE '%' || #{search.keyword} || '%'
-                OR vpc.post_title  LIKE '%' || #{search.keyword} || '%'
+                tps.post_content ILIKE '%' || #{search.keyword} || '%'
+                OR vpc.post_title ILIKE '%' || #{search.keyword} || '%'
+                OR tm.member_name  ILIKE '%' || #{search.keyword} || '%'
+                OR c.crew_name     ILIKE '%' || #{search.keyword} || '%'
+                OR vpc.country_name ILIKE '%' || #{search.keyword} || '%'
                 )
             </if>
         </where>

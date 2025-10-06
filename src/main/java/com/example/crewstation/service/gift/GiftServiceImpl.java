@@ -7,6 +7,7 @@ import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.repository.gift.GiftDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +92,10 @@ public class GiftServiceImpl implements GiftService {
             if (gift.getFilePath() != null) {
                 gift.setFilePath(s3Service.getPreSignedUrl(gift.getFilePath(), Duration.ofMinutes(5)));
             }
+            if (gift.getCreatedDatetime() != null) {
+                gift.setRelativeDate(DateUtils.toRelativeTime(gift.getCreatedDatetime()));
+            }
+
         });
 
         criteria.setHasMore(gifts.size() > criteria.getRowCount());

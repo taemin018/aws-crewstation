@@ -39,6 +39,6 @@ public class AccompanyDTO {
     private String socialImgUrl;
     private String postContent;
     private int fileCount;
-    private String relativeCreated;
     private List<AccompanyPathDTO> accompanyPathDTO;
+    private String relativeDate;
 }

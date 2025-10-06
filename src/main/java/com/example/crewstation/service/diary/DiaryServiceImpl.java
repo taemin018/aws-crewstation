@@ -239,6 +239,8 @@ public class DiaryServiceImpl implements DiaryService {
         }
         dto.setDiaryDTOs(diaries);
         dto.setCriteria(criteria);
+        dto.setTotalCount(totalCount);
+
 
 
         return dto;

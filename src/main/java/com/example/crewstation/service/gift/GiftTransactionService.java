@@ -21,7 +21,7 @@ public class GiftTransactionService {
     private final S3Service s3Service;
     private final RedisTemplate<String, Object> redisTemplate;
     private final GiftDAO giftDAO;
-    private final GiftDTO  giftDTO;
+    private final GiftDTO giftDTO;
 
     @Transactional(rollbackFor = Exception.class)
     public List<GiftDTO> getMainGifts(int limit) {
