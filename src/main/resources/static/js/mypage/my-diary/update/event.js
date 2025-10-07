@@ -436,10 +436,30 @@ leftList?.addEventListener("click", (e) => {
     const li = del.closest(".post-sub-img:not(.add)");
     const idx = +li.dataset.idx;
     console.log(idx + "뭐냐 이거는 ");
-    if(li.dataset.fileid){
+    if (li.dataset.fileid) {
         deleteImages.push(li.dataset.fileid);
+
+        if (li.classList.contains("thumbnail")) {
+            thumbnail = li.dataset.fileid;
+            console.log("썸네일 변경 중");
+
+            if (li.nextElementSibling?.dataset?.fileid) {
+                console.log("썸네일 1");
+                newThumbnail = li.nextElementSibling.dataset.fileid;
+                document.querySelector("li.post-img-content-wrapper").classList.add("thumbnail");
+                li.nextElementSibling.classList.add("thumbnail");
+            } else {
+                console.log("썸네일 2");
+                newThumbnail = -1;
+            }
+
+
+        }
+    }
+    if (li?.dataset?.postsectionid) {
         deleteSections.push(li.dataset.postsectionid);
     }
+
 
     //  0이고 길이도 0이야
     if (
@@ -477,6 +497,11 @@ leftList?.addEventListener("click", (e) => {
             console.log(data);
             data.dataset.idx = index;
         });
+    const el = document.querySelector("li.post-img-content-wrapper[data-fileid]");
+
+    if (el) {
+        el.classList.add("thumbnail");
+    }
     // contentList
     //     .querySelector(`.post-img-content-wrapper[data-idx="${idx}"]`)
     //     ?.remove();
@@ -518,6 +543,16 @@ contentList?.addEventListener("click", (e) => {
             block.querySelectorAll(".img-tag-container").forEach((data) => {
                 data.remove();
             });
+
+            if (block.dataset?.fileid) {
+                deleteImages.push(block.dataset.fileid);
+                delete block.dataset.fileid;
+            }
+            if (block.dataset?.postsectionid) {
+                deleteSections.push(block.dataset.postsectionid)
+                delete block.dataset.postsectionid;
+            }
+
             previewIn(block, url);
             console.log("asdasdasd");
             console.log(block.dataset.idx);
@@ -543,11 +578,26 @@ contentList?.addEventListener("click", (e) => {
 
     // 삭제(오른쪽)
     if (e.target.closest(".delete-img")) {
+        console.log(block.nextElementSibling);
         const i = +idx;
-        if(block.dataset.fileid){
+        if (block.dataset?.fileid) {
             deleteImages.push(block.dataset.fileid);
-            deleteSections.push(block.dataset.postsectionid);
+            console.log(block.classList.contains("thumbnail"));
+            if (block.classList.contains("thumbnail")) {
+                thumbnail = block.dataset.fileid;
+                if (block.nextElementSibling?.dataset?.fileid) {
+                    newThumbnail = block.nextElementSibling.dataset.fileid;
+                    console.log(block.nextElementSibling);
+                    block.nextElementSibling.classList.add("thumbnail");
+                } else {
+                    newThumbnail = -1;
+                }
+            }
         }
+        if (block.dataset?.postsectionid) {
+            deleteSections.push(block.dataset?.postsectionid);
+        }
+
         fileBuffer.splice(i, 1);
         console.log(i);
         console.log(
@@ -598,6 +648,10 @@ contentList?.addEventListener("click", (e) => {
         //     if (!sampleBlock.isConnected) contentList.appendChild(sampleBlock);
         //     resetBlock(sampleBlock);
         // }
+        const el = document.querySelector("li.post-sub-img[data-fileid]");
+        if (el) {
+            el.classList.add("thumbnail")
+        }
         return;
     }
 
@@ -634,7 +688,7 @@ contentList?.addEventListener("click", (e) => {
         return;
     }
 
-     // 파란 + 클릭 → 모달
+    // 파란 + 클릭 → 모달
 });
 
 // 태그 모달
@@ -663,6 +717,7 @@ tagModal?.addEventListener("click", (e) => {
 
     // "선택" → 현재 블록에 파란 + 고정
     if (e.target.closest(".tag-select-btn")) {
+        const parent = e.target.closest(".tag-select-btn").previousElementSibling;
         if (currentBlock) {
             const {tx, ty} = currentBlock.dataset;
             if (tx && ty) {
@@ -677,6 +732,9 @@ tagModal?.addEventListener("click", (e) => {
                 }`;
                 div.dataset.idx = currentBlock.dataset.idx;
                 div.innerHTML = tagPin;
+                console.log(parent.querySelector(".member-name"))
+
+                div.querySelector("#mention-name").textContent = parent.querySelector(".member-name").textContent;
                 currentBlock
                     .querySelector(".img-add-container")
                     .appendChild(div);
@@ -698,7 +756,6 @@ document.addEventListener("keydown", (e) => {
     const input = form.querySelector(".input-tag-wrap");
     const btn = form.querySelector(".input-tag-btn");
     let list = form.parentElement.querySelector(".tag-list");
-
     if (!list) {
         list = document.createElement("div");
         list.className = "tag-list";
@@ -739,9 +796,10 @@ document.addEventListener("keydown", (e) => {
 const inputCountry = document.querySelector(".input-tag-wrap");
 const btn = document.querySelector(".input-tag-btn");
 let tagList = document.querySelector(".input-tag");
-list = document.createElement("div");
-list.className = "tag-list";
-tagList.appendChild(list);
+const list = document.querySelector(".tag-list")
+// list = document.createElement("div");
+// list.className = "tag-list";
+// tagList.appendChild(list);
 const addChip = () => {
     const v = (inputCountry.value || "").trim();
     if (!v) return;
@@ -772,6 +830,14 @@ inputCountry?.addEventListener("keydown", (e) => {
 });
 
 // 작성(트리거만)
+
+const deleteCountries = [];
+const deleteSections = [];
+const deleteImages = [];
+const deleteTags = [];
+let thumbnail = -1;
+let newThumbnail = -1;
+
 const complteBtn = document.querySelector(".complete-btn");
 complteBtn.addEventListener("click", (e) => {
     const form = document.forms["diary"];
@@ -811,68 +877,146 @@ complteBtn.addEventListener("click", (e) => {
         return;
     }
     const countries = document.querySelectorAll(".tag-chip");
-    if(!countries.length){
+    if (!countries.length) {
         toastModal("나라를 추가해줴요.")
         return;
     }
-    countries.forEach((country,countryIndex) => {
-        if(country.dataset.countryid) return;
+    countries.forEach((country, countryIndex) => {
+        if (country.dataset.countryId) return;
+        console.log(country)
         const countryInput = document.createElement("input");
         countryInput.name = `countries[${countryIndex}]`;
         countryInput.value = country.textContent;
         form.appendChild(countryInput);
     });
     console.log(fileBuffer.length);
+    let newFileIndex = 0;
     let count = 0;
+    let oldCount = 0;
+    let tagCount = 0;
     document.querySelectorAll(".post-img-content-wrapper").forEach((data) => {
+        console.log(data)
         const idx = +data.dataset.idx;
-        const file = fileBuffer[idx];
+        newFileIndex = idx;
+        const fileId = data.dataset?.postsectionid;
         const textarea = data.querySelector("textarea");
-        textarea.name = `images[${idx}].postContent`;
-        const image = document.createElement("input");
-        image.type = "file";
-        image.name = `images[${idx}].image`;
-        const dt = new DataTransfer();
-        if (file === '') {
-            image.value = ''; // 파일 input 초기화
-        } else {
-            dt.items.add(file);
-            image.files = dt.files;
-        }
+
         const imgItem = document.querySelector(
-            `.post-img-content-wrapper[data-idx="${idx}"]`
+            `.post-img-content-wrapper[data-idx="${newFileIndex}"]`
         );
-        form.appendChild(image);
-        console.log(imgItem);
-
-        const tags = imgItem.querySelectorAll(".img-tag-container.tag");
-        tags.forEach((tag, tagIndex) => {
-            const inputTagX = document.createElement("input");
-            const inputTagY = document.createElement("input");
-            const inputTagMemberId = document.createElement("input");
-            inputTagX.name = `images[${idx}].tags[${tagIndex}].tagLeft`;
-            inputTagY.name = `images[${idx}].tags[${tagIndex}].tagTop`;
-            inputTagMemberId.name = `images[${idx}].tags[${tagIndex}].memberId`;
-            inputTagX.value = tag.style.left.replace("%","");
-            inputTagY.value = tag.style.top.replace("%","");
-            inputTagMemberId.value = tag.dataset.memberId;
-            console.log(inputTagX.value);
-            console.log(inputTagY.value);
-            form.appendChild(inputTagX);
-            form.appendChild(inputTagY);
-            form.appendChild(inputTagMemberId);
+        console.log(fileId)
+        if (!fileId) {
+            console.log("새로운 이미지 추가야");
+            console.log(newFileIndex);
+            // const idx = +data.dataset.idx;
+            console.log(fileBuffer)
+            const file = fileBuffer[newFileIndex];
+            const image = document.createElement("input");
+            image.type = "file";
+            image.name = `images[${count}].image`;
+            const dt = new DataTransfer();
+            if (file === '') {
+                image.value = ''; // 파일 input 초기화
+            } else {
+                dt.items.add(file);
+                image.files = dt.files;
+            }
+            form.appendChild(image);
+            textarea.name = `images[${count}].postContent`;
+            const tags = imgItem.querySelectorAll(".img-tag-container.tag");
+            tags.forEach((tag, tagIndex) => {
+                if (tag.dataset.tagId) return;
+                console.log("새로운 이미지에 태그 추가야");
+                const inputTagX = document.createElement("input");
+                const inputTagY = document.createElement("input");
+                const inputTagMemberId = document.createElement("input");
+                inputTagX.name = `images[${count}].tags[${tagIndex}].tagLeft`;
+                inputTagY.name = `images[${count}].tags[${tagIndex}].tagTop`;
+                inputTagMemberId.name = `images[${count}].tags[${tagIndex}].memberId`;
+                inputTagX.value = tag.style.left.replace("%", "");
+                inputTagY.value = tag.style.top.replace("%", "");
+                inputTagMemberId.value = tag.dataset.memberId;
+                console.log(inputTagX.value);
+                console.log(inputTagY.value);
+                form.appendChild(inputTagX);
+                form.appendChild(inputTagY);
+                form.appendChild(inputTagMemberId);
+            });
+            count++;
+            // newFileIndex++;
+            console.log(tags);
+            console.log(countries);
+            console.log(image);
+            console.log(123);
+            console.log("작성 클릭");
+            console.log(imgItem);
+        } else {
+            console.log("기존 이미지");
+            console.log(newFileIndex);
+            textarea.name = `oldImages[${oldCount}].postContent`;
+            const ids = data.dataset.fileid;
+            const fileInput = document.createElement("input");
+            console.log(ids)
+            fileInput.name = `oldImages[${oldCount}].fileId`;
+            fileInput.value = ids ? ids : -1;
+            form.appendChild(fileInput);
+            const tags = imgItem.querySelectorAll(".img-tag-container.tag");
+            tags.forEach((tag, tagIndex) => {
+                console.log(tag.dataset.tagId);
+                if (tag.dataset.tagId) return;
+                console.log(tag.dataset.tagId);
+                console.log("기존 이미지에 태그 추가");
+                const inputTagX = document.createElement("input");
+                const inputTagY = document.createElement("input");
+                const inputTagMemberId = document.createElement("input");
+                const inputSectionId = document.createElement("input");
+                inputSectionId.value = fileId;
+                inputSectionId.name = `oldImages[${oldCount}].postSectionId`;
+                inputTagX.name = `oldImages[${oldCount}].tags[${tagCount}].tagLeft`;
+                inputTagY.name = `oldImages[${oldCount}].tags[${tagCount}].tagTop`;
+                inputTagMemberId.name = `oldImages[${oldCount}].tags[${tagCount}].memberId`;
+                inputTagX.value = tag.style.left.replace("%", "");
+                inputTagY.value = tag.style.top.replace("%", "");
+                inputTagMemberId.value = tag.dataset.memberId;
+                console.log(inputTagX.value);
+                console.log(inputTagY.value);
+                form.appendChild(inputSectionId);
+                form.appendChild(inputTagX);
+                form.appendChild(inputTagY);
+                form.appendChild(inputTagMemberId);
+                tagCount++;
+            });
+            oldCount++
+        }
+        // const deleteCountries = [];
+        // const deleteSections = [];
+        // const deleteImages = [];
+        // const deleteTags = [];
+        // let thumbnail = -1;
+        // let newThumbnail = -1;
+        // text += `<input type="hidden" name="deleteFileIds" value="${id}">`;
+        const deleteWrap = document.getElementById("deleteWrap");
+        let text = ``;
+        deleteCountries.forEach((id, index) => {
+            text += `<input type="hidden" name="deleteCountries[${index}]" value="${id}">`
         });
-        console.log(tags);
-        console.log(countries);
-        console.log(image);
-    });
-    fileBuffer.forEach((file, index) => {
-    });
-    console.log(123);
-    console.log("작성 클릭");
-    form.submit();
-});
+        deleteSections.forEach((id, index) => {
+            text += `<input type="hidden" name="deleteSections[${index}]" value="${id}">`
+        });
+        deleteImages.forEach((id, index) => {
+            text += `<input type="hidden" name="deleteImages[${index}]" value="${id}">`
+        });
+        deleteTags.forEach((id, index) => {
+            text += `<input type="hidden" name="deleteTags[${index}]" value="${id}">`
+        });
+        text += `<input type="hidden" name="thumbnail" value="${thumbnail}">`
+        text += `<input type="hidden" name="newThumbnail" value="${newThumbnail}">`
+        deleteWrap.innerHTML = text;
+        form.submit();
 
+    });
+
+});
 let fileBuffer = [];
 const toKey = (f) => `${f.name}|${f.size}|${f.lastModified}`;
 
@@ -922,7 +1066,7 @@ secretToggle.addEventListener("click", (e) => {
 contentList?.addEventListener("dblclick", (e) => {
     if (e.target.closest(".img-tag-container.tag")) {
         console.log("더블클릭");
-        if(e.target.closest(".img-tag-container.tag").dataset.tagId){
+        if (e.target.closest(".img-tag-container.tag").dataset.tagId) {
             deleteTags.push(e.target.closest(".img-tag-container.tag").dataset.tagId);
         }
         e.target.closest(".img-tag-container.tag").remove();
@@ -931,33 +1075,28 @@ contentList?.addEventListener("dblclick", (e) => {
 
 
 const memberSearch = document.getElementById("memberSearch")
-memberSearch.addEventListener("keydown",async (e)=>{
-    if(e.key ==="Enter"){
-        await diaryWriteService.search(diaryWriteLayout.showList,memberSearch.value.trim());
+memberSearch.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+        await diaryWriteService.search(diaryWriteLayout.showList, memberSearch.value.trim());
     }
 })
 
 const countryTagWrap = document.querySelector("div.tag-list")
-countryTagWrap.addEventListener("click",(e)=>{
+countryTagWrap.addEventListener("click", (e) => {
     console.log(e.target);
-    if(e.target.closest(".tag-chip")){
+    if (e.target.closest(".tag-chip")) {
 
-        if(e.target.closest(".tag-chip").dataset.countryId){
+        if (e.target.closest(".tag-chip").dataset.countryId) {
             deleteCountries.push(e.target.closest(".tag-chip").dataset.countryId)
         }
         e.target.closest(".tag-chip").remove();
     }
-})
+});
 
-const deleteCountries = [];
-const deleteSections = [];
-const deleteImages = [];
-const deleteTags = [];
+
+
 //
-// setInterval(()=>{
-//     console.log(deleteCountries);
-//     console.log(deleteSections);
-//     console.log(deleteImages);
-//     console.log(deleteTags);
-//
-// },2000)
+setInterval(()=>{
+    console.log(thumbnail);
+    console.log(newThumbnail);
+},2000)

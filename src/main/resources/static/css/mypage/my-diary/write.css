@@ -250,7 +250,7 @@ ul {
   position: relative;
   background: #f7f8fa;
   border-radius: 4px;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 /* 업로드된 실제 이미지 */
 .css-n9shyu {

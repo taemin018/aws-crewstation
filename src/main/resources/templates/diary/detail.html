@@ -23,9 +23,9 @@
                     </div>
                 </div>
                 <div class="update" th:if="${diary.diary.userId !=null}">
-                    <button class="update-button">수정</button>
+                    <button class="update-button" th:onclick="'location.href=\'/diaries/' + ${diary.diary.postId} + '\''">수정</button>
                     <span class="bar">|</span>
-                    <button class="remove-button">삭제</button>
+                    <button class="remove-button remove-content-button">삭제</button>
                 </div>
             </div>
             <!-- 제목 -->
@@ -86,7 +86,7 @@
                                         <a href="">
                                             <img class="diary-img" th:src="@{${section.filePath}}">
                                         </a>
-                                        <div class="mention" th:each="tag :${section.tags}" th:style="'left' + ${tag.tagLeft} +'%; top:' + ${tag.tagTop}+'%;' ">
+                                        <div class="mention" th:each="tag :${section.tags}" th:style="'left:' + ${tag.tagLeft} +'%; top:' + ${tag.tagTop}+'%;' ">
                                             <div class="mention-container">
                                                 <button class="mention-button">
                                                     <span class="mention-span"></span>
@@ -354,15 +354,31 @@
         </div>
     </div>
     <div style="position: relative; z-index: 11;">
-        <div class="remove-modal">
+        <div class="remove-modal remove-modal-reply">
             <div class="remove-modal-win">
                 <div class="remove-head">
                     <p class="head-text">댓글을 삭제하시겠습니까?<br>삭제한 댓글은 되돌릴 수 없습니다.</p>
                 </div>
                 <div class="remove-buttons-wrap">
                     <div class="remove-buttons">
-                        <button class="remove-no modal-reply-button">취소</button>
-                        <button class="remove-ok">확인</button>
+                        <button class="remove-no remove-no-reply modal-reply-button">취소</button>
+                        <button class="remove-ok remove-ok-reply">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="position: relative; z-index: 11;">
+        <div class="remove-modal remove-modal-content">
+            <div class="remove-modal-win">
+                <div class="remove-head">
+                    <p class="head-text">글을 삭제하시겠습니까?<br>삭제한 글은 되돌릴 수 없습니다.</p>
+                </div>
+                <div class="remove-buttons-wrap">
+                    <div class="remove-buttons">
+                        <button class="remove-no remove-no-content modal-content-button">취소</button>
+                        <button class="remove-ok remove-ok-content">확인</button>
                     </div>
                 </div>
             </div>

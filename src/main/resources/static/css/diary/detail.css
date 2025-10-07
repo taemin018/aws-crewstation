@@ -461,8 +461,6 @@ input, textarea, select {
 
 .mention {
     position: absolute;
-    left: 53%;
-    top: 53%;
     margin: -9px 0px 0px -9px;
     z-index: 1;
 }
@@ -1470,8 +1468,9 @@ input, textarea, select {
 
 .img-modal-container > img {
     width: 90%;
-    height: auto;
+    height: 90%;
     position: static;
+    object-fit: contain;
     margin-top: 40px;
 }
 
