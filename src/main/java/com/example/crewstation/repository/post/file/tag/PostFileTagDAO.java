@@ -25,4 +25,12 @@ public class PostFileTagDAO {
     public List<PostFileTagDTO> findByFileId(Long fileId){
         return postFileTagMapper.selectByFileId(fileId);
     }
+
+    public void deleteAllByFileId(Long fileId){
+        postFileTagMapper.deleteAllByFileId(fileId);
+    }
+
+    public void deleteById(Long id){
+        postFileTagMapper.deleteById(id);
+    }
 }

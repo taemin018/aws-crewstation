@@ -34,4 +34,12 @@ public class FilePostSectionDAO {
     public void updateImageType(Long postSectionId, Type imageType){
         filePostSectionMapper.updateImageType(postSectionId,imageType);
     }
+
+    public void deleteByFileId(Long fileId){
+        filePostSectionMapper.deleteByFileId(fileId);
+    }
+
+    public void updateImageTypeByFileId(Long fileId, Type imageType){
+        filePostSectionMapper.updateImageTypeByFileId(fileId,imageType);
+    }
 }

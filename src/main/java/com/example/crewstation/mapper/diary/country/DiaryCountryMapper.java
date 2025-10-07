@@ -12,5 +12,8 @@ public interface DiaryCountryMapper {
     public void insert(DiaryCountryVO diaryCountryVO);
 
     public List<CountryDTO> selectCountryByPostId(Long postId);
+
+    //   나라 삭제
+    public void delete(Long countryId);
 }
 

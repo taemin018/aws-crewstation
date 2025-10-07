@@ -20,4 +20,8 @@ public interface FilePostSectionMapper {
 
 //  이미지 썸네일 변경해주기
     public void updateImageType(Long postSectionId, Type imageType);
+
+    public void updateImageTypeByFileId(Long fileId, Type imageType);
+
+    public void deleteByFileId(Long fileId);
 }

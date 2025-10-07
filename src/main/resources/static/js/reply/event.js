@@ -92,9 +92,9 @@ replyInput.addEventListener("keydown",async (e)=>{
 })
 
 
-const removeModal = document.querySelector(".remove-modal");
-const removeNoButton = removeModal.querySelector(".remove-no");
-const removeOkButton = removeModal.querySelector(".remove-ok");
+const removeModal = document.querySelector(".remove-modal-reply");
+const removeNoButton = removeModal.querySelector(".remove-no-reply");
+const removeOkButton = removeModal.querySelector(".remove-ok-reply");
 
 const replyWrap=document.getElementById("replyWrap");
 let replyTextDiv = null;
