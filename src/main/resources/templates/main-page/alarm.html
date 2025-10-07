@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crew Station</title>
-    <link rel="stylesheet" href="../../static/css/font.css">
-    <link rel="stylesheet" href="../../static/css/main-page/alarm.css">
-    <link rel="shortcut icon" href="../../static/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/main-page/alarm.css">
+    <link rel="stylesheet" href="/css/fixed/web/header.css">
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
 </head>
 <body>
+<header th:replace="~{fixed/web/header :: header}"></header>
     <div class="page">
         <div class="layout">
             <main class="main-container">
@@ -60,4 +62,6 @@
         </div>
     </div>
 </body>
+<script src="/js/fixed/web/header/module/service.js"></script>
+<script src="/js/fixed/web/header/event.js"></script>
 </html>
