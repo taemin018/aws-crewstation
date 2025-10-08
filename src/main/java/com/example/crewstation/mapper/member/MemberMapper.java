@@ -3,6 +3,7 @@ package com.example.crewstation.mapper.member;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.util.Search;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,6 +43,16 @@ public interface MemberMapper {
     public void updateChemistryScore(@Param("sellerId") Long sellerId, @Param("rating") int rating);
 //    회원 검색
     public List<MemberDTO> selectSearchMember(String search);
+
+//    관리자 회원 목록
+    public List<MemberDTO> findAdminMembers(@Param("search") Search search,
+                                            @Param("limit") int limit,
+                                            @Param("offset") int offset);
+//    회원수 조회
+    public int countAdminMembers(@Param("search") Search search);
+
+//    상세 조회
+    public MemberDTO findAdminMemberDetail(@Param("memberId") Long memberId);
 }
 
 
