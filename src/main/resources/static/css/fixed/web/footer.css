@@ -274,3 +274,25 @@ a.social-img > svg{
     vertical-align: top;
     color: #828C94;
 }
+
+footer, header, main { position: static; }
+footer.footer-container {
+    position: static;
+    z-index: auto;
+}
+
+
+html, body { min-height: 100vh; }
+.layout, .page, body, html { height: auto; }
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.page { flex: 1 0 auto; }
+
+
+footer.footer-container { margin-top: auto; }
+

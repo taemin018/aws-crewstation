@@ -58,5 +58,11 @@ public class MainPageController {
 
         return "main-page/main";
     }
+
+    @GetMapping("/company")
+    public String getCompanyPage(Model model) {
+
+        return "main-page/company-info";
+    }
 }
 
