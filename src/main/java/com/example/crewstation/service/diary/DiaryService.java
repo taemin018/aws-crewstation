@@ -6,12 +6,16 @@ import com.example.crewstation.domain.diary.DiaryVO;
 import com.example.crewstation.domain.diary.country.DiaryCountryVO;
 import com.example.crewstation.domain.diary.diary.path.DiaryDiaryPathVO;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
+import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.post.file.tag.PostFileTagVO;
+import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.file.tag.ImageDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
+import com.example.crewstation.dto.post.section.PostSectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.repository.diary.diary.path.DiaryDiaryPathDAO;
 import com.example.crewstation.util.ScrollCriteria;
@@ -50,13 +54,16 @@ public interface DiaryService {
 
 //    다이어리 작성
     public void write(PostDiaryDetailTagDTO request);
-
+//  다이어리 업데이트
+    public void update(PostDiaryDetailTagDTO request);
     // 다이어리 상세 내용 가져오기
     public DiaryDetailDTO getDiary(Long postId,CustomUserDetails customUserDetails);
 
 //    다이어리 공개 비공개 변경
     public String changeSecret(DiaryDTO diaryDTO);
 
+
+    public void deleteDiary(Long postId);
     default DiaryVO toDiaryVO(PostDTO postDTO) {
         return DiaryVO.builder()
                 .diarySecret(postDTO.getSecret())
@@ -80,7 +87,7 @@ public interface DiaryService {
     default PostFileTagVO toPostFileTagVO(PostFileTagDTO postFileTagDTO) {
         return PostFileTagVO.builder()
                 .tagTop(postFileTagDTO.getTagTop())
-                .tagLeft(postFileTagDTO.getTagTop())
+                .tagLeft(postFileTagDTO.getTagLeft())
                 .postSectionFileId(postFileTagDTO.getPostSectionFileId())
                 .memberId(postFileTagDTO.getMemberId())
                 .createdDatetime(postFileTagDTO.getCreatedDatetime())
@@ -97,4 +104,20 @@ public interface DiaryService {
                 .updatedDatetime(sectionFileDTO.getUpdateDatetime())
                 .build();
     }
+
+    default PostSectionVO toPostSectionVO(ImageDTO imageDTO) {
+        return PostSectionVO.builder()
+                .id(imageDTO.getPostSectionId())
+                .postContent(imageDTO.getPostContent())
+                .build();
+    }
+
+    default PostVO toPostVO(PostDiaryDetailTagDTO postDiaryDetailTagDTO) {
+        return PostVO.builder()
+                .id(postDiaryDetailTagDTO.getPostId())
+                .postTitle(postDiaryDetailTagDTO.getPostTitle())
+                .build();
+    }
 }
+
+

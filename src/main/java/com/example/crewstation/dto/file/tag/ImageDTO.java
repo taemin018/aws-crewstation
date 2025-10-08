@@ -19,6 +19,7 @@ public class ImageDTO {
     private MultipartFile image;
     private Long postId;
     private Long postSectionId;
+    private Long fileId;
     private String postContent;
     private List<PostFileTagDTO> tags;
 }

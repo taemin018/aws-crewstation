@@ -1,6 +1,7 @@
 package com.example.crewstation.dto.file.tag;
 
 
+import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,4 +25,11 @@ public class PostDiaryDetailTagDTO {
     private List<Long> countryIds;
     private Long postSectionId;
     private Long fileId;
+    private Long thumbnail;
+    private Long newThumbnail;
+    private Long[] deleteCountries;
+    private Long[] deleteSections;
+    private Long[] deleteImages;
+    private Long[] deleteTags;
+    private List<ImageDTO> oldImages;
 }

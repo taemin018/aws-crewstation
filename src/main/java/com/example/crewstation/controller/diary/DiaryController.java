@@ -36,7 +36,7 @@ public class DiaryController {
         request.setMemberId(1L);
         diaryService.write(request);
         log.info("{}",request);
-        return new RedirectView("/diaries");
+        return new RedirectView("/diaries/detail/"+ request.getPostId());
     }
 
 
@@ -53,5 +53,21 @@ public class DiaryController {
         DiaryDetailDTO diary = diaryService.getDiary(postId, customUserDetails);
         model.addAttribute("diary",diary);
         return "mypage/my-diary/update";
+    }
+
+    @PostMapping("{postId}")
+    public RedirectView modify(@PathVariable Long postId, PostDiaryDetailTagDTO request){
+        log.info("::::::::::{}",request);
+//        DiaryDetail/DTO diary = diaryService.getDiary(postId, customUserDetails);
+        diaryService.update(request);
+//        model.addAttribute("diary",diary);
+        return new RedirectView("/diaries/detail/"+postId);
+    }
+
+
+    @GetMapping("delete/{id}")
+    public RedirectView delete(@PathVariable Long id) {
+        diaryService.deleteDiary(id);
+        return new RedirectView("/diaries");
     }
 }

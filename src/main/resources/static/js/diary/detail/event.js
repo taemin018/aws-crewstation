@@ -226,37 +226,23 @@ document
         });
     });
 
-// // 댓글 삭제
-//
-// const replyRemoveButtons = document.querySelectorAll(".remove-reply-button");
-// const removeModal = document.querySelector(".remove-modal");
-// const removeNoButton = removeModal.querySelector(".remove-no");
-// const removeOkButton = removeModal.querySelector(".remove-ok");
-//
-// let targetReply = null; // 삭제 대상 reply-item 저장용
-//
-// replyRemoveButtons.forEach((btn) => {
-//     btn.addEventListener("click", (e) => {
-//         removeModal.style.display = "block";
-//         targetReply = btn.closest(".reply-item"); // 삭제할 대상 저장
-//     });
-// });
-//
-// // 취소 버튼 클릭 시 모달 닫기
-// removeNoButton.addEventListener("click", () => {
-//     removeModal.style.display = "none";
-//     targetReply = null;
-// });
-//
-// // 확인 버튼 클릭 시 reply-item 삭제 후 모달 닫기
-// removeOkButton.addEventListener("click", () => {
-//     if (targetReply) {
-//         targetReply.remove();
-//         targetReply = null;
-//     }
-//     removeModal.style.display = "none";
-// });
+const removeContentModal = document.querySelector(".remove-modal-content");
+const removeContentNoButton = document.querySelector(".remove-no-content");
+console.log(removeContentNoButton);
+const removeContentOkButton = document.querySelector(".remove-ok-content");
+const removeContentBtn = document.querySelector(".remove-button.remove-content-button");
+removeContentBtn.addEventListener("click",(e)=>{
+    removeContentModal.style.display = "block";
+})
+removeContentNoButton.addEventListener("click",(e)=>{
+    console.log("123")
+    removeContentModal.style.display = "none";
+})
+removeContentOkButton.addEventListener("click",(e)=>{
+    const postId = +document.getElementById("postId").dataset.post;
+    location.href=`/diaries/delete/${postId}`;
 
+})
 // 페이지 클릭
 
 const numberButtons = document.querySelectorAll(".number-button");
