@@ -1109,11 +1109,37 @@ VALUES ('알림 테스트 글', (SELECT id FROM tbl_member WHERE member_email='a
 RETURNING id;  -- POST_ID 메모 (예: 10)
 
 
-INSERT INTO tbl_diary (post_id, diary_secret, diary_like_count, diary_reply_count)
+
+INSERT INTO tbl_diary_country_path (
+    country_start_date,
+    country_end_date,
+    member_id,
+    country_id
+)
 VALUES (
-           (SELECT id FROM tbl_post WHERE post_title='알림 테스트 글'),
+           '2025-11-01',                -- 여행 시작일
+           '2025-11-05',                -- 여행 종료일
+           (SELECT id FROM tbl_member WHERE member_email = 'a@gmail.com'),  -- 정이랑 id
+           (SELECT id FROM tbl_country LIMIT 1)   -- 존재하는 나라 중 하나 사용 (예: 1)
+       )
+RETURNING id;
+
+INSERT INTO tbl_diary (
+    post_id,
+    diary_secret,
+    diary_like_count,
+    diary_reply_count,
+    diary_country_path_id
+)
+VALUES (
+           (SELECT id FROM tbl_post WHERE post_title = '알림 테스트 글'),
            'public'::secret,
            0,
-           0
+           0,
+           3  -- 위 RETURNING으로 나온 id 넣기
        );
+
+SELECT post_id, diary_country_path_id, diary_secret
+FROM tbl_diary
+ORDER BY post_id DESC;
 
