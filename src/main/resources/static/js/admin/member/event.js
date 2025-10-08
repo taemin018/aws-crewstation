@@ -143,47 +143,108 @@
     });
 })();
 
-// ===== 모달 열기/닫기 =====
+// ===== 모달 열기/닫기 + 상세 데이터 로드 =====
 (() => {
     const modal = document.querySelector(".member-modal");
     if (!modal) return;
 
     const closeBtns = modal.querySelectorAll(".close, .btn-close");
     const table = document.querySelector(".table-layout");
-
-    // 가운데 정렬 보장 (부트스트랩 없이 CSS 유사 적용)
     const dialog = modal.querySelector(".modal-dialog");
     if (dialog) dialog.style.margin = "1.75rem auto";
 
-    // 상세 버튼(동적 포함) - 이벤트 위임
-    if (table) {
-        table.addEventListener("click", (e) => {
-            const btn = e.target.closest(".action-btn");
-            if (!btn) return;
-
-            modal.style.display = "block";
-            requestAnimationFrame(() => {
-                modal.classList.add("show");
-                modal.style.background = "rgba(0,0,0,0.5)";
-                document.body.classList.add("modal-open");
-            });
+    const openModal = () => {
+        modal.style.display = "block";
+        requestAnimationFrame(() => {
+            modal.classList.add("show");
+            modal.style.background = "rgba(0,0,0,0.5)";
+            document.body.classList.add("modal-open");
         });
-    }
+    };
 
     const closeModal = () => {
         modal.classList.remove("show");
         document.body.classList.remove("modal-open");
-        setTimeout(() => {
-            modal.style.display = "none";
-        }, 100);
+        setTimeout(() => { modal.style.display = "none"; }, 100);
     };
 
+    // ✅ 상세 버튼 클릭 시: 상세 API 호출 -> 렌더 -> 모달 오픈
+    if (table) {
+        table.addEventListener("click", async (e) => {
+            // 버튼 클래스는 layout에서 뿌린 것과 동일해야 합니다.
+            // (layout에서 "action-btn member-detail-btn"로 넣었다면 아래 셀렉터를 그에 맞춰 바꾸세요)
+            const btn = e.target.closest(".member-detail-btn, .action-btn");
+            if (!btn) return;
+
+            const memberId = btn.dataset.memberid;  // data-memberid 필수
+            if (!memberId) return;
+
+            const loading = document.getElementById("loading");
+            if (loading) loading.style.display = "block";
+            try {
+                await memberService.getDetailMember(memberLayout.showMemberDetail, memberId);
+                openModal();
+            } catch (err) {
+                console.error("회원 상세 조회 실패:", err);
+            } finally {
+                if (loading) loading.style.display = "none";
+            }
+        });
+    }
+
     closeBtns.forEach((b) => b.addEventListener("click", closeModal));
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeModal();
-    });
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modal.classList.contains("show"))
-            closeModal();
+        if (e.key === "Escape" && modal.classList.contains("show")) closeModal();
     });
 })();
+
+
+const memberMenuBtn = document.getElementById("memberMenu");
+const paginationMember = document.querySelector(".pagination.bootpay-pagination.member-pagination");
+const memberKeywordInput = document.getElementById("memberKeyword");
+const memberKeywordBtn = document.getElementById("memberKeywordBtn");
+
+const loading = document.getElementById("loading");
+
+const showMembers = async (page = 1, keyword = "") => {
+    if (loading) loading.style.display = "block";
+    const res = await memberService.getMembers(memberLayout.showMembers, page, keyword);
+    if (loading) loading.style.display = "none";
+    return res;
+};
+
+if (paginationMember) {
+    paginationMember.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("paging")) {
+            e.preventDefault();
+            const page = e.target.dataset.page;
+            await showMembers(page, memberKeywordInput?.value || "");
+        }
+    });
+}
+
+if (memberKeywordInput) {
+    memberKeywordInput.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+            await showMembers(1, memberKeywordInput.value.trim());
+        }
+    });
+}
+
+if (memberKeywordBtn) {
+    memberKeywordBtn.addEventListener("click", async () => {
+        await showMembers(1, memberKeywordInput?.value.trim() || "");
+    });
+}
+
+if (memberMenuBtn) {
+    memberMenuBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await showMembers(1, "");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await showMembers(1, "");
+});
