@@ -48,7 +48,7 @@
                     </div>
                     <span id="name" th:text="${diary.diary.memberName}">CREW_STATION</span>
                 </a>
-                <th:block th:if="diary.diary.userId !=null">
+                <th:block th:if="${diary.diary.userId !=null}">
                     <div class="lock" th:classappend="${diary.diary.diarySecret == 'public' ? 'hidden' : ''}">
                         <img src="/images/lock.png" class="lock-img">
                         <span class="secret-title">비공개 중</span>

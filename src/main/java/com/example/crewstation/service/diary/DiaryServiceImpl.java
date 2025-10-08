@@ -159,6 +159,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @LogReturnStatus
     public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails) {
         DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
         Search newSearch = new Search();
@@ -248,7 +249,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 
     @Transactional(rollbackFor = Exception.class)
-//    @LogStatus
+    @LogStatus
     public void update(PostDiaryDetailTagDTO request) {
 
         FileDTO fileDTO = new FileDTO();
@@ -420,9 +421,11 @@ public class DiaryServiceImpl implements DiaryService {
         diaryDAO.save(toDiaryVO(post));
         diaryCountryVOs = toDiaryCountryVO(request);
         diaryCountryVOs.forEach(diaryCountryDAO::save);
-        diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
+
         if (request.getCrewId() != null) {
             crewDiaryDAO.save(CrewDiaryVO.builder().diaryId(request.getPostId()).crewId(request.getCrewId()).build());
+        }else{
+            diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
         }
         images.forEach(image -> {
             MultipartFile file = image.getImage();
@@ -479,7 +482,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    @LogReturnStatus
+//    @LogReturnStatus
     @Transactional(rollbackFor = Exception.class)
     public DiaryDetailDTO getDiary(Long postId, CustomUserDetails customUserDetails) {
         DiaryDetailDTO diaryDetailDTO = new DiaryDetailDTO();
@@ -490,14 +493,13 @@ public class DiaryServiceImpl implements DiaryService {
         byPostId.ifPresent(diaryDTO -> {
             diaryDTO.setMemberFilePath(s3Service.getPreSignedUrl(diaryDTO.getMemberFilePath(), Duration.ofMinutes(5)));
             diaryDTO.setRelativeDate(DateUtils.toRelativeTime(diaryDTO.getCreatedDatetime()));
-            diaryDTO.setUserId(1L);
-            Long likeId = likeDAO.isLikeByPostIdAndMemberId(diaryDTO);
-            diaryDTO.setLikeId(likeId);
+
             if (customUserDetails != null) {
                 diaryDTO.setUserId(Objects.equals(customUserDetails.getId(), diaryDTO.getMemberId()) ? customUserDetails.getId() : null);
-            } else {
-                diaryDTO.setUserId(1L);
+                Long likeId = likeDAO.isLikeByPostIdAndMemberId(diaryDTO);
+                diaryDTO.setLikeId(likeId);
             }
+            log.info("유저 아이디{}",diaryDTO.getUserId());
         });
         diaryDetailDTO.setCountries(countries);
         sections.forEach(section -> {

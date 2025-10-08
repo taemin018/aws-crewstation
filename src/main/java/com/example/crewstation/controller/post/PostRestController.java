@@ -26,7 +26,7 @@ public class PostRestController {
     @PostMapping("report")
     public ResponseEntity<String> reportPurchase(@RequestBody ReportDTO reportDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try{
-            reportDTO.setMemberId(1L);
+            reportDTO.setMemberId(userDetails.getId());
             postService.report(reportDTO);
             return ResponseEntity.ok().body("신고 완료되었습니다.");
         }catch (PostNotFoundException e){
@@ -36,7 +36,7 @@ public class PostRestController {
     @PostMapping("report/replies")
     public ResponseEntity<String> reportReply(@RequestBody ReportDTO reportDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try{
-            reportDTO.setMemberId(1L);
+            reportDTO.setMemberId(userDetails.getId());
             postService.reportReply(reportDTO);
             log.info(reportDTO.toString());
             return ResponseEntity.ok().body("신고 완료되었습니다.");
