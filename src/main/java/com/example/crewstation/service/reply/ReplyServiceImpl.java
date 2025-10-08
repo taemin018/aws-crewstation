@@ -3,6 +3,7 @@ package com.example.crewstation.service.reply;
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.exception.MemberNotFoundException;
 import com.example.crewstation.common.exception.PostNotFoundException;
 import com.example.crewstation.dto.reply.ReplyCriteriaDTO;
 import com.example.crewstation.dto.reply.ReplyDTO;
@@ -37,18 +38,16 @@ public class ReplyServiceImpl implements ReplyService {
                                        Long postId,
                                        CustomUserDetails customUserDetails) {
         ReplyCriteriaDTO replyCriteriaDTO = new ReplyCriteriaDTO();
-        Criteria criteria = new Criteria(page, replyDAO.findAllCountByPostId(postId),5,5);
+        Criteria criteria = new Criteria(page, replyDAO.findAllCountByPostId(postId), 5, 5);
         List<ReplyDTO> replies = replyDAO.findAllByPostId(postId, criteria);
         replies.forEach(reply -> {
-            if(reply.getFilePath() !=null){
+            if (reply.getFilePath() != null) {
                 reply.setFilePath(s3Service.getPreSignedUrl(reply.getFilePath(), Duration.ofMinutes(5)));
             }
             reply.setRelativeDate(DateUtils.toRelativeTime(reply.getCreatedDatetime()));
             if (customUserDetails != null) {
                 reply.setWriter(reply.getMemberId().equals(customUserDetails.getId()));
             }
-//            임시로 합니다
-            reply.setWriter(reply.getMemberId().equals(1L));
         });
         replyCriteriaDTO.setReplies(replies);
         replyCriteriaDTO.setCriteria(criteria);
@@ -59,23 +58,22 @@ public class ReplyServiceImpl implements ReplyService {
     @LogStatus
     @Transactional(rollbackFor = Exception.class)
     public void write(ReplyDTO replyDTO, CustomUserDetails customUserDetails) {
-        if(!postDAO.isActivePost(replyDTO.getPostId())){
+        if (!postDAO.isActivePost(replyDTO.getPostId())) {
             throw new PostNotFoundException("이미 삭제된 게시글입니다.");
         }
-        if(customUserDetails != null) {
-            replyDTO.setMemberId(customUserDetails.getId());
+        if (customUserDetails == null) {
+            throw new MemberNotFoundException("로그인 후 사용 가능");
         }
-//        임시입니다
-        replyDTO.setMemberId(1L);
+        replyDTO.setMemberId(customUserDetails.getId());
         replyDAO.save(replyDTO);
         alarmDAO.saveReplyAlarm(replyDTO.getPostId());
-        diaryDAO.changeReplyCount(+1,replyDTO.getPostId());
+        diaryDAO.changeReplyCount(+1, replyDTO.getPostId());
     }
 
     @Override
     @LogStatus
     public void upate(ReplyDTO replyDTO) {
-        if(!postDAO.isActivePost(replyDTO.getPostId())){
+        if (!postDAO.isActivePost(replyDTO.getPostId())) {
             throw new PostNotFoundException("이미 삭제된 게시글입니다.");
         }
         replyDAO.update(toReplyVO(replyDTO));
@@ -85,10 +83,10 @@ public class ReplyServiceImpl implements ReplyService {
     @LogStatus
     @Transactional(rollbackFor = Exception.class)
     public void delete(ReplyDTO replyDTO) {
-        if(!postDAO.isActivePost(replyDTO.getPostId())){
+        if (!postDAO.isActivePost(replyDTO.getPostId())) {
             throw new PostNotFoundException("이미 삭제된 게시글입니다.");
         }
         replyDAO.softDelete(replyDTO.getId());
-        diaryDAO.changeReplyCount(-1,replyDTO.getPostId());
+        diaryDAO.changeReplyCount(-1, replyDTO.getPostId());
     }
 }
