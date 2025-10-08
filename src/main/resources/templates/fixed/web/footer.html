@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crew Station</title>
-    <link rel="stylesheet" href="../../../static/css/font.css">
-    <link rel="stylesheet" href="../../../static/css/fixed/web/footer.css">
-    <link rel="shortcut icon" href="../../../static/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/fixed/web/footer.css">
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
 </head>
 <body>
-    <footer class="footer-container">
+    <footer class="footer-container" >
         <div class="footer-wrap">
             <div class="inquiry-wrap">
                 <div class="inquiry-title">
@@ -25,12 +25,12 @@
                 </div>
                 <div class="inquiry-days"><div class="inquiry-info">평일: 전체 문의 상담</div><div class="inquiry-info">토요일, 공휴일: Crew Station 기프트건 상담</div><div class="inquiry-info">일요일: 휴무</div></div>
                 <div class="inquiry-reg-wrap">
-                    <a class="inquiry-reg">문의하기</a>
+                    <a th:href="@{/ask/register}" class="inquiry-reg">문의하기</a>
                 </div>
             </div>
             <div class="vertical-line"></div>
             <div class="company-info-wrap">
-                <a class="info-item">회사소개</a>
+                <a class="info-item" th:href="@{/company}">회사소개</a>
                 <a class="info-item">이용약관</a>
                 <a class="info-item bold">개인정보 처리방침</a>
                 <a class="info-item">공지사항</a>
