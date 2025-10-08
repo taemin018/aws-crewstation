@@ -5,7 +5,7 @@ const secretToggle = document.querySelector(".secret-toggle");
 const lockIcon = document.querySelector(".lock");
 const unlockIcon = document.querySelector(".unlock");
 
-secretToggle.addEventListener("click", async (e) => {
+secretToggle?.addEventListener("click", async (e) => {
     secretCheckbox.checked = secretToggle.classList.toggle("active");
     console.log(secretCheckbox.checked)
     console.log(document.getElementById("postId").dataset.post);
@@ -231,7 +231,7 @@ const removeContentNoButton = document.querySelector(".remove-no-content");
 console.log(removeContentNoButton);
 const removeContentOkButton = document.querySelector(".remove-ok-content");
 const removeContentBtn = document.querySelector(".remove-button.remove-content-button");
-removeContentBtn.addEventListener("click",(e)=>{
+removeContentBtn?.addEventListener("click",(e)=>{
     removeContentModal.style.display = "block";
 })
 removeContentNoButton.addEventListener("click",(e)=>{

@@ -46,7 +46,7 @@ public class PurchaseDTO implements Serializable {
     private String fileOriginName;
     private String address;
     private List<SectionDTO> sections;
-
+    private boolean writer;
     private String purchaseContent;
     private Long postSectionId;
     private Long thumbnail;

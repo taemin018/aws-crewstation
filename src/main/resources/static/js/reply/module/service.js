@@ -21,6 +21,7 @@ const replyService = (() => {
     }
 
     const write = async(reply) =>{
+        let message = null;
         const response = await fetch("/api/replies/write", {
             method: "POST",
             headers: {
@@ -32,10 +33,10 @@ const replyService = (() => {
         if(response.ok) {
             console.log("댓글 작성 성공");
         } else{
-            const errorMessage = await response.text();
-            console.log(errorMessage)
+            message = await response.text();
+            console.log(message)
         }
-    return {status : response.status}
+    return {message: message ,status : response.status}
     }
 
     const modify = async (reply)  =>{
