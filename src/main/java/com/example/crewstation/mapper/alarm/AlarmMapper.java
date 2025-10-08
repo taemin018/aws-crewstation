@@ -1,6 +1,10 @@
 package com.example.crewstation.mapper.alarm;
 
+import com.example.crewstation.dto.alarm.AlarmDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface AlarmMapper {
@@ -16,5 +20,15 @@ public interface AlarmMapper {
 
 //   댓글 알람 추가
     public void insertReplyAlarm(Long postId);
+
+//    안 읽은 알람 개수 조회
+    public int selectUnreadCount(@Param("memberId") Long memberId);
+
+//    알림페이지 목록
+    public List<AlarmDTO> selectLatestAlarms (@Param("memberId") Long memberId);
+
+//    알림 읽음 처리
+    public int markAlarmAsRead(@Param("alarmType") String alarmType,
+                        @Param("alarmId") Long alarmId);
 }
 
