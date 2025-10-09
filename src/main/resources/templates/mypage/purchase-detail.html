@@ -4,122 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crew Station</title>
-    <link rel="shortcut icon" href="/static/images/crew-station-favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="/static/css/font.css">
-    <link rel="stylesheet" href="/static/css/mypage/purchase-detail.css">
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/mypage/purchase-detail.css">
 </head>
 <body>
-     <div class="all">
-        <div class="myhome-nav">
-            <nav class="page-navigation">
-                <ul>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 다이어리
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 크루 구하기
-                        </a>
-                    </li>z
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 크루 목록
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 활동
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="" class="active">
-                            나의 구매 내역
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 판매 내역
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 문의
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="main">
-            <div class="main-wrapper">
-                <div class="main-wrap">
-                    <h1 class="main-title">구매상세</h1>
-                    <section class="header">
-                        <section class="header-wrapper">
-                            <h1 class="header-title">
-                                <span class="date">2/22 (수)</span>
-                                <!-- 상태쓰기 -->
-                                <span>결제완료</span>
-                            </h1>
-                        </section>
-                        <div class="line fill">
-                            <h3 class="status">승락 대기</h3>
-                        </div>
-                        <div class="line fill">
-                            <h3 class="status">결제 대기</h3>
-                        </div>
-                        <div class="line">
-                            <!-- 현재 있는곳 까지 -->
-                            <span class="now">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" data-testid="arrow-down-icon">
-                                    <path fill="#2F3438" fill-rule="evenodd" d="M1.201 3.182a.6.6 0 0 1 .847.05l3.996 4.495 3.997-4.496a.6.6 0 1 1 .896.798l-4.07 4.58a1.1 1.1 0 0 1-1.645 0l-4.07-4.58a.6.6 0 0 1 .05-.847" clip-rule="evenodd"></path>
-                                </svg>
-                            </span>
-                            <h3 class="status">결제 완료</h3>
-                        </div>
-                        <div class="line">
-                            <h3 class="status">수령 완료</h3>
-                        </div>
-                    </section>
-                    <hr class="bar">
-                    <div class="product">
-                        <!-- 택배일 경우 -->
-                        <h2 class="address-wrap">배송지정보</h2>
-                        <div class="address">
-                            <span class="address-span">주소</span>
-                            서울시 강남구 무슨무슨로 101동 102호
-                        </div>
-                        <div class="address">
-                            <span class="address-span">받은 사람</span>
-                            김크루
-                        </div>
-                        <div class="address">
-                            <span class="address-span">전화번호</span>
-                            010-1234-1234
-                        </div>
-                        <!-- 직거래 일 때 -->
-                         <h2 class="address-wrap">구매자정보</h2>
-                         <div class="address">
-                            <span class="address-span">받은 사람</span>
-                            김크루
-                        </div>
-                        <div class="address">
-                            <span class="address-span">전화번호</span>
-                            010-1234-1234
-                        </div>
-                        <div class="product-wrapper">
-                            <img src="/static/images/gift-shop-post-img2.png" alt="">
-                            <div class="purchase-info">
-                                <p class="info-title">파리에서 사온 키링~</p>
-                                <p class="info-detail">10000원 | 1개</p>
-                            </div>
+<!--<div class="all">-->
+<div class="main">
+    <div class="main-wrapper">
+        <div class="main-wrap">
+
+            <!--레이아웃 부분-->
+            <div id="order-detail"></div>
+
+            <!--별점 모달 부분-->
+            <div class="modal-wrapper">
+                <div class="modal-wrap">
+                    <div class="modal-header">
+                        <span class="header">별점 남기기</span>
+                        <button type="button" class="close-button">
+                            <span class="close"></span>
+                        </button>
+                    </div>
+                    <div class="modal-content">
+                        <div class="modal-content-wrap">
+                            <form action="">
+                                <div class="product-star">
+                                    <div class="star-title">
+                                        <span class="star-title-text"></span>
+                                    </div>
+                                    <div class="star-content">
+                                        <label for="star" class="star" data-point="1">
+                                            <svg width="48" height="48" class="star" fill="currentColor" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
+                                                <defs>
+                                                    <clipPath id="halfStarClip">
+                                                        <rect x="0" y="0" width="18" height="36"></rect>
+                                                    </clipPath>
+                                                    <clipPath id="quarterStarClip">
+                                                        <rect x="0" y="0" width="9" height="36"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                                <path fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                                <path class="star-fill" fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                            </svg>
+                                        </label>
+                                        <label for="" class="star" data-point="2">
+                                            <svg width="48" height="48" class="star" fill="currentColor" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
+                                                <defs>
+                                                    <clipPath id="halfStarClip">
+                                                        <rect x="0" y="0" width="18" height="36"></rect>
+                                                    </clipPath>
+                                                    <clipPath id="quarterStarClip">
+                                                        <rect x="0" y="0" width="9" height="36"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                                <path fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                                <path class="star-fill" fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                            </svg>
+                                        </label>
+                                        <label for="" class="star" data-point="3">
+                                            <svg width="48" height="48" class="star" fill="currentColor" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
+                                                <defs>
+                                                    <clipPath id="halfStarClip">
+                                                        <rect x="0" y="0" width="18" height="36"></rect>
+                                                    </clipPath>
+                                                    <clipPath id="quarterStarClip">
+                                                        <rect x="0" y="0" width="9" height="36"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                                <path fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                                <path class="star-fill" fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                            </svg>
+                                        </label>
+                                        <label for="" class="star" data-point="4">
+                                            <svg width="48" height="48" class="star" fill="currentColor" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
+                                                <defs>
+                                                    <clipPath id="halfStarClip">
+                                                        <rect x="0" y="0" width="18" height="36"></rect>
+                                                    </clipPath>
+                                                    <clipPath id="quarterStarClip">
+                                                        <rect x="0" y="0" width="9" height="36"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                                <path fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                                <path class="star-fill" fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                            </svg>
+                                        </label>
+                                        <label for="" class="star"  data-point="5">
+                                            <svg width="48"   height="48" class="star" fill="currentColor" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
+                                                <defs>
+                                                    <clipPath id="halfStarClip">
+                                                        <rect x="0" y="0" width="18" height="36"></rect>
+                                                    </clipPath>
+                                                    <clipPath id="quarterStarClip">
+                                                        <rect x="0" y="0" width="9" height="36"></rect>
+                                                    </clipPath>
+                                                </defs>
+                                                <path fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                                <path class="star-fill" fill-rule="evenodd" d="M18 30.7l-9 3.8c-1.5.7-2.6-.2-2.5-1.8l.8-9.7L1 15.6c-1-1.3-.6-2.6 1-3l9.5-2.2 5-8.3c1-1.5 2.3-1.5 3.1 0l5 8.3 9.6 2.2c1.6.4 2 1.7 1 3L28.7 23l.8 9.7c.1 1.6-1 2.5-2.5 1.8l-9-3.8z"></path>
+                                            </svg>
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="" id="star" value="0">
+                                <button class="button-submit">별점 주기</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+</div>
+</div>
+</div>
 </body>
-<script src="/static/js/mypage/purchase-detail/event.js"></script>
+<script src="https://js.bootpay.co.kr/bootpay-5.0.2.min.js"></script>
+<script src="/js/mypage/purchase-detail/module/service.js"></script>
+<script src="/js/mypage/purchase-detail/module/layout.js"></script>
+<script src="/js/mypage/purchase-detail/event.js"></script>
 </html>

@@ -1,136 +1,95 @@
-// 개수 조회
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. 구매 상태 개수 조회
+    const purchases = document.querySelectorAll(".purchase-list-wrapper");
+    const requestNumber = document.querySelector(".request-number");
+    const waitingNumber = document.querySelector(".watting-number");
+    const paymentOkNumber = document.querySelector(".payment-ok");
+    const receiveNumber = document.querySelector(".receive-number");
 
-const purchases = document.querySelectorAll(".purchase-list-wrapper");
-const requestNumber = document.querySelector(".request-number");
-const wattingNumber = document.querySelector(".watting-number");
-const paymentOkNumber = document.querySelector(".payment-ok");
-const receiveNumber = document.querySelector(".receive-number");
+    let request = 0;
+    let paymentOk = 0;
+    let waiting = 0;
+    let receive = 0;
 
-let request = 0;
-let paymentOk = 0;
-let watting = 0;
-let receive = 0;
+    purchases.forEach((purchase) => {
+        const title = purchase.querySelector(".title-status");
+        if (!title) return;
 
-purchases.forEach((purchase) => {
-    const title = purchase.querySelector(".title-status");
+        const text = title.innerText.trim();
 
-    let text = title.innerText;
-
-    if (text === "승락대기") {
-        request++;
-    } else if (text === "결제완료") {
-        paymentOk++;
-    } else if (text === "결제대기") {
-        watting++;
-    } else if (text === "수령완료") {
-        receive++;
-    } else {
-        return;
-    }
-
-    requestNumber.innerText = request;
-    wattingNumber.innerText = watting;
-    paymentOkNumber.innerText = paymentOk;
-    receiveNumber.innerText = receive;
-});
-
-//  검색 드롭다운
-
-const dropDownButtons = document.querySelectorAll(".drop-down-button");
-
-dropDownButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const list = btn.nextElementSibling;
-        list.classList.toggle("active");
-    });
-});
-
-// 문서 전체 클릭 시 active 제거
-document.addEventListener("click", () => {
-    const activeLists = document.querySelectorAll(".drop-down-list.active");
-    activeLists.forEach((list) => {
-        list.classList.remove("active");
-    });
-});
-
-//  선택 항목 button에 담기
-
-const listContents = document.querySelectorAll(".list-content");
-
-listContents.forEach((content) => {
-    content.addEventListener("click", (e) => {
-        const dropDown = content.closest(".drop-down-wrapper");
-        const text = dropDown.querySelector(".drop-down-text");
-        const list = dropDown.querySelector(".drop-down-list");
-        let word = content.innerText;
-
-        text.innerText = word;
-        list.classList.remove("active");
-    });
-});
-
-// 주문 취소 버튼
-
-const cancelButtons = document.querySelectorAll(".purchase-cancel");
-
-cancelButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        const confirmed = confirm("정말 주문 취소 하시겠습니까?");
-        if (confirmed) {
-            // 상태 변경
+        switch (text) {
+            case "수락 요청":
+                request++;
+                break;
+            case "결제 완료":
+                paymentOk++;
+                break;
+            case "결제 대기":
+                waiting++;
+                break;
+            case "수령 완료":
+                receive++;
+                break;
         }
     });
-});
 
-// 수령 완료 버튼
+    if (requestNumber) requestNumber.innerText = request;
+    if (waitingNumber) waitingNumber.innerText = waiting;
+    if (paymentOkNumber) paymentOkNumber.innerText = paymentOk;
+    if (receiveNumber) receiveNumber.innerText = receive;
 
-const receiveButtons = document.querySelectorAll(".receive-button");
+    // 버튼 동작
 
-receiveButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        const confirmed = confirm("제품을 수령하셨나요?");
-        if (confirmed) {
-            // 상태 변경
-        }
-    });
-});
-
-// 별점 남기기
-
-const stars = document.querySelectorAll("label.star");
-const hiddenInput = document.querySelector("input[type='hidden']#star");
-
-let data = 0;
-
-stars.forEach((star) => {
-    star.addEventListener("click", (e) => {
-        data = star.dataset.point;
-        stars.forEach((star, i) => {
-            if (data >= i + 1) {
-                star.closest(".star").classList.add("full");
-            } else if (data < i + 1) {
-                star.closest(".star").classList.remove("full");
+    document.querySelectorAll(".purchase-cancel").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            if (confirm("정말 주문을 취소하시겠습니까?")) {
+                // TODO: 주문취소 API 호출
+                console.log("주문취소 요청");
             }
         });
     });
-});
 
-// 모달 켜기
-
-const modal = document.querySelector(".modal-wrapper");
-const starButtons = document.querySelectorAll(".star-button");
-
-starButtons.forEach((starButton) => {
-    starButton.addEventListener("click", (e) => {
-        modal.style.display = "flex";
+    document.querySelectorAll(".receive-button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            if (confirm("제품을 수령하셨나요?")) {
+                // TODO: 수령 완료 API 호출
+                console.log("수령 완료 요청");
+            }
+        });
     });
-});
 
-// 모달 끄기
+    // 4. 별점 남기기
+    const stars = document.querySelectorAll("label.star");
+    let currentStar = 0;
 
-const closeButton = document.querySelector(".close-button");
+    stars.forEach((star) => {
+        star.addEventListener("click", () => {
+            const point = parseInt(star.dataset.point);
+            currentStar = point;
 
-closeButton.addEventListener("click", (e) => {
-    modal.style.display = "none";
+            stars.forEach((s, i) => {
+                s.parentElement.classList.toggle("full", i < point);
+            });
+
+            // hidden input 값 세팅 (백엔드 전송용)
+            const hiddenInput = document.querySelector("#star");
+            if (hiddenInput) hiddenInput.value = currentStar;
+        });
+    });
+
+    // 5. 모달 열기 / 닫기
+    const modal = document.querySelector(".modal-wrapper");
+    const closeButton = document.querySelector(".close-button");
+
+    document.querySelectorAll(".star-button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            if (modal) modal.style.display = "flex";
+        });
+    });
+
+    if (closeButton) {
+        closeButton.addEventListener("click", () => {
+            if (modal) modal.style.display = "none";
+        });
+    }
 });

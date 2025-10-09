@@ -8,6 +8,8 @@ import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
+import com.example.crewstation.dto.purchase.PurchaseListCriteriaDTO;
+import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,9 @@ public interface PurchaseService {
 
 //  기프트 삭제
     public void softDelete(Long id);
+
+//  구매내역 조회
+    public PurchaseListCriteriaDTO getPurchaseListByMemberId(Long memberId, ScrollCriteria scrollcriteria, Search search);
 
 
     default PostSectionVO toPostSectionVO(PurchaseDTO purchaseDTO){

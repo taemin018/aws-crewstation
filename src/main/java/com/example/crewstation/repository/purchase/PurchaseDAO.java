@@ -3,8 +3,10 @@ package com.example.crewstation.repository.purchase;
 import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
+import com.example.crewstation.dto.purchase.PurchaseListDTO;
 import com.example.crewstation.mapper.purchase.PurchaseMapper;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +50,16 @@ public class PurchaseDAO {
     // 구매 상세
     public Optional<PurchaseDetailDTO> findByPurchaseDetail(Long postId){
         return purchaseMapper.selectPurchaseDetailByPostId(postId);
+    }
+
+//  구매 내역 조회
+    public List<PurchaseListDTO> selectPurchaseList(Long memberId, ScrollCriteria scrollcriteria, Search search) {
+        return purchaseMapper.selectPurchaseList(memberId, scrollcriteria, search);
+    }
+
+//  전체 개수 조회
+    public int selectTotalCount(Long memberId, Search search) {
+        return purchaseMapper.selectTotalCount(memberId, search);
     }
 
 }

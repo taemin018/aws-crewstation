@@ -9,6 +9,16 @@
             )
         </if>
     </sql>
+
+    <sql id="purchaseSearch">
+        <if test="search.keyword != null and search.keyword != ''">
+            AND (
+            vpp.post_title LIKE CONCAT('%', #{search.keyword}, '%')
+            OR vpp.purchase_country LIKE CONCAT('%', #{search.keyword}, '%')
+            )
+        </if>
+    </sql>
+
     <select id="selectAllByKeyWord">
         select vpp.id as post_id,
         vpp.post_title,
@@ -102,10 +112,49 @@
                tm.id AS member_id,
                tm.member_name
         FROM tbl_member tm
-                 JOIN view_post_purchase vpp
-                      ON tm.id = vpp.member_id
-                          AND vpp.id = #{postId}
+        JOIN view_post_purchase vpp
+        ON tm.id = vpp.member_id
+        AND vpp.id = #{postId}
         WHERE vpp.post_status = 'active'
+    </select>
+
+    <!-- 멤버아이디로 구매내역 조회  -->
+    <select id="selectPurchaseList">
+        SELECT
+        vpp.id AS post_id,
+        vpp.post_title,
+        vpp.purchase_product_price AS purchase_product_price,
+        vpp.created_datetime,
+        vpp.updated_datetime,
+        tps.payment_phase AS status,
+        tm.id AS member_id,
+        vfps.file_id,
+        vfps.file_name,
+        vfps.file_origin_name,
+        vfps.file_path
+        FROM tbl_member tm
+        JOIN view_post_purchase vpp ON tm.id = vpp.member_id
+        LEFT JOIN tbl_post_section tsec ON vpp.id = tsec.post_id
+        LEFT JOIN view_file_post_section_file vfps ON tsec.id = vfps.post_section_id
+        LEFT JOIN tbl_payment_status tps ON vpp.id = tps.purchase_id
+        WHERE tm.id = #{memberId}
+        AND vpp.post_status = 'active'
+        <include refid="purchaseSearch"/>
+        ORDER BY vpp.created_datetime DESC
+        LIMIT #{criteria.size}
+        OFFSET #{criteria.offset}
+    </select>
+
+
+
+    <!-- 전체 개수 조회 (페이징용) -->
+    <select id="selectTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM view_post_purchase vpp
+        JOIN tbl_member tm ON tm.id = vpp.member_id
+        WHERE tm.id = #{memberId}
+        AND vpp.post_status = 'active'
+        <include refid="purchaseSearch"/>
     </select>
 
 </mapper>
