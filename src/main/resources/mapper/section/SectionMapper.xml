@@ -5,7 +5,7 @@
         select post_content,
                post_id,
                file_id,
-               post_section_id,
+               tps.id as post_section_id,
                COALESCE(image_type, 'sub') as image_type,
                file_origin_name,
                file_path,

@@ -14,4 +14,9 @@ public interface PostFileTagMapper {
 
 //    태그 불러오기
     public List<PostFileTagDTO> selectByFileId(Long fileId);
+
+//    태그 전체 삭제
+    public void deleteAllByFileId(Long fileId);
+//    태그 개별 삭제
+    public void deleteById(Long id);
 }

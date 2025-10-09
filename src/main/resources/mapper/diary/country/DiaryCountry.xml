@@ -10,4 +10,9 @@
         from tbl_diary_country tdc join tbl_country tc on  tdc.country_id = tc.id
         and tdc.post_id = #{postId}
     </select>
+
+    <delete id="delete">
+        delete from tbl_diary_country
+        where country_id =#{countryId}
+    </delete>
 </mapper>

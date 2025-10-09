@@ -1,6 +1,7 @@
 package com.example.crewstation.controller.reply;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.exception.MemberNotFoundException;
 import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.dto.reply.ReplyCriteriaDTO;
 import com.example.crewstation.dto.reply.ReplyDTO;
@@ -38,6 +39,8 @@ public class ReplyRestController {
             return ResponseEntity.ok().body("작성 성공");
         } catch (PostNotActiveException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 

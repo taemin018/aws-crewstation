@@ -18,4 +18,5 @@ public class AlarmDTO {
     private ReadStatus readStatus;
     private String createdDatetime;
     private String updatedDatetime;
+
 }

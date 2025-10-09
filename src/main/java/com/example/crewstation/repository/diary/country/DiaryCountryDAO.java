@@ -23,4 +23,8 @@ public class DiaryCountryDAO {
     public List<CountryDTO> findCountryByPostId(Long postId){
         return diaryCountryMapper.selectCountryByPostId(postId);
     }
+
+    public void delete(Long countryId){
+        diaryCountryMapper.delete(countryId);
+    }
 }

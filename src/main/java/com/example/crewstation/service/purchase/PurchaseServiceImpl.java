@@ -2,6 +2,7 @@ package com.example.crewstation.service.purchase;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;

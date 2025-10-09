@@ -9,7 +9,7 @@
   <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
 </head>
 <body>
-<form name="diary" id="diary" action="/diaries/write" method="POST" enctype="multipart/form-data">
+<form name="diary" id="diary" th:action="@{/diaries/{id}(id=${diary.diary.postId})}" method="POST" enctype="multipart/form-data">
   <div class="page">
     <div class="crew-write-page">
       <div class="crew-write-page-wrapper">
@@ -74,7 +74,7 @@
               <!-- 좌측 이미지 추가 -->
               <!-- 초기화면 -->
               <ol class="left-img-add-container">
-                <li class="post-sub-img" th:each="section,index:${diary.sections}" th:attr="data-idx=${index.index},data-postSectionId=${section.postSectionId}, data-fileId=${section.fileId}" th:style="${section.filePath} == null or ${section.filePath} == '' ? 'display:none;' : ''" >
+                <li class="post-sub-img" th:each="section,index:${diary.sections}" th:attr="data-idx=${index.index},data-postSectionId=${section.postSectionId}, data-fileId=${section.fileId}" th:style="${section.filePath} == null or ${section.filePath} == '' ? 'display:none;' : ''" th:classappend="${index.index == 0} ? ' thumbnail' : ''" >
                   <div class="sub-img-wrapper">
                     <div class="sub-img-wrap">
                       <div class="sub-img"><img class="img-view" alt="" th:src="${section.filePath} == null or ${section.filePath} == '' ? '/images/noImage.png' : @{${section.filePath}}"></div>
@@ -95,7 +95,7 @@
 
             <!-- 이미지 + 게시글 내용 -->
             <ol class="post-img-content-container">
-              <li class="post-img-content-wrapper"  data-armed="0" th:each="section,index : ${diary.sections}" th:attr="data-idx=${index.index} ,data-postSectionId=${section.postSectionId}, data-fileId=${section.fileId}" th:id="'section_' + ${index.index+1}">
+              <li class="post-img-content-wrapper"  data-armed="0" th:each="section,index : ${diary.sections}" th:attr="data-idx=${index.index} ,data-postSectionId=${section.postSectionId}, data-fileId=${section.fileId}" th:id="'section_' + ${index.index+1}" th:classappend="${index.index == 0} ? ' thumbnail' : ''">
                 <div class="post-img-content">
                   <div class="post-img">
                     <div class="content-del" th:style="${section.filePath} != null and ${section.filePath} != '' ? 'display:none;' : ''" >
@@ -142,7 +142,15 @@
                           <div class="mention-profile">
                             <a class="profile-a">
                               <div class="mention-profile-img">
-                                <img th:src="@{${tag.filePath}}">
+                                <th:block th:if="${tag.filePath != null}">
+                                  <img class="product-seller-profile-img" th:src="@{${tag.filePath}}">
+                                </th:block>
+                                <th:block th:if="${tag.filePath == null and tag.socialImgUrl !=null}">
+                                  <img class="product-seller-profile-img" th:src="@{${tag.socialImgUrl}}">
+                                </th:block>
+                                <th:block th:if="${tag.filePath == null and tag.socialImgUrl ==null}">
+                                  <img class="product-seller-profile-img" src="/images/air1.png">
+                                </th:block>
                               </div>
                               <span id="mention-name" th:text="${tag.memberName}">크루원 이름</span>
                             </a>
@@ -216,6 +224,7 @@
       </div>
     </li>
   </template>
+  <div id="deleteWrap"></div>
 </form>
 <script src="/js/mypage/my-diary/update/module/service.js"></script>
 <script src="/js/mypage/my-diary/update/module/layout.js"></script>

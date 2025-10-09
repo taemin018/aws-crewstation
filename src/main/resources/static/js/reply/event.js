@@ -73,10 +73,13 @@ replyInput.addEventListener("keydown",async (e)=>{
             console.log(123123)
             return;
         }
-        const {status}=await replyService.write({"postId":postId,"replyContent":replyInput.value})
+        const {message,status}=await replyService.write({"postId":postId,"replyContent":replyInput.value})
         if(status ===404){
             location.href = "/diaries"
+        } else if(status ===401){
+            toastModal(message);
         }
+
         const repliesCriteria = await replyService.getList(postId,replyLayout.showList,1);
         document.querySelector("span.total").textContent = repliesCriteria.criteria.total;
         document.querySelector("span.go-reply-icon").nextElementSibling.textContent = repliesCriteria.criteria.total;
@@ -92,9 +95,9 @@ replyInput.addEventListener("keydown",async (e)=>{
 })
 
 
-const removeModal = document.querySelector(".remove-modal");
-const removeNoButton = removeModal.querySelector(".remove-no");
-const removeOkButton = removeModal.querySelector(".remove-ok");
+const removeModal = document.querySelector(".remove-modal-reply");
+const removeNoButton = removeModal.querySelector(".remove-no-reply");
+const removeOkButton = removeModal.querySelector(".remove-ok-reply");
 
 const replyWrap=document.getElementById("replyWrap");
 let replyTextDiv = null;

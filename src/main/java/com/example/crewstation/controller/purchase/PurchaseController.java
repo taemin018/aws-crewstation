@@ -49,39 +49,12 @@ public class PurchaseController {
     }
 
     @GetMapping("detail/{postId}")
-    public String detail(@PathVariable Long postId, Model model) {
-
-//        임시 로그인
-//        MemberDTO memberDTO = new MemberDTO();
-//        memberDTO.setMemberEmail("test@ac.kr");
-//        memberDTO.setMemberPassword("1234");
-//        try {
-//            Authentication authentication =
-//                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberDTO.getMemberEmail(), memberDTO.getMemberPassword()));
-//
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            String accessToken = jwtTokenProvider.createAccessToken(((UserDetails) authentication.getPrincipal()).getUsername());
-//            String refreshToken = jwtTokenProvider.createRefreshToken(((UserDetails) authentication.getPrincipal()).getUsername());
-//
-//            Map<String, String> tokens = new HashMap<>();
-//            tokens.put("accessToken", accessToken);
-//            tokens.put("refreshToken", refreshToken);
-//            log.info("tokens {}", tokens);
-//        } catch(AuthenticationException e) {
-//                log.error("AuthenticationException", e);
-//        }
-
+    public String detail(@PathVariable Long postId, Model model,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         PurchaseDTO purchase = purchaseService.getPurchase(postId);
-/*
-        purchase.ifPresent(purchaseDetailDTO -> {
-            purchaseDetailDTO.setWriter(true);
-            purchaseDetailDTO.setFilePath(null);
-            purchaseDetailDTO.setSocialImgUrl("https://prs.ohousecdn.com/apne2/content/community/v1-385639845687296.jpg?w=768&h=1026&c=c");
-        });*/
         log.info("purchase {}", purchase);
         model.addAttribute("purchase", purchase);
-        model.addAttribute("writer", true);
+        model.addAttribute("writer", customUserDetails != null && customUserDetails.getId().equals(purchase.getMemberId()));
         return "gift-shop/detail";
     }
 
@@ -93,11 +66,12 @@ public class PurchaseController {
 
     @PostMapping("write")
     public RedirectView write(PurchaseDTO purchaseDTO,
-//                      @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                      @AuthenticationPrincipal CustomUserDetails customUserDetails,
                               @RequestParam("files") List<MultipartFile> files) {
         log.info("purchaseDTO {}", purchaseDTO);
         log.info("files {}", files.size());
-        purchaseDTO.setMemberId(1L);
+//        purchaseDTO.setMemberId(1L);
+        purchaseDTO.setMemberId(customUserDetails.getId());
         purchaseService.write(purchaseDTO, files);
 
 //        purchaseDTO.setMemberId(customUserDetails.getId());

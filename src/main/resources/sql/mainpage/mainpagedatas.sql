@@ -1076,3 +1076,70 @@ INSERT INTO tbl_banner_file (file_id, banner_id)
 VALUES
     (46, 1),
     (47, 2);
+
+
+-- 좋아요 알람 더미
+insert into tbl_like_alarm (alarm_status, like_id)
+values ('unread', 1);
+
+-- 다이어리 알람 더미
+insert into tbl_diary_alarm (alarm_status, diary_id)
+values ('unread', 1);
+
+-- 멤버 알람 더미
+insert into tbl_member_alarm (alarm_status, member_id)
+values ('unread', 1);
+
+-- 알림을 “받을” 유저 (A)
+INSERT INTO tbl_member (member_name, member_phone, member_email, member_gender, member_role)
+VALUES ('정이랑', '01088888888', 'a@gmail.com', 'female', 'member')
+RETURNING id;
+
+-- 결과 예시: A_ID = 1 (아래에서 이 값 사용)
+-- 알림을 “발생시키는” 유저 (B)
+INSERT INTO tbl_member (member_name, member_phone, member_email, member_gender, member_role)
+VALUES ('손수영', '01077777777', 'b@gmail.com', 'female', 'member')
+RETURNING id;
+
+-- 결과 예시: B_ID = 2
+
+
+INSERT INTO tbl_post (post_title, member_id, post_status)
+VALUES ('알림 테스트 글', (SELECT id FROM tbl_member WHERE member_email='a@gmail.com'), 'active'::status)
+RETURNING id;  -- POST_ID 메모 (예: 10)
+
+
+
+INSERT INTO tbl_diary_country_path (
+    country_start_date,
+    country_end_date,
+    member_id,
+    country_id
+)
+VALUES (
+           '2025-11-01',                -- 여행 시작일
+           '2025-11-05',                -- 여행 종료일
+           (SELECT id FROM tbl_member WHERE member_email = 'a@gmail.com'),  -- 정이랑 id
+           (SELECT id FROM tbl_country LIMIT 1)   -- 존재하는 나라 중 하나 사용 (예: 1)
+       )
+RETURNING id;
+
+INSERT INTO tbl_diary (
+    post_id,
+    diary_secret,
+    diary_like_count,
+    diary_reply_count,
+    diary_country_path_id
+)
+VALUES (
+           (SELECT id FROM tbl_post WHERE post_title = '알림 테스트 글'),
+           'public'::secret,
+           0,
+           0,
+           3  -- 위 RETURNING으로 나온 id 넣기
+       );
+
+SELECT post_id, diary_country_path_id, diary_secret
+FROM tbl_diary
+ORDER BY post_id DESC;
+

@@ -1,7 +1,3 @@
-purchaseDetailService.info((member) => {
-    console.log("회원정보 받아오기")
-    document.getElementById("memberId").value = member.id;
-})
 
 document.addEventListener("DOMContentLoaded", () => {
     // 슬라이드 관련
@@ -30,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(modalId);
                 if (modalId === "myModal") {
                     console.log("판매 요청 들어왔고");
-                    const memberId = document.getElementById("memberId").value;
                     const postId = document.getElementById("postId").dataset.post;
                     console.log("회원 유저야")
                     console.log(123)
@@ -234,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
     confirmReportYes.addEventListener("click", async (e) => {
         const reportContent = document.querySelector("input[name='reason']:checked").value;
         console.log(reportContent);
-        const memberId = document.getElementById("memberId").value;
         const postId = document.getElementById("postId").dataset.post;
         const {message, status} = await purchaseDetailService.report({
             reportContent: reportContent,
@@ -489,7 +483,7 @@ document.querySelector("div.product-detail-container").addEventListener("click",
     document.querySelector("div.modify-container").style.display = "none";
 })
 
-document.querySelector("div.del-post").addEventListener("click",(e)=>{
+document.querySelector("div.del-post")?.addEventListener("click",(e)=>{
     document.getElementById("delconfirmModal").classList.add("active");
 })
 
