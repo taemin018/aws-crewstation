@@ -1,14 +1,24 @@
 package com.example.crewstation.controller.mypage;
 
+import com.example.crewstation.dto.purchase.PurchaseListCriteriaDTO;
+import com.example.crewstation.service.purchase.PurchaseService;
+import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/mypage/**")
 public class MypageController {
+
+    private final PurchaseService purchaseService;
 
     // 마이페이지 -> 내가 좋아요한 일기 목록 화면 & 내가 댓글 단 일기 목록 화면
     @GetMapping("/my-activities")
@@ -17,4 +27,33 @@ public class MypageController {
         return "mypage/my-activities";
     }
 
+    // 마이페이지 -> 나의 구매내역 목록
+    @GetMapping("/purchase-list")
+    public String getPurchaseList(@RequestParam(defaultValue = "1") int page,
+                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(required = false) String keyword,
+                                  Model model) {
+
+        // 임시 memberId (테스트용)
+        Long memberId = 1L;
+
+        // 페이징 및 검색 설정
+        ScrollCriteria scrollCriteria = new ScrollCriteria(page, size);
+        Search search = new Search();
+        search.setKeyword(keyword);
+
+        // 서비스 호출
+        PurchaseListCriteriaDTO result = purchaseService.getPurchaseListByMemberId(memberId, scrollCriteria, search);
+
+        // 모델 추가
+        model.addAttribute("result", result);
+        model.addAttribute("purchaseList", result.getPurchaseListDTOs());
+        model.addAttribute("criteria", result.getScrollcriteria());
+        model.addAttribute("search", result.getSearch());
+
+        log.info("memberId={}, keyword={}, page={}, size={}", memberId, keyword, page, size);
+        log.info("otal={}, hasMore={}", scrollCriteria.getTotal(), scrollCriteria.isHasMore());
+
+        return "mypage/purchase-list";
+    }
 }

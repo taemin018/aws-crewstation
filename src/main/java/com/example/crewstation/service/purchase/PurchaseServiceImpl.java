@@ -11,19 +11,14 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
-import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
-import com.example.crewstation.dto.purchase.PurchaseDTO;
-import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
+import com.example.crewstation.dto.purchase.*;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.file.section.FilePostSectionDAO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
 import com.example.crewstation.repository.section.SectionDAO;
 import com.example.crewstation.service.s3.S3Service;
-import com.example.crewstation.util.Criteria;
-import com.example.crewstation.util.DateUtils;
-import com.example.crewstation.util.PriceUtils;
-import com.example.crewstation.util.Search;
+import com.example.crewstation.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -260,6 +255,41 @@ public class PurchaseServiceImpl implements PurchaseService {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return today.format(formatter);
+    }
+
+    @Override
+    public PurchaseListCriteriaDTO getPurchaseListByMemberId(Long memberId, ScrollCriteria scrollcriteria, Search search) {
+
+        List<PurchaseListDTO> list = purchaseDAO.selectPurchaseList(memberId, scrollcriteria, search);
+        int total = purchaseDAO.selectTotalCount(memberId, search);
+        scrollcriteria.setTotal(total);
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+        list.forEach(dto -> {
+            try {
+                if (dto.getCreatedDatetime() != null && !dto.getCreatedDatetime().isEmpty()) {
+                    dto.setCreatedDatetime(
+                            LocalDate.parse(dto.getCreatedDatetime(), inputFormatter).format(outputFormatter)
+                    );
+                }
+                if (dto.getUpdatedDatetime() != null && !dto.getUpdatedDatetime().isEmpty()) {
+                    dto.setUpdatedDatetime(
+                            LocalDate.parse(dto.getUpdatedDatetime(), inputFormatter).format(outputFormatter)
+                    );
+                }
+            } catch (Exception e) {
+                log.warn("Date format error: {}", e.getMessage());
+            }
+        });
+
+        PurchaseListCriteriaDTO result = new PurchaseListCriteriaDTO();
+        result.setPurchaseListDTOs(list);
+        result.setScrollcriteria(scrollcriteria);
+        result.setSearch(search);
+
+        return result;
     }
 
 }
