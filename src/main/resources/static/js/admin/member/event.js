@@ -130,20 +130,8 @@
     });
 })();
 
-// ===== 페이징 =====
-(() => {
-    document.querySelectorAll(".page-item-num").forEach((link) => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            document
-                .querySelectorAll(".page-item")
-                .forEach((li) => li.classList.remove("active"));
-            link.closest(".page-item").classList.add("active");
-        });
-    });
-})();
 
-// ===== 모달 열기/닫기 + 상세 데이터 로드 =====
+// ===== 모달 열기/닫기 =====
 (() => {
     const modal = document.querySelector(".member-modal");
     if (!modal) return;
@@ -168,7 +156,6 @@
         setTimeout(() => { modal.style.display = "none"; }, 100);
     };
 
-    // ✅ 상세 버튼 클릭 시: 상세 API 호출 -> 렌더 -> 모달 오픈
     if (table) {
         table.addEventListener("click", async (e) => {
             // 버튼 클래스는 layout에서 뿌린 것과 동일해야 합니다.
@@ -214,15 +201,6 @@ const showMembers = async (page = 1, keyword = "") => {
     return res;
 };
 
-if (paginationMember) {
-    paginationMember.addEventListener("click", async (e) => {
-        if (e.target.classList.contains("paging")) {
-            e.preventDefault();
-            const page = e.target.dataset.page;
-            await showMembers(page, memberKeywordInput?.value || "");
-        }
-    });
-}
 
 if (memberKeywordInput) {
     memberKeywordInput.addEventListener("keydown", async (e) => {
@@ -247,4 +225,17 @@ if (memberMenuBtn) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     await showMembers(1, "");
+});
+
+// 페이징 클릭
+document.addEventListener("click", async (e) => {
+    const a = e.target.closest(".pagination.bootpay-pagination a.paging");
+    if (!a) return;
+
+    e.preventDefault();
+
+    const page = Number(a.dataset.page || 1);
+    const keyword = (memberKeywordInput?.value || "").trim();
+
+    await showMembers(page, keyword);
 });

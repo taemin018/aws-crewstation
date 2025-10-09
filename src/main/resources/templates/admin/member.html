@@ -427,7 +427,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div class="modal-title">
-                                    (TestId01) Test01
+                                    <span id="memberModalTitle"></span>
                                 </div>
                                 <button class="close">
                                     <i class="mdi mdi-close"></i>
@@ -458,6 +458,7 @@
                                                                     <tr><th>mbti</th><td></td></tr>
                                                                     <tr><th>생년월일</th><td></td></tr>
                                                                     <tr><th>가입일</th><td><span id="memberDetailCreatedDatetime"></span></td></tr>
+                                                                    <tr><th>제공자</th><td><span id="memberDetailProvider"></span></td></tr>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -471,7 +472,6 @@
                                                                     <tr><th>성별</th><td></td></tr>
                                                                     <tr><th>주소</th><td></td></tr>
                                                                     <tr><th>상태</th><td><span id="memberDetailStatus"></span></td></tr>
-                                                                    <tr><th>제공자</th><td><span id="memberDetailProvider"></span></td></tr>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -491,31 +491,16 @@
                                                             <div class="flex-right"></div>
                                                         </div>
                                                         <div class="d-table w-100">
+                                                            <!-- 작성 게시글 -->
                                                             <table class="info-table">
                                                                 <thead>
-                                                                    <tr>
-                                                                        <th>게시글 제목</th>
-                                                                        <th>게시글 내용</th>
-                                                                        <th>게시글 작성 일자</th>
-                                                                    </tr>
+                                                                <tr>
+                                                                    <th>게시글 제목</th>
+                                                                    <th>게시글 내용</th>
+                                                                    <th>게시글 작성 일자</th>
+                                                                </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>test-title</td>
-                                                                        <td>test-context</td>
-                                                                        <td>2025-08-01</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>test-title</td>
-                                                                        <td>test-context</td>
-                                                                        <td>2025-08-01</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>test-title</td>
-                                                                        <td>test-context</td>
-                                                                        <td>2025-08-01</td>
-                                                                    </tr>                                                                                                                               
-                                                                </tbody>
+                                                                <tbody id="memberPostTbody"></tbody>
                                                             </table>
                                                         </div>                             
                                                     </div>
@@ -533,31 +518,16 @@
                                                             <div class="flex-right"></div>
                                                         </div>
                                                         <div class="d-table w-100">
+                                                            <!-- 작성 댓글 -->
                                                             <table class="info-table">
                                                                 <thead>
-                                                                    <tr>
-                                                                        <th>게시글 제목</th>
-                                                                        <th>댓글 내용</th>
-                                                                        <th>댓글 작성 일자</th>
-                                                                    </tr>
+                                                                <tr>
+                                                                    <th>게시글 제목</th>
+                                                                    <th>댓글 내용</th>
+                                                                    <th>댓글 작성 일자</th>
+                                                                </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>test-title</td>
-                                                                        <td>test-context</td>
-                                                                        <td>2025-08-01</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>test-title</td>
-                                                                        <td>test-context</td>
-                                                                        <td>2025-08-01</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>test-title</td>
-                                                                        <td>test-context</td>
-                                                                        <td>2025-08-01</td>
-                                                                    </tr>                                                                                                                               
-                                                                </tbody>
+                                                                <tbody id="memberCommentTbody"></tbody>
                                                             </table>
                                                         </div>                             
                                                     </div>
