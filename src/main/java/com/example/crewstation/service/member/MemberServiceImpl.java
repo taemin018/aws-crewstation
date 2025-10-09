@@ -8,6 +8,7 @@ import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
+import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.mapper.payment.PaymentMapper;
@@ -17,6 +18,8 @@ import com.example.crewstation.repository.member.AddressDAO;
 import com.example.crewstation.repository.member.MemberDAO;
 import com.example.crewstation.repository.member.MemberFileDAO;
 import com.example.crewstation.service.s3.S3Service;
+import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,6 +46,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final S3Service s3Service;
     private final PaymentStatusMapper paymentStatusMapper;
+    private final MemberDTO memberDTO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -210,6 +214,40 @@ public class MemberServiceImpl implements MemberService {
         });
 //        return memberDAO.findSearchMember(search);
         return searchMember;
+    }
+// 관리자 회원 목록
+    @Override
+    public MemberCriteriaDTO getMembers(Search search) {
+        int page = Optional.ofNullable(search.getPage()).orElse(1);
+        int size = 10;
+        int offset = (page - 1) * size;
+
+        int total = memberDAO.countAdminMembers(search);
+        List<MemberDTO> members = memberDAO.findAdminMembers(search, size, offset);
+        Criteria criteria = new Criteria(page, size, total, 5);
+
+        MemberCriteriaDTO dto = new MemberCriteriaDTO();
+        dto.setMembers(members);
+        dto.setTotal(total);
+        dto.setCriteria(criteria);
+        dto.setSearch(search);
+
+        return dto;
+    }
+
+//관리자 회원 상세
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MemberDTO getMemberDetail(Long memberId) {
+        if (memberId == null) {
+            throw new MemberNotFoundException();
+        }
+        MemberDTO dto = memberDAO.findAdminMemberDetail(memberId);
+
+        if (dto == null) {
+            throw new MemberNotFoundException();
+        }
+        return dto;
     }
 
     public Optional<MemberProfileDTO> getMember(Long memberId) {

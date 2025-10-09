@@ -7,8 +7,10 @@ import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.AddressDTO;
+import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.util.Search;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -40,6 +42,12 @@ public interface MemberService {
     public void submitReview(Long sellerId, Long purchaseId, int rating);
 //  회원 검색
     public List<MemberDTO> searchMember(String search);
+
+//    관리자 회원 목록
+    public MemberCriteriaDTO getMembers(Search search);
+
+//    관리자 상세
+    public MemberDTO getMemberDetail(Long memberId);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()
