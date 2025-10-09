@@ -34,18 +34,14 @@ public class MypageController {
                                   @RequestParam(required = false) String keyword,
                                   Model model) {
 
-        // 임시 memberId (테스트용)
         Long memberId = 1L;
 
-        // 페이징 및 검색 설정
         ScrollCriteria scrollCriteria = new ScrollCriteria(page, size);
         Search search = new Search();
         search.setKeyword(keyword);
 
-        // 서비스 호출
         PurchaseListCriteriaDTO result = purchaseService.getPurchaseListByMemberId(memberId, scrollCriteria, search);
 
-        // 모델 추가
         model.addAttribute("result", result);
         model.addAttribute("purchaseList", result.getPurchaseListDTOs());
         model.addAttribute("criteria", result.getScrollcriteria());
@@ -55,5 +51,12 @@ public class MypageController {
         log.info("otal={}, hasMore={}", scrollCriteria.getTotal(), scrollCriteria.isHasMore());
 
         return "mypage/purchase-list";
+    }
+
+    // 마이페이지 - 내 구매 상세
+    @GetMapping("/purchase-detail")
+    public String loadMyPurchasesDetailPage() {
+        log.info("마이페이지 - 구매 상세");
+        return "mypage/purchase-detail";
     }
 }
