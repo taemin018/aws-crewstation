@@ -733,7 +733,7 @@ tagModal?.addEventListener("click", (e) => {
                 div.dataset.idx = currentBlock.dataset.idx;
                 div.innerHTML = tagPin;
                 console.log(parent.querySelector(".member-name"))
-
+                div.querySelector(".mention-profile-img img").src = parent.previousElementSibling.querySelector(".member-profile-img").src;
                 div.querySelector("#mention-name").textContent = parent.querySelector(".member-name").textContent;
                 currentBlock
                     .querySelector(".img-add-container")

@@ -649,6 +649,7 @@ tagModal?.addEventListener("click", (e) => {
 
     // "선택" → 현재 블록에 파란 + 고정
     if (e.target.closest(".tag-select-btn")) {
+        const parent = e.target.closest(".tag-select-btn").previousElementSibling;
         if (currentBlock) {
             const {tx, ty} = currentBlock.dataset;
             if (tx && ty) {
@@ -663,6 +664,8 @@ tagModal?.addEventListener("click", (e) => {
                 }`;
                 div.dataset.idx = currentBlock.dataset.idx;
                 div.innerHTML = tagPin;
+                div.querySelector(".mention-profile-img img").src = parent.previousElementSibling.querySelector(".member-profile-img").src;
+                div.querySelector("#mention-name").textContent = parent.querySelector(".member-name").textContent;
                 currentBlock
                     .querySelector(".img-add-container")
                     .appendChild(div);
