@@ -275,7 +275,7 @@ console.log(sampleBlock);
 // 편집 버튼 초기 라벨 통일
 const editButtons = document.querySelectorAll(".edit-button");
 editButtons.forEach((btn) => {
-    btn.textContent = "+ 상품 태그 추가";
+    btn.textContent = "+ 태그 추가";
 });
 
 // 왼쪽 + 는 하나만 남기기
@@ -315,7 +315,7 @@ const resetBlock = (block) => {
         data.remove();
     });
     const btn = block.querySelector(".edit-button");
-    if (btn) btn.textContent = "+ 상품 태그 추가";
+    if (btn) btn.textContent = "+ 태그 추가";
 
     const ta = block.querySelector(".post-input");
     if (ta) ta.value = "";
@@ -594,7 +594,7 @@ contentList?.addEventListener("click", (e) => {
         const btn = e.target.closest(".edit-button");
         const armed = block.dataset.armed === "1";
         block.dataset.armed = armed ? "0" : "1";
-        btn.textContent = armed ? "+ 상품 태그 추가" : "태그 편집 완료";
+        btn.textContent = armed ? "+ 태그 추가" : "태그 편집 완료";
         return;
     }
 
