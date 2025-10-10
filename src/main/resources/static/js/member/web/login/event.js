@@ -32,6 +32,7 @@ inputTags.forEach((input) => {
 });
 
 const button = document.querySelector('.login-member-btn');
+const loginError = document.querySelector(".login-error");
 
 button.addEventListener('click', async () => {
     const email = document.querySelector(".member-email").value;
@@ -40,17 +41,26 @@ button.addEventListener('click', async () => {
         const result = await memberService.login({memberEmail: email, memberPassword: password});
         if(result.accessToken){
             location.href = '/';
-        }
 
+        }
     } catch (err) {
-        const loginError = document.querySelector(".login-error");
         loginError.innerHTML = `<span>이메일 또는 비밀번호가 잘못 되었습니다.</span>`
         inputTags.forEach((input) => {
             input.classList.add("error");
+
         })
     }
 })
 
+const guestButton = document.querySelector(".guest");
+
+guestButton.addEventListener("click", (e) => {
+    loginError.innerHTML = ``;
+    inputTags.forEach((input) => {
+        input.classList.remove("error");
+
+    })
+})
 
 
 // social 로그인

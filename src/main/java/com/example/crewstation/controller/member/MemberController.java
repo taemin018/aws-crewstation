@@ -76,7 +76,6 @@ public class MemberController {
     @PostMapping("web/login")
     public RedirectView login(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
         guestService.login(guestDTO);
-        log.info(guestService.login(guestDTO).toString());
 
         return new RedirectView("/guest/purchase-detail");
     }
@@ -86,7 +85,7 @@ public class MemberController {
         guestService.login(guestDTO);
 
 
-        return new RedirectView("/member/mobile/login");
+        return new RedirectView("/gifts");
     }
 
 //    web sns 회원가입

@@ -94,6 +94,8 @@ memberPhone.addEventListener("keyup", (e) => {
     }
 });
 
+
+
 // 휴대전화 인증 체크 부분
 const inputPhone = document.querySelector("input.phone");
 const codeSendBtn = document.querySelector("button.phone-certification");
@@ -130,12 +132,20 @@ codeSendBtn.addEventListener("click", (e) => {
     if (!codeSendCheck) return;
     clearInterval(timer);
     time = 5 * 60;
-    console.log("안막혀");
 
     codeSendCheck = false;
     codeInputWrap.style.display = "block";
     timer = setInterval(updateTimer, 1000);
     updateTimer(timer);
+});
+
+let result = null;
+
+codeSendBtn.addEventListener("click", async (e) => {
+    const phone = inputPhone.value;
+    result = await memberService.checkPhone(phone);
+
+    console.log(result.code);
 });
 
 code.addEventListener("input", (e) => {
@@ -148,17 +158,21 @@ code.addEventListener("input", (e) => {
 
 codeCheckBtn.addEventListener("click", (e) => {
     //코드 체크 성공 시
-    if (!true) {
+    if (code.value === result.code) {
         inputPhone.readOnly = true;
-
         clearInterval(timer);
         codeInputWrap.style.display = "none";
+        const errorTag = document.querySelector("div.error-text-phone");
+        errorTag.style.display = "block";
+        errorTag.firstElementChild.textContent = "";
+
+        codeSendBtn.disabled = true;
     } else {
         codeSendCheck = true;
         code.classList.add("error");
         const errorTag = document.querySelector("div.error-text-phone");
         errorTag.style.display = "block";
-        errorTag.firstElementChild.textContent = "에러문구에 맞게";
+        errorTag.firstElementChild.textContent = "인증번호가 다릅니다.";
     }
 });
 
@@ -338,23 +352,35 @@ const mbtiRegex = /^(?:[EI][SN][TF][JP])$/i;
 
 mbtiInput.addEventListener("keyup", () => {
     const value = mbtiInput.value.trim().toUpperCase(); // 대문자로 변환
-
-    if (!mbtiRegex.test(value)) {
-        mbtiError.style.display = "block";
-        mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
-        mbtiInput.classList.add("error");
+    if (mbtiInput.value) {
+        if (!mbtiRegex.test(value)) {
+            mbtiError.style.display = "block";
+            mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
+            mbtiInput.classList.add("error");
+        } else {
+            mbtiError.style.display = "none";
+            mbtiErrorSpan.textContent = "";
+            mbtiInput.classList.remove("error");
+            mbtiInput.value = value; // 대문자로 유지
+        }
     } else {
         mbtiError.style.display = "none";
         mbtiErrorSpan.textContent = "";
         mbtiInput.classList.remove("error");
-        mbtiInput.value = value; // 대문자로 유지
     }
 });
 
 
 // 유효성 검사 다 체크
 
+const nameInput = document.querySelector(".form-control.essential.name");
+const errorTextName = document.querySelector((".error-text-name"));
+
 function validateForm() {
+    // 이름 검사 (이름이 없거나 에러 메시지가 보이면 false)
+    if (nameInput.value.trim() === "" || errorTextName.style.display === "block") {
+        return false;
+    }
 
     // 성별 선택 검사
     const genderChecked = document.querySelectorAll(".gender-radio:checked").length > 0;
@@ -365,14 +391,11 @@ function validateForm() {
         return false;
     }
 
-    // 휴대폰 검사
-    if (document.querySelector(".error-text-phone").style.display === "block") {
-        return false;
-    }
-
     // 비밀번호 검사
-    if (document.querySelector(".error-text-password").style.display === "block" ||
-        document.querySelector(".error-text-password-check").style.display === "block") {
+    if (
+        document.querySelector(".error-text-password").style.display === "block" ||
+        document.querySelector(".error-text-password-check").style.display === "block"
+    ) {
         return false;
     }
 
@@ -388,10 +411,17 @@ function validateForm() {
         return false;
     }
 
+    // MBTI 검사
     if (mbtiError.style.display === "block") {
         return false;
     }
 
+    // 휴대폰 인증 확인 (readOnly 아니면 아직 미완료)
+    if (!inputPhone.readOnly) {
+        return false;
+    }
+
+    // 모든 조건을 통과하면 true
     return true;
 }
 
@@ -401,7 +431,7 @@ const submitBtn = document.querySelector(".submit-btn");
 
 submitBtn.disabled = true;
 
-document.addEventListener("keyup", () => {
+document.addEventListener("click", () => {
     submitBtn.disabled = !validateForm();
-    console.log(submitBtn.disabled)
+    console.log(validateForm());
 });

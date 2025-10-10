@@ -196,7 +196,7 @@ const logoutLink = document.querySelector("a.logout-menu-footer");
 
 logoutLink.addEventListener("click", async (e) => {
     e.preventDefault();
+    console.log("fsdfdssafsdfsdfsdfasdfdfdfdfddsfsd")
     await memberService.logout()
     location.href = "/member/mobile/login";
-    console.log("fsdfdssafsdfsdfsdfasdfdfdfdfddsfsd")
 });

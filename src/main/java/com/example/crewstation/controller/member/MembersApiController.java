@@ -55,6 +55,7 @@ public class MembersApiController {
     @PostMapping("/phone-check")
     public ResponseEntity<Map<String, String>> checkPhone(@RequestParam String phone) {
         String code = joinSmsService.send(phone);
+        log.info("code: {}", code);
         return ResponseEntity.ok(Map.of("code", code));
     }
 
