@@ -83,12 +83,11 @@ const memberLayout = (() => {
         }
         tbody.innerHTML = rows;
 
-        // --- 페이징 계산: total/amount 로 안전 계산 ---
+        // --- 페이징 계산 ---
         const pageSize   = Number(criteria.amount ?? criteria.pageSize ?? 10);
         const current    = Number(criteria.page ?? 1);
         const totalPages = Math.max(1, Math.ceil(Number(total) / pageSize));
 
-// 총 1페이지면 페이징 감추기
         if (totalPages === 1) {
             pageWrap.innerHTML = "";
         } else {
@@ -123,7 +122,6 @@ const memberLayout = (() => {
     const showMemberDetail = (result) => {
         if (!result) return;
 
-        // 타이틀
         const titleEl = el.detailTitle();
         if (titleEl) {
             const loginId = result.memberLoginId || result.loginId || result.username || "";

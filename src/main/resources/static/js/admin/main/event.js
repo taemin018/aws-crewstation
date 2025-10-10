@@ -1,3 +1,5 @@
+
+
 // =============== 사이드바 ===============
 (() => {
     const side = document.querySelector("#bootpay-side");
@@ -221,9 +223,7 @@ if (memberMenuBtn) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await showMembers(1, "");
-});
+
 
 // 페이징 클릭
 document.addEventListener("click", async (e) => {
@@ -237,3 +237,78 @@ document.addEventListener("click", async (e) => {
 
     await showMembers(page, keyword);
 });
+
+// 구글차트
+google.charts.load('current', { packages: ['corechart', 'bar'] });
+google.charts.setOnLoadCallback(drawAll);
+
+function drawAll() {
+    drawJoinChart();
+    drawPie();
+}
+
+function isRenderable(el) {
+    return !!el && el.offsetWidth > 0 && el.offsetHeight > 0;
+}
+
+function drawJoinChart() {
+    const el = document.getElementById('join_chart');
+    if (!isRenderable(el)) return;
+
+
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', '년-월');
+    data.addColumn('number', '가입자 수');
+
+
+    const options = {
+        title: '최근 3개월 가입자 수',
+        legend: { position: 'none' },
+        bar: { groupWidth: '45%' },
+        vAxis: { minValue: 0 },
+        chartArea: { left: 50, right: 20, top: 40, bottom: 40 },
+    };
+
+    const chart = new google.visualization.ColumnChart(el);
+    chart.draw(data, options);
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    await drawChart();
+});
+
+const drawChart =async  ()=>{
+    const today = new Date();
+    staticsData = await mainService.getMain(mainLayout.showMain);
+    await google.charts.setOnLoadCallback(drawJoinChart);
+    for(let i = 0; i<3; i++){
+        joinData.addRow([today.getFullYear()+"/"+String(staticsData.monthlyJoins[i].date).padStart(2,'0'),Number(staticsData.monthlyJoins[i].count)])
+    }
+
+    joinChart = new google.charts.Bar(document.getElementById('joinChart'));
+
+    joinChart.draw(joinData, google.charts.Bar.convertOptions(joinOptions));
+}
+
+
+
+// 선호 여행지
+function drawPie() {
+    const el = document.getElementById('piechart');
+    if (!isRenderable(el)) return;
+
+    const data = google.visualization.arrayToDataTable([
+        ['지역', '비율'],
+        ['유럽',       11],
+        ['북아메리카',  2],
+        ['남아메리카',  2],
+        ['아시아',      2],
+        ['아프리카',    7],
+    ]);
+
+    const options = { title: '선호 여행지' };
+    new google.visualization.PieChart(el).draw(data, options);
+}
+
+
+

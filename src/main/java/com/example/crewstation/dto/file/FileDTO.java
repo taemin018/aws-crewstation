@@ -1,14 +1,11 @@
 package com.example.crewstation.dto.file;
 
-//import com.example.crewstation.dto.file.tag.PostFileTagDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @Getter

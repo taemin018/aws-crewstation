@@ -3,6 +3,7 @@ package com.example.crewstation.repository.member;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.dto.member.MemberStatics;
 import com.example.crewstation.mapper.member.MemberMapper;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
@@ -82,9 +83,19 @@ public class MemberDAO {
         return memberMapper.countAdminMembers(search);
     }
 
-//    회원 상세 목록
+//    관리자 회원 상세 목록
     public MemberDTO findAdminMemberDetail(Long memberId) {
         return memberMapper.findAdminMemberDetail(memberId);
+    }
+
+//    월별 가입자 수
+    public List<MemberStatics> findMonthlyJoin() {
+    return memberMapper.selectMonthlyJoin();
+}
+
+//    오늘 가입자 수
+    public int selectCountTodayJoin() {
+        return memberMapper.selectCountTodayJoin();
     }
 
 
