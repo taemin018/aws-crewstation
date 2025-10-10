@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     // 슬라이드 관련
     const carouselList = document.querySelector(".carousel-list");
@@ -39,8 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         e.stopPropagation();
                         modal.classList.add("active");
                     }
-                }
-                else if(modalId === "reportModal"){
+                } else if (modalId === "reportModal") {
                     modal.classList.add("active");
                 }
             });
@@ -369,8 +367,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     thumbnails.forEach((thumb, i) => {
         thumb.addEventListener("click", () => {
+
+            if (thumbnails.length === 1) return;
             goTo(i + 1);
             resetAutoSlide();
+            console.log(i + 1);
+
         });
     });
     if (total !== 1) {
@@ -471,10 +473,10 @@ function clip() {
 document.addEventListener("DOMContentLoaded", startCountdown);
 
 
-document.querySelector("div.product-detail-container").addEventListener("click",(e)=>{
+document.querySelector("div.product-detail-container").addEventListener("click", (e) => {
     console.log(e.target)
     console.log(e.target.closest("div.modify-wrap"))
-    if(e.target.closest("div.modify-wrap")){
+    if (e.target.closest("div.modify-wrap")) {
         console.log(123)
         console.log(e.target.closest("div.modify-wrap").querySelector("div.modify-container"));
         e.target.closest("div.modify-wrap").querySelector("div.modify-container").style.display = "flex";
@@ -483,10 +485,10 @@ document.querySelector("div.product-detail-container").addEventListener("click",
     document.querySelector("div.modify-container").style.display = "none";
 })
 
-document.querySelector("div.del-post")?.addEventListener("click",(e)=>{
+document.querySelector("div.del-post")?.addEventListener("click", (e) => {
     document.getElementById("delconfirmModal").classList.add("active");
 })
 
-document.getElementById("cancelDel").addEventListener("click",(e)=>{
+document.getElementById("cancelDel").addEventListener("click", (e) => {
     document.getElementById("delconfirmModal").classList.remove("active");
 })

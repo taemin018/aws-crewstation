@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CrewStation</title>
-  <link rel="stylesheet" href="/css/mypage/my-diary/write.css" />
-  <link rel="stylesheet" href="/css/font.css" />
+  <link rel="stylesheet" href="/css/mypage/my-diary/write.css">
+  <link rel="stylesheet" href="/css/font.css">
   <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/fixed/web/header.css">
+    <link rel="stylesheet" href="/css/fixed/web/footer.css">
 </head>
 <body>
 <form name="diary" id="diary" action="/diaries/write" method="POST" enctype="multipart/form-data">
@@ -194,10 +196,14 @@
     </li>
   </template>
 </form>
+<footer th:replace="~{fixed/web/footer :: footer}"></footer>
+
 <script th:inline="javascript">
   const crew = [[${crew}]];
   const path = [[${path}]];
 </script>
+<script src="/js/fixed/web/header/module/service.js"></script>
+<script src="/js/fixed/web/header/event.js"></script>
 <script src="/js/mypage/my-diary/write/module/service.js"></script>
 <script src="/js/mypage/my-diary/write/module/layout.js"></script>
 <script src="/js/mypage/my-diary/write/event.js"></script>

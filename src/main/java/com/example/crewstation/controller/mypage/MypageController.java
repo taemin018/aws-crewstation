@@ -59,4 +59,11 @@ public class MypageController {
         log.info("마이페이지 - 구매 상세");
         return "mypage/purchase-detail";
     }
+
+    // 마이페이지 - 내 판매 목록
+    @GetMapping("/sale-list")
+    public String loadMySaleListPage() {
+        log.info("마이페이지 - 판매 목록");
+        return "mypage/sale-list";
+    }
 }
