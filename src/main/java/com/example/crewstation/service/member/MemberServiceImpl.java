@@ -7,10 +7,7 @@ import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
-import com.example.crewstation.dto.member.AddressDTO;
-import com.example.crewstation.dto.member.MemberCriteriaDTO;
-import com.example.crewstation.dto.member.MemberDTO;
-import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.dto.member.*;
 import com.example.crewstation.mapper.payment.PaymentMapper;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
 import com.example.crewstation.repository.file.FileDAO;
@@ -248,6 +245,14 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberNotFoundException();
         }
         return dto;
+    }
+
+    @Override
+    public MemberAdminStatics getStatics() {
+        MemberAdminStatics statics = new MemberAdminStatics();
+        statics.setMonthlyJoins(memberDAO.findMonthlyJoin());
+        statics.setTodayJoin(memberDAO.selectCountTodayJoin());
+        return statics;
     }
 
     public Optional<MemberProfileDTO> getMember(Long memberId) {

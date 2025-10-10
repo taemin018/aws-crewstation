@@ -158,6 +158,29 @@
         where tm.id = #{memberId}
     </select>
 
+    <select id="selectmonthlyjoin">
+        select
+            date_trunc('month', created_datetime at time zone 'Asia/Seoul') as monthly_join_date,
+            count(id)                                                       as monthly_users
+        from tbl_member
+        where date_trunc('year', created_datetime at time zone 'Asia/Seoul')
+                  = date_trunc('year', now() at time zone 'Asia/Seoul')
+        group by monthly_join_date
+        order by monthly_join_date;
+
+
+    </select>
+
+
+
+    <select id="selectCountTodayJoin">
+        select count(id)
+        from tbl_member
+        where (created_datetime at time zone 'Asia/Seoul')::date
+        = (now() at time zone 'Asia/Seoul')::date
+    </select>
+
+
 
 
 </mapper>

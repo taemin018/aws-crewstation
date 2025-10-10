@@ -130,81 +130,110 @@
     });
 })();
 
-// 페이지 번호 클릭 이벤트(데이터를 받아와야 하는 곳이라 주석 처리)
-const pageNums = document.querySelectorAll(".page-num");
-const pageItemNums = document.querySelectorAll(".page-item-num");
 
-pageItemNums.forEach((pageItemNum) => {
-    pageItemNum.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        pageNums.forEach((pageNum) => {
-            pageNum.classList.remove("active");
-        });
-
-        pageItemNum.parentElement.classList.add("active");
-    });
-});
-
-// 모달 열기/닫기
+// ===== 모달 열기/닫기 =====
 (() => {
-    const modal = document.getElementById("modal");
+    const modal = document.querySelector(".member-modal");
     if (!modal) return;
 
-    const body = document.body;
-
-    // 열기 트리거: #modal-open 이 있으면 사용, 없으면 .action-btn 도 허용(선택)
-    const openers = document.querySelectorAll("#save-order-btn");
-
-    // 닫기 트리거
-    const closer = document.getElementById("close");
-    const footerClose = modal.querySelector(".btn-close"); // "답변하기" 버튼이 닫기가 아니면 삭제해도 됨
+    const closeBtns = modal.querySelectorAll(".close, .btn-close");
+    const table = document.querySelector(".table-layout");
+    const dialog = modal.querySelector(".modal-dialog");
+    if (dialog) dialog.style.margin = "1.75rem auto";
 
     const openModal = () => {
         modal.style.display = "block";
-        // 다음 프레임에서 show 붙여 트랜지션 자연스럽게
         requestAnimationFrame(() => {
             modal.classList.add("show");
             modal.style.background = "rgba(0,0,0,0.5)";
-            body.classList.add("modal-open");
+            document.body.classList.add("modal-open");
         });
     };
 
     const closeModal = () => {
         modal.classList.remove("show");
-        body.classList.remove("modal-open");
-        setTimeout(() => {
-            modal.style.display = "none";
-            modal.style.background = "";
-        }, 150);
+        document.body.classList.remove("modal-open");
+        setTimeout(() => { modal.style.display = "none"; }, 100);
     };
 
-    // 열기
-    openers.forEach((el) =>
-        el?.addEventListener("click", (e) => {
-            e.preventDefault();
-            openModal();
-        })
-    );
+    if (table) {
+        table.addEventListener("click", async (e) => {
+            const btn = e.target.closest(".member-detail-btn, .action-btn");
+            if (!btn) return;
 
-    // 닫기 (X 버튼 / 푸터 버튼)
-    closer?.addEventListener("click", (e) => {
-        e.preventDefault();
-        closeModal();
-    });
-    footerClose?.addEventListener("click", (e) => {
-        e.preventDefault();
-        closeModal();
-    });
+            const memberId = btn.dataset.memberid;  // data-memberid 필수
+            if (!memberId) return;
 
-    // 오버레이 클릭으로 닫기
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeModal();
-    });
+            const loading = document.getElementById("loading");
+            if (loading) loading.style.display = "block";
+            try {
+                await memberService.getDetailMember(memberLayout.showMemberDetail, memberId);
+                openModal();
+            } catch (err) {
+                console.error("회원 상세 조회 실패:", err);
+            } finally {
+                if (loading) loading.style.display = "none";
+            }
+        });
+    }
 
-    // ESC 로 닫기
+    closeBtns.forEach((b) => b.addEventListener("click", closeModal));
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modal.classList.contains("show"))
-            closeModal();
+        if (e.key === "Escape" && modal.classList.contains("show")) closeModal();
     });
 })();
+
+
+const memberMenuBtn = document.getElementById("memberMenu");
+const paginationMember = document.querySelector(".pagination.bootpay-pagination.member-pagination");
+const memberKeywordInput = document.getElementById("memberKeyword");
+const memberKeywordBtn = document.getElementById("memberKeywordBtn");
+
+const loading = document.getElementById("loading");
+
+const showMembers = async (page = 1, keyword = "") => {
+    if (loading) loading.style.display = "block";
+    const res = await memberService.getMembers(memberLayout.showMembers, page, keyword);
+    if (loading) loading.style.display = "none";
+    return res;
+};
+
+
+if (memberKeywordInput) {
+    memberKeywordInput.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+            await showMembers(1, memberKeywordInput.value.trim());
+        }
+    });
+}
+
+if (memberKeywordBtn) {
+    memberKeywordBtn.addEventListener("click", async () => {
+        await showMembers(1, memberKeywordInput?.value.trim() || "");
+    });
+}
+
+if (memberMenuBtn) {
+    memberMenuBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await showMembers(1, "");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await showMembers(1, "");
+});
+
+// 페이징 클릭
+document.addEventListener("click", async (e) => {
+    const a = e.target.closest(".pagination.bootpay-pagination a.paging");
+    if (!a) return;
+
+    e.preventDefault();
+
+    const page = Number(a.dataset.page || 1);
+    const keyword = (memberKeywordInput?.value || "").trim();
+
+    await showMembers(page, keyword);
+});

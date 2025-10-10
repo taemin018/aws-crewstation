@@ -1,5 +1,6 @@
 package com.example.crewstation.controller.admin;
 
+import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.service.member.MemberService;
@@ -27,6 +28,14 @@ public class AdminRestController {
     @GetMapping("/members/{memberId}")
     public ResponseEntity<MemberDTO> getMemberDetails(@PathVariable Long memberId) {
         return ResponseEntity.ok(memberService.getMemberDetail(memberId));
+    }
+
+//    관리자 메인 회원 통계
+    @GetMapping("")
+    public ResponseEntity<MemberAdminStatics> getStatics() {
+        MemberAdminStatics statics = memberService.getStatics();
+        return ResponseEntity.ok(statics);
+
     }
 
 
