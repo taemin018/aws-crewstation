@@ -67,135 +67,9 @@ genderRadioes.forEach((radio) => {
     });
 });
 
-
-
-// 휴대전화 번호 검사
-
-const memberPhone = document.querySelector("#memberPhone");
-const phoneText = document.querySelector(".error-text-phone");
-const phoneTextSpan = document.querySelector(".error-text-phone span");
-
-memberPhone.addEventListener("keyup", (e) => {
-    const phone = memberPhone.value.replace(/[^0-9]/g, "");
-    memberPhone.value = phone; // 자동으로 숫자만 입력되게 정리
-
-    const phoneRegex = /^010\d{8}$/;
-
-    if (!phoneRegex.test(phone)) {
-        phoneText.style.display = "block";
-        phoneTextSpan.innerText = "번호를 다시 확인해 주세요.";
-
-        memberPhone.classList.add("error");
-    } else {
-        phoneText.style.display = "none";
-        phoneTextSpan.innerText = "";
-
-        memberPhone.classList.remove("error");
-    }
-});
-
-// 휴대전화 인증 체크 부분
-const inputPhone = document.querySelector("input.phone");
-const codeSendBtn = document.querySelector("button.phone-certification");
-const codeCheckBtn = document.querySelector("button.code-check");
-const code = document.querySelector("input.essential.code");
-let codeSendCheck = true;
-let time = 5 * 60;
-let timer;
-function updateTimer(timer) {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    document.querySelector(".limit-time").textContent = `${minutes}:${
-        seconds < 10 ? "0" + seconds : seconds
-    }`;
-
-    if (time > 0) {
-        time--;
-    } else {
-        mailSendCheck = true;
-        clearInterval(timer); // 0초가 되면 멈춤
-    }
-}
-
-const codeInputWrap = document.querySelector("div.phone-check");
-inputPhone.addEventListener("input", (e) => {
-    if (inputPhone.value.trim() === "") {
-        codeSendBtn.disabled = true;
-    } else {
-        codeSendBtn.disabled = false;
-    }
-});
-
-codeSendBtn.addEventListener("click", (e) => {
-    if (!codeSendCheck) return;
-    clearInterval(timer);
-    time = 5 * 60;
-    console.log("안막혀");
-
-    codeSendCheck = false;
-    codeInputWrap.style.display = "block";
-    timer = setInterval(updateTimer, 1000);
-    updateTimer(timer);
-});
-
-code.addEventListener("input", (e) => {
-    if (code.value.trim() === "") {
-        codeCheckBtn.disabled = true;
-    } else {
-        codeCheckBtn.disabled = false;
-    }
-});
-
-codeCheckBtn.addEventListener("click", (e) => {
-    //코드 체크 성공 시
-    if (!true) {
-        inputPhone.readOnly = true;
-
-        clearInterval(timer);
-        codeInputWrap.style.display = "none";
-    } else {
-        codeSendCheck = true;
-        code.classList.add("error");
-        const errorTag = document.querySelector("div.error-text-phone");
-        errorTag.style.display = "block";
-        errorTag.firstElementChild.textContent = "에러문구에 맞게";
-    }
-});
-
-
-// 이메일 가능 검사
-const emailInput = document.querySelector("input.email");
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const emailText = document.querySelector(".error-text-email");
-const emailTextSpan = document.querySelector(".error-text-email span");
-
-emailInput.addEventListener("keyup", async (e) => {
-    const email = emailInput.value.trim();
-
-    // 이메일 형식 체크
-    if (!emailRegex.test(email)) {
-        emailText.style.display = "block";
-        emailTextSpan.innerText = "이메일 형식이 올바르지 않습니다.";
-        return;
-    }
-
-    // 이메일 중복 체크
-    let check = await memberService.checkEmail(email);
-
-    if (check) {
-        emailText.style.display = "block";
-        emailTextSpan.innerText = "이미 사용 중인 이메일입니다.";
-    } else {
-        emailText.style.display = "none";
-        emailTextSpan.innerText = "";
-    }
-});
-
 // 생년월일 확인
 
-const birthInput = document.querySelector(
-    "input.birth"
-);
+const birthInput = document.querySelector("input.birth");
 const birthError = document.querySelector("div.error-text-birth");
 const birthCheckError = document.querySelector(
     "div.error-text-birth span"
@@ -278,37 +152,38 @@ const mbtiRegex = /^(?:[EI][SN][TF][JP])$/i;
 
 mbtiInput.addEventListener("keyup", () => {
     const value = mbtiInput.value.trim().toUpperCase(); // 대문자로 변환
-
-    if (!mbtiRegex.test(value)) {
-        mbtiError.style.display = "block";
-        mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
-        mbtiInput.classList.add("error");
+    if (mbtiInput.value) {
+        if (!mbtiRegex.test(value)) {
+            mbtiError.style.display = "block";
+            mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
+            mbtiInput.classList.add("error");
+        } else {
+            mbtiError.style.display = "none";
+            mbtiErrorSpan.textContent = "";
+            mbtiInput.classList.remove("error");
+            mbtiInput.value = value; // 대문자로 유지
+        }
     } else {
         mbtiError.style.display = "none";
         mbtiErrorSpan.textContent = "";
         mbtiInput.classList.remove("error");
-        mbtiInput.value = value; // 대문자로 유지
     }
 });
 
 
 // 유효성 검사 다 체크
+const nameInput = document.querySelector(".form-control.essential.name");
+const errorTextName = document.querySelector((".error-text-name"));
 
 function validateForm() {
+    // 이름 검사 (이름이 없거나 에러 메시지가 보이면 false)
+    if (nameInput.value.trim() === "" || errorTextName.style.display === "block") {
+        return false;
+    }
 
     // 성별 선택 검사
     const genderChecked = document.querySelectorAll(".gender-radio:checked").length > 0;
     if (!genderChecked) return false;
-
-    // 이메일 형식/중복 검사
-    if (document.querySelector(".error-text-email").style.display === "block") {
-        return false;
-    }
-
-    // 휴대폰 검사
-    if (document.querySelector(".error-text-phone").style.display === "block") {
-        return false;
-    }
 
     // 생년월일 검사
     if (document.querySelector(".error-text-birth").style.display === "block") {
@@ -322,6 +197,7 @@ function validateForm() {
         return false;
     }
 
+    // MBTI 검사
     if (mbtiError.style.display === "block") {
         return false;
     }
@@ -335,7 +211,7 @@ const submitBtn = document.querySelector(".submit-btn");
 
 submitBtn.disabled = true;
 
-document.addEventListener("keyup", () => {
+document.addEventListener("click", () => {
     submitBtn.disabled = !validateForm();
     console.log(submitBtn.disabled)
 });
