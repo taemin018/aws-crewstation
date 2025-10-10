@@ -90,4 +90,74 @@
         where tm.member_email like '%' || #{search} || '%'
         or tm.member_name like '%' || #{search} || '%'
     </select>
+
+    <select id="findAdminMembers">
+        select
+        tm.id,
+        tm.member_name,
+        tm.member_phone,
+        tm.member_email,
+        tm.member_social_url,
+        tm.member_birth,
+        tm.member_gender,
+        tm.member_mbti,
+        tm.member_status,
+        tm.member_provider,
+        tm.social_img_url,
+        tm.member_social_email,
+        tm.member_description,
+        tm.member_role,
+        tm.created_datetime,
+        tm.updated_datetime,
+        tm.chemistry_score
+        from tbl_member tm
+        <where>
+            <if test="search.keyword != null || search.keyword != ''">
+                (tm.member_name ilike '%' || #{search.keyword} || '%'
+                or tm.member_email ilike '%' || #{search.keyword} || '%')
+            </if>
+        </where>
+        order by tm.id desc
+        limit #{limit} offset #{offset}
+
+
+    </select>
+
+    <select id="countAdminMembers">
+        select count(*)
+        from tbl_member tm
+        <where>
+            <if test="search.keyword != null and search.keyword != ''">
+                (tm.member_name ilike '%' || #{search.keyword} || '%'
+                or tm.member_email ilike '%' || #{search.keyword} || '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findAdminMemberDetail">
+        select
+            tm.id,
+            tm.member_name,
+            tm.member_phone,
+            tm.member_email,
+            tm.member_social_url,
+            tm.member_birth,
+            tm.member_gender,
+            tm.member_mbti,
+            tm.member_password,
+            tm.member_status,
+            tm.member_provider,
+            tm.social_img_url,
+            tm.member_social_email,
+            tm.member_description,
+            tm.member_role,
+            tm.created_datetime,
+            tm.updated_datetime,
+            tm.chemistry_score
+        from tbl_member tm
+        where tm.id = #{memberId}
+    </select>
+
+
+
 </mapper>

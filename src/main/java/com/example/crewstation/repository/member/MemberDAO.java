@@ -4,6 +4,7 @@ import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -70,4 +71,21 @@ public class MemberDAO {
     public List<MemberDTO> findSearchMember(String search){
         return memberMapper.selectSearchMember(search);
     }
+
+//    관리자 회원 목록
+    public List<MemberDTO> findAdminMembers(Search search, int limit, int offset){
+        return memberMapper.findAdminMembers(search, limit, offset);
+    }
+
+//    회원 수
+    public int countAdminMembers(Search search) {
+        return memberMapper.countAdminMembers(search);
+    }
+
+//    회원 상세 목록
+    public MemberDTO findAdminMemberDetail(Long memberId) {
+        return memberMapper.findAdminMemberDetail(memberId);
+    }
+
+
 }

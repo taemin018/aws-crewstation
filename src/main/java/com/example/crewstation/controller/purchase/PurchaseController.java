@@ -6,7 +6,10 @@ import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
+import com.example.crewstation.dto.purchase.PurchaseListCriteriaDTO;
 import com.example.crewstation.service.purchase.PurchaseService;
+import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import jakarta.servlet.http.Cookie;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,7 @@ public class PurchaseController {
     //    임시 로그인
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final PurchaseListCriteriaDTO purchaseListCriteriaDTO;
 
     @GetMapping()
     public String list(@AuthenticationPrincipal UserDetails userDetails) {
@@ -100,4 +104,6 @@ public class PurchaseController {
         purchaseService.softDelete(id);
         return new RedirectView("/gifts");
     }
+
+
 }
