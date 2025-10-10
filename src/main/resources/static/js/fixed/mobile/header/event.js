@@ -1,3 +1,17 @@
+// document.querySelector(".sticky-action-btn").style.visibility = "hidden";
+// document.querySelector(".sticky-action-btn").style.display = "none";
+if (window.location.href.includes("detail")) {
+    document.querySelector("div.sticky-search-wrap").style.width = "auto";
+}else{
+    document.querySelector(".sticky-action-btn a").style.display="none";
+}
+document.querySelector(".sticky-action-btn").style.display = "flex";
+
+document.querySelector(".sticky-action-btn a").addEventListener("click",(e)=>{
+    history.back();
+})
+
+
 // 서브헤더 클릭 이벤트
 const subHeaders = document.querySelectorAll(
     "div.sticky-container.sticky-sub-container"
