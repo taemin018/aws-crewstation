@@ -94,6 +94,8 @@ memberPhone.addEventListener("keyup", (e) => {
     }
 });
 
+
+
 // 휴대전화 인증 체크 부분
 const inputPhone = document.querySelector("input.phone");
 const codeSendBtn = document.querySelector("button.phone-certification");
@@ -130,12 +132,20 @@ codeSendBtn.addEventListener("click", (e) => {
     if (!codeSendCheck) return;
     clearInterval(timer);
     time = 5 * 60;
-    console.log("안막혀");
 
     codeSendCheck = false;
     codeInputWrap.style.display = "block";
     timer = setInterval(updateTimer, 1000);
     updateTimer(timer);
+});
+
+let result = null;
+
+codeSendBtn.addEventListener("click", async (e) => {
+    const phone = inputPhone.value;
+    result = await memberService.checkPhone(phone);
+
+    console.log(result.code);
 });
 
 code.addEventListener("input", (e) => {
@@ -148,17 +158,21 @@ code.addEventListener("input", (e) => {
 
 codeCheckBtn.addEventListener("click", (e) => {
     //코드 체크 성공 시
-    if (!true) {
+    if (code.value === result.code) {
         inputPhone.readOnly = true;
-
         clearInterval(timer);
         codeInputWrap.style.display = "none";
+        const errorTag = document.querySelector("div.error-text-phone");
+        errorTag.style.display = "block";
+        errorTag.firstElementChild.textContent = "";
+
+        codeSendBtn.disabled = true;
     } else {
         codeSendCheck = true;
         code.classList.add("error");
         const errorTag = document.querySelector("div.error-text-phone");
         errorTag.style.display = "block";
-        errorTag.firstElementChild.textContent = "에러문구에 맞게";
+        errorTag.firstElementChild.textContent = "인증번호가 다릅니다.";
     }
 });
 
@@ -275,59 +289,78 @@ birthInput.addEventListener("keyup", (e) => {
 })
 
 // 주소 찾기
+// 우편번호 찾기 찾기 화면을 넣을 element
+var element_wrap = document.getElementById('wrap');
 
+function foldDaumPostcode() {
+    // iframe을 넣은 element를 안보이게 한다.
+    element_wrap.style.display = 'none';
+}
 
-
-const addressBtn =document.querySelector("#addressBtn");
-
-
-addressBtn.addEventListener("click",(e)=>{
-    getAddressWindow();
-})
-
-const getAddressWindow = () => {
+function sample3_execDaumPostcode() {
+    // 현재 scroll 위치를 저장해놓는다.
+    var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
     new daum.Postcode({
         oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+            // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
 
-            // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
             // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-            let roadAddr = data.roadAddress; // 도로명 주소 변수
-            let addr = "";
-            let extraRoadAddr = ''; // 참고 항목 변수
+            var addr = ''; // 주소 변수
+            var extraAddr = ''; // 참고항목 변수
 
-            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                extraRoadAddr += data.bname;
-            }
-            // 건물명이 있고, 공동주택일 경우 추가한다.
-            if(data.buildingName !== '' && data.apartment === 'Y'){
-                extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-            }
-            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-            if(extraRoadAddr !== ''){
-                extraRoadAddr = ' (' + extraRoadAddr + ')';
-            }
-
+            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
             if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
                 addr = data.roadAddress;
             } else { // 사용자가 지번 주소를 선택했을 경우(J)
                 addr = data.jibunAddress;
             }
 
-            // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.querySelector(".memberZipCode").value = data.zonecode;
-            document.querySelector(".memberAddress").value = addr;
+            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+            if(data.userSelectedType === 'R'){
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                    extraAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraAddr !== ''){
+                    extraAddr = ' (' + extraAddr + ')';
+                }
+                // 조합된 참고항목을 해당 필드에 넣는다.
+                document.getElementById("sample3_extraAddress").value = extraAddr;
 
-            // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
-            if(roadAddr !== ''){
-                document.querySelector(".memberAddressDetail").value = extraRoadAddr;
             } else {
-                document.querySelector(".memberAddressDetail").value = '';
+                document.getElementById("sample3_extraAddress").value = '';
             }
-        }
-    }).open();
+
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            document.getElementById('sample3_postcode').value = data.zonecode;
+            document.getElementById("sample3_address").value = addr;
+            // 커서를 상세주소 필드로 이동한다.
+            document.getElementById("sample3_extraAddress").focus();
+
+            // iframe을 넣은 element를 안보이게 한다.
+            // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+            element_wrap.style.display = 'none';
+
+            // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+            document.body.scrollTop = currentScroll;
+        },
+        // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+        onresize : function(size) {
+            element_wrap.style.height = '500px';
+        },
+        width : '100%',
+        height : '100%'
+    }).embed(element_wrap);
+
+    // iframe을 넣은 element를 보이게 한다.
+    element_wrap.style.display = 'block';
 }
 
 // MBTI 유효성 검사
@@ -338,23 +371,35 @@ const mbtiRegex = /^(?:[EI][SN][TF][JP])$/i;
 
 mbtiInput.addEventListener("keyup", () => {
     const value = mbtiInput.value.trim().toUpperCase(); // 대문자로 변환
-
-    if (!mbtiRegex.test(value)) {
-        mbtiError.style.display = "block";
-        mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
-        mbtiInput.classList.add("error");
+    if (mbtiInput.value) {
+        if (!mbtiRegex.test(value)) {
+            mbtiError.style.display = "block";
+            mbtiErrorSpan.textContent = "올바른 MBTI 유형을 입력해주세요.";
+            mbtiInput.classList.add("error");
+        } else {
+            mbtiError.style.display = "none";
+            mbtiErrorSpan.textContent = "";
+            mbtiInput.classList.remove("error");
+            mbtiInput.value = value; // 대문자로 유지
+        }
     } else {
         mbtiError.style.display = "none";
         mbtiErrorSpan.textContent = "";
         mbtiInput.classList.remove("error");
-        mbtiInput.value = value; // 대문자로 유지
     }
 });
 
 
 // 유효성 검사 다 체크
 
+const nameInput = document.querySelector(".form-control.essential.name");
+const errorTextName = document.querySelector((".error-text-name"));
+
 function validateForm() {
+    // 이름 검사 (이름이 없거나 에러 메시지가 보이면 false)
+    if (nameInput.value.trim() === "" || errorTextName.style.display === "block") {
+        return false;
+    }
 
     // 성별 선택 검사
     const genderChecked = document.querySelectorAll(".gender-radio:checked").length > 0;
@@ -365,14 +410,11 @@ function validateForm() {
         return false;
     }
 
-    // 휴대폰 검사
-    if (document.querySelector(".error-text-phone").style.display === "block") {
-        return false;
-    }
-
     // 비밀번호 검사
-    if (document.querySelector(".error-text-password").style.display === "block" ||
-        document.querySelector(".error-text-password-check").style.display === "block") {
+    if (
+        document.querySelector(".error-text-password").style.display === "block" ||
+        document.querySelector(".error-text-password-check").style.display === "block"
+    ) {
         return false;
     }
 
@@ -388,10 +430,17 @@ function validateForm() {
         return false;
     }
 
+    // MBTI 검사
     if (mbtiError.style.display === "block") {
         return false;
     }
 
+    // 휴대폰 인증 확인 (readOnly 아니면 아직 미완료)
+    if (!inputPhone.readOnly) {
+        return false;
+    }
+
+    // 모든 조건을 통과하면 true
     return true;
 }
 
@@ -401,7 +450,7 @@ const submitBtn = document.querySelector(".submit-btn");
 
 submitBtn.disabled = true;
 
-document.addEventListener("keyup", () => {
+document.addEventListener("click", () => {
     submitBtn.disabled = !validateForm();
-    console.log(submitBtn.disabled)
+    console.log(validateForm());
 });
