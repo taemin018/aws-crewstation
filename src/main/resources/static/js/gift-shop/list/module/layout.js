@@ -8,7 +8,7 @@ const purchaseListLayout = (() => {
         purchases.forEach((purchase) => {
                 text += `
             <article class="product-card-wrapper">
-                <a href="/gifts/${purchase.postId}" class="purchase-link">
+                <a href="/gifts/detail/${purchase.postId}" class="purchase-link">
                 <div class="product-image-container">
                     <div class="product-limit-time-wrapper" data-endtime="${purchase.limitDateTime}">
                     </div>
