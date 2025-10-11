@@ -1,11 +1,15 @@
 const mainLayout = (() => {
-    const showMain = async (result) => {
-        const today = new Date();
+    const showMain = (result) => {
 
-        document.getElementById("todayJoinCount").textContent = result.todayJoin;
-        document.getElementById("monthlyJoinCount").textContent = result.monthlyJoins[2].count;
-    }
-    return {showMain: showMain}
+        const todayEl = document.getElementById("todayJoin");
+        const monthlyEl = document.getElementById("monthlyJoins");
+
+        if (todayEl) todayEl.textContent = result?.todayJoin ?? 0;
+
+        const lastMonthly = Array.isArray(result?.monthlyJoins)
+            ? result.monthlyJoins[result.monthlyJoins.length - 1] : null;
+
+        if (monthlyEl) monthlyEl.textContent = lastMonthly?.count ?? 0;
+    };
+    return { showMain };
 })();
-
-

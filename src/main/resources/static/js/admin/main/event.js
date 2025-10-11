@@ -238,28 +238,40 @@ document.addEventListener("click", async (e) => {
     await showMembers(page, keyword);
 });
 
-// 구글차트
+// 구글 차트 로드
 google.charts.load('current', { packages: ['corechart', 'bar'] });
-google.charts.setOnLoadCallback(drawAll);
 
-function drawAll() {
-    drawJoinChart();
-    drawPie();
-}
+// 차트 그리기
+window.addEventListener('DOMContentLoaded', () => {
+    google.charts.setOnLoadCallback(async () => {
+        const staticsData = await mainService.getMain(mainLayout.showMain);
+        drawJoinChart(staticsData?.monthlyJoins || []);
+        drawPie(); // 기존 파이차트 그대로 사용
+    });
+});
 
 function isRenderable(el) {
     return !!el && el.offsetWidth > 0 && el.offsetHeight > 0;
 }
 
-function drawJoinChart() {
+// 최근 3개월 가입자 수
+function drawJoinChart(monthlyJoins) {
     const el = document.getElementById('join_chart');
     if (!isRenderable(el)) return;
 
+    const last3 = monthlyJoins.slice(-3);
 
     const data = new google.visualization.DataTable();
     data.addColumn('string', '년-월');
     data.addColumn('number', '가입자 수');
 
+    const rows = last3.map(m => {
+        const label = String(m.date).length === 2
+            ? `${new Date().getFullYear()}/${String(m.date).padStart(2, '0')}`
+            : String(m.date);
+        return [label, Number(m.count || 0)];
+    });
+    data.addRows(rows);
 
     const options = {
         title: '최근 3개월 가입자 수',
@@ -269,30 +281,11 @@ function drawJoinChart() {
         chartArea: { left: 50, right: 20, top: 40, bottom: 40 },
     };
 
-    const chart = new google.visualization.ColumnChart(el);
+    const chart = new google.visualization.ColumnChart(el); // id=join_chart 사용
     chart.draw(data, options);
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-    await drawChart();
-});
-
-const drawChart =async  ()=>{
-    const today = new Date();
-    staticsData = await mainService.getMain(mainLayout.showMain);
-    await google.charts.setOnLoadCallback(drawJoinChart);
-    for(let i = 0; i<3; i++){
-        joinData.addRow([today.getFullYear()+"/"+String(staticsData.monthlyJoins[i].date).padStart(2,'0'),Number(staticsData.monthlyJoins[i].count)])
-    }
-
-    joinChart = new google.charts.Bar(document.getElementById('joinChart'));
-
-    joinChart.draw(joinData, google.charts.Bar.convertOptions(joinOptions));
-}
-
-
-
-// 선호 여행지
+// 선호 여행지 파이차트는 기존 코드 그대로
 function drawPie() {
     const el = document.getElementById('piechart');
     if (!isRenderable(el)) return;
@@ -309,6 +302,7 @@ function drawPie() {
     const options = { title: '선호 여행지' };
     new google.visualization.PieChart(el).draw(data, options);
 }
+
 
 
 

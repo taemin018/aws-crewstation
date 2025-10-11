@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @ToString
 public class MemberAdminStatics {
-    public List<MemberStatics> monthlyJoins;
-    public int todayJoin;
+    private List<MemberStatics> monthlyJoins;
+    private int todayJoin;
 
 }

@@ -1,27 +1,21 @@
 const mainService = (() => {
-
     const getMain = async (callback) => {
         try {
-            const response = await fetch(`/api/admin/`)
-            const result = await response.json();
-            console.log(result);
-            if (response.ok) {
-                console.log("통계 잘나옴")
-                if (callback) {
-                    setTimeout(() => {
-                        callback(result);
-                    }, 1000)
-                }
-            } else {
-                const errorText = await response.text();
-                console.log(response.status);
-                console.log(errorText || "Fetch Error");
+            const response = await fetch(`/api/admin`);
+            if (!response.ok) {
+                const err = await response.text().catch(() => "");
+                console.error("GET /api/admin/ 실패:", response.status, err);
+                return null;
             }
+            const result = await response.json();
+            console.log("관리자 통계:", result);
+
+            if (callback) callback(result);
             return result;
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            return null;
         }
-    }
-
-    return {getMain: getMain}
+    };
+    return { getMain };
 })();
