@@ -61,6 +61,9 @@ public interface MemberMapper {
 //    오늘 가입자 수
     public int selectCountTodayJoin();
 
+//    총 회원 수
+    public int selectTotalMemberCount();
+
 }
 
 

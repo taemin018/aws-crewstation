@@ -21,4 +21,6 @@ public interface CrewMapper {
     public List<CrewDTO> findCrews(@Param("criteria") Criteria criteria,
                             @Param("search") Search search);
 
+//    크루 총 갯수
+    public int selectTotalCrewCount();
 }

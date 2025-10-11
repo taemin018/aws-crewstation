@@ -183,6 +183,11 @@
           = (now() AT TIME ZONE 'Asia/Seoul')::date
     </select>
 
+    <select id="selectTotalMemberCount">
+        select count(*)
+        from tbl_member
+    </select>
+
 
 
 
