@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin**")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminRestController {
@@ -31,7 +31,7 @@ public class AdminRestController {
     }
 
 //    관리자 메인 회원 통계
-    @GetMapping("")
+    @GetMapping({"", "/"})
     public ResponseEntity<MemberAdminStatics> getStatics() {
         MemberAdminStatics statics = memberService.getStatics();
         return ResponseEntity.ok(statics);

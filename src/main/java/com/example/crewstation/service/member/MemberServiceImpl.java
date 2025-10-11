@@ -10,6 +10,8 @@ import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.*;
 import com.example.crewstation.mapper.payment.PaymentMapper;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
+import com.example.crewstation.repository.country.CountryDAO;
+import com.example.crewstation.repository.crew.CrewDAO;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.member.AddressDAO;
 import com.example.crewstation.repository.member.MemberDAO;
@@ -44,6 +46,8 @@ public class MemberServiceImpl implements MemberService {
     private final S3Service s3Service;
     private final PaymentStatusMapper paymentStatusMapper;
     private final MemberDTO memberDTO;
+    private final CrewDAO crewDAO;
+    private final CountryDAO countryDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -252,6 +256,9 @@ public class MemberServiceImpl implements MemberService {
         MemberAdminStatics statics = new MemberAdminStatics();
         statics.setMonthlyJoins(memberDAO.findMonthlyJoin());
         statics.setTodayJoin(memberDAO.selectCountTodayJoin());
+        statics.setTotalCrewCount(crewDAO.selectTotalCrewCount());
+        statics.setTotalMemberCount(memberDAO.selectTotalMemberCount());
+        statics.setPopularCountries(countryDAO.selectPopularCountries());
         return statics;
     }
 

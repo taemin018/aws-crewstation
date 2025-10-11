@@ -158,15 +158,18 @@
         where tm.id = #{memberId}
     </select>
 
-    <select id="selectmonthlyjoin">
+    <select id="selectMonthlyJoin">
         select
-            date_trunc('month', created_datetime at time zone 'Asia/Seoul') as monthly_join_date,
-            count(id)                                                       as monthly_users
+            TO_CHAR(
+                    date_trunc('month', created_datetime AT TIME ZONE 'Asia/Seoul'),
+                    'YYYY-MM'
+            ) AS date,
+            COUNT(id) AS count
         from tbl_member
-        where date_trunc('year', created_datetime at time zone 'Asia/Seoul')
-                  = date_trunc('year', now() at time zone 'Asia/Seoul')
-        group by monthly_join_date
-        order by monthly_join_date;
+        where (created_datetime AT TIME ZONE 'Asia/Seoul')
+                  >= date_trunc('month', (now() AT TIME ZONE 'Asia/Seoul')) - INTERVAL '2 months'
+        group by 1
+        order by 1;
 
 
     </select>
@@ -174,10 +177,15 @@
 
 
     <select id="selectCountTodayJoin">
-        select count(id)
+        SELECT COUNT(id)
+        FROM tbl_member
+        WHERE (created_datetime AT TIME ZONE 'Asia/Seoul')::date
+          = (now() AT TIME ZONE 'Asia/Seoul')::date
+    </select>
+
+    <select id="selectTotalMemberCount">
+        select count(*)
         from tbl_member
-        where (created_datetime at time zone 'Asia/Seoul')::date
-        = (now() at time zone 'Asia/Seoul')::date
     </select>
 
 

@@ -82,5 +82,11 @@
         limit #{criteria.rowCount} offset #{criteria.offset}
     </select>
 
+    <select id="selectTotalCrewCount">
+        select count(*)
+        from tbl_crew
+
+    </select>
+
 
 </mapper>

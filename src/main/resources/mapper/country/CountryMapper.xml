@@ -5,4 +5,18 @@
         select id, country_name
         from tbl_country
     </select>
+
+    <select id="selectPopularCountries">
+        select
+            tc.country_name as country,
+            count(td.post_id) as count
+        from tbl_diary td
+                 join tbl_diary_country_path dcp on td.diary_country_path_id = dcp.id
+                 join tbl_country tc on dcp.country_id = tc.id
+        where td.diary_secret = 'public'
+        group by tc.country_name
+        order by count desc
+        limit 5
+
+    </select>
 </mapper>

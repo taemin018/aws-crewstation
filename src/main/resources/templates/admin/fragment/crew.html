@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CrewStation</title>
-    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/admin/font.css">
-    <link rel="stylesheet" href="/css/admin/member.css">
     <link rel="stylesheet" href="/css/admin/sidebar.css">
+    <link rel="stylesheet" href="/css/admin/member.css">
+    <link rel="stylesheet" href="/css/admin/font.css">
+    <link rel="shortcut icon" href="../../../static/images/crew-station-favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
-
 </head>
 <body>
     <div id= "bootpay">
@@ -42,14 +41,14 @@
                             </a>
                         </li>
                         <li class="menu menu-item d-flex flex-column open">
-                            <a id="memberMenu" class="menu-btn d-flex w-100 active" data-toggle="collapse" >
+                            <a class="menu-btn d-flex w-100" data-toggle="collapse" >
                                 <span class="menu-name">회원관리</span>
                                 <div class="icon-wrapper flex-grow-1 text-right">
                                 </div>
                             </a>
                         </li>
                         <li class="menu menu-item d-flex flex-column open">
-                            <a class="menu-btn d-flex w-100 " data-toggle="collapse" >
+                            <a class="menu-btn d-flex w-100 active" data-toggle="collapse" >
                                 <span class="menu-name">크루관리</span>
                                 <div class="icon-wrapper flex-grow-1 text-right">
                                 </div>
@@ -108,6 +107,7 @@
                 </div>
             </div>
         </aside>
+
         <div id="bootpay-main" class="has-menu">
             <div id="header-wrapper">
                 <div id="bootpay-header" class="d-flex trial-mode">
@@ -156,7 +156,7 @@
             </div>
             <div class="page ana-user-index wide-page">
                 <div class="page-header">
-                    <div class="page-title">회원 관리</div>
+                    <div class="page-title">크루 관리</div>
                     <div class="page-subtitle"></div>
                 </div>
                 <div class="page-body">
@@ -166,10 +166,9 @@
                                 <div class="row">
                                     <div class="col-auto">
                                         <span class="member-count">총
-                                            <span class="count-amount">n</span>명
+                                            <span class="count-amount">n</span>
                                         </span>
                                     </div>
-                                    <!-- PG 선택, 결제방식선택, 결제상태선택 버튼 -->
                                     <!-- <div class="col-auto"></div> -->
                                     <div class="col-auto"></div>
                                     <div class="col-auto"></div>
@@ -178,9 +177,9 @@
                                     <div class="col-auto">
                                         <div class="filter-wrapper filter-search ml-1">
                                             <div class="input-group">
-                                                <input  id="memberKeyword" class="form-control flex-grow-1" type="text" placeholder="이름/ID" value="">
+                                                <input class="form-control flex-grow-1" type="text" placeholder="이름/ID" value="">
                                                 <div class="input-group-append">
-                                                    <button  id="memberKeywordBtn" class="btn btn-search">
+                                                    <button class="btn btn-search">
                                                         <span class="comp-icon icon-magnify" id="icons/ico-search.svg">
                                                             <svg class="icon-img" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                 <path class="icon-color fill" d="m13.523 12.463 3.212 3.211-1.06 1.061-3.212-3.212A6.72 6.72 0 0 1 8.25 15 6.752 6.752 0 0 1 1.5 8.25 6.752 6.752 0 0 1 8.25 1.5 6.752 6.752 0 0 1 15 8.25a6.72 6.72 0 0 1-1.477 4.213zm-1.504-.557A5.233 5.233 0 0 0 13.5 8.25C13.5 5.349 11.15 3 8.25 3A5.248 5.248 0 0 0 3 8.25c0 2.9 2.349 5.25 5.25 5.25a5.233 5.233 0 0 0 3.656-1.481l.113-.113z" fill="#292929"></path>
@@ -197,13 +196,13 @@
                                 <table class="table grey-header-table w-100 member-table">
                                     <thead>
                                       <tr>
-                                        <th class="td-name">회원</th>
-                                        <th class="td-amount text-right pr-4">이름</th>
-                                        <th class="td-email">이메일</th>
-                                        <th class="td-phone">전화번호</th>
-                                        <th class="td-start">가입일</th>
+                                        <th class="td-name">크루이름</th>
+                                        <th class="td-amount text-right pr-4">크루장 이름</th>
+                                        <th class="td-email">대표 이메일</th>
+                                        <th class="td-phone">대표 전화번호</th>
+                                        <th class="td-start">크루 가입일</th>
                                         <th class="td-recent">최근 접속</th>
-                                        <th class="td-action">상세</th>
+                                        <th class="td-action">회원 상세</th>
                                       </tr>
                                     </thead>
                                     <tbody id="membersTbody">
@@ -211,22 +210,6 @@
                                         <td class="td-name">
                                           <div class="member-name">Test01
                                           </div>
-                                          <div class="member-id">TestId01</div>
-                                        </td>
-                                        <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
-                                        <td class="td-email">test01@gmail.com</td>
-                                        <td class="td-phone">010-1234-5678</td>
-                                        <td class="td-start">2025-06-12</td>
-                                        <td class="td-recent">2025-07-29</td>
-                                        <td class="td-action text-center">
-                                          <button type="button" class="action-btn" data-memberId="${m.id}"><i class="mdi mdi-chevron-right"></i></button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td class="td-name">
-                                          <div class="member-name">Test01
-                                          </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -241,7 +224,6 @@
                                         <td class="td-name">
                                           <div class="member-name">Test01
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -256,7 +238,6 @@
                                         <td class="td-name">
                                           <div class="member-name">Test01
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -271,7 +252,6 @@
                                         <td class="td-name">
                                           <div class="member-name">Test01
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -286,7 +266,6 @@
                                         <td class="td-name">
                                           <div class="member-name">Test01
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -300,9 +279,7 @@
                                       <tr>
                                         <td class="td-name">
                                           <div class="member-name">Test01
-                                            <span class="badge-label badge text-danger ml-2">일반회원</span>
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -316,9 +293,7 @@
                                       <tr>
                                         <td class="td-name">
                                           <div class="member-name">Test01
-                                            <span class="badge-label badge text-danger ml-2">일반회원</span>
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -332,9 +307,7 @@
                                       <tr>
                                         <td class="td-name">
                                           <div class="member-name">Test01
-                                            <span class="badge-label badge text-danger ml-2">일반회원</span>
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -348,9 +321,7 @@
                                       <tr>
                                         <td class="td-name">
                                           <div class="member-name">Test01
-                                            <span class="badge-label badge text-danger ml-2">일반회원</span>
                                           </div>
-                                          <div class="member-id">TestId01</div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -364,9 +335,21 @@
                                       <tr>
                                         <td class="td-name">
                                           <div class="member-name">Test01
-                                            <span class="badge-label badge text-danger ml-2">일반회원</span>
                                           </div>
-                                          <div class="member-id">TestId01</div>
+                                        </td>
+                                        <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
+                                        <td class="td-email">test01@gmail.com</td>
+                                        <td class="td-phone">010-1234-5678</td>
+                                        <td class="td-start">2025-06-12</td>
+                                        <td class="td-recent">2025-07-29</td>
+                                        <td class="td-action text-center">
+                                          <button type="button" class="action-btn"><i class="mdi mdi-chevron-right"></i></button>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td class="td-name">
+                                          <div class="member-name">Test01
+                                          </div>
                                         </td>
                                         <td class="td-amount text-right pr-4 font-weight-bold">테스트01<span class="amount-unit"> 님</span></td>
                                         <td class="td-email">test01@gmail.com</td>
@@ -427,7 +410,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div class="modal-title">
-                                    <span id="memberModalTitle"></span>
+                                    (TestId01) Test01
                                 </div>
                                 <button class="close">
                                     <i class="mdi mdi-close"></i>
@@ -440,11 +423,11 @@
                                         <div class="tab-view-body">
                                             <div style="display: block;">
                                                 <div class="tab-inner tab-detail">
-                                                    <!-- 일반회원 상세정보 -->
+                                                    <!-- 크루원 상세정보 -->
                                                     <div class="info-layout detail-info">
                                                         <div class="info-title justify-content-between">
                                                             <div class="flex-left d-flex">
-                                                                <div class="title">회원 상세정보</div>
+                                                                <span class="approval-status status-badge status-pending">크루장</span>
                                                             </div>
                                                             <div class="flex-right"></div>
                                                         </div>
@@ -453,12 +436,26 @@
                                                             <div class="d-table-cell">
                                                                 <table class="info-table">
                                                                     <tbody>
-                                                                    <tr><th>이름</th><td><span id="memberDetailName"></span></td></tr>
-                                                                    <tr><th>핸드폰 번호</th><td><span id="memberDetailPhone"></span></td></tr>
-                                                                    <tr><th>mbti</th><td></td></tr>
-                                                                    <tr><th>생년월일</th><td></td></tr>
-                                                                    <tr><th>가입일</th><td><span id="memberDetailCreatedDatetime"></span></td></tr>
-                                                                    <tr><th>제공자</th><td><span id="memberDetailProvider"></span></td></tr>
+                                                                        <tr>
+                                                                            <th>이름</th>
+                                                                            <td>테스트01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>핸드폰 번호</th>
+                                                                            <td>010-1234-5678</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>mbti</th>
+                                                                            <td>INFP</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>생년월일</th>
+                                                                            <td>010803</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>가입일</th>
+                                                                            <td>2025-06-12</td>
+                                                                        </tr>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -466,70 +463,224 @@
                                                             <div class="d-table-cell">
                                                                 <table class="info-table">
                                                                     <tbody>
-                                                                    <tr><th>회원ID</th><td><span id="memberDetailId"></span></td></tr>
-                                                                    <tr><th>이메일</th><td><span id="memberDetailEmail"></span></td></tr>
-                                                                    <tr><th>최근 접속</th><td></td></tr>
-                                                                    <tr><th>성별</th><td></td></tr>
-                                                                    <tr><th>주소</th><td></td></tr>
-                                                                    <tr><th>상태</th><td><span id="memberDetailStatus"></span></td></tr>
+                                                                        <tr>
+                                                                            <th>회원ID</th>
+                                                                            <td>TestId01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>이메일</th>
+                                                                            <td>test01@gmail.com</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>최근 접속</th>
+                                                                            <td>2025-07-29</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>성별</th>
+                                                                            <td>남</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>주소</th>
+                                                                            <td>서울시 강남구</td>
+                                                                        </tr>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- 회원 작성 게시글 -->
+                                                    
+                                                    
                                                     <div class="info-layout detail-info">
                                                         <div class="info-title justify-content-between">
                                                             <div class="flex-left d-flex">
-                                                                <!-- 작성 게시글 클릭 시 콘텐츠 관리 내 게시글 페이지로 이동 -->
-                                                                <a href="" class="info-detail">
-                                                                    <div class="title">작성 게시글
-                                                                        <i class="mdi mdi-menu-left ml-2"></i>
-                                                                    </div>
-                                                                </a>
+                                                                <span class="title">크루원</span>
                                                             </div>
                                                             <div class="flex-right"></div>
                                                         </div>
                                                         <div class="d-table w-100">
-                                                            <!-- 작성 게시글 -->
-                                                            <table class="info-table">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>게시글 제목</th>
-                                                                    <th>게시글 내용</th>
-                                                                    <th>게시글 작성 일자</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody id="memberPostTbody"></tbody>
-                                                            </table>
-                                                        </div>                             
+                                                            <!-- 테이블 왼쪽 -->
+                                                            <div class="d-table-cell">
+                                                                <table class="info-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>이름</th>
+                                                                            <td>테스트01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>핸드폰 번호</th>
+                                                                            <td>010-1234-5678</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>mbti</th>
+                                                                            <td>INFP</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>생년월일</th>
+                                                                            <td>010803</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>가입일</th>
+                                                                            <td>2025-06-12</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- 테이블 오른쪽 -->                                                        
+                                                            <div class="d-table-cell">
+                                                                <table class="info-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>회원ID</th>
+                                                                            <td>TestId01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>이메일</th>
+                                                                            <td>test01@gmail.com</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>최근 접속</th>
+                                                                            <td>2025-07-29</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>성별</th>
+                                                                            <td>남</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>주소</th>
+                                                                            <td>서울시 강남구</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <!-- 회원 작성 댓글 -->
                                                     <div class="info-layout detail-info">
                                                         <div class="info-title justify-content-between">
                                                             <div class="flex-left d-flex">
-                                                                <!-- 작성 댓글 클릭 시 콘텐츠 관리 내 댓글 페이지로 이동 -->
-                                                                <a href="" class="info-detail">
-                                                                    <div class="title">작성 댓글
-                                                                        <i class="mdi mdi-menu-left ml-2"></i>
-                                                                    </div>
-                                                                </a>
+                                                                <span class="title">크루원</span>
                                                             </div>
                                                             <div class="flex-right"></div>
                                                         </div>
                                                         <div class="d-table w-100">
-                                                            <!-- 작성 댓글 -->
-                                                            <table class="info-table">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>게시글 제목</th>
-                                                                    <th>댓글 내용</th>
-                                                                    <th>댓글 작성 일자</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody id="memberCommentTbody"></tbody>
-                                                            </table>
-                                                        </div>                             
+                                                            <!-- 테이블 왼쪽 -->
+                                                            <div class="d-table-cell">
+                                                                <table class="info-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>이름</th>
+                                                                            <td>테스트01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>핸드폰 번호</th>
+                                                                            <td>010-1234-5678</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>mbti</th>
+                                                                            <td>INFP</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>생년월일</th>
+                                                                            <td>010803</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>가입일</th>
+                                                                            <td>2025-06-12</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- 테이블 오른쪽 -->                                                        
+                                                            <div class="d-table-cell">
+                                                                <table class="info-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>회원ID</th>
+                                                                            <td>TestId01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>이메일</th>
+                                                                            <td>test01@gmail.com</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>최근 접속</th>
+                                                                            <td>2025-07-29</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>성별</th>
+                                                                            <td>남</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>주소</th>
+                                                                            <td>서울시 강남구</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="info-layout detail-info">
+                                                        <div class="info-title justify-content-between">
+                                                            <div class="flex-left d-flex">
+                                                                <span class="title">크루원</span>
+                                                            </div>
+                                                            <div class="flex-right"></div>
+                                                        </div>
+                                                        <div class="d-table w-100">
+                                                            <!-- 테이블 왼쪽 -->
+                                                            <div class="d-table-cell">
+                                                                <table class="info-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>이름</th>
+                                                                            <td>테스트01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>핸드폰 번호</th>
+                                                                            <td>010-1234-5678</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>mbti</th>
+                                                                            <td>INFP</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>생년월일</th>
+                                                                            <td>010803</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>가입일</th>
+                                                                            <td>2025-06-12</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- 테이블 오른쪽 -->                                                        
+                                                            <div class="d-table-cell">
+                                                                <table class="info-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>회원ID</th>
+                                                                            <td>TestId01</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>이메일</th>
+                                                                            <td>test01@gmail.com</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>최근 접속</th>
+                                                                            <td>2025-07-29</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>성별</th>
+                                                                            <td>남</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>주소</th>
+                                                                            <td>서울시 강남구</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -544,13 +695,7 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </body>
-<script src="/js/admin/member/module/service.js"></script>
-<script src="/js/admin/member/module/layout.js"></script>
-<script src="/js/admin/member/event.js"></script>
-
-
-
+<script src="/static/js/admin/member/event.js"></script>
 </html>

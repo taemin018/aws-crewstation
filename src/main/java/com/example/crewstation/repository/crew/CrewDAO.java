@@ -32,4 +32,9 @@ public class CrewDAO {
         return crewMapper.findCrews(criteria, search);
     }
 
+//   크루 총 갯수
+    public int selectTotalCrewCount() {
+        return crewMapper.selectTotalCrewCount();
+    }
+
 }

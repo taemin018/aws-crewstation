@@ -98,5 +98,10 @@ public class MemberDAO {
         return memberMapper.selectCountTodayJoin();
     }
 
+//    총 회원 수
+    public int selectTotalMemberCount() {
+        return memberMapper.selectTotalMemberCount();
+    }
+
 
 }
