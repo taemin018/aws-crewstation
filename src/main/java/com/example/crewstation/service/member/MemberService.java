@@ -49,6 +49,9 @@ public interface MemberService {
 //  나의 판매내역 목록
     public List<MySaleListDTO> getMySaleList(Long memberId);
 
+//    관리자 회원 통계 자료
+    public MemberAdminStatics getStatics();
+
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()
                 .id(memberDTO.getId())

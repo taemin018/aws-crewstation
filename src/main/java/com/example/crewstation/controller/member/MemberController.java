@@ -76,7 +76,6 @@ public class MemberController {
     @PostMapping("web/login")
     public RedirectView login(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
         guestService.login(guestDTO);
-        log.info(guestService.login(guestDTO).toString());
 
         return new RedirectView("/guest/order-detail");
     }
@@ -85,7 +84,7 @@ public class MemberController {
     public RedirectView mobileLogin(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
         guestService.login(guestDTO);
 
-
+        
         return new RedirectView("/guest/order-detail");
     }
 

@@ -103,8 +103,10 @@ div.sticky-layout{
 }
 
 div.sticky-action-btn{
-    flex: 0 0 auto;
-    display: block;
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
     margin-left: -7px;
 }
 
@@ -159,12 +161,14 @@ a.sticky-title-logo h2{
 
 div.sticky-search-wrap{
     margin-right: -7px;
+    width: 100%;
     flex: 0 0 auto;
 }
 div.sticky-search-icon{
     display: flex;
+    width: 100%;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     line-height: 0;
 }
 
@@ -397,7 +401,7 @@ input.search-input{
     line-height: 24px;
 }
 
-div.global-search-combobox:has(input.search-input:focus){
+div.search-input-wrap:has(input.search-input:focus){
     border: 1px solid #647FBC;
     background-color: #F7F9FA;
 }
@@ -768,4 +772,15 @@ a.join-btn-wrap{
     flex: 1 1 0%;
     justify-content: center;
     align-items: center;
+}
+
+.sticky-action-btn a {
+    width: 10px;
+    margin-left: 8px;
+    transform: rotate(180deg);
+    display: block;
+}
+
+.gallery__right-arrow{
+    width: 10px;
 }

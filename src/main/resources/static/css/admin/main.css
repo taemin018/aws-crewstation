@@ -890,7 +890,7 @@ element.style {
 /* 관리자 상단 이메일 클릭 시 */
 /* 기준 잡기 위해 넣어둠 */
 .user-menu {
-  position: relative; 
+  position: relative;
 }
 
 .user-menu .user-menu-content {
@@ -1095,6 +1095,7 @@ element.style {
     border-radius: 8px;
     box-shadow: 0 0 10px hsla(196, 7%, 71%, .1);
     margin-bottom: 20px;
+    margin-top: 1%;
 }
 
 .chart-wrapper {
@@ -1473,3 +1474,4 @@ td {
     font-size: 12px;
     font-weight: 700;
 }
+

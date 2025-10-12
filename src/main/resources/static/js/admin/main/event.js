@@ -1,3 +1,5 @@
+
+
 // =============== 사이드바 ===============
 (() => {
     const side = document.querySelector("#bootpay-side");
@@ -101,34 +103,47 @@
 
 // =============== 우측 상단 유저 메뉴 ===============
 (() => {
-    const btn = document.getElementById("usermenubtn");
-    const menu = document.getElementById("usermenu");
-    if (!btn || !menu) return;
+    const initUserMenu = () => {
+        const btn = document.getElementById("userMenuBtn");
+        const menu = document.getElementById("userMenu");
+        if (!btn || !menu) return;
 
-    const hide = () => {
-        menu.classList.remove("show");
-        menu.style.display = "none";
+        const hide = () => {
+            menu.classList.remove("show");
+            menu.style.display = "none";
+            btn.setAttribute("aria-expanded", "false");
+        };
+
+        const toggle = () => {
+            const willShow = !menu.classList.contains("show");
+            menu.classList.toggle("show", willShow);
+            menu.style.display = willShow ? "block" : "none";
+            btn.setAttribute("aria-expanded", String(willShow));
+        };
+
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation(); // 문서 클릭 핸들러보다 우선
+            toggle();
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!btn.contains(e.target) && !menu.contains(e.target)) hide();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") hide();
+        });
     };
 
-    const toggle = () => {
-        const willShow = !menu.classList.contains("show");
-        menu.classList.toggle("show", willShow);
-        menu.style.display = willShow ? "block" : "none";
-    };
-
-    btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        toggle();
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !menu.contains(e.target)) hide();
-    });
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") hide();
-    });
+    // DOM 준비 후 실행
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initUserMenu);
+    } else {
+        initUserMenu();
+    }
 })();
+
 
 
 // ===== 모달 열기/닫기 =====
@@ -221,9 +236,7 @@ if (memberMenuBtn) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await showMembers(1, "");
-});
+
 
 // 페이징 클릭
 document.addEventListener("click", async (e) => {
@@ -237,3 +250,99 @@ document.addEventListener("click", async (e) => {
 
     await showMembers(page, keyword);
 });
+
+
+//  구글 차트
+google.charts.load('current', { packages: ['corechart', 'bar'] });
+
+window.addEventListener('DOMContentLoaded', async () => {
+    const staticsData = await mainService.getMain(mainLayout.showMain);
+
+    // 구글 차트가 로드되면 실행
+    google.charts.setOnLoadCallback(() => {
+        drawJoinChart(staticsData);
+        drawPie(staticsData);
+    });
+});
+
+//  join 차트
+function drawJoinChart(staticsData) {
+    const el = document.getElementById('join_chart');
+    if (!el) return;
+
+    const dataArray = [['월', '가입자 수']];
+    if (Array.isArray(staticsData?.monthlyJoins)) {
+        staticsData.monthlyJoins.forEach(m => {
+            dataArray.push([m.date, Number(m.count)]);
+        });
+    }
+
+    const data = google.visualization.arrayToDataTable(dataArray);
+    const options = {
+        title: '최근 3개월 가입자 수',
+        vAxis: { minValue: 0 },
+        legend: { position: 'none' },
+        colors: ['#3366cc'],
+        chartArea: { width: '85%', height: '70%' },
+    };
+
+    const chart = new google.visualization.ColumnChart(el);
+    chart.draw(data, options);
+}
+
+//  인기 여행지 파이차트
+function drawPie(staticsData) {
+    const el = document.getElementById('piechart');
+    if (!el) return;
+
+    const dataArray = [['지역', '비율']];
+    if (Array.isArray(staticsData?.popularCountries)) {
+        staticsData.popularCountries.forEach(c => {
+            dataArray.push([c.country, Number(c.count)]);
+        });
+    }
+
+    const data = google.visualization.arrayToDataTable(dataArray);
+    const options = {
+        title: '인기 여행지 TOP 5',
+        pieHole: 0.4,
+        legend: { position: 'bottom' },
+        chartArea: { width: '90%', height: '80%' },
+    };
+
+    const chart = new google.visualization.PieChart(el);
+    chart.draw(data, options);
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const menuButtons = document.querySelectorAll(".menu-btn[data-section]");
+    const sections = document.querySelectorAll("#page-container > div");
+
+    menuButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const target = btn.getAttribute("data-section");
+
+            // active 스타일 변경
+            menuButtons.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            // 해당 섹션만 보이기
+            sections.forEach((sec) => {
+                if (sec.id === `section-${target}`) {
+                    sec.style.display = "block";
+                } else {
+                    sec.style.display = "none";
+                }
+            });
+        });
+    });
+
+    // 초기 HOME만 표시
+    sections.forEach((sec) => {
+        sec.style.display = sec.id === "section-home" ? "block" : "none";
+    });
+});
+
+
+

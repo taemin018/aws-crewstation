@@ -12,9 +12,4 @@ public class AdminController {
 
         return "admin/main";
     }
-
-    @GetMapping("/member")
-    public String goMemberPage(){
-        return "admin/member";
-    }
 }

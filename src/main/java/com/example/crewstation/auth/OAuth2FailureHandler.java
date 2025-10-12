@@ -18,6 +18,14 @@ public class OAuth2FailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         exception.printStackTrace();
-        response.sendRedirect("/member/login");
+        String ua = request.getHeader("User-Agent");
+
+        boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
+
+        if (isMobile) {
+            response.sendRedirect("/member/mobile/login");
+        } else {
+            response.sendRedirect("/member/web/login");
+        }
     }
 }

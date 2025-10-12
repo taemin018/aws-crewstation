@@ -183,4 +183,37 @@
         ORDER BY ps.created_datetime DESC
     </select>
 
+    <select id="selectMonthlyJoin">
+        select
+            TO_CHAR(
+                    date_trunc('month', created_datetime AT TIME ZONE 'Asia/Seoul'),
+                    'YYYY-MM'
+            ) AS date,
+            COUNT(id) AS count
+        from tbl_member
+        where (created_datetime AT TIME ZONE 'Asia/Seoul')
+                  >= date_trunc('month', (now() AT TIME ZONE 'Asia/Seoul')) - INTERVAL '2 months'
+        group by 1
+        order by 1;
+
+
+    </select>
+
+
+
+    <select id="selectCountTodayJoin">
+        SELECT COUNT(id)
+        FROM tbl_member
+        WHERE (created_datetime AT TIME ZONE 'Asia/Seoul')::date
+          = (now() AT TIME ZONE 'Asia/Seoul')::date
+    </select>
+
+    <select id="selectTotalMemberCount">
+        select count(*)
+        from tbl_member
+    </select>
+
+
+
+
 </mapper>
