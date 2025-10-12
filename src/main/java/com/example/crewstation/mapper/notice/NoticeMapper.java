@@ -1,6 +1,7 @@
 package com.example.crewstation.mapper.notice;
 
 import com.example.crewstation.domain.notice.NoticeVO;
+import com.example.crewstation.dto.notice.NoticeCriteriaDTO;
 import com.example.crewstation.util.Criteria;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,4 +11,8 @@ import java.util.List;
 public interface NoticeMapper {
     public List<NoticeVO> selectAllNotice(Criteria criteria);
     public int selectCountAll();
+
+//    관리자 공지사항 목록
+    public List<NoticeCriteriaDTO> selectNoticeCriteria(Criteria criteria);
+
 }

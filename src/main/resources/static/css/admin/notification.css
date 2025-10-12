@@ -2281,3 +2281,36 @@ table.info-table td, table.info-table th {
         justify-content: flex-end;
         padding: .75rem;
     }
+
+.notice-list-head,
+.notice-item {
+    display: grid;
+    grid-template-columns: 100px 1fr 120px; /* 날짜 | 제목 | 작성자 */
+    align-items: center;
+    gap: 16px;
+}
+
+.notice-list-head {
+    padding: 10px 16px;
+    color: #9ca3af;           /* 회색 헤더 */
+    font-size: 14px;
+}
+
+.notice-list {
+    border-top: 1px solid #eee;
+}
+
+.notice-item {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.notice-date { color:#6b7280; }
+.notice-title { font-weight: 500; }
+.notice-writer { color:#6b7280; text-align: right; }
+
+.notice-list .empty {
+    padding: 32px 16px;
+    color: #9ca3af;
+    text-align: center;
+}

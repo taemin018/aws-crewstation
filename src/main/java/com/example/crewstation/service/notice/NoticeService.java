@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,5 +30,19 @@ public class NoticeService {
 
 
     }
+//  관리자 공지사항 목록
+    public NoticeCriteriaDTO getAdminNotices(int page) {
+        int total = noticeDAO.getTotal();
+        Criteria criteria = new Criteria(page, total, 16, 10);
+
+        List<NoticeCriteriaDTO> noticeListAdmin = noticeDAO.findNoticeCriteriaForAdmin(criteria);
+
+        NoticeCriteriaDTO noticeCriteriaDTO = new NoticeCriteriaDTO();
+        noticeCriteriaDTO.setCriteria(criteria);
+        noticeCriteriaDTO.setNoticeListAdmin(noticeListAdmin);
+
+        return noticeCriteriaDTO;
+    }
+
 
 }

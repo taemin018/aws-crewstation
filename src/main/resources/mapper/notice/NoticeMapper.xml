@@ -11,6 +11,21 @@
         select count(*) from tbl_notice
     </select>
 
+    <select id="selectNoticeCriteria">
+        select
+            n.id,
+            n.notice_title   AS title,
+            n.member_id      AS memberId,
+            n.created_datetime AS createdDatetime,
+            to_char(n.created_datetime, 'MM-DD') AS createdMd,
+            m.member_name    AS writerName
+        from tbl_notice n
+                 left join tbl_member m on m.id = n.member_id
+        order by n.id desc
+        limit #{rowCount} offset #{offset}
+
+    </select>
+
 
 
 

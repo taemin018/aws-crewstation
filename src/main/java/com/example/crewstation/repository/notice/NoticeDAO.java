@@ -1,6 +1,7 @@
 package com.example.crewstation.repository.notice;
 
 import com.example.crewstation.domain.notice.NoticeVO;
+import com.example.crewstation.dto.notice.NoticeCriteriaDTO;
 import com.example.crewstation.mapper.notice.NoticeMapper;
 import com.example.crewstation.util.Criteria;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,11 @@ public class NoticeDAO {
     public int getTotal(){
 
         return noticeMapper.selectCountAll();
+    }
+
+//    관리자 공지사항 목록 조회
+    public List<NoticeCriteriaDTO>  findNoticeCriteriaForAdmin(Criteria criteria){
+        return noticeMapper.selectNoticeCriteria(criteria);
     }
 
 
