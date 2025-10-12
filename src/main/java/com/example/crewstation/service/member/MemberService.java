@@ -46,6 +46,9 @@ public interface MemberService {
 //    관리자 상세
     public MemberDTO getMemberDetail(Long memberId);
 
+//  나의 판매내역 목록
+    public List<MySaleListDTO> getMySaleList(Long memberId);
+
 //    관리자 회원 통계 자료
     public MemberAdminStatics getStatics();
 

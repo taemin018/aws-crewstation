@@ -5,6 +5,7 @@ import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
+import com.example.crewstation.dto.member.MySaleListDTO;
 import com.example.crewstation.service.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -52,5 +53,13 @@ public class MemberServiceTests {
     public void testSearchMember(){
         List<MemberDTO> test = memberService.searchMember("test");
         test.stream().map(MemberDTO::toString).forEach(log::info);
+    }
+
+    @Test
+    void getMySaleListTest() {
+        Long memberId = 1L;
+        List<MySaleListDTO> saleList = memberService.getMySaleList(memberId);
+
+        saleList.forEach(System.out::println);
     }
 }

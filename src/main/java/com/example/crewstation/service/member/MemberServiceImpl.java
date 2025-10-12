@@ -276,4 +276,10 @@ public class MemberServiceImpl implements MemberService {
         paymentStatusMapper.updatePaymentStatus(purchaseId, PaymentPhase.REVIEWED);
     }
 
+//  나의 판매내역 목록
+    @Override
+    public List<MySaleListDTO> getMySaleList(Long memberId) {
+        return memberDAO.findMySaleList(memberId);
+    }
+
 }

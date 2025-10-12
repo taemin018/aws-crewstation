@@ -158,6 +158,31 @@
         where tm.id = #{memberId}
     </select>
 
+    <!-- 나의 판매내역 목록 조회 -->
+    <select id="selectMySaleList">
+        SELECT
+            ps.id                                      AS id,
+            ps.payment_phase                           AS paymentStatus,
+            p.id                                       AS postId,
+            p.id                                       AS purchaseId,
+            p.post_title                               AS postTitle,
+            vp.purchase_product_price                  AS purchaseProductPrice,
+            vp.purchase_product_count                  AS purchaseProductCount,
+            vf.file_path || '/' || vf.file_name        AS mainImage,
+            ps.created_datetime                        AS createdDatetime,
+            ps.updated_datetime                        AS updatedDatetime
+        FROM tbl_payment_status ps
+                 JOIN view_post_purchase vp
+                      ON ps.purchase_id = vp.id
+                 JOIN tbl_post p
+                      ON vp.id = p.id
+                 LEFT JOIN view_file_post_section_file vf
+                           ON vf.image_type = 'main'
+                               AND vf.id = p.id
+        WHERE ps.member_id = #{memberId}
+        ORDER BY ps.created_datetime DESC
+    </select>
+
     <select id="selectMonthlyJoin">
         select
             TO_CHAR(

@@ -3,6 +3,7 @@ package com.example.crewstation.mapper.member;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.dto.member.MySaleListDTO;
 import com.example.crewstation.dto.member.MemberStatics;
 import com.example.crewstation.util.Search;
 import org.apache.ibatis.annotations.Mapper;
@@ -54,6 +55,9 @@ public interface MemberMapper {
 
 //   관리자 상세 조회
     public MemberDTO findAdminMemberDetail(@Param("memberId") Long memberId);
+
+//  나의 판매내역 목록
+    public List<MySaleListDTO> selectMySaleList(@Param("memberId") Long memberId);
 
 //    월별 가입자 수
     public List<MemberStatics> selectMonthlyJoin();
