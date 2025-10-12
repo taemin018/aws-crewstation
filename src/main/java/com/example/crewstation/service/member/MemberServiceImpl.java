@@ -7,10 +7,7 @@ import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
-import com.example.crewstation.dto.member.AddressDTO;
-import com.example.crewstation.dto.member.MemberCriteriaDTO;
-import com.example.crewstation.dto.member.MemberDTO;
-import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.dto.member.*;
 import com.example.crewstation.mapper.payment.PaymentMapper;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
 import com.example.crewstation.repository.file.FileDAO;
@@ -262,6 +259,12 @@ public class MemberServiceImpl implements MemberService {
 
         // 주문 상태 reviewed 로 변경
         paymentStatusMapper.updatePaymentStatus(purchaseId, PaymentPhase.REVIEWED);
+    }
+
+//  나의 판매내역 목록
+    @Override
+    public List<MySaleListDTO> getMySaleList(Long memberId) {
+        return memberDAO.findMySaleList(memberId);
     }
 
 }

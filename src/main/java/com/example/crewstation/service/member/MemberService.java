@@ -6,10 +6,7 @@ import com.example.crewstation.domain.file.member.MemberFileVO;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
-import com.example.crewstation.dto.member.AddressDTO;
-import com.example.crewstation.dto.member.MemberCriteriaDTO;
-import com.example.crewstation.dto.member.MemberDTO;
-import com.example.crewstation.dto.member.MemberProfileDTO;
+import com.example.crewstation.dto.member.*;
 import com.example.crewstation.util.Search;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,6 +45,9 @@ public interface MemberService {
 
 //    관리자 상세
     public MemberDTO getMemberDetail(Long memberId);
+
+//  나의 판매내역 목록
+    public List<MySaleListDTO> getMySaleList(Long memberId);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

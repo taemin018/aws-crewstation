@@ -1,6 +1,8 @@
 package com.example.crewstation.controller.mypage;
 
+import com.example.crewstation.dto.member.MySaleListDTO;
 import com.example.crewstation.dto.purchase.PurchaseListCriteriaDTO;
+import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.purchase.PurchaseService;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MypageController {
 
     private final PurchaseService purchaseService;
+    private final MemberService memberService;
 
     // 마이페이지 -> 내가 좋아요한 일기 목록 화면 & 내가 댓글 단 일기 목록 화면
     @GetMapping("/my-activities")
@@ -64,6 +69,20 @@ public class MypageController {
     @GetMapping("/sale-list")
     public String loadMySaleListPage() {
         log.info("마이페이지 - 판매 목록");
+        return "mypage/sale-list";
+    }
+
+    @GetMapping("/sale-list")
+    public String goToMySaleListPage(Model model, @RequestParam(required = false) Long memberId) {
+
+        // TODO: JWT 연동
+        if (memberId == null) {
+            memberId = 1L; // 임시 값
+        }
+
+        List<MySaleListDTO> saleList = memberService.getMySaleList(memberId);
+        model.addAttribute("saleList", saleList);
+
         return "mypage/sale-list";
     }
 }
