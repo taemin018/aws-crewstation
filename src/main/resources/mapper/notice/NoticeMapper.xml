@@ -26,6 +26,15 @@
 
     </select>
 
+    <insert id="insertNotice">
+        insert into tbl_notice
+        (notice_title, notice_content, member_id, created_datetime, updated_datetime)
+            values
+                (#{noticeTitle}, #{noticeContent}, #{memberId}, now(), now())
+                returning id
+    </insert>
+
+
 
 
 
