@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/admin/sidebar.css">
     <link rel="stylesheet" href="/css/admin/font.css">
     <link rel="stylesheet" href="/css/admin/diary-report.css">
-    <link rel="shortcut icon" href="../../../static/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 </head>
 <body>
@@ -128,14 +128,14 @@
                                 <div id="usermenu" class="user-menu-content dropdown-menu dropdown-menu-right">
                                     <ul class="menu-body list-unstyled">
                                         <li>
-                                            <a class="boot-link d-block text-dark"href="">
+                                            <a class="boot-link d-block text-dark" href="">
                                                 <i class="mdi mdi-bell-outline mr-2 mdi-18px"></i>
                                                 회원가입
                                                 
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="d-block text-dark"href="">
+                                            <a class="d-block text-dark" href="">
                                                 <i class="mdi mdi-logout-variant mr-2 mdi-18px"></i>
                                                 로그아웃
                                             </a>
@@ -181,63 +181,8 @@
                                         <th class="text-right">관리</th>
                                       </tr>
                                     </thead>
-                                  
                                     <tbody>
-                                      <!-- 예시1: 대기중 -->
-                                      <tr data-status="PENDING">
-                                        <td class="td-post">
-                                          <div class="post-title">프랑스 다이어리</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48321</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-danger">욕설이나 비방이 심해요</span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@gmail.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 20:59:36</td>
-                                  
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                          
-                                          
-                                      </tr>
-                                  
-                                      <!-- 예시2: 처리완료 -->
-                                      <tr data-status="RESOLVED">
-                                        <td class="td-post">
-                                          <div class="post-title">태국 야경 스냅</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48377</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-danger">이 글로 도배가 돼있어요</span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@naver.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 21:10:22</td>
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                      </tr>
-                                      
+                                    <!-- 신고 다이어리 목록 -->
                                     </tbody>
                                   </table>
                                   
@@ -303,13 +248,11 @@
                                       <div class="admin-actions">
                                         <label><input type="checkbox" class="cb-hide-post"> 게시글 숨김</label>
                                         <label><input type="checkbox" class="cb-block-author"> 작성자 제한(일시)</label>
-                                        <label><input type="checkbox" class="cb-warn"> 경고 발송</label>
                                       </div>
                                     </div>
                               
                                     <div class="modal-footer report-footer">
                                         <button class="btn outline btn-approve">처리</button>
-                                        <button class="btn primary btn-reject">반려</button>
                                         <button class="btn soft btn-close">닫기</button>
                                       </div>
                                       
@@ -326,5 +269,7 @@
     </div>
 </div>
 </body>
-<script src="/static/js/admin/diary-report/event.js"></script>
+<script src="/js/admin/diary-report/module/layout.js"></script>
+<script src="/js/admin/diary-report/module/service.js"></script>
+<script src="/js/admin/diary-report/event.js"></script>
 </html>

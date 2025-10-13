@@ -1,0 +1,42 @@
+const reportService = (() => {
+
+    // 다이어리 신고 목록
+    const getReports = async (page = 1) => {
+        const res = await fetch(`/api/admin/diaries?page=${page}`);
+        if (!res.ok) {
+            console.error("신고 목록 로드 실패");
+            return [];
+        }
+        return await res.json();
+    };
+
+    // 다이어리 신고 상세
+    const getReportDetail = async (reportId) => {
+        const res = await fetch(`/api/admin/diary/${reportId}`);
+        if (!res.ok) {
+            console.error("신고 상세 조회 실패");
+            return null;
+        }
+        return await res.json();
+    };
+
+    // 신고 처리
+    const processReport = async (reportId, postId = null, hidePost = false) => {
+        const params = new URLSearchParams();
+        if (postId) params.append("postId", postId);
+        if (hidePost) params.append("hidePost", hidePost);
+
+        const res = await fetch(`/api/admin/diary/${reportId}/process?${params.toString()}`, {
+            method: "POST"
+        });
+
+        if (!res.ok) {
+            console.error("신고 처리 실패");
+            return false;
+        }
+
+        return true;
+    };
+
+    return { getReports : getReports, getReportDetail : getReportDetail, processReport : processReport };
+})();
