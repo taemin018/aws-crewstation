@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showSection('notice');
     });
 
-    //  페이지네이션
+    // 페이지네이션
     document.addEventListener('click', (e) => {
         const li = e.target.closest('.notice-pagination li, .notice-pagination a.paging');
         if (!li) return;
@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (location.hash === '#notice') showSection('notice');
     });
 });
-
 
 // 모달 제어
 const NoticeModal = (() => {
@@ -75,30 +74,7 @@ const NoticeModal = (() => {
     return { show, hide, reset };
 })();
 
-
-// 저장
-window.noticeService = window.noticeService || {};
-window.noticeService.save = async (title, content) => {
-    try {
-        const res = await fetch('/api/admin/notices', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            credentials: 'same-origin',
-            body: JSON.stringify({ title, content })
-        });
-        if (!res.ok) {
-            console.error('공지 저장 실패:', await res.text());
-            return false;
-        }
-        return true;
-    } catch (err) {
-        console.error('공지 저장 오류:', err);
-        return false;
-    }
-};
-
-
-// ️ 작성 버튼 → 모달 열기
+// ✏️ 작성 버튼 → 모달 열기
 document.addEventListener('click', (e) => {
     const btn = e.target.closest('#notice-save-btn');
     if (!btn) return;
@@ -107,7 +83,7 @@ document.addEventListener('click', (e) => {
     NoticeModal.show();
 });
 
-//  모달 닫기
+// ❌ 모달 닫기
 document.addEventListener('click', (e) => {
     if (e.target.closest('#notice-modal-close')) {
         e.preventDefault();
@@ -119,7 +95,18 @@ document.addEventListener('click', (e) => {
     }
 });
 
-//  완료(저장) 버튼
+// ⏎ Enter로 저장 (제목/내용 포커스 중)
+document.addEventListener('keydown', (e) => {
+    if (document.getElementById('notice-modal')?.classList.contains('show')) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            document.getElementById('notice-modal-submit')?.click();
+        }
+    }
+});
+
+// ✅ 완료(저장) 버튼
+let _saving = false;
 document.addEventListener('click', async (e) => {
     const submit = e.target.closest('#notice-modal-submit');
     if (!submit) return;
@@ -131,13 +118,14 @@ document.addEventListener('click', async (e) => {
         return;
     }
 
-    if (submit.disabled) return;
+    if (_saving) return;
+    _saving = true;
     submit.disabled = true;
     const prev = submit.textContent;
     submit.textContent = '저장 중...';
 
     try {
-        const ok = await noticeService.save(title, content);
+        const ok = await noticeService.save(title, content); // service.js에 save(title, content)여야 함
         if (ok) {
             NoticeModal.hide();
             noticeService.getList(noticeLayout.showList, 1);
@@ -148,7 +136,44 @@ document.addEventListener('click', async (e) => {
         console.error(err);
         alert('저장 중 오류가 발생했습니다.');
     } finally {
+        _saving = false;
         submit.disabled = false;
         submit.textContent = prev;
     }
 });
+
+/* =========================
+   ▼ 추가: 상세 보기/돌아가기
+   ========================= */
+
+// 목록 아이템 클릭 → 상세 보기
+document.addEventListener('click', async (e) => {
+    const item = e.target.closest('.notice-item');
+    if (!item) return;
+
+    const id = item.dataset.id;
+    if (!id) return;
+
+    try {
+        const data = await noticeService.getDetail(id);
+        noticeLayout.showDetail(data);
+    } catch (err) {
+        console.error('공지 상세 로드 실패:', err);
+        alert('공지 상세를 불러오지 못했습니다.');
+    }
+});
+
+// 상세에서 돌아가기 → 목록으로
+document.addEventListener('click', (e) => {
+    const back = e.target.closest('#goNoticeList');
+    if (!back) return;
+
+    document.querySelectorAll('#page-container > *').forEach(el => el.style.display = 'none');
+    const list = document.getElementById('section-notice');
+    if (list) {
+        list.style.display = 'block';
+        noticeService.getList(noticeLayout.showList, 1);
+    }
+});
+
+
