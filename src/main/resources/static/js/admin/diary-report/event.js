@@ -1,14 +1,13 @@
 // 무한 스크롤
-console.log("event.js 실행");
 let page = 1;
 let checkScroll = true;
 let hasMore = true;
 
 const loadReportDiaryList = async (page = 1) => {
-    console.log("페이지: ", page);
+    // console.log("페이지: ", page);
 
     const reports = await reportService.getReports(page);
-    console.log("불러온 결과", reports);
+    // console.log("불러온 결과", reports);
 
     diaryReportLayout.showReportDiaryLst(reports);
 

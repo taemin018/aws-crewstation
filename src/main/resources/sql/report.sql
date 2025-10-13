@@ -23,3 +23,5 @@ select * from tbl_report;
 select count(*)
 from view_report_post_report r
          left join view_post_diary p on p.id = r.post_id;
+
+select * from tbl_post;
