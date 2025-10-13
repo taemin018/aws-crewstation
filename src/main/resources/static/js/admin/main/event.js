@@ -323,7 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", () => {
             const target = btn.getAttribute("data-section");
 
-            // active 스타일 변경
             menuButtons.forEach((b) => b.classList.remove("active"));
             btn.classList.add("active");
 
@@ -338,11 +337,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 초기 HOME만 표시
     sections.forEach((sec) => {
         sec.style.display = sec.id === "section-home" ? "block" : "none";
     });
 });
 
+// ===== 로그인 정보 표시 + 로그아웃 =====
+
+async function fetchWithRefresh(url, opts = {}) {
+    let res = await fetch(url, { credentials: 'include', ...opts });
+    if (res.status === 401) {
+        const r = await fetch('/api/admin/auth/refresh', { method: 'GET', credentials: 'include' });
+        if (r.ok) res = await fetch(url, { credentials: 'include', ...opts });
+    }
+    return res;
+}
+
+(async () => {
+    try {
+        const res = await fetchWithRefresh('/api/admin/auth/info');
+        if (!res.ok) throw new Error('unauthorized');
+
+        const me = await res.json();
+
+        const emailEl = document.querySelector('.user-menu-email');
+        if (emailEl) emailEl.textContent = me.memberEmail || '관리자';
+
+        const avatarEl = document.querySelector('.user-avatar');
+        if (avatarEl) {
+            const letter = (me.memberEmail || 'C').trim().charAt(0).toUpperCase();
+            avatarEl.textContent = letter || 'C';
+        }
+    } catch (e) {
+        // 토큰 없거나 만료면 로그인 페이지로
+        window.location.href = '/admin/login';
+    }
+})();
+
+// 2) 로그아웃 클릭 처리
+(function attachLogout() {
+    let logoutLink = document.getElementById('logout-link');
+
+    logoutLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await fetch('/api/admin/auth/logout', { method: 'POST', credentials: 'include' });
+        } finally {
+            window.location.href = '/admin/login';
+        }
+    });
+})();
 
 

@@ -1143,3 +1143,7 @@ SELECT post_id, diary_country_path_id, diary_secret
 FROM tbl_diary
 ORDER BY post_id DESC;
 
+insert into tbl_member (member_name, member_email, member_password, member_role)
+values ('test', 'test@naver.com', 'tet1234', 'admin');
+
+select * from tbl_member;

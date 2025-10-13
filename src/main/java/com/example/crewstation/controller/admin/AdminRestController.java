@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,17 +65,21 @@ public class AdminRestController {
     }
 
 //    공지사항 작성
-    @PostMapping("/notices")
-    public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails admin,
-                                          @RequestBody NoticeWriteRequest req) {
-        Long memberId = (admin != null) ? admin.getId()
-                : (req.getMemberId() != null ? req.getMemberId() : 1L);
-        Long id = noticeService.insertNotice(memberId, req.getTitle(), req.getContent());
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", id));
+@PostMapping("/notices")
+public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails admin,
+                                      @RequestBody NoticeWriteRequest req) {
+    Long memberId = admin.getId();
+    Long id = noticeService.insertNotice(memberId, req.getTitle(), req.getContent());
+    if (id == null) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>());
     }
+    return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", id));
+}
+
+
 
 //    공지사항 상세
-    @GetMapping("notices/{id}")
+    @GetMapping("/notices/{id}")
     public ResponseEntity<NoticeDetailVO> noticeDetail(@PathVariable Long id) {
         NoticeDetailVO notice = noticeDetailService.getDetail(id);
         return ResponseEntity.ok(notice);

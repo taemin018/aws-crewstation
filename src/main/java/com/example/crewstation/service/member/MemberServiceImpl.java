@@ -262,6 +262,18 @@ public class MemberServiceImpl implements MemberService {
         return statics;
     }
 
+    @Override
+    public void joinAdmin(MemberDTO memberDTO) {
+        memberDTO.setMemberPassword(passwordEncoder.encode(memberDTO.getMemberPassword()));
+
+        memberDTO.setMemberName(memberDTO.getMemberName());
+        memberDTO.setMemberRole(memberDTO.getMemberRole());
+        memberDTO.setMemberEmail(memberDTO.getMemberEmail());
+        memberDTO.setMemberPassword(memberDTO.getMemberPassword());
+
+        memberDAO.insertAdmin(memberDTO);
+    }
+
     public Optional<MemberProfileDTO> getMember(Long memberId) {
         return Optional.empty();
     }

@@ -68,6 +68,9 @@ public interface MemberMapper {
 //    총 회원 수
     public int selectTotalMemberCount();
 
+//    관리자 등록
+    public void insertAdmin(MemberDTO memberDTO);
+
 }
 
 

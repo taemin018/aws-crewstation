@@ -37,6 +37,7 @@ public class MemberDTO {
     private MemberFileDTO memberFileDTO;
     private FileDTO fileDTO;
     private String filePath;
+    private Boolean remember;
     public MemberRole getMemberRole() {
         return memberRole != null ? memberRole : MemberRole.MEMBER;
     }
