@@ -68,7 +68,7 @@ public class AdminRestController {
     }
 
 //    공지사항 상세
-    @GetMapping("notice/{id}")
+    @GetMapping("notices/{id}")
     public ResponseEntity<NoticeDetailVO> noticeDetail(@PathVariable Long id) {
         NoticeDetailVO notice = noticeDetailService.getDetail(id);
         return ResponseEntity.ok(notice);

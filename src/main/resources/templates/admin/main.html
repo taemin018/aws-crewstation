@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CrewStation</title>
 
-    <link rel="stylesheet" href="/css/admin/font.css" />
-    <link rel="stylesheet" href="/css/admin/sidebar.css" />
+    <link rel="stylesheet" href="/css/admin/font.css"/>
+    <link rel="stylesheet" href="/css/admin/sidebar.css"/>
     <link rel="stylesheet" href="/css/admin/notification.css">
     <link rel="stylesheet" href="/css/admin/notification-detail.css">
-    <link rel="stylesheet" href="/css/admin/main.css" />
-    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/admin/main.css"/>
+    <link rel="stylesheet" href="/css/admin/member.css"/>
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
 </head>
 <body>
@@ -136,8 +137,9 @@
             <div id="section-home" th:replace="~{admin/fragment/main :: main-page}"></div>
             <div th:replace="~{admin/fragment/member :: member-page}"></div>
             <div th:replace="~{admin/fragment/notification :: notice-page}"></div>
-<!--            <div th:replace="~{admin/fragments/notificationDetail :: noticesDetail}"></div>-->
-            
+            <div th:replace="~{admin/fragment/notificationDetail :: noticesDetail}"></div>
+
+
         </div>
     </div>
 </div>
@@ -152,8 +154,5 @@
 <script src="/js/admin/notification/module/service.js"></script>
 <script src="/js/admin/notification/module/layout.js"></script>
 <script src="/js/admin/notification/event.js"></script>
-<script src="/js/admin/notificationDetail/module/service.js"></script>
-<script src="/js/admin/notificationDetail/module/layout.js"></script>
-<script src="/js/admin/notificationDetail/event.js"></script>
 </body>
 </html>

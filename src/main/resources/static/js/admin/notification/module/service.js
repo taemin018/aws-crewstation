@@ -40,5 +40,19 @@ const noticeService = (() => {
         }
     };
 
-    return { getList, save };
+    //  공지 상세 조회
+    const getDetail = async (id) => {
+        try {
+            const res = await fetch(`/api/admin/notices/${id}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            console.log("공지 상세 불러오기 성공:", data);
+            return data;
+        } catch (err) {
+            console.error("공지 상세 불러오기 실패:", err);
+            throw err;
+        }
+    };
+
+    return { getList, save, getDetail };
 })();
