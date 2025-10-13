@@ -7,6 +7,7 @@ import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.mapper.report.ReportMapper;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -31,8 +32,8 @@ public class ReportDAO {
     }
 
 //    관리자 다이어리 신고 내역
-    public List<ReportPostDTO> findAllReportDiaries(Criteria criteria) {
-        return reportMapper.selectAllReportDiaries(criteria);
+    public List<ReportPostDTO> findAllReportDiaries(ScrollCriteria scrollCriteria) {
+        return reportMapper.selectAllReportDiaries(scrollCriteria);
     }
 
 //    관리자 다이어리 신고 갯수

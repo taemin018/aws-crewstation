@@ -18,7 +18,17 @@ select * from tbl_member;
 select *
 from view_post_diary p;
 
+select * from tbl_post;
+
+select * from tbl_diary;
+insert into tbl_diary (post_id)
+values (33);
+
 select * from tbl_report;
+
+select * from tbl_post_report;
+insert into tbl_post_report (report_id, post_id)
+values (13,27);
 
 select count(*)
 from view_report_post_report r

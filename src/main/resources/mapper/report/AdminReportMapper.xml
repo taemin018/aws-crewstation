@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.report.ReportMapper">
 <!-- 신고 된 다이어리 목록 -->
-    <select id="selectAllReportDiaries" parameterType="com.example.crewstation.util.Criteria">
+    <select id="selectAllReportDiaries">
         select r.created_datetime as createdDatetime,
                r.report_content as reportContent,
                p.post_title as postTitle,
@@ -13,11 +13,11 @@
                writer.member_email          as writerEmail,
                writer.member_social_email   as writerSocialEmail
         from view_report_post_report r
-                 left join view_post_diary p on p.id = r.post_id
-            left join tbl_member reporter on reporter.id = r.member_id
-            left join tbl_member writer on writer.id = p.member_id
+        join view_post_diary p on p.id = r.post_id
+        join tbl_member reporter on reporter.id = r.member_id
+        join tbl_member writer on writer.id = p.member_id
         order by r.created_datetime desc
-            limit #{rowCount} offset #{offset}
+            limit #{size} offset #{offset}
     </select>
 
 <!-- 신고 된 다이어리 갯수 -->
