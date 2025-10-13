@@ -92,11 +92,12 @@ public class MemberDAO {
 //  나의 판매내역 목록
     public List<MySaleListDTO> findMySaleList(Long memberId) {
         return memberMapper.selectMySaleList(memberId);
+    }
 
 //    월별 가입자 수
     public List<MemberStatics> findMonthlyJoin() {
-    return memberMapper.selectMonthlyJoin();
-}
+        return memberMapper.selectMonthlyJoin();
+    }
 
 //    오늘 가입자 수
     public int selectCountTodayJoin() {

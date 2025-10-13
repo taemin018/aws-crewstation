@@ -66,11 +66,11 @@ public class MypageController {
     }
 
     // 마이페이지 - 내 판매 목록
-    @GetMapping("/sale-list")
-    public String loadMySaleListPage() {
-        log.info("마이페이지 - 판매 목록");
-        return "mypage/sale-list";
-    }
+//    @GetMapping("/sale-list")
+//    public String loadMySaleListPage() {
+//        log.info("마이페이지 - 판매 목록");
+//        return "mypage/sale-list";
+//    }
 
     @GetMapping("/sale-list")
     public String goToMySaleListPage(Model model, @RequestParam(required = false) Long memberId) {
