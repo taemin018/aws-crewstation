@@ -11,19 +11,18 @@ const loadReportDiaryList = async (page = 1) => {
 
     diaryReportLayout.showReportDiaryLst(reports);
 
-    hasMore = reports.length === 10;
+    hasMore = reports.length > 0;
 };
 
 loadReportDiaryList(page);
 
-// const scrollContainer = document.querySelector(".page-body");
+const scrollContainer = document.querySelector("#bootpay-main");
 
-window.addEventListener("scroll", async () => {
-    const scrollTop = window.scrollTop;
-    const clientHeight = window.clientHeight;
-    const scrollHeight = window.scrollHeight;
+scrollContainer.addEventListener("scroll", async () => {
+    const scrollTop = scrollContainer.scrollTop;
+    const clientHeight = scrollContainer.clientHeight;
+    const scrollHeight = scrollContainer.scrollHeight;
 
-    // 스크롤이 바닥 근처일 때
     if (scrollTop + clientHeight >= scrollHeight - 100) {
         if (checkScroll && hasMore) {
             checkScroll = false;

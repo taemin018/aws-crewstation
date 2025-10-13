@@ -7,6 +7,7 @@ import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.ScrollCriteria;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface ReportMapper {
     public void insertReportReply(ReportReplyVO reportReplyVO);
 
 //    관리자 다이어리 신고 내역
-    public List<ReportPostDTO> selectAllReportDiaries(Criteria criteria);
+    public List<ReportPostDTO> selectAllReportDiaries(ScrollCriteria scrollCriteria);
 
 //    관리자 다이어리 신고 갯수
     public int selectReportDiariesCount();

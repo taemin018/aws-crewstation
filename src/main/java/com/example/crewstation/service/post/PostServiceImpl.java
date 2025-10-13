@@ -8,6 +8,7 @@ import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,11 +56,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<ReportPostDTO> getReportDiaries(int page) {
-        int total = reportDAO.countAllReportDiaries();
-        log.info("신고 총 갯수: {}", total);
-        Criteria criteria = new Criteria(page, 10);
-        log.info("offset={}, rowCount={}", criteria.getOffset(), criteria.getRowCount());
-        return reportDAO.findAllReportDiaries(criteria);
+        ScrollCriteria scrollCriteria = new ScrollCriteria(page, 10);
+        log.info("스크롤 page={}, size={}, offset={}", scrollCriteria.getPage(), scrollCriteria.getSize(), scrollCriteria.getOffset());
+        return reportDAO.findAllReportDiaries(scrollCriteria);
     }
 
 
