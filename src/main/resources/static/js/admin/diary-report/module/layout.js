@@ -1,0 +1,43 @@
+const diaryReportLayout = (() => {
+    const diaryReport = document.querySelector(".table-reports tbody");
+    const showReportDiaryLst = (reportDiary) => {
+        reportDiary.forEach((diary) => {
+            const reportTr = document.createElement("tr");
+            reportTr.dataset.reportId = diary.reportId;
+            reportTr.dataset.status = diary.processStatus || "PENDING";
+
+            const statusClass = diary.processStatus === 'RESOLVED' ? 'status-resolved' : 'status-pending';
+            const statusText = diary.processStatus === 'RESOLVED' ? '처리완료' : '대기중';
+
+            reportTr.innerHTML = `
+                <td class="td-post">
+                    <div class="post-title">${diary.postTitle}</div>
+                    <div class="post-meta">
+                        <span class="meta">by <b>${diary.writerEmail}</b></span>
+                        <span class="dot">·</span>
+                        <span class="meta">postId: ${diary.postId}</span>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <span class="badge badge-label reason-badge text-danger">${diary.reportContent}</span>
+                </td>
+                <td>
+                    <div>reporter: <b>${diary.reporterEmail ?? diary.reporterSocialEmail ?? "익명"}</b></div>
+                    <div class="text-muted">${diary.reporterEmail ?? diary.reporterSocialEmail ?? "-"}</div>
+                </td>
+                <td class="text-center text-muted">${diary.createdDatetime ?? "-"}</td>
+                <td class="td-actions text-right">
+                    <span class="approval-status status-badge ${statusClass}">${statusText}</span>
+                    <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
+                        <i class="mdi mdi-chevron-right"></i>
+                    </button>
+                </td>
+            `;
+
+            diaryReport.appendChild(reportTr);
+
+        })
+    }
+
+    return { showReportDiaryLst: showReportDiaryLst };
+})();

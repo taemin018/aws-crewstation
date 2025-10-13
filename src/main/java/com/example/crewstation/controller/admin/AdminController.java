@@ -12,4 +12,10 @@ public class AdminController {
 
         return "admin/main";
     }
+
+    @GetMapping("/diary")
+    public String goAdminDiary(){
+
+        return "admin/fragment/diary-report";
+    }
 }
