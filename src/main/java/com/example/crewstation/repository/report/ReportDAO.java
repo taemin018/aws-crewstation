@@ -40,4 +40,19 @@ public class ReportDAO {
     public int countAllReportDiaries() {
         return reportMapper.selectReportDiariesCount();
     }
+
+//    관리자 다이어리 신고 상세
+    public ReportPostDTO findReportDiaryDetail(Long reportId) {
+        return reportMapper.selectReportDiaryDetail(reportId);
+    }
+
+//    게시글 숨김
+    public void updatePostStatus(Long postId, String status) {
+        reportMapper.updatePostStatus(postId, status);
+    }
+
+//    신고 처리 상태 변경
+    public void updateReportProcessStatus(Long reportId, String status) {
+        reportMapper.updateReportProcessStatus(reportId, status);
+    }
 }

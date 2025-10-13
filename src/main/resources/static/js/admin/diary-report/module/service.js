@@ -20,5 +20,23 @@ const reportService = (() => {
         return await res.json();
     };
 
-    return { getReports : getReports, getReportDetail : getReportDetail };
+    // 신고 처리
+    const processReport = async (reportId, postId = null, hidePost = false) => {
+        const params = new URLSearchParams();
+        if (postId) params.append("postId", postId);
+        if (hidePost) params.append("hidePost", hidePost);
+
+        const res = await fetch(`/api/admin/diary/${reportId}/process?${params.toString()}`, {
+            method: "POST"
+        });
+
+        if (!res.ok) {
+            console.error("신고 처리 실패");
+            return false;
+        }
+
+        return true;
+    };
+
+    return { getReports : getReports, getReportDetail : getReportDetail, processReport : processReport };
 })();

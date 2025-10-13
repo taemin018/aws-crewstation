@@ -9,6 +9,7 @@ import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,4 +27,14 @@ public interface ReportMapper {
 
 //    관리자 다이어리 신고 갯수
     public int selectReportDiariesCount();
+
+//    관리자 다이어리 신고 상세
+    public ReportPostDTO selectReportDiaryDetail(Long reportId);
+
+//    게시글 숨김
+    public void updatePostStatus(@Param("postId") Long postId, @Param("status") String status);
+
+//    신고 처리 상태 변경
+    public void updateReportProcessStatus(@Param("reportId") Long reportId, @Param("status") String status);
+
 }

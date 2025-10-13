@@ -6,8 +6,17 @@ const diaryReportLayout = (() => {
             reportTr.dataset.reportId = diary.reportId;
             reportTr.dataset.status = diary.processStatus || "PENDING";
 
-            const statusClass = diary.processStatus === 'RESOLVED' ? 'status-resolved' : 'status-pending';
-            const statusText = diary.processStatus === 'RESOLVED' ? '처리완료' : '대기중';
+            const statusValue = (diary.processStatus || "").toUpperCase();
+
+            const statusClass =
+                statusValue === 'RESOLVED'
+                    ? 'status-resolved'
+                    : 'status-pending';
+
+            const statusText =
+                statusValue === 'RESOLVED'
+                    ? '처리완료'
+                    : '대기중';
 
             reportTr.innerHTML = `
                 <td class="td-post">
