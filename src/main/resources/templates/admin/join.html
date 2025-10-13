@@ -12,17 +12,17 @@
     <div class="page">
         <section class="page-container">
             <div class="main-container">
-                <a class="home-logo">
+                <a class="home-logo" href="/admin/login">
                     <img src="/images/crew-station-favicon.png"  width="147" height="100">
                 </a>
                 <h1 class="join-title">관리자 등록</h1>
-                <form name="">
+                <form action="/admin/join" method="post" th:object="${memberDTO}" name="signup">
                     <div class="form-section">
                         <label class="member-name-label form-label essential">이름</label>
                         <div class="name-wrap form-wrap">
                             <div class="input-group name-input">
                                 <span class="name-input-local form-input-local">
-                                    <input type="text" name="memberName" class="form-control essential name" size="1" placeholder="이름">
+                                    <input type="text" name="memberName" class="form-control essential name" size="1" placeholder="이름" th:field="*{memberName}">
                                 </span>
                             </div>
                             <div class="error-text-wrap error-text-name">
@@ -36,7 +36,7 @@
                         <div class="email-wrap form-wrap">
                             <div class="input-group email-input">
                                 <span class="email-input-local form-input-local">
-                                    <input type="email" name="memberEmail" class="form-control essential email" size="1" placeholder="이메일">
+                                    <input type="email" name="memberEmail" class="form-control essential email" size="1" placeholder="이메일" th:field="*{memberEmail}">
                                 </span>
                             </div>
                             <div class="error-text-wrap error-text-email">
@@ -52,7 +52,7 @@
                         <div class="password-wrap form-wrap">
                             <div class="input-group password-input">
                                 <span class="password-input-local form-input-local">
-                                    <input type="password" name="memberPassword" class="form-control essential password" size="1" placeholder="비밀번호">
+                                    <input type="password" name="memberPassword" class="form-control essential password" size="1" placeholder="비밀번호" th:field="*{memberPassword}">
                                 </span>
                             </div>
                             <div class="error-text-wrap error-text-password">
@@ -74,10 +74,12 @@
                         </div>
                     </div>
                     <button class="submit-btn">
-                        회원가입
+                        관리자 등록
                     </button>
                 </form>
-                <p class="login-mv-btn">이미 아이디가 있으신가요?<a>로그인</a></p>
+                <p class="login-mv-btn">이미 아이디가 있으신가요?
+                    <a href="/admin/login">로그인</a>
+                </p>
             </div>
         </section>
     </div>

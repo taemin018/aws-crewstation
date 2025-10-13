@@ -52,6 +52,9 @@ public interface MemberService {
 //    관리자 회원 통계 자료
     public MemberAdminStatics getStatics();
 
+//    관리자 등록
+    public void joinAdmin(MemberDTO memberDTO);
+
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()
                 .id(memberDTO.getId())

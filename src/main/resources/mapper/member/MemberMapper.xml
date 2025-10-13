@@ -213,6 +213,11 @@
         from tbl_member
     </select>
 
+    <insert id="insertAdmin" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_member (member_name, member_email, member_password, member_role)
+        values (#{memberName}, #{memberEmail}, #{memberPassword}, #{memberRole})
+    </insert>
+
 
 
 

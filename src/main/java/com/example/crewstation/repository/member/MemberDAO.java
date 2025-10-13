@@ -1,5 +1,6 @@
 package com.example.crewstation.repository.member;
 
+import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
@@ -106,6 +107,11 @@ public class MemberDAO {
 //    총 회원 수
     public int selectTotalMemberCount() {
         return memberMapper.selectTotalMemberCount();
+    }
+
+//    관리자 등록
+    public void insertAdmin(MemberDTO memberDTO){
+        memberMapper.insertAdmin(memberDTO);
     }
 
 
