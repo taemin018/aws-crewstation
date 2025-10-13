@@ -6,8 +6,6 @@ import com.example.crewstation.service.member.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -41,7 +39,7 @@ public class AdminController {
     }
 
 
-    @GetMapping("/login")
+    @GetMapping("login")
     public String goLoginPage(MemberDTO memberDTO, Model model){
         model.addAttribute("memberDTO",memberDTO);
 
