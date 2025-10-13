@@ -14,7 +14,7 @@ select *
 from view_report_post_report r;
 
 select * from tbl_member;
-
+select * from tbl_report;
 select *
 from view_post_diary p;
 

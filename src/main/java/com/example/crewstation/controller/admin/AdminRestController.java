@@ -13,6 +13,7 @@ import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
 import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.post.PostService;
+import com.example.crewstation.service.report.ReportService;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class AdminRestController {
     private final NoticeService noticeService;
     private final NoticeDetailService noticeDetailService;
     private final PostService postService;
+    private final ReportService reportService;
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -84,6 +86,28 @@ public class AdminRestController {
         int safePage = Math.max(1, page);
         List<ReportPostDTO> reports = postService.getReportDiaries(safePage);
         return ResponseEntity.ok(reports);
+    }
+
+//    다이어리 신고 상세
+    @GetMapping("/diary/{reportId}")
+    public ResponseEntity<ReportPostDTO> getReportDiaryDetail(@PathVariable Long reportId) {
+        ReportPostDTO detail = postService.getReportDiaryDetail(reportId);
+        return ResponseEntity.ok(detail);
+    }
+
+//    신고 처리
+    @PostMapping("/diary/{reportId}/process")
+    public ResponseEntity<Void> processReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
+
+        log.info("신고 처리 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
+
+        if (hidePost && postId != null) {
+            postService.hidePost(postId);
+        }
+
+        reportService.resolveReport(reportId);
+
+        return ResponseEntity.ok().build();
     }
 
 }

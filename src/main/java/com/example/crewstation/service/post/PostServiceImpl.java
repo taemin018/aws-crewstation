@@ -2,6 +2,7 @@ package com.example.crewstation.service.post;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
+import com.example.crewstation.common.enumeration.Status;
 import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
@@ -57,8 +58,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<ReportPostDTO> getReportDiaries(int page) {
         ScrollCriteria scrollCriteria = new ScrollCriteria(page, 10);
-        log.info("스크롤 page={}, size={}, offset={}", scrollCriteria.getPage(), scrollCriteria.getSize(), scrollCriteria.getOffset());
+//        log.info("스크롤 페이지 번호 = {}", scrollCriteria.getPage());
         return reportDAO.findAllReportDiaries(scrollCriteria);
+    }
+
+    @Override
+    public ReportPostDTO getReportDiaryDetail(Long reportId) {
+        return reportDAO.findReportDiaryDetail(reportId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void hidePost(Long postId) {
+        log.info("게시글 숨김 postId={}", postId);
+        reportDAO.updatePostStatus(postId, Status.INACTIVE.getValue());
     }
 
 
