@@ -1,3 +1,42 @@
+// 무한 스크롤
+console.log("event.js 실행");
+let page = 1;
+let checkScroll = true;
+let hasMore = true;
+
+const loadReportDiaryList = async (page = 1) => {
+    console.log("페이지: ", page);
+
+    const reports = await reportService.getReports(page);
+    console.log("불러온 결과", reports);
+
+    diaryReportLayout.showReportDiaryLst(reports);
+
+    hasMore = reports.length === 10;
+};
+
+loadReportDiaryList(page);
+
+// const scrollContainer = document.querySelector(".page-body");
+
+window.addEventListener("scroll", async () => {
+    const scrollTop = window.scrollTop;
+    const clientHeight = window.clientHeight;
+    const scrollHeight = window.scrollHeight;
+
+    // 스크롤이 바닥 근처일 때
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+        if (checkScroll && hasMore) {
+            checkScroll = false;
+            await loadReportDiaryList(++page);
+            setTimeout(() => {
+                if (hasMore) checkScroll = true;
+            }, 800);
+        }
+    }
+});
+
+
 // =============== 사이드바 ===============
 (() => {
     const side = document.querySelector("#bootpay-side");
@@ -62,7 +101,6 @@
     side.addEventListener("click", (e) => {
         const subLink = e.target.closest(".menu-sub-list .boot-link");
         if (subLink && side.contains(subLink)) {
-            e.preventDefault();
             const ul = subLink.closest(".menu-sub-list");
             ul.querySelectorAll(".boot-link.active").forEach((a) =>
                 a.classList.remove("active")
@@ -81,7 +119,6 @@
 
         const btnTop = e.target.closest(".menu-item > .menu-btn");
         if (!btnTop || !side.contains(btnTop)) return;
-        e.preventDefault();
 
         const panel = btnTop.nextElementSibling;
         const hasPane = panel && panel.classList.contains("menu-sub-list");
@@ -117,7 +154,6 @@
     };
 
     btn.addEventListener("click", (e) => {
-        e.preventDefault();
         toggle();
     });
 

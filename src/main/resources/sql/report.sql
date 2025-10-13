@@ -9,3 +9,17 @@ create table tbl_report
     constraint fk_report_member foreign key (member_id)
         references tbl_member (id)
 );
+
+select *
+from view_report_post_report r;
+
+select * from tbl_member;
+
+select *
+from view_post_diary p;
+
+select * from tbl_report;
+
+select count(*)
+from view_report_post_report r
+         left join view_post_diary p on p.id = r.post_id;

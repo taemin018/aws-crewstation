@@ -3,8 +3,13 @@ package com.example.crewstation.mapper.report;
 import com.example.crewstation.domain.report.ReportVO;
 import com.example.crewstation.domain.report.post.ReportPostVO;
 import com.example.crewstation.domain.report.reply.ReportReplyVO;
+import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.report.ReportDTO;
+import com.example.crewstation.dto.report.post.ReportPostDTO;
+import com.example.crewstation.util.Criteria;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface ReportMapper {
@@ -14,4 +19,10 @@ public interface ReportMapper {
     public void insertReportPost(ReportPostVO reportPostVO);
 
     public void insertReportReply(ReportReplyVO reportReplyVO);
+
+//    관리자 다이어리 신고 내역
+    public List<ReportPostDTO> selectAllReportDiaries(Criteria criteria);
+
+//    관리자 다이어리 신고 갯수
+    public int selectReportDiariesCount();
 }
