@@ -1,12 +1,15 @@
 package com.example.crewstation.controller.admin;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.domain.notice.NoticeDetailVO;
+import com.example.crewstation.domain.notice.NoticeVO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.notice.NoticeCriteriaDTO;
 import com.example.crewstation.dto.notice.NoticeWriteRequest;
 import com.example.crewstation.service.member.MemberService;
+import com.example.crewstation.service.notice.NoticeDetailService;
 import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ public class AdminRestController {
 
     private final MemberService memberService;
     private final NoticeService noticeService;
+    private final NoticeDetailService noticeDetailService;
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -61,6 +65,13 @@ public class AdminRestController {
                 : (req.getMemberId() != null ? req.getMemberId() : 1L);
         Long id = noticeService.insertNotice(memberId, req.getTitle(), req.getContent());
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", id));
+    }
+
+//    공지사항 상세
+    @GetMapping("notice/{id}")
+    public ResponseEntity<NoticeDetailVO> noticeDetail(@PathVariable Long id) {
+        NoticeDetailVO notice = noticeDetailService.getDetail(id);
+        return ResponseEntity.ok(notice);
     }
 
 
