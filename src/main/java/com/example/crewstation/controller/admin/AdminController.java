@@ -12,4 +12,14 @@ public class AdminController {
 
         return "admin/main";
     }
+
+    @GetMapping("/join")
+    public String goJoinPage(){
+        return "admin/join";
+    }
+
+    @GetMapping("/login")
+    public String goLoginPage(){
+        return "admin/login";
+    }
 }
