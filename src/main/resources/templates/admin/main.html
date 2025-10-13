@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="/css/admin/font.css" />
     <link rel="stylesheet" href="/css/admin/sidebar.css" />
+    <link rel="stylesheet" href="/css/admin/notification.css">
     <link rel="stylesheet" href="/css/admin/main.css" />
     <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
@@ -98,8 +99,8 @@
                 <div class="flex-grow-1"></div>
                 <div>
                     <div class="header-menu-group d-flex">
-                        <a href="" class="bootpay mr-3">
-                            <div class="header-menu-btn" title="공지사항">
+                        <a class="boot-link mr-3" href="#notice" data-section="notice" title="공지사항">
+                            <div class="header-menu-btn">
                                 <i class="mdi mdi-bullhorn-variant-outline"></i>
                             </div>
                         </a>
@@ -133,19 +134,9 @@
         <div id="page-container">
             <div id="section-home" th:replace="~{admin/fragment/main :: main-page}"></div>
             <div th:replace="~{admin/fragment/member :: member-page}"></div>
-
-            <!-- 필요 시 다른 섹션도 아래처럼 추가하여 토글로 보여주기 -->
-            <!--
-            <div id="section-member"     th:replace="~{admin/fragment/member :: member-section}"></div>
-            <div id="section-payment"    th:replace="~{admin/fragment/payment :: payment-section}"></div>
-            <div id="section-inquiry"    th:replace="~{admin/fragment/inquiry :: inquiry-section}"></div>
-            <div id="section-banner"     th:replace="~{admin/fragment/banner :: banner-section}"></div>
-            <div id="section-diary-report" th:replace="~{admin/fragment/diary-report :: diary-report-section}"></div>
-            <div id="section-gift-report"  th:replace="~{admin/fragment/gift-report  :: gift-report-section}"></div>
-            <div id="section-crew-report"  th:replace="~{admin/fragment/crew-report  :: crew-report-section}"></div>
-            -->
+            <div th:replace="~{admin/fragment/notification :: notice-page}"></div>
+            
         </div>
-        <!--  본문 -->
     </div>
 </div>
 
@@ -156,6 +147,8 @@
 <script src="/js/admin/member/module/service.js"></script>
 <script src="/js/admin/member/module/layout.js"></script>
 <script src="/js/admin/member/event.js"></script>
-
+<script src="/js/admin/notification/module/service.js"></script>
+<script src="/js/admin/notification/module/layout.js"></script>
+<script src="/js/admin/notification/event.js"></script>
 </body>
 </html>
