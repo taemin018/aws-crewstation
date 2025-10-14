@@ -2,13 +2,12 @@ package com.example.crewstation.service.diary;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.common.exception.DiaryNotFoundException;
 import com.example.crewstation.common.exception.PostNotFoundException;
-import com.example.crewstation.domain.crew.CrewDiaryVO;
 import com.example.crewstation.domain.diary.country.DiaryCountryVO;
-import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
 import com.example.crewstation.dto.country.CountryDTO;
 import com.example.crewstation.dto.diary.*;
@@ -19,7 +18,6 @@ import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
-import com.example.crewstation.mapper.crew.diary.CrewDiaryMapper;
 import com.example.crewstation.repository.crew.diary.CrewDiaryDAO;
 import com.example.crewstation.repository.diary.DiaryDAO;
 import com.example.crewstation.repository.diary.country.DiaryCountryDAO;
@@ -36,6 +34,7 @@ import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -77,7 +76,15 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
-        List<DiaryDTO> diaries = (List<DiaryDTO>) redisTemplate.opsForValue().get("diaries");
+        List<LinkedHashMap> rawDiaries = (List<LinkedHashMap>) redisTemplate.opsForValue().get("diaries");
+
+        List<DiaryDTO> diaries = new ArrayList<>();
+        if (rawDiaries != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            diaries = rawDiaries.stream()
+                    .map(map -> mapper.convertValue(map, DiaryDTO.class))
+                    .collect(Collectors.toList());
+        }
 
         if (diaries != null) {
             diaries.forEach(diary -> {
@@ -393,7 +400,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @LogStatus
+//    @LogStatus
     public void write(PostDiaryDetailTagDTO request) {
         FileDTO fileDTO = new FileDTO();
         FilePostSectionDTO sectionFileDTO = new FilePostSectionDTO();
@@ -420,6 +427,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .collect(Collectors.toList());
         request.setCountryIds(countryIds);
         postDAO.savePost(post);
+        log.info("post: {}", post);
         request.setPostId(post.getPostId());
         diaryDAO.save(toDiaryVO(post));
         diaryCountryVOs = toDiaryCountryVO(request);
@@ -494,7 +502,9 @@ public class DiaryServiceImpl implements DiaryService {
         Optional<DiaryDTO> byPostId = diaryDAO.findByPostId(postId);
         List<SectionDTO> sections = sectionDAO.findSectionsByPostId(postId);
         byPostId.ifPresent(diaryDTO -> {
-            diaryDTO.setMemberFilePath(s3Service.getPreSignedUrl(diaryDTO.getMemberFilePath(), Duration.ofMinutes(5)));
+            if(diaryDTO.getMemberFilePath() != null){
+                diaryDTO.setMemberFilePath(s3Service.getPreSignedUrl(diaryDTO.getMemberFilePath(), Duration.ofMinutes(5)));
+            }
             diaryDTO.setRelativeDate(DateUtils.toRelativeTime(diaryDTO.getCreatedDatetime()));
 
             if (customUserDetails != null) {

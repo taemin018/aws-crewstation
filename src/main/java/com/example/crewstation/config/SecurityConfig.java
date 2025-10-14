@@ -79,19 +79,21 @@ public class SecurityConfig {
                                 "/",
                                 "/api/likes/**",
                                 "/diaries",
-                                "/diaries/write",
                                 "/diaries/detail/**",
                                 "/api/diaries",
                                 "/api/replies/**",
                                 "/gifts",
                                 "/gifts/detail/**",
-                                "/gifts/write",
-                                "/api/gifts")
+                                "/api/gifts",
+                                "/company",
+                                "/search",
+                                "/ask/register",
+                                "/notice/notice",
+                                "/notice/notice-detail")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/diaries",
                                 "/diaries/write",
-                                "/diaries/detail/**",
                                 "/diaries/{postId:\\d+}",
                                 "/api/diaries",
                                 "/api/likes/**",
@@ -103,6 +105,8 @@ public class SecurityConfig {
                                 "/api/gifts")
                         .authenticated()
                         .requestMatchers(HttpMethod.GET,
+                                "/diaries/write",
+                                "/gifts/write",
                                 "/diaries/delete/{postId:\\d+}",
                                 "/gifts/delete/{postId:\\d+}")
                         .authenticated()
