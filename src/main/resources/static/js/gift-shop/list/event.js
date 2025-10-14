@@ -104,6 +104,7 @@ window.addEventListener("scroll", async (e) => {
             timers.forEach(timer=>{
                 clearInterval(Number(timer.dataset.timeout));
             })
+            document.getElementById("loading").style.display = "block";
             purchases = await purchaseListService.getPurchases(purchaseListLayout.showPurchases, ++page, keyword);
             keyword = purchases.search.keyword;
             checkMore = purchases.criteria.hasMore;
@@ -115,6 +116,7 @@ window.addEventListener("scroll", async (e) => {
                 if(checkMore){
                     checkScroll = true;
                 }
+                document.getElementById("loading").style.display = "none";
                 console.log("지금 실행")
             }, 500);
         }
