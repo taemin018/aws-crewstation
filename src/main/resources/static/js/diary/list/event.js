@@ -116,6 +116,7 @@ window.addEventListener("scroll", async (e) => {
         if (checkScroll) {
             checkScroll = false;
             console.log("몇 번 실행되니")
+            document.getElementById("loading").style.display = "block";
             diaries = await diaryListService.getDiaries(diariesListLayout.showDiaries, ++page, keyword, orderType, category);
             console.log(diaries);
             ({page, keyword, orderType, category} = diaries.search);
@@ -125,6 +126,7 @@ window.addEventListener("scroll", async (e) => {
                 if (checkMore) {
                     checkScroll = true;
                 }
+                document.getElementById("loading").style.display = "none";
                 console.log("지금 실행")
             }, 500);
         }

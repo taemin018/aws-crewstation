@@ -8,6 +8,10 @@ const diariesListLayout = (() => {
         if(check){
             tbody.innerHTML= ""
         }
+        if(result.criteria.total){
+            console.log("실행")
+            document.querySelector("div.search-page-empty").style.display = "none";
+        }
         diaries.forEach((diary) => {
             let filePath= null
             if(diary.memberFilePath){
@@ -15,7 +19,7 @@ const diariesListLayout = (() => {
             } else if(diary.socialImgUrl){
                 filePath = diary.socialImgUrl;
             }else{
-                filePath = "https://media.a-ha.io/aha-qna/images/v3/product/default-profile-image.webp";
+                filePath = "https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c";
             }
 
 
@@ -29,9 +33,9 @@ const diariesListLayout = (() => {
                                                             <img src="${filePath}" alt="" class="card-writer-img">
                                                             <div class="writer-info">
                                                                 <span class="writer-name">${diary.memberName}</span>
-                                                                ${diary.crewName ? `<span class="badge-list-container">${diary.crewName}</span>` :""}
+                                                                
                                                             </div>
-                                                            <p class="card-item-writer-introduction">${diary.memberDescription}</p>
+                                                           
                                                         </a>
                                                         
                                                     </div>

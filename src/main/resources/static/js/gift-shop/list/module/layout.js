@@ -5,6 +5,10 @@ const purchaseListLayout = (() => {
         const purchases = result.purchaseDTOs;
         const tbody = document.querySelector("div.product-list-wrapper");
         console.log(tbody)
+        if(!result.criteria.total){
+            console.log("실행")
+            document.querySelector("div.search-page-empty").style.display = "none";
+        }
         purchases.forEach((purchase) => {
                 text += `
             <article class="product-card-wrapper">
