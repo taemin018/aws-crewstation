@@ -1,303 +1,266 @@
-// 무한 스크롤
-let diaryPage = 1;
-let diaryCheckScroll = true;
-let diaryHasMore = true;
+// 다이어리 신고 - SPA 초기화 함수
+window.diaryReportInit = async function () {
+    // 이미 초기화했으면 재진입 시 스킵
+    if (window.__diaryReportInited) return;
+    window.__diaryReportInited = true;
 
-const loadReportDiaryList = async (page = 1) => {
-    // console.log("페이지: ", page);
+    // ===== 무한 스크롤 상태 =====
+    let diaryPage = 1;
+    let diaryCheckScroll = true;
+    let diaryHasMore = true;
 
-    const reports = await diaryReportService.getReports(page);
-    // console.log("불러온 결과", reports);
-
-    diaryReportLayout.showReportDiaryList(reports);
-
-    diaryHasMore = reports.length > 0;
-};
-
-loadReportDiaryList(diaryPage);
-
-const DiaryScrollContainer = document.querySelector("#bootpay-main");
-
-DiaryScrollContainer.addEventListener("scroll", async () => {
-    const scrollTop = DiaryScrollContainer.scrollTop;
-    const clientHeight = DiaryScrollContainer.clientHeight;
-    const scrollHeight = DiaryScrollContainer.scrollHeight;
-
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
-        if (diaryCheckScroll && diaryHasMore) {
-            diaryCheckScroll = false;
-            await loadReportDiaryList(++page);
-            setTimeout(() => {
-                if (diaryHasMore) diaryCheckScroll = true;
-            }, 800);
-        }
-    }
-});
-
-
-// =============== 사이드바 ===============
-(() => {
-    const side = document.querySelector("#bootpay-side");
-    if (!side) return;
-
-    const topButtons = side.querySelectorAll(".menu-item > .menu-btn");
-    const subLists = side.querySelectorAll(".menu-item > .menu-sub-list");
-
-    const closeAllMenus = () => {
-        subLists.forEach((ul) => {
-            ul.classList.remove("show");
-            ul.style.display = "none";
-        });
-        topButtons.forEach((btn) => btn.classList.remove("active", "current"));
-        side.querySelectorAll(".menu-list > li").forEach((li) =>
-            li.classList.remove("open")
-        );
+    const loadReportDiaryList = async (page = 1) => {
+        const reports = await diaryReportService.getReports(page);
+        diaryReportLayout.showReportDiaryList(reports);
+        diaryHasMore = Array.isArray(reports) && reports.length > 0;
     };
 
-    const syncFromDOM = () => {
-        // 서브링크 .active 가 있는 패널들은 펼친다
-        subLists.forEach((ul) => {
-            const hasActiveChild = !!ul.querySelector(".boot-link.active");
-            const markedShow = ul.classList.contains("show");
-            if (hasActiveChild || markedShow) {
-                ul.classList.add("show");
-                ul.style.display = "block";
-                const btn = ul.previousElementSibling; // 상위 메뉴 버튼
-                const li = ul.closest("li");
-                btn && btn.classList.add("active", "current");
-                li && li.classList.add("open");
+    // 최초 로드 (섹션 진입 시 1회)
+    await loadReportDiaryList(diaryPage);
+
+    // 스크롤 컨테이너 (메인 패널)
+    const DiaryScrollContainer = document.querySelector("#bootpay-main");
+    if (DiaryScrollContainer && !DiaryScrollContainer.__diaryScrollBound) {
+        DiaryScrollContainer.__diaryScrollBound = true; // 중복 바인딩 방지
+
+        DiaryScrollContainer.addEventListener("scroll", async () => {
+            const scrollTop = DiaryScrollContainer.scrollTop;
+            const clientHeight = DiaryScrollContainer.clientHeight;
+            const scrollHeight = DiaryScrollContainer.scrollHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (diaryCheckScroll && diaryHasMore) {
+                    diaryCheckScroll = false;
+                    // ✅ 버그 fix: ++page -> ++diaryPage
+                    await loadReportDiaryList(++diaryPage);
+                    setTimeout(() => {
+                        if (diaryHasMore) diaryCheckScroll = true;
+                    }, 800);
+                }
             }
         });
+    }
 
-        //  최상위 버튼이 .active 라면 그 다음 패널도 열어준다
-        side.querySelectorAll(".menu-item > .menu-btn.active").forEach(
-            (btn) => {
+    // =============== 사이드바 ===============
+    (() => {
+        const side = document.querySelector("#bootpay-side");
+        if (!side) return;
+
+        const topButtons = side.querySelectorAll(".menu-item > .menu-btn");
+        const subLists = side.querySelectorAll(".menu-item > .menu-sub-list");
+
+        const closeAllMenus = () => {
+            subLists.forEach((ul) => {
+                ul.classList.remove("show");
+                ul.style.display = "none";
+            });
+            topButtons.forEach((btn) => btn.classList.remove("active", "current"));
+            side.querySelectorAll(".menu-list > li").forEach((li) =>
+                li.classList.remove("open")
+            );
+        };
+
+        const syncFromDOM = () => {
+            subLists.forEach((ul) => {
+                const hasActiveChild = !!ul.querySelector(".boot-link.active");
+                const markedShow = ul.classList.contains("show");
+                if (hasActiveChild || markedShow) {
+                    ul.classList.add("show");
+                    ul.style.display = "block";
+                    const btn = ul.previousElementSibling;
+                    const li = ul.closest("li");
+                    btn && btn.classList.add("active", "current");
+                    li && li.classList.add("open");
+                }
+            });
+
+            side.querySelectorAll(".menu-item > .menu-btn.active").forEach((btn) => {
                 const panel = btn.nextElementSibling;
                 if (panel && panel.classList.contains("menu-sub-list")) {
                     panel.classList.add("show");
                     panel.style.display = "block";
                     btn.classList.add("current");
-                    btn.closest("li").classList.add("open");
+                    btn.closest("li")?.classList.add("open");
                 }
-            }
+            });
+        };
+
+        const hasExplicit = !!side.querySelector(
+            ".menu-btn.active, .menu-btn.current, .menu-sub-list.show, .menu-sub-list .boot-link.active"
         );
-    };
+        if (hasExplicit) syncFromDOM();
+        else closeAllMenus();
 
-    // 초기 처리: active/show 가 하나라도 있으면 그 상태를 살리고,
-    // 없으면(아무 지정도 없으면) 전체 닫기
-    const hasExplicit = !!side.querySelector(
-        ".menu-btn.active, .menu-btn.current, .menu-sub-list.show, .menu-sub-list .boot-link.active"
-    );
+        side.addEventListener("click", (e) => {
+            const subLink = e.target.closest(".menu-sub-list .boot-link");
+            if (subLink && side.contains(subLink)) {
+                // SPA 라우팅은 전역 router에서 처리 → 여기선 메뉴 UI만 유지
+                const ul = subLink.closest(".menu-sub-list");
+                ul.querySelectorAll(".boot-link.active").forEach((a) =>
+                    a.classList.remove("active")
+                );
+                subLink.classList.add("active");
 
-    if (hasExplicit) {
-        syncFromDOM();
-    } else {
-        closeAllMenus();
-    }
+                closeAllMenus();
+                ul.classList.add("show");
+                ul.style.display = "block";
+                const btn = ul.previousElementSibling;
+                const li = ul.closest("li");
+                btn && btn.classList.add("active", "current");
+                li && li.classList.add("open");
+                return;
+            }
 
-    // 이하 클릭 위임 로직은 그대로 유지
-    side.addEventListener("click", (e) => {
-        const subLink = e.target.closest(".menu-sub-list .boot-link");
-        if (subLink && side.contains(subLink)) {
-            const ul = subLink.closest(".menu-sub-list");
-            ul.querySelectorAll(".boot-link.active").forEach((a) =>
-                a.classList.remove("active")
-            );
-            subLink.classList.add("active");
+            const btnTop = e.target.closest(".menu-item > .menu-btn");
+            if (!btnTop || !side.contains(btnTop)) return;
+
+            const panel = btnTop.nextElementSibling;
+            const hasPane = panel && panel.classList.contains("menu-sub-list");
+            const wasOpen = hasPane && panel.classList.contains("show");
 
             closeAllMenus();
-            ul.classList.add("show");
-            ul.style.display = "block";
-            const btn = ul.previousElementSibling;
-            const li = ul.closest("li");
-            btn && btn.classList.add("active", "current");
-            li && li.classList.add("open");
-            return;
-        }
+            btnTop.classList.add("active");
 
-        const btnTop = e.target.closest(".menu-item > .menu-btn");
-        if (!btnTop || !side.contains(btnTop)) return;
-
-        const panel = btnTop.nextElementSibling;
-        const hasPane = panel && panel.classList.contains("menu-sub-list");
-        const wasOpen = hasPane && panel.classList.contains("show");
-
-        closeAllMenus();
-        btnTop.classList.add("active");
-
-        if (hasPane && !wasOpen) {
-            panel.classList.add("show");
-            panel.style.display = "block";
-            btnTop.classList.add("current");
-            btnTop.closest("li").classList.add("open");
-        }
-    });
-})();
-
-// =============== 우측 상단 유저 메뉴 ===============
-(() => {
-    const btn = document.getElementById("usermenubtn");
-    const menu = document.getElementById("usermenu");
-    if (!btn || !menu) return;
-
-    const hide = () => {
-        menu.classList.remove("show");
-        menu.style.display = "none";
-    };
-
-    const toggle = () => {
-        const willShow = !menu.classList.contains("show");
-        menu.classList.toggle("show", willShow);
-        menu.style.display = willShow ? "block" : "none";
-    };
-
-    btn.addEventListener("click", (e) => {
-        toggle();
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !menu.contains(e.target)) hide();
-    });
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") hide();
-    });
-})();
-
-// =============== 신고 모달 (상세보기/처리/반려) ===============
-(() => {
-    const modal = document.querySelector(".report-modal"); // 모달 루트(.modal.report-modal)
-    if (!modal) return;
-
-    const closeBtns = modal.querySelectorAll(".btn-close, .close"); // 닫기 버튼들
-    const viewBtns = document.querySelectorAll(".action-btn.view"); // 테이블의 "상세보기" 버튼들
-    let currentRow = null; // 현재 선택된 tr
-
-    // 텍스트 바인딩 헬퍼
-    const bindText = (key, val) => {
-        const el = modal.querySelector(`[data-bind="${key}"]`);
-        if (el) el.textContent = val ?? "";
-    };
-
-    // 모달 열기
-    const openModalFromRow = (row) => {
-        currentRow = row;
-
-        const title =
-            row.querySelector(".post-title").textContent.trim() ?? "-";
-        const author =
-            row.querySelector(".post-meta b").textContent.trim() ?? "-";
-        const postIdText =
-            row
-                .querySelector(".post-meta .meta:last-child")
-                .textContent.trim() ?? "postId: -";
-        const postId = postIdText.replace(/^postId:\s*/i, "") || "-";
-        const reason =
-            row.querySelector(".reason-badge").textContent.trim() ?? "-";
-        const reporterName =
-            row.querySelector("td:nth-child(3) b").textContent.trim() ?? "-";
-        const reporterEmail =
-            row
-                .querySelector("td:nth-child(3) .text-muted")
-                .textContent.trim() ?? "-";
-        const reportedAt =
-            row.querySelector("td:nth-child(4)").textContent.trim() ?? "-";
-        const badgeInRow = row.querySelector(".approval-status");
-
-        // 데이터 바인딩
-        bindText("title", title);
-        bindText("author", author);
-        bindText("postId", postId);
-        bindText("reason", reason);
-        bindText("reporterName", reporterName);
-        bindText("reporterEmail", reporterEmail);
-        bindText("reportedAt", reportedAt);
-
-        // 상태 배지 동기화
-        const badgeInModal = modal.querySelector('[data-bind="statusBadge"]');
-        if (badgeInModal) {
-            badgeInModal.className = "status-badge";
-            if (badgeInRow?.classList.contains("status-resolved")) {
-                badgeInModal.classList.add("status-resolved");
-                badgeInModal.textContent = "처리완료";
-            } else if (badgeInRow?.classList.contains("status-rejected")) {
-                badgeInModal.classList.add("status-rejected");
-                badgeInModal.textContent = "반려";
-            } else {
-                badgeInModal.classList.add("status-pending");
-                badgeInModal.textContent = "대기중";
+            if (hasPane && !wasOpen) {
+                panel.classList.add("show");
+                panel.style.display = "block";
+                btnTop.classList.add("current");
+                btnTop.closest("li")?.classList.add("open");
             }
-        }
-
-        // 체크박스 초기화
-        const cbHide = modal.querySelector(".cb-hide-post");
-        const cbBlock = modal.querySelector(".cb-block-author");
-        const cbWarn = modal.querySelector(".cb-warn");
-        cbHide && (cbHide.checked = false);
-        cbBlock && (cbBlock.checked = false);
-        cbWarn && (cbWarn.checked = false);
-
-        // 실제 열기
-        modal.style.display = "block";
-        requestAnimationFrame(() => {
-            modal.classList.add("show");
-            modal.style.background = "rgba(0,0,0,.5)";
-            document.body.classList.add("modal-open");
         });
-    };
+    })();
 
-    document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".action-btn.view");
-        if (!btn) return;
-        const row = btn.closest("tr");
-        if (!row) return;
-        openModalFromRow(row);
-    });
+    // =============== 우측 상단 유저 메뉴 ===============
+    (() => {
+        const btn = document.getElementById("usermenubtn");
+        const menu = document.getElementById("usermenu");
+        if (!btn || !menu) return;
 
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeModal();
-    });
+        const hide = () => {
+            menu.classList.remove("show");
+            menu.style.display = "none";
+        };
 
-    const closeModal = () => {
-        modal.classList.remove("show");
-        document.body.classList.remove("modal-open");
-        setTimeout(() => (modal.style.display = "none"), 120);
-    };
+        const toggle = () => {
+            const willShow = !menu.classList.contains("show");
+            menu.classList.toggle("show", willShow);
+            menu.style.display = willShow ? "block" : "none";
+        };
 
-    closeBtns.forEach((b) => b.addEventListener("click", closeModal));
+        btn.addEventListener("click", () => toggle());
+        document.addEventListener("click", (e) => {
+            if (!btn.contains(e.target) && !menu.contains(e.target)) hide();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") hide();
+        });
+    })();
 
-    // 처리 버튼
-    const approveBtn = modal.querySelector(".btn-approve");
-    approveBtn &&
-    approveBtn.addEventListener("click", async () => {
-        if (!currentRow) return;
+    // =============== 신고 모달 (상세/처리) ===============
+    (() => {
+        const modal = document.querySelector(".report-modal");
+        if (!modal) return;
 
-        const reportId = currentRow.dataset.reportId;
-        const postIdText = currentRow.querySelector(".post-meta .meta:last-child").textContent.trim() ?? "";
-        const postId = postIdText.replace(/^postId:\s*/i, "");
-        const hidePost = modal.querySelector(".cb-hide-post").checked || false;
+        const closeModal = () => {
+            modal.classList.remove("show");
+            document.body.classList.remove("modal-open");
+            setTimeout(() => (modal.style.display = "none"), 120);
+        };
 
-        const ok = await diaryReportService.processReport(reportId, postId, hidePost);
-        if (!ok) {
-            alert("신고 처리에 실패했습니다.");
-            return;
-        }
+        const bindText = (key, val) => {
+            const el = modal.querySelector(`[data-bind="${key}"]`);
+            if (el) el.textContent = val ?? "";
+        };
 
-        // 테이블 배지
-        const badge = currentRow.querySelector(".approval-status");
-        if (badge) {
-            badge.textContent = "처리완료";
-            badge.classList.remove("status-pending", "status-rejected");
-            badge.classList.add("status-resolved");
-        }
+        let currentRow = null;
 
-        // 모달 배지
-        const badgeInModal = modal.querySelector('[data-bind="statusBadge"]');
-        if (badgeInModal) {
-            badgeInModal.className = "status-badge status-resolved";
-            badgeInModal.textContent = "처리완료";
-        }
+        const openModalFromRow = (row) => {
+            currentRow = row;
 
-        closeModal();
-    });
-})();
+            const title = row.querySelector(".post-title")?.textContent.trim() ?? "-";
+            const author = row.querySelector(".post-meta b")?.textContent.trim() ?? "-";
+            const postIdText =
+                row.querySelector(".post-meta .meta:last-child")?.textContent.trim() ?? "postId: -";
+            const postId = postIdText.replace(/^postId:\s*/i, "") || "-";
+            const reason = row.querySelector(".reason-badge")?.textContent.trim() ?? "-";
+            const reporterName = row.querySelector("td:nth-child(3) b")?.textContent.trim() ?? "-";
+            const reporterEmail = row.querySelector("td:nth-child(3) .text-muted")?.textContent.trim() ?? "-";
+            const reportedAt = row.querySelector("td:nth-child(4)")?.textContent.trim() ?? "-";
+            const badgeInRow = row.querySelector(".approval-status");
+
+            bindText("title", title);
+            bindText("author", author);
+            bindText("postId", postId);
+            bindText("reason", reason);
+            bindText("reporterName", reporterName);
+            bindText("reporterEmail", reporterEmail);
+            bindText("reportedAt", reportedAt);
+
+            const badgeInModal = modal.querySelector('[data-bind="statusBadge"]');
+            if (badgeInModal) {
+                badgeInModal.className = "status-badge";
+                if (badgeInRow?.classList.contains("status-resolved")) {
+                    badgeInModal.classList.add("status-resolved");
+                    badgeInModal.textContent = "처리완료";
+                } else if (badgeInRow?.classList.contains("status-rejected")) {
+                    badgeInModal.classList.add("status-rejected");
+                    badgeInModal.textContent = "반려";
+                } else {
+                    badgeInModal.classList.add("status-pending");
+                    badgeInModal.textContent = "대기중";
+                }
+            }
+
+            modal.style.display = "block";
+            requestAnimationFrame(() => {
+                modal.classList.add("show");
+                modal.style.background = "rgba(0,0,0,.5)";
+                document.body.classList.add("modal-open");
+            });
+        };
+
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".action-btn.view");
+            if (!btn) return;
+            const row = btn.closest("tr");
+            if (!row) return;
+            openModalFromRow(row);
+        });
+
+        const closeBtns = modal.querySelectorAll(".btn-close, .close");
+        closeBtns.forEach((b) => b.addEventListener("click", closeModal));
+        modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+        const approveBtn = modal.querySelector(".btn-approve");
+        approveBtn &&
+        approveBtn.addEventListener("click", async () => {
+            if (!currentRow) return;
+
+            const reportId = currentRow.dataset.reportId;
+            const postIdText = currentRow.querySelector(".post-meta .meta:last-child")?.textContent.trim() ?? "";
+            const postId = postIdText.replace(/^postId:\s*/i, "");
+            const hidePost = modal.querySelector(".cb-hide-post")?.checked || false;
+
+            const ok = await diaryReportService.processReport(reportId, postId, hidePost);
+            if (!ok) {
+                alert("신고 처리에 실패했습니다.");
+                return;
+            }
+
+            const badge = currentRow.querySelector(".approval-status");
+            if (badge) {
+                badge.textContent = "처리완료";
+                badge.classList.remove("status-pending", "status-rejected");
+                badge.classList.add("status-resolved");
+            }
+
+            const badgeInModal = modal.querySelector('[data-bind="statusBadge"]');
+            if (badgeInModal) {
+                badgeInModal.className = "status-badge status-resolved";
+                badgeInModal.textContent = "처리완료";
+            }
+
+            closeModal();
+        });
+    })();
+};

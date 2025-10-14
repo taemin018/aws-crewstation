@@ -46,12 +46,6 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping("/diary")
-    public String goAdminDiary(){
-
-        return "admin/fragment/diary-report";
-    }
-
     @GetMapping("/payment")
     public String goPayment(){
         return "admin/fragment/payment";

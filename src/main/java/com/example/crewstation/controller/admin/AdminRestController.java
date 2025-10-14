@@ -40,8 +40,6 @@ public class AdminRestController {
     private final NoticeDetailService noticeDetailService;
     private final ReportService reportService;
     private final GiftService giftService;
-    private final PaymentStatusDAO paymentStatusDAO;
-    private final PaymentService paymentService;
 
     //    관리자 회원 목록
     @PostMapping("/members")
