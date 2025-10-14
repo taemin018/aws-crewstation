@@ -9,7 +9,7 @@ const loadReportDiaryList = async (page = 1) => {
     const reports = await reportService.getReports(page);
     // console.log("불러온 결과", reports);
 
-    diaryReportLayout.showReportDiaryLst(reports);
+    diaryReportLayout.showReportDiaryList(reports);
 
     hasMore = reports.length > 0;
 };
