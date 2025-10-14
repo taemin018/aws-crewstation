@@ -28,3 +28,7 @@ VALUES ('test', 14);
 -- 3) 섹션-파일 매핑 (대표 이미지니까 image_type='main')
 INSERT INTO tbl_post_section_file (file_id, post_section_id, image_type)
 VALUES (50, 30, 'main');
+
+
+ALTER TABLE tbl_post_section_file
+    ALTER COLUMN file_id DROP IDENTITY;

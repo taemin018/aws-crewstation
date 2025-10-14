@@ -22,7 +22,7 @@ public class MypageRestController {
     private final GuestService guestService;
     private final MemberService memberService;
     private final PurchaseService purchaseService;
-    
+
 //    // 구매 상세
 //    @GetMapping("/purchase-detail/{postId}")
 //    public ResponseEntity<PurchaseDetailDTO> getOrderDetail(@PathVariable Long postId) {

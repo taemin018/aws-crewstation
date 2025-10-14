@@ -18,3 +18,5 @@ ALTER TABLE tbl_diary
 ALTER TABLE tbl_diary
     DROP COLUMN diary_country_path_id;
 
+ALTER TABLE tbl_diary
+    ALTER COLUMN post_id DROP IDENTITY;
