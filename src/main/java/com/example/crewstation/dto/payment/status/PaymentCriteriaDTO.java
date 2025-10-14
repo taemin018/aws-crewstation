@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 public class PaymentCriteriaDTO {
-    private List<PaymentStatusDTO> paymentList;
+    private List<PaymentCriteriaDTO> paymentList;
     private Criteria criteria;
     private Long id;
     private Long paymentId;
