@@ -137,13 +137,13 @@ public class AdminRestController {
     }
 
     //    결제 목록
-    @GetMapping("/payment")
-    public ResponseEntity<?> getPayment(@RequestParam(defaultValue = "1") int page) {
-        int safePage = Math.max(1, page);
-        List<PaymentCriteriaDTO> paymentList = paymentService.selectPayment(safePage);
-
-        return ResponseEntity.ok(paymentList);
-    }
+//    @GetMapping("/payment")
+//    public ResponseEntity<?> getPayment(@RequestParam(defaultValue = "1") int page) {
+//        int safePage = Math.max(1, page);
+//        List<PaymentCriteriaDTO> paymentList = paymentService.selectPayment(safePage);
+//
+//        return ResponseEntity.ok(paymentList);
+//    }
 
 
 }
