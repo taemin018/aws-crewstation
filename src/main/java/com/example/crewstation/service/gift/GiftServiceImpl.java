@@ -1,13 +1,17 @@
 package com.example.crewstation.service.gift;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.enumeration.Status;
 import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.gift.GiftCriteriaDTO;
 import com.example.crewstation.dto.gift.GiftDTO;
+import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.repository.gift.GiftDAO;
+import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
+import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +41,7 @@ public class GiftServiceImpl implements GiftService {
             "crew", "not null",
             "individual", "null"
     );
+    private final ReportDAO reportDAO;
 
 
     @Override
@@ -108,6 +113,20 @@ public class GiftServiceImpl implements GiftService {
         dto.setTotalCount(totalCount);
 
         return dto;
+    }
+
+    @Override
+    public List<ReportPostDTO> getReportGifts(int page) {
+        ScrollCriteria scrollCriteria = new ScrollCriteria(page, 10);
+//        log.info("스크롤 페이지 번호 = {}", scrollCriteria.getPage());
+        return reportDAO.findAllReportGifts(scrollCriteria);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void hidePost(Long postId) {
+        log.info("게시글 숨김 postId={}", postId);
+        reportDAO.updatePostStatus(postId, Status.INACTIVE.getValue());
     }
 
 }

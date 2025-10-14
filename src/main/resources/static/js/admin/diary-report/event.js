@@ -1,34 +1,34 @@
 // 무한 스크롤
-let page = 1;
-let checkScroll = true;
-let hasMore = true;
+let diaryPage = 1;
+let diaryCheckScroll = true;
+let diaryHasMore = true;
 
 const loadReportDiaryList = async (page = 1) => {
     // console.log("페이지: ", page);
 
-    const reports = await reportService.getReports(page);
+    const reports = await diaryReportService.getReports(page);
     // console.log("불러온 결과", reports);
 
-    diaryReportLayout.showReportDiaryLst(reports);
+    diaryReportLayout.showReportDiaryList(reports);
 
-    hasMore = reports.length > 0;
+    diaryHasMore = reports.length > 0;
 };
 
-loadReportDiaryList(page);
+loadReportDiaryList(diaryPage);
 
-const scrollContainer = document.querySelector("#bootpay-main");
+const DiaryScrollContainer = document.querySelector("#bootpay-main");
 
-scrollContainer.addEventListener("scroll", async () => {
-    const scrollTop = scrollContainer.scrollTop;
-    const clientHeight = scrollContainer.clientHeight;
-    const scrollHeight = scrollContainer.scrollHeight;
+DiaryScrollContainer.addEventListener("scroll", async () => {
+    const scrollTop = DiaryScrollContainer.scrollTop;
+    const clientHeight = DiaryScrollContainer.clientHeight;
+    const scrollHeight = DiaryScrollContainer.scrollHeight;
 
     if (scrollTop + clientHeight >= scrollHeight - 100) {
-        if (checkScroll && hasMore) {
-            checkScroll = false;
+        if (diaryCheckScroll && diaryHasMore) {
+            diaryCheckScroll = false;
             await loadReportDiaryList(++page);
             setTimeout(() => {
-                if (hasMore) checkScroll = true;
+                if (diaryHasMore) diaryCheckScroll = true;
             }, 800);
         }
     }
@@ -277,7 +277,7 @@ scrollContainer.addEventListener("scroll", async () => {
         const postId = postIdText.replace(/^postId:\s*/i, "");
         const hidePost = modal.querySelector(".cb-hide-post").checked || false;
 
-        const ok = await reportService.processReport(reportId, postId, hidePost);
+        const ok = await diaryReportService.processReport(reportId, postId, hidePost);
         if (!ok) {
             alert("신고 처리에 실패했습니다.");
             return;

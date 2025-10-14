@@ -41,11 +41,6 @@ public class ReportDAO {
         return reportMapper.selectReportDiariesCount();
     }
 
-//    관리자 다이어리 신고 상세
-    public ReportPostDTO findReportDiaryDetail(Long reportId) {
-        return reportMapper.selectReportDiaryDetail(reportId);
-    }
-
 //    게시글 숨김
     public void updatePostStatus(Long postId, String status) {
         reportMapper.updatePostStatus(postId, status);
@@ -55,4 +50,15 @@ public class ReportDAO {
     public void updateReportProcessStatus(Long reportId, String status) {
         reportMapper.updateReportProcessStatus(reportId, status);
     }
+
+//    관리자 기프트 신고 내역
+    public List<ReportPostDTO> findAllReportGifts(ScrollCriteria scrollCriteria) {
+        return reportMapper.selectAllReportGifts(scrollCriteria);
+    }
+
+//    관리자 기프트 신고 갯수
+    public int countAllReportGifts() {
+        return reportMapper.selectReportGiftsCount();
+    }
+
 }
