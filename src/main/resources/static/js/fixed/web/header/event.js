@@ -232,5 +232,5 @@ const logoutLink = document.querySelector("a.logout-btn");
 logoutLink.addEventListener("click", async (e) => {
     e.preventDefault();
     await memberService.logout()
-    location.href = "/member/web/login";
+    location.href = "/member/login";
 });

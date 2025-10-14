@@ -212,5 +212,5 @@ logoutLink.addEventListener("click", async (e) => {
     e.preventDefault();
     console.log("fsdfdssafsdfsdfsdfasdfdfdfdfddsfsd")
     await memberService.logout()
-    location.href = "/member/mobile/login";
+    location.href = "/mobile/login";
 });

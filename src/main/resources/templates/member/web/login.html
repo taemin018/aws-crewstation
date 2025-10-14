@@ -34,7 +34,7 @@
                             <a class="join" th:href="@{/member/join}">회원가입</a>
                         </section>
                     </form>
-                    <form action="/member/web/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
+                    <form action="/member/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
                         <div class="guest-id-input-wrap input-wrap">
                             <input type="text" class="guest-id" name="guestOrderNumber" placeholder="주문번호" th:field="*{guestOrderNumber}"/>
                         </div>
