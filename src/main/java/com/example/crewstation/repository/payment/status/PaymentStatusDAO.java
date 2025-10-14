@@ -2,11 +2,15 @@ package com.example.crewstation.repository.payment.status;
 
 
 import com.example.crewstation.common.enumeration.PaymentPhase;
+import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
+import com.example.crewstation.util.Criteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -28,6 +32,16 @@ public class PaymentStatusDAO {
     public void updatePaymentStatus(Long purchaseId, PaymentPhase paymentPhase) {
         paymentStatusMapper.updatePaymentStatus(purchaseId, paymentPhase);
 
+    }
+
+//    결제 목록 갯수
+    public int countPayment(){
+        return paymentStatusMapper.countPayment();
+    }
+
+//    결제 목록
+    public List<PaymentCriteriaDTO> adminPaymentList(Criteria criteria) {
+        return paymentStatusMapper.selectPayment(criteria);
     }
 
 }

@@ -50,4 +50,9 @@ public class AdminController {
 
         return "admin/fragment/diary-report";
     }
+
+    @GetMapping("/payment")
+    public String goPayment(){
+        return "admin/fragment/payment";
+    }
 }

@@ -1147,3 +1147,26 @@ insert into tbl_member (member_name, member_email, member_password, member_role)
 values ('test', 'test@naver.com', 'tet1234', 'admin');
 
 select * from tbl_member;
+
+insert into tbl_file (id, file_origin_name, file_name, file_path)
+values (1, 'test.jpg', 'test.jpg', '/images/banner');
+
+
+
+insert into tbl_file (file_origin_name, file_name, file_path, file_size)
+values ('test.jpg', 'test.jpg', '/images/banner', 12345);
+
+
+insert into tbl_file (file_origin_name, file_name, file_path, file_size)
+values ('dummy.jpg', 'dummy.jpg', '/images/banner', 1024);
+select * from tbl_file order by id desc limit 1;
+delete from tbl_banner_file where file_id = 2;
+insert into tbl_file (file_origin_name, file_name, file_path, file_size)
+values ('newBanner.jpg', 'newBanner.jpg', '/images/banner', 2048);
+insert into tbl_file (file_origin_name, file_name, file_path, file_size)
+values ('updateBanner.jpg', 'updateBanner.jpg', '/images/banner', 1234);
+
+select * from tbl_file;
+
+select * from tbl_banner_file order by banner_id;
+delete from tbl_banner_file where banner_id = 1 and file_id = 52;

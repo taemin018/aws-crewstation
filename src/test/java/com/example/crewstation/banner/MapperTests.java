@@ -23,4 +23,35 @@ public class MapperTests {
         List<BannerDTO> banners = bannerMapper.getBanners(5);
         log.info("banners: {}", banners);
     }
+
+    @Test
+    public void insertBannerTest() {
+        BannerDTO banner = new BannerDTO();
+        banner.setBannerOrder(1);
+        bannerMapper.insertBanner(banner);
+
+        log.info("생성된 배너 ID: {}", banner.getId());
+    }
+
+    @Test
+    public void insertBannerFileTest() {
+        Long testFileId = 52L;
+        Long testBannerId = 1L;
+
+        bannerMapper.insertBannerFile(bannerDTO);
+
+        log.info("fileId: {}, bannerId: {}", testFileId, testBannerId);
+    }
+
+
+    @Test
+    public void updateBannerFileTest() {
+        Long testBannerId = 1L;
+        Long bannerOrder = 54L;
+        bannerMapper.updateBannerFile(bannerDTO);
+
+        log.info("배너 파일 수정{}", testBannerId, bannerOrder);
+
+    }
+
 }

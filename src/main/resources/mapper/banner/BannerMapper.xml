@@ -21,4 +21,28 @@
     limit 5;
 </select>
 
+    <insert id="insertBanner" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into tbl_banner (banner_order)
+        values (#{bannerOrder})
+    </insert>
+
+    <insert id="insertBannerFile">
+        insert into tbl_banner_file (file_id, banner_id)
+        values (#{fileId}, #{bannerId})
+    </insert>
+
+    <update id="updateBannerFile">
+        update tbl_banner
+        set banner_order = #{bannerOrder}
+        where id = #{bannerId}
+    </update>
+
+    <delete id="deleteBanner">
+        delete from tbl_banner where id = #{bannerId}
+    </delete>
+
+
+
+
+
 </mapper>

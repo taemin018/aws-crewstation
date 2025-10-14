@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @ToString
 @EqualsAndHashCode(of="id")
 public class BannerDTO {
-    private Long id;
+    private Long bannerId;
     private int bannerOrder;
     private String createdDatetime;
     private String updatedDatetime;
