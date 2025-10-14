@@ -5,5 +5,8 @@
         insert into tbl_member_file (file_id, member_id)
         values (#{fileId}, #{memberId})
     </insert>
+    <select id="all">
+        select * from tbl_member_file
+    </select>
 
 </mapper>
