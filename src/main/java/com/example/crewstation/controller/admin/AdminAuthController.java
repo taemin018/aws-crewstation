@@ -37,6 +37,7 @@ public class AdminAuthController implements AdminAuthControllerDocs {
     @PostMapping("login")
     @LogReturnStatus
     public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
+        log.info(memberDTO.toString());
         try {
             Authentication authentication =
                     authenticationManager.authenticate(
@@ -54,7 +55,7 @@ public class AdminAuthController implements AdminAuthControllerDocs {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+            String username = ((CustomUserDetails) authentication.getPrincipal()).getMemberEmail();
             String accessToken = jwtTokenProvider.createAccessToken(username);
             String refreshToken = jwtTokenProvider.createRefreshToken(username);
 
@@ -162,10 +163,10 @@ public class AdminAuthController implements AdminAuthControllerDocs {
 
         CustomUserDetails cud =
                 (CustomUserDetails) jwtTokenProvider.getAuthentication(refreshToken).getPrincipal();
-        String accessToken = jwtTokenProvider.createAccessToken(cud.getUsername());
+        String accessToken = jwtTokenProvider.createAccessToken(cud.getMemberEmail());
 
         jwtTokenProvider.deleteRefreshToken(username);
-        jwtTokenProvider.createRefreshToken(cud.getUsername());
+        jwtTokenProvider.createRefreshToken(cud.getMemberEmail());
 
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("accessToken", accessToken);
