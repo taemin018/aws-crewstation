@@ -1,16 +1,21 @@
 package com.example.crewstation.controller.mypage;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.dto.guest.GuestOrderDetailDTO;
 import com.example.crewstation.dto.member.MySaleListDTO;
+import com.example.crewstation.dto.purchase.PurchaseDetailDTO;
 import com.example.crewstation.service.guest.GuestService;
 import com.example.crewstation.service.member.MemberService;
+import com.example.crewstation.service.purchase.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -20,38 +25,43 @@ public class MypageRestController {
 
     private final GuestService guestService;
     private final MemberService memberService;
+    private final PurchaseService purchaseService;
 
-    // 주문번호로 단건 조회
-    @GetMapping("/purchase-detail/{guestOrderNumber}")
-    public ResponseEntity<GuestOrderDetailDTO> getOrderDetail(@PathVariable String guestOrderNumber) {
-        GuestOrderDetailDTO orderDetail = guestService.getOrderDetail(guestOrderNumber);
-        return ResponseEntity.ok(orderDetail);
-    }
+    // 구매 상세
+    @GetMapping("/purchase-detail/{postId}")
+    public ResponseEntity<PurchaseDetailDTO> getOrderDetail(@PathVariable Long postId) {
+        Optional<PurchaseDetailDTO> orderDetailOpt = purchaseService.getPurchaseDetail(postId);
 
-    // 결제 상태 업데이트
-    @PutMapping("/purchase-detail/{guestOrderNumber}/status")
-    public ResponseEntity<Void> updatePaymentStatus(
-            @PathVariable String guestOrderNumber,
-            @RequestParam PaymentPhase paymentPhase) {
-
-        log.info("PUT /order/{}/status called with phase={}", guestOrderNumber, paymentPhase);
-
-        GuestOrderDetailDTO order = guestService.getOrderDetail(guestOrderNumber);
-        if (order == null) {
-            log.warn("Order not found: {}", guestOrderNumber);
+        if (orderDetailOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        guestService.updatePaymentStatus(order.getPurchaseId(), paymentPhase);
-        log.info("Order status updated for purchaseId={}", order.getPurchaseId());
+        return ResponseEntity.ok(orderDetailOpt.get());
+    }
+
+    // 결제 상태 업데이트
+    @PutMapping("/purchase-detail/{purchaseId}/status")
+    public ResponseEntity<Void> updatePaymentStatus(
+            @PathVariable Long purchaseId,
+            @RequestParam PaymentPhase paymentPhase) {
+
+        Optional<PurchaseDetailDTO> orderOpt = purchaseService.getPurchaseDetail(purchaseId);
+
+        if (orderOpt.isEmpty()) {
+            log.warn("Order not found: {}", purchaseId);
+            return ResponseEntity.notFound().build();
+        }
+
+        PurchaseDetailDTO order = orderOpt.get();
+        purchaseService.updatePaymentStatus(order.getPurchaseId(), paymentPhase);
         return ResponseEntity.ok().build();
     }
 
 //  판매 내역 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<MySaleListDTO>> getMySaleList(@RequestParam Long memberId) {
-        log.info("GET /api/mypage/sale/list called with memberId={}", memberId);
+    public ResponseEntity<List<MySaleListDTO>> getMySaleList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
+        Long memberId = customUserDetails.getId();
         List<MySaleListDTO> saleList = memberService.getMySaleList(memberId);
 
         if (saleList == null || saleList.isEmpty()) {
@@ -67,12 +77,15 @@ public class MypageRestController {
     @PutMapping("/status/{postId}")
     public ResponseEntity<Void> updateSaleStatus(
             @PathVariable Long postId,
-            @RequestParam String paymentPhase) {
+            @RequestParam String paymentPhase,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        log.info("PUT /api/mypage/sale/status/{} with paymentPhase={}", postId, paymentPhase);
+        Long memberId = customUserDetails.getId(); // 로그인 사용자 정보
+        log.info("PUT /api/mypage/sale/status/{} by memberId={} with phase={}",
+                postId, memberId, paymentPhase);
 
-        // TODO: service에 update 메서드 추가 필요
-        // memberService.updateSaleStatus(postId, PaymentPhase.valueOf(paymentPhase));
+        // TODO: 서비스 로직 추가
+        // memberService.updateSaleStatus(memberId, postId, PaymentPhase.valueOf(paymentPhase));
 
         return ResponseEntity.ok().build();
     }
