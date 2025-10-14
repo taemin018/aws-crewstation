@@ -80,22 +80,20 @@ public class PaymentServiceImpl implements PaymentService {
         paymentStatusDAO.updatePaymentStatus(purchaseId, PaymentPhase.SUCCESS);
     }
 
-    @Override
-    public void selectPayment(Criteria criteria, PaymentCriteriaDTO PaymentCriteriaDTO) {
 
-    }
+
 
     @Override
     public void selectPayment(int page) {
         int total = paymentStatusDAO.countPayment();
         Criteria criteria = new Criteria(page, total, 16, 10);
 
-        List<PaymentCriteriaDTO> paymentCriteriaDTOS = paymentStatusDAO.adminPaymentList(criteria);
+        List<PaymentCriteriaDTO> paymentList = paymentStatusDAO.adminPaymentList(criteria);
 
         PaymentCriteriaDTO paymentCriteriaDTO = new PaymentCriteriaDTO();
-        paymentCriteriaDTO.getCriteria();
+        paymentCriteriaDTO.setCriteria(criteria);
+        paymentCriteriaDTO.setPaymentList(paymentList);
 
-        return;
 
 
     }

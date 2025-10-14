@@ -1170,3 +1170,55 @@ select * from tbl_file;
 
 select * from tbl_banner_file order by banner_id;
 delete from tbl_banner_file where banner_id = 1 and file_id = 52;
+
+select * from tbl_member;
+
+
+
+
+-- 1) 신고 생성 → 새 id 받기
+WITH new_report AS (
+    INSERT INTO tbl_report (report_content, member_id)
+        VALUES ('욕설이 심해요(더미)', 22)
+        RETURNING id
+)
+-- 2) 신고-게시글 매핑 (IDENTITY 우회)
+INSERT INTO tbl_post_report (report_id, post_id)
+    OVERRIDING SYSTEM VALUE
+SELECT id, 42 FROM new_report;
+
+-- 3) 보기 좋은 시간(선택)
+UPDATE tbl_report
+SET created_datetime = NOW() - INTERVAL '12 minutes'
+WHERE id = (SELECT max(id) FROM tbl_report WHERE member_id = 22);
+
+
+WITH new_report AS (
+    INSERT INTO tbl_report (report_content, member_id)
+        VALUES ('스팸/광고 같아요(더미)', 22)
+        RETURNING id
+)
+INSERT INTO tbl_post_report (report_id, post_id)
+    OVERRIDING SYSTEM VALUE
+SELECT id, 14 FROM new_report;
+
+UPDATE tbl_report
+SET created_datetime = NOW() - INTERVAL '6 minutes'
+WHERE id = (SELECT max(id) FROM tbl_report WHERE member_id = 22);
+
+
+-- 다이어리 목록 쪽
+SELECT r.id AS report_id, r.created_datetime, r.report_content, r.report_process_status,
+       p.post_title, p.id AS post_id
+FROM view_report_post_report r
+         JOIN view_post_diary p ON p.id = r.post_id
+ORDER BY r.created_datetime DESC
+LIMIT 10;
+
+-- 기프트 목록 쪽
+SELECT r.id AS report_id, r.created_datetime, r.report_content, r.report_process_status,
+       p.post_title, p.id AS post_id
+FROM view_report_post_report r
+         JOIN view_post_purchase p ON p.id = r.post_id
+ORDER BY r.created_datetime DESC
+LIMIT 10;
