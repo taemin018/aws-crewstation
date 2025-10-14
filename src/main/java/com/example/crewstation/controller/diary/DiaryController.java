@@ -25,15 +25,15 @@ public class DiaryController {
     }
 
     @GetMapping("write")
-    public String goWriteForm(@RequestParam Long path,@RequestParam(required = false) Long crew, Model model){
-        model.addAttribute("path",path);
-        model.addAttribute("crew",crew);
+    public String goWriteForm(Model model){
+//        model.addAttribute("path",path);
+//        model.addAttribute("crew",crew);
         return "mypage/my-diary/write";
     }
     @PostMapping("write")
     public RedirectView write(PostDiaryDetailTagDTO request, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-//        request.setMemberId(customUserDetails.getId());
-        request.setMemberId(1L);
+        request.setMemberId(customUserDetails.getId());
+//        request.setMemberId(1L);
         diaryService.write(request);
         log.info("{}",request);
         return new RedirectView("/diaries/detail/"+ request.getPostId());
