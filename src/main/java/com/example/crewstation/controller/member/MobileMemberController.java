@@ -16,49 +16,51 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("/member/**")
+@RequestMapping("/mobile/**")
 @RequiredArgsConstructor
 @Slf4j
-public class MemberController {
+public class MobileMemberController {
     private final MemberService memberService;
     private final GuestService guestService;
     private final JwtTokenProvider jwtTokenProvider;
 
-//    web 회원가입
-    @GetMapping("join")
-    public String join(MemberDTO memberDTO, Model model) {
-        model.addAttribute("memberDTO", memberDTO);
 
-        return "member/web/join";
+    //    mobile 회원가입
+    @GetMapping("join")
+    public String mobileJoin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
+        model.addAttribute("memberDTO", memberDTO);
+        model.addAttribute("guestDTO", guestDTO);
+
+        return "member/mobile/join";
     }
 
     @PostMapping("join")
-    public RedirectView join(@ModelAttribute("memberDTO") MemberDTO memberDTO, @RequestParam("file")MultipartFile multipartFile) {
+    public RedirectView mobileJoin(@ModelAttribute("memberDTO") MemberDTO memberDTO, @RequestParam("file")MultipartFile multipartFile) {
         memberService.join(memberDTO, multipartFile);
 
-        return new RedirectView("/member/login");
+        return new RedirectView("/mobile/login");
     }
 
-    //    web 로그인
+    //    mobile 로그인
     @GetMapping("login")
-    public String login(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
+    public String mobileLogin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
         model.addAttribute("guestDTO", guestDTO);
-        return "member/web/login";
+        return "member/mobile/login";
     }
 
-// guest
-
+//    게스트
     @PostMapping("login")
-    public RedirectView login(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
+    public RedirectView mobileLogin(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
         guestService.login(guestDTO);
 
+        
         return new RedirectView("/guest/order-detail");
     }
 
-//    web sns 회원가입
+    //    mobile sns 회원가입
     @GetMapping("sns/join")
-    public String snsJoin(@CookieValue(value = "memberSocialEmail", required = false) String memberSocialEmail,
+    public String mobileJoin(@CookieValue(value = "memberSocialEmail", required = false) String memberSocialEmail,
                           @CookieValue(value = "profile", required = false) String socialProfile,
                           @CookieValue(value = "name", required = false) String memberName,
                           MemberDTO memberDTO, Model model) {
@@ -68,11 +70,11 @@ public class MemberController {
 
         model.addAttribute("memberDTO", memberDTO);
 
-        return "member/web/sns/join";
+        return "member/mobile/sns/join";
     }
 
     @PostMapping("sns/join")
-    public RedirectView join(@CookieValue(value = "role", required = false) String role,
+    public RedirectView mobileJoin(@CookieValue(value = "role", required = false) String role,
                              @CookieValue(value = "provider", required = false) String provider, MemberDTO memberDTO,
                              @RequestParam("file")MultipartFile multipartFile) {
         memberDTO.setMemberRole(role.equals("ROLE_MEMBER") ? MemberRole.MEMBER : MemberRole.ADMIN);
@@ -88,27 +90,26 @@ public class MemberController {
 
 
 
-//    비밀번호 찾기
-//    web
+
+//    mobile
     @GetMapping("forgot-password")
-    public String changePassword(MemberDTO memberDTO, Model model) {
+    public String mobileChangePassword(MemberDTO memberDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
-        return "member/web/forgot-password";
+        return "member/mobile/forgot-password";
     }
 
     @PostMapping("forgot-password")
-    public RedirectView changePassword(
+    public RedirectView mobileChangePassword(
             @RequestParam("memberEmail") String memberEmail,
             @RequestParam("memberPassword") String memberPassword
     ) {
         memberService.resetPassword(memberEmail, memberPassword);
-        return new RedirectView("/member/reset-password-success");
-    }
-    
-    // 비밀벌호 변경 성공
-    @GetMapping("reset-password-success")
-    public String resetPasswordSuccess() {
-        return "member/web/reset-password-success";
+        return new RedirectView("/mobile/reset-password-success");
     }
 
+    // 비밀벌호 변경 성공
+    @GetMapping("reset-password-success")
+    public String mobileResetPasswordSuccess() {
+        return "member/mobile/reset-password-success";
+    }
 }

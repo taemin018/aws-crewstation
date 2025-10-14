@@ -30,8 +30,8 @@
                         </div>
                         <button class="login-member-btn login-btn" type="button">로그인</button>
                         <section class="login-option-action">
-                            <a class="password-find" th:href="@{/member/web/forgot-password}">비밀번호 찾기</a>
-                            <a class="join" th:href="@{/member/web/join}">회원가입</a>
+                            <a class="password-find" th:href="@{/member/forgot-password}">비밀번호 찾기</a>
+                            <a class="join" th:href="@{/member/join}">회원가입</a>
                         </section>
                     </form>
                     <form action="/member/web/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
@@ -43,8 +43,8 @@
                         </div>
                         <button class="login-guest-btn login-btn">주문 조회</button>
                         <section class="login-option-action">
-                            <a class="password-find" th:href="@{/member/web/password}">비밀번호 찾기</a>
-                            <a class="join" th:href="@{/member/web/join}">회원가입</a>
+                            <a class="password-find" th:href="@{/member/password}">비밀번호 찾기</a>
+                            <a class="join" th:href="@{/member/join}">회원가입</a>
                         </section>
                     </form>
                     <section class="social-login-wrap">
