@@ -35,7 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final MemberDAO memberDAO;
     private final GuestDAO guestDAO;
     private final SmsService smsService;
-    private final PaymentService paymentService;
+//    private final PaymentService paymentService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

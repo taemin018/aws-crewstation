@@ -16,7 +16,7 @@ import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
 import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.payment.PaymentService;
-import com.example.crewstation.service.post.PostService;
+//import com.example.crewstation.service.post.PostService;
 import com.example.crewstation.service.gift.GiftService;
 import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
@@ -145,6 +145,7 @@ public class AdminRestController {
     @GetMapping("/payment")
     public ResponseEntity<PaymentVO> getPayment(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
+        return null;
     }
 
 }
