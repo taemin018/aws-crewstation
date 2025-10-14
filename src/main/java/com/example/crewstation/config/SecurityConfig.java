@@ -81,13 +81,11 @@ public class SecurityConfig {
                                 "/diaries",
                                 "/diaries/write",
                                 "/diaries/detail/**",
-                                "/diaries/**",
                                 "/api/diaries",
                                 "/api/replies/**",
                                 "/gifts",
                                 "/gifts/detail/**",
                                 "/gifts/write",
-                                "/gifts/**",
                                 "/api/gifts")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,

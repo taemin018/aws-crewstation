@@ -63,6 +63,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberEmail;
+        return memberName;
     }
+
+    public String getUserEmail () {return this.memberEmail;}
 }
