@@ -2,9 +2,6 @@ package com.example.crewstation.controller.admin;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.notice.NoticeDetailVO;
-import com.example.crewstation.domain.notice.NoticeVO;
-import com.example.crewstation.domain.payment.PaymentVO;
-import com.example.crewstation.dto.banner.BannerDTO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
@@ -16,11 +13,7 @@ import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
 import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.payment.PaymentService;
-//import com.example.crewstation.service.post.PostService;
 import com.example.crewstation.service.gift.GiftService;
-import com.example.crewstation.service.member.MemberService;
-import com.example.crewstation.service.notice.NoticeDetailService;
-import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.report.ReportService;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +37,6 @@ public class AdminRestController {
     private final NoticeService noticeService;
     private final NoticeDetailService noticeDetailService;
     private final ReportService reportService;
-    private final BannerService bannerService;
-    private final PaymentService paymentService;
     private final GiftService giftService;
 
     //    관리자 회원 목록
@@ -54,27 +45,28 @@ public class AdminRestController {
         return ResponseEntity.ok(memberService.getMembers(search));
     }
 
-//    관리자 회원 상세
+    //    관리자 회원 상세
     @GetMapping("/members/{memberId}")
     public ResponseEntity<MemberDTO> getMemberDetails(@PathVariable Long memberId) {
         return ResponseEntity.ok(memberService.getMemberDetail(memberId));
     }
 
-//    관리자 메인 회원 통계
+    //    관리자 메인 회원 통계
     @GetMapping({"", "/"})
     public ResponseEntity<MemberAdminStatics> getStatics() {
         MemberAdminStatics statics = memberService.getStatics();
         return ResponseEntity.ok(statics);
 
     }
-//  공지사항 목록
+
+    //  공지사항 목록
     @GetMapping("/notices")
     public ResponseEntity<NoticeCriteriaDTO> getAdminNotices(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
         return ResponseEntity.ok(noticeService.getAdminNotices(safePage));
     }
 
-//    공지사항 작성
+    //    공지사항 작성
     @PostMapping("/notices")
     public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails admin,
                                           @RequestBody NoticeWriteRequest req) {
@@ -87,15 +79,14 @@ public class AdminRestController {
     }
 
 
-
-//    공지사항 상세
+    //    공지사항 상세
     @GetMapping("/notices/{id}")
     public ResponseEntity<NoticeDetailVO> noticeDetail(@PathVariable Long id) {
         NoticeDetailVO notice = noticeDetailService.getDetail(id);
         return ResponseEntity.ok(notice);
     }
 
-//    다이어리 신고 목록
+    //    다이어리 신고 목록
     @GetMapping("/diaries")
     public ResponseEntity<?> getReportDiaryList(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
@@ -103,7 +94,7 @@ public class AdminRestController {
         return ResponseEntity.ok(reports);
     }
 
-//    다이어리 신고 처리
+    //    다이어리 신고 처리
     @PostMapping("/diary/{reportId}/process")
     public ResponseEntity<?> processDiaryReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 
@@ -118,7 +109,7 @@ public class AdminRestController {
         return ResponseEntity.ok().build();
     }
 
-//    기프트 신고 목록
+    //    기프트 신고 목록
     @GetMapping("/gifts")
     public ResponseEntity<?> getReportGiftList(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
@@ -126,7 +117,7 @@ public class AdminRestController {
         return ResponseEntity.ok(reports);
     }
 
-//    기프트 신고 처리
+    //    기프트 신고 처리
     @PostMapping("/gift/{reportId}/process")
     public ResponseEntity<?> processGiftReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 

@@ -65,3 +65,6 @@ VALUES
     ('partner'::crew_role,
      (SELECT id FROM tbl_crew WHERE crew_name='뉴욕 크루'),
      (SELECT id FROM tbl_member WHERE member_email='alice@example.com'));
+
+
+select * from tbl_post;
