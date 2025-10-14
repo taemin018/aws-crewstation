@@ -15,6 +15,8 @@ public interface PaymentService {
     public void completePayment(Long purchaseId, PaymentDTO paymentDTO);
 
 
+    public void selectPayment(int page);
+
     default GuestVO toVO(PaymentStatusDTO  paymentStatusDTO) {
         return GuestVO.builder()
                 .memberId(paymentStatusDTO.getMemberId())
@@ -26,5 +28,4 @@ public interface PaymentService {
                 .build();
     }
 
-    void selectPayment(int page);
 }

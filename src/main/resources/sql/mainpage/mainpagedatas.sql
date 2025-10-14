@@ -1170,3 +1170,5 @@ select * from tbl_file;
 
 select * from tbl_banner_file order by banner_id;
 delete from tbl_banner_file where banner_id = 1 and file_id = 52;
+
+select * from tbl_member;
