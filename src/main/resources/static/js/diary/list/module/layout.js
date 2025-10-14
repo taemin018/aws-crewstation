@@ -33,9 +33,9 @@ const diariesListLayout = (() => {
                                                             <img src="${filePath}" alt="" class="card-writer-img">
                                                             <div class="writer-info">
                                                                 <span class="writer-name">${diary.memberName}</span>
-                                                                ${diary.crewName ? `<span class="badge-list-container">${diary.crewName}</span>` :""}
+                                                                
                                                             </div>
-                                                            <p class="card-item-writer-introduction">${diary.memberDescription}</p>
+                                                           
                                                         </a>
                                                         
                                                     </div>
