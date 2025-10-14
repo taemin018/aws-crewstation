@@ -20,17 +20,21 @@ from view_post_diary p;
 
 select * from tbl_post;
 
+select * from tbl_member;
+
 select * from tbl_diary;
 insert into tbl_diary (post_id)
 values (33);
 
 select * from tbl_report;
+insert into tbl_report (report_content, member_id)
+values ('신고사유13', 7);
 
 select * from tbl_post_report;
 insert into tbl_post_report (report_id, post_id)
-values (13,27);
+values (14,28);
 
-select count(*)
+select *
 from view_report_post_report r
          left join view_post_diary p on p.id = r.post_id;
 
