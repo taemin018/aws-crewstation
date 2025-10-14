@@ -1,3 +1,32 @@
+// ===== ★ 전역 섹션 전환 함수 (SPA) =====
+function showSection(name) {
+    const container = document.getElementById('page-container');
+    if (!container) return;
+
+    const sections = container.querySelectorAll(':scope > div[id^="section-"]');
+    const targetId = `section-${name}`;
+
+    sections.forEach(sec => {
+        sec.style.display = (sec.id === targetId ? 'block' : 'none');
+    });
+
+    // 해시 동기화 (뒤로가기/북마크)
+    if (location.hash !== `#${name}`) history.pushState(null, '', `#${name}`);
+
+    // 사이드바 active 동기화
+    document.querySelectorAll('[data-section]').forEach(a => {
+        a.classList.toggle('active', a.dataset.section === name);
+    });
+
+    // 섹션별 최초 1회 초기화 훅 (필요한 경우만)
+    if (name === 'diary-report' && typeof window.diaryReportInit === 'function') {
+        if (!showSection.__inited) showSection.__inited = {};
+        if (!showSection.__inited[name]) {
+            showSection.__inited[name] = true;
+            window.diaryReportInit(); // 필요시 await 가능
+        }
+    }
+}
 
 
 // =============== 사이드바 ===============
@@ -64,7 +93,11 @@
     side.addEventListener("click", (e) => {
         const subLink = e.target.closest(".menu-sub-list .boot-link");
         if (subLink && side.contains(subLink)) {
-            e.preventDefault();
+            if (subLink.dataset.section) {
+                   e.preventDefault();
+                   showSection(subLink.dataset.section);
+            }
+
             const ul = subLink.closest(".menu-sub-list");
             ul.querySelectorAll(".boot-link.active").forEach((a) =>
                 a.classList.remove("active")
@@ -83,7 +116,13 @@
 
         const btnTop = e.target.closest(".menu-item > .menu-btn");
         if (!btnTop || !side.contains(btnTop)) return;
-        e.preventDefault();
+
+             if (btnTop.dataset.section) {
+               e.preventDefault();
+               showSection(btnTop.dataset.section);
+               return;
+             }
+         e.preventDefault();
 
         const panel = btnTop.nextElementSibling;
         const hasPane = panel && panel.classList.contains("menu-sub-list");
@@ -315,33 +354,6 @@ function drawPie(staticsData) {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    const menuButtons = document.querySelectorAll(".menu-btn[data-section]");
-    const sections = document.querySelectorAll("#page-container > div");
-
-    menuButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const target = btn.getAttribute("data-section");
-
-            menuButtons.forEach((b) => b.classList.remove("active"));
-            btn.classList.add("active");
-
-            // 해당 섹션만 보이기
-            sections.forEach((sec) => {
-                if (sec.id === `section-${target}`) {
-                    sec.style.display = "block";
-                } else {
-                    sec.style.display = "none";
-                }
-            });
-        });
-    });
-
-    sections.forEach((sec) => {
-        sec.style.display = sec.id === "section-home" ? "block" : "none";
-    });
-});
-
 // ===== 로그인 정보 표시 + 로그아웃 =====
 
 async function fetchWithRefresh(url, opts = {}) {
@@ -388,4 +400,12 @@ async function fetchWithRefresh(url, opts = {}) {
     });
 })();
 
+window.addEventListener('DOMContentLoaded', () => {
+    const initial = (location.hash || '#home').slice(1);
+    showSection(initial);
+});
 
+window.addEventListener('popstate', () => {
+    const name = (location.hash || '#home').slice(1);
+    showSection(name);
+});
