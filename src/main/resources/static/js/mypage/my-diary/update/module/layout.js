@@ -16,8 +16,9 @@ const diaryWriteLayout = (() => {
             }else if(member.socialImgUrl){
                 path = member.socialImgUrl
             }else{
-                path = "https://prs.ohousecdn.com/apne2/any/uploads/productions/v1-356976242864128.jpg?c=c&w=320&h=320"
+                path = "https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c"
             }
+            // let memberEmail = me
             text += `
                 <button class="tag-profile-container" type="button" >
                   <div class="member-profile">
@@ -28,7 +29,7 @@ const diaryWriteLayout = (() => {
 
                   <div class="member-info-container">
                     <div class="member-name">${member.memberName}</div>
-                    <div class="member-email">${member.memberEmail}</div>
+                    <div class="member-email">${member.memberEmail || member.memberSocialEmail}</div>
                   </div>
                   <div class="tag-select-btn" data-member-id="${member.id}">
                     <div class="tag-select-btn-text">선택</div>
