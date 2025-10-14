@@ -8,17 +8,20 @@ const purchaseDetailService = (() => {
             body: JSON.stringify(report),
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            redirect: 'manual',
+            credentials: 'same-origin'
         });
         if (response.ok) {
             console.log("기프트 존재")
         } else if (response.status === 404) {
             console.log("기프트 없음")
         } else {
-            const error = await response.text()
-            console.log(error);
+            // const error = await response.text()
+            console.log(response);
         }
         message = await response.text();
+        console.log(response);
         return {message: message, status: response.status}
     }
 
@@ -26,7 +29,7 @@ const purchaseDetailService = (() => {
         let message = null;
         let result = null;
         let isGuest = false;
-        const response = await fetch("/api/payment/", {
+        const response = await fetch("/api/payment", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {

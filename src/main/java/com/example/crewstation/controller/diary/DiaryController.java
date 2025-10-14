@@ -32,6 +32,7 @@ public class DiaryController {
     }
     @PostMapping("write")
     public RedirectView write(PostDiaryDetailTagDTO request, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        log.info("{}::::::::::",customUserDetails.getId());
         request.setMemberId(customUserDetails.getId());
 //        request.setMemberId(1L);
         diaryService.write(request);

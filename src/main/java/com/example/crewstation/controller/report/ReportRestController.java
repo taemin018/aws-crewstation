@@ -2,6 +2,7 @@ package com.example.crewstation.controller.report;
 
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.exception.MemberNotFoundException;
 import com.example.crewstation.common.exception.PostNotFoundException;
 import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.service.report.ReportService;
@@ -25,22 +26,25 @@ public class ReportRestController {
     @PostMapping
     public ResponseEntity<String> reportPurchase(@RequestBody ReportDTO reportDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try{
-            reportDTO.setMemberId(userDetails.getId());
-            reportService.report(reportDTO);
+
+            reportService.report(reportDTO,userDetails);
             return ResponseEntity.ok().body("신고 완료되었습니다.");
         }catch (PostNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
     @PostMapping("replies")
     public ResponseEntity<String> reportReply(@RequestBody ReportDTO reportDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try{
-            reportDTO.setMemberId(userDetails.getId());
-            reportService.reportReply(reportDTO);
+            reportService.reportReply(reportDTO,userDetails);
             log.info(reportDTO.toString());
             return ResponseEntity.ok().body("신고 완료되었습니다.");
         }catch (PostNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (MemberNotFoundException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 }

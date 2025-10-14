@@ -2,6 +2,7 @@ package com.example.crewstation.controller.admin;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.notice.NoticeDetailVO;
+import com.example.crewstation.domain.payment.PaymentVO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
@@ -132,11 +133,11 @@ public class AdminRestController {
         return ResponseEntity.ok().build();
     }
 
-    //    결제 목록
-//    @GetMapping("/payment")
-//    public ResponseEntity<PaymentVO> getPayment(@RequestParam(defaultValue = "1") int page) {
-//        int safePage = Math.max(1, page);
-//    }
-
+//    결제 목록
+    @GetMapping("/payment")
+    public ResponseEntity<PaymentVO> getPayment(@RequestParam(defaultValue = "1") int page) {
+        int safePage = Math.max(1, page);
+        return null;
+    }
 
 }

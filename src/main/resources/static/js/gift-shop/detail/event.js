@@ -1,3 +1,56 @@
+// 모달 관련 (공통)
+function setupModal(modalId, openSelector, closeSelector, onClose) {
+
+    console.log(openSelector);
+    console.log("선택햇습니다.")
+    const modal = document.getElementById(modalId);
+    const openBtns = document.querySelectorAll(openSelector);
+    const closeBtn = modal ? modal.querySelector(closeSelector) : null;
+
+    if (!modal || openBtns.length === 0 || !closeBtn) {
+        console.warn("모달 요소를 찾을 수 없음:", modalId, openSelector, closeSelector);
+        return;
+    }
+
+    // 열기 버튼들
+    openBtns.forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+            console.log(modalId);
+            if (modalId === "myModal") {
+                console.log("판매 요청 들어왔고");
+                const postId = document.getElementById("postId").dataset.post;
+                console.log("회원 유저야")
+                console.log(123)
+                const {isGuest, message, status} = await purchaseDetailService.requestToSell({
+                    purchaseId: postId
+                })
+                console.log(isGuest)
+                if (!isGuest) {
+                    toastModal(message);
+                } else {
+                    e.stopPropagation();
+                    modal.classList.add("active");
+                }
+            } else if (modalId === "reportModal") {
+                modal.classList.add("active");
+            }
+        });
+    });
+
+    // 닫기 버튼
+    closeBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+        if (onClose) onClose();
+    });
+
+    // 바깥 클릭 시 닫기
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.classList.remove("active");
+            if (onClose) onClose();
+        }
+    });
+}
 document.addEventListener("DOMContentLoaded", () => {
     // 슬라이드 관련
     const carouselList = document.querySelector(".carousel-list");
@@ -5,59 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dots = document.querySelectorAll(".carousel-paginator-page");
     const thumbnails = document.querySelectorAll(".product-cover-image-list .image");
 
-    // 모달 관련 (공통)
-    function setupModal(modalId, openSelector, closeSelector, onClose) {
 
-        console.log(openSelector);
-        console.log("선택햇습니다.")
-        const modal = document.getElementById(modalId);
-        const openBtns = document.querySelectorAll(openSelector);
-        const closeBtn = modal ? modal.querySelector(closeSelector) : null;
-
-        if (!modal || openBtns.length === 0 || !closeBtn) {
-            console.warn("모달 요소를 찾을 수 없음:", modalId, openSelector, closeSelector);
-            return;
-        }
-
-        // 열기 버튼들
-        openBtns.forEach((btn) => {
-            btn.addEventListener("click", async (e) => {
-                console.log(modalId);
-                if (modalId === "myModal") {
-                    console.log("판매 요청 들어왔고");
-                    const postId = document.getElementById("postId").dataset.post;
-                    console.log("회원 유저야")
-                    console.log(123)
-                    const {isGuest, message, status} = await purchaseDetailService.requestToSell({
-                        purchaseId: postId
-                    })
-                    console.log(isGuest)
-                    if (!isGuest) {
-                        toastModal(message);
-                    } else {
-                        e.stopPropagation();
-                        modal.classList.add("active");
-                    }
-                } else if (modalId === "reportModal") {
-                    modal.classList.add("active");
-                }
-            });
-        });
-
-        // 닫기 버튼
-        closeBtn.addEventListener("click", () => {
-            modal.classList.remove("active");
-            if (onClose) onClose();
-        });
-
-        // 바깥 클릭 시 닫기
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.classList.remove("active");
-                if (onClose) onClose();
-            }
-        });
-    }
 
     setupModal("myModal", "#openBuyingModalBtn", ".close");
     setupModal("reportModal", ".gift-shop-post-report-btn", ".close-button", () => selectFirstReportRadio());
@@ -221,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmReportNo = document.getElementById("confirmReportNo");
     const reportBtn = document.getElementById("reportBtn");
     reportBtn.addEventListener("click", (e) => {
+        console.log(123)
         confirmReportModal.style.display = "flex";
     })
 
@@ -482,7 +484,13 @@ document.querySelector("div.product-detail-container").addEventListener("click",
         e.target.closest("div.modify-wrap").querySelector("div.modify-container").style.display = "flex";
         return
     }
-    document.querySelector("div.modify-container").style.display = "none";
+    if(document.querySelector("div.modify-container")){
+        document.querySelector("div.modify-container").style.display = "none";
+    }
+    if(e.target.closest("button.gift-shop-post-report-btn")){
+        setupModal("reportModal", ".gift-shop-post-report-btn", ".close-button", () => selectFirstReportRadio());
+    }
+
 })
 
 document.querySelector("div.del-post")?.addEventListener("click", (e) => {
