@@ -15,9 +15,6 @@
             <div class="crew-label-wrap">
                 <!-- 크루 이름 -->
                 <div class="writer-info">
-                    <span class="badge-list-container"
-                          th:if="${diary.diary.crewName != null and diary.diary.crewName != ''}"
-                          th:text="${diary.diary.crewName}">크루스테이션</span>
                     <div class="country-wrap">
                     <span class="crew-label" th:each="country:${diary.countries}" th:text="${country.countryName}">프랑스</span>
                     </div>
