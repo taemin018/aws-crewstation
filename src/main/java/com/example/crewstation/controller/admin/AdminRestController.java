@@ -99,7 +99,7 @@ public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails
     @PostMapping("/diary/{reportId}/process")
     public ResponseEntity<?> processDiaryReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 
-        log.info("신고 처리 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
+        log.info("다이어리 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
         if (hidePost && postId != null) {
             postService.hidePost(postId);
@@ -122,7 +122,7 @@ public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails
     @PostMapping("/gift/{reportId}/process")
     public ResponseEntity<?> processGiftReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 
-        log.info("신고 처리 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
+        log.info("기프트 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
         if (hidePost && postId != null) {
             postService.hidePost(postId);

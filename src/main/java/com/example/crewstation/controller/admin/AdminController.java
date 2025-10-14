@@ -45,6 +45,7 @@ public class AdminController {
 
         return "admin/login";
     }
+
     @GetMapping("/diary")
     public String goAdminDiary(){
 

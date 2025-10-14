@@ -1,4 +1,4 @@
-const reportService = (() => {
+const diaryReportService = (() => {
 
     // 다이어리 신고 목록
     const getReports = async (page = 1) => {
