@@ -1,5 +1,6 @@
 package com.example.crewstation.controller.mypage;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.dto.member.MySaleListDTO;
 import com.example.crewstation.dto.purchase.PurchaseListCriteriaDTO;
 import com.example.crewstation.service.member.MemberService;
@@ -8,6 +9,7 @@ import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +36,13 @@ public class MypageController {
 
     // 마이페이지 -> 나의 구매내역 목록
     @GetMapping("/purchase-list")
-    public String getPurchaseList(@RequestParam(defaultValue = "1") int page,
+    public String getPurchaseList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                  @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "10") int size,
                                   @RequestParam(required = false) String keyword,
                                   Model model) {
 
-        Long memberId = 1L;
+        Long memberId = customUserDetails.getId();
 
         ScrollCriteria scrollCriteria = new ScrollCriteria(page, size);
         Search search = new Search();
@@ -65,20 +68,11 @@ public class MypageController {
         return "mypage/purchase-detail";
     }
 
-    // 마이페이지 - 내 판매 목록
-//    @GetMapping("/sale-list")
-//    public String loadMySaleListPage() {
-//        log.info("마이페이지 - 판매 목록");
-//        return "mypage/sale-list";
-//    }
 
     @GetMapping("/sale-list")
-    public String goToMySaleListPage(Model model, @RequestParam(required = false) Long memberId) {
+    public String goToMySaleListPage(Model model,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        // TODO: JWT 연동
-        if (memberId == null) {
-            memberId = 1L; // 임시 값
-        }
+        Long memberId = customUserDetails.getId();
 
         List<MySaleListDTO> saleList = memberService.getMySaleList(memberId);
         model.addAttribute("saleList", saleList);
