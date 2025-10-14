@@ -2,12 +2,21 @@ package com.example.crewstation.controller.admin;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.notice.NoticeDetailVO;
+import com.example.crewstation.domain.notice.NoticeVO;
+import com.example.crewstation.domain.payment.PaymentVO;
+import com.example.crewstation.dto.banner.BannerDTO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.notice.NoticeCriteriaDTO;
 import com.example.crewstation.dto.notice.NoticeWriteRequest;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
+import com.example.crewstation.service.banner.BannerService;
+import com.example.crewstation.service.member.MemberService;
+import com.example.crewstation.service.notice.NoticeDetailService;
+import com.example.crewstation.service.notice.NoticeService;
+import com.example.crewstation.service.payment.PaymentService;
+import com.example.crewstation.service.post.PostService;
 import com.example.crewstation.service.gift.GiftService;
 import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
@@ -35,6 +44,8 @@ public class AdminRestController {
     private final NoticeService noticeService;
     private final NoticeDetailService noticeDetailService;
     private final ReportService reportService;
+    private final BannerService bannerService;
+    private final PaymentService paymentService;
     private final GiftService giftService;
 
     //    관리자 회원 목록
@@ -64,16 +75,16 @@ public class AdminRestController {
     }
 
 //    공지사항 작성
-@PostMapping("/notices")
-public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails admin,
-                                      @RequestBody NoticeWriteRequest req) {
-    Long memberId = admin.getId();
-    Long id = noticeService.insertNotice(memberId, req.getTitle(), req.getContent());
-    if (id == null) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>());
+    @PostMapping("/notices")
+    public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails admin,
+                                          @RequestBody NoticeWriteRequest req) {
+        Long memberId = admin.getId();
+        Long id = noticeService.insertNotice(memberId, req.getTitle(), req.getContent());
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", id));
     }
-    return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", id));
-}
 
 
 
@@ -128,6 +139,12 @@ public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails
         reportService.resolveReport(reportId);
 
         return ResponseEntity.ok().build();
+    }
+
+//    결제 목록
+    @GetMapping("/payment")
+    public ResponseEntity<PaymentVO> getPayment(@RequestParam(defaultValue = "1") int page) {
+        int safePage = Math.max(1, page);
     }
 
 }

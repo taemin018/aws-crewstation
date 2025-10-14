@@ -1,20 +1,31 @@
 package com.example.crewstation.service.banner;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
+import com.example.crewstation.aop.aspect.annotation.LogStatus;
+import com.example.crewstation.common.enumeration.Type;
+import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.dto.accompany.AccompanyDTO;
 import com.example.crewstation.dto.banner.BannerDTO;
+import com.example.crewstation.dto.file.FileDTO;
+import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.repository.banner.BannerDAO;
+import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -45,3 +56,62 @@ public class BannerServiceImpl implements BannerService {
         return bannerTransactionService.getBanners(limit);
     }
 }
+
+//    @Override
+//    public void insertBanner(BannerDTO banner) {
+//
+//        bannerDTO.setBannerOrder(banner.getBannerOrder());
+//        bannerDAO.insertBanner(banner);
+//    }
+//
+//
+//    @Override
+//    @Transactional(rollbackFor = Exception.class)
+//    @LogStatus
+//    public void insertBannerFile(BannerDTO bannerDTO, List<MultipartFile> files) {
+//
+//        bannerDTO.setBannerOrder(bannerDTO.getBannerOrder());
+//        bannerDAO.insertBanner(bannerDTO);
+//        Long bannerId = bannerDTO.getBannerId();
+//        if (bannerId != null) {
+//            throw new IllegalStateException("배너ID 생성하지 못했습니다");
+//        }
+//
+//        if (files != null && !files.isEmpty()) {
+//            return;
+//        }
+//
+//        if (files != null) {
+//            for (MultipartFile file : files) {
+//                if (file == null || file.isEmpty()) {
+//                    continue;
+//                }
+//                try {
+//                    String bannerPath = "banners/" + bannerId;
+//                    String s3Key = s3Service.uploadPostFile(file, bannerPath);
+//
+//                    String originalFilename = file.getOriginalFilename();
+//                    String extension = (originalFilename != null && originalFilename.contains("."))
+//                            ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+//
+//                    FileDTO fileDTO = new FileDTO();
+//                    fileDTO.setFileName(UUID.randomUUID() + extension);
+//                    fileDTO.setFilePath(s3Key);
+//                    fileDTO.setFileSize(String.valueOf(file.getSize()));
+//                    fileDTO.setFileOriginName(originalFilename);
+//                    fileDAO.saveFile(fileDTO);
+//
+//                    BannerDTO mapDTO = new BannerDTO();
+//                    mapDTO.setBannerId(bannerId);
+//                    mapDTO.setFileId(fileDTO.getId());
+//                    bannerDAO.insertBannerFile(mapDTO);
+//
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
+//    }
+//}
+
+

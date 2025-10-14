@@ -6,6 +6,7 @@ import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.domain.guest.GuestVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.payment.PaymentDTO;
+import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.repository.alarm.AlarmDAO;
 import com.example.crewstation.repository.guest.GuestDAO;
@@ -14,11 +15,13 @@ import com.example.crewstation.repository.payment.PaymentDAO;
 import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.service.sms.SmsService;
+import com.example.crewstation.util.Criteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -32,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final MemberDAO memberDAO;
     private final GuestDAO guestDAO;
     private final SmsService smsService;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,6 +79,26 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 결제 상태 업데이트
         paymentStatusDAO.updatePaymentStatus(purchaseId, PaymentPhase.SUCCESS);
+    }
+
+    @Override
+    public void selectPayment(Criteria criteria, PaymentCriteriaDTO PaymentCriteriaDTO) {
+
+    }
+
+    @Override
+    public void selectPayment(int page) {
+        int total = paymentStatusDAO.countPayment();
+        Criteria criteria = new Criteria(page, total, 16, 10);
+
+        List<PaymentCriteriaDTO> paymentCriteriaDTOS = paymentStatusDAO.adminPaymentList(criteria);
+
+        PaymentCriteriaDTO paymentCriteriaDTO = new PaymentCriteriaDTO();
+        paymentCriteriaDTO.getCriteria();
+
+        return;
+
+
     }
 
 

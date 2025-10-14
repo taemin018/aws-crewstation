@@ -17,4 +17,26 @@ public class BannerDAO {
     public List<BannerDTO> getBanners(@Param("limit") int limit) {
         return bannerMapper.getBanners(limit);
     }
+
+//    배너 추가
+    public void insertBanner(BannerDTO bannerDTO) {
+        bannerMapper.insertBanner(bannerDTO);
+    }
+
+//    배너 파일 추가
+    public void insertBannerFile(BannerDTO bannerDTO) {
+        bannerMapper.insertBannerFile(bannerDTO);
+    }
+
+//    배너 수정
+    public void updateBannerFile(BannerDTO bannerDTO) {
+        bannerMapper.updateBannerFile(bannerDTO);
+    }
+
+//    배너 삭제
+    public void deleteBanner(@Param("bannerId") Long bannerId) {
+        bannerMapper.deleteBanner(bannerId);
+    }
+
+
 }

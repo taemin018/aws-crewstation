@@ -25,4 +25,24 @@
         WHERE purchase_id = #{purchaseId}
     </update>
 
+    <select id="countPayment">
+        select count(*)
+        from tbl_payment_status
+
+    </select>
+
+    <select id="selectPayment">
+        select
+            id,
+            payment_phase,
+            purchase_id,
+            created_datetime,
+            updated_datetime,
+            member_id
+
+        from tbl_payment_status
+        limit #{rowCount} offset #{offset}
+
+    </select>
+
 </mapper>
