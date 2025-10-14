@@ -76,7 +76,7 @@ replyInput.addEventListener("keydown",async (e)=>{
         const {message,status}=await replyService.write({"postId":postId,"replyContent":replyInput.value})
         if(status ===404){
             location.href = "/diaries"
-        } else if(status ===403){
+        } else if(status===401 || status === 403){
             toastModal(message);
         }
 

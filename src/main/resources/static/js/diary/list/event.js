@@ -13,18 +13,21 @@ if (toggleBtn && dropdown) {
     // 메뉴 클릭 시 버튼 텍스트 변경
     dropdown.querySelectorAll("li").forEach((item) => {
         item.addEventListener("click", async () => {
+            console.log("불통")
             if (!btnCheck) return;
+            console.log("허락")
             btnCheck = false;
             toggleBtn.childNodes[0].nodeValue = item.textContent + " ";
+            setTimeout(() => {
+                btnCheck = true
+            }, 1500);
             if (orderType === item.dataset.value) {
                 return;
             }
             orderType = item.dataset.value
             await showList(page, keyword, orderType, category, true);
             dropdown.style.display = "none";
-            setTimeout(() => {
-                btnCheck = true
-            }, 1500);
+
         });
     });
 
