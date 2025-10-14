@@ -1,10 +1,7 @@
 package com.example.crewstation.mapper.member;
 
 import com.example.crewstation.domain.member.MemberVO;
-import com.example.crewstation.dto.member.MemberDTO;
-import com.example.crewstation.dto.member.MemberProfileDTO;
-import com.example.crewstation.dto.member.MySaleListDTO;
-import com.example.crewstation.dto.member.MemberStatics;
+import com.example.crewstation.dto.member.*;
 import com.example.crewstation.util.Search;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -58,6 +55,9 @@ public interface MemberMapper {
 
 //  나의 판매내역 목록
     public List<MySaleListDTO> selectMySaleList(@Param("memberId") Long memberId);
+
+//  나의 구매내역 상세
+    public List<MyPurchaseDetailDTO>  selectMyPurchaseDetail(@Param("purchaseId") Long purchaseId);
 
 //    월별 가입자 수
     public List<MemberStatics> selectMonthlyJoin();
