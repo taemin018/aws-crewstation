@@ -425,11 +425,11 @@ public class DiaryServiceImpl implements DiaryService {
         diaryCountryVOs = toDiaryCountryVO(request);
         diaryCountryVOs.forEach(diaryCountryDAO::save);
 
-        if (request.getCrewId() != null) {
-            crewDiaryDAO.save(CrewDiaryVO.builder().diaryId(request.getPostId()).crewId(request.getCrewId()).build());
-        }else{
-            diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
-        }
+//        if (request.getCrewId() != null) {
+//            crewDiaryDAO.save(CrewDiaryVO.builder().diaryId(request.getPostId()).crewId(request.getCrewId()).build());
+//        }else{
+//            diaryDiaryPathDAO.save(toDiaryDiaryPathVO(request));
+//        }
         images.forEach(image -> {
             MultipartFile file = image.getImage();
             log.info(":::::::::::::{}", image.toString());
