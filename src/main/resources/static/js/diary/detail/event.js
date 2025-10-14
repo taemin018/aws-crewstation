@@ -106,7 +106,7 @@ submitReportBtn.addEventListener("click", (e) => {
 
 // 신고하기 창 제출/끄기 후 첫번째 라디오 버튼 선택
 
-
+console.log(document.querySelector("input[name='reason']:checked").value);
 confirmReportYes.addEventListener("click", async (e) => {
 
     const reportContent = document.querySelector("input[name='reason']:checked").value;

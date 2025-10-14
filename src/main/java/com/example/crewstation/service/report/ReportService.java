@@ -1,5 +1,6 @@
 package com.example.crewstation.service.report;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.report.post.ReportPostVO;
 import com.example.crewstation.domain.report.reply.ReportReplyVO;
 import com.example.crewstation.dto.report.ReportDTO;
@@ -10,9 +11,9 @@ import java.util.List;
 public interface ReportService {
 
     //  신고하기
-    public void report(ReportDTO reportDTO);
+    public void report(ReportDTO reportDTO, CustomUserDetails userDetails);
 
-    public void reportReply(ReportDTO reportDTO);
+    public void reportReply(ReportDTO reportDTO,CustomUserDetails userDetails);
 
     //    관리자 다이어리 신고 목록
     public List<ReportPostDTO> getReportDiaries(int page);

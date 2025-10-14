@@ -1,8 +1,10 @@
 package com.example.crewstation.service.report;
 
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.ProcessStatus;
 import com.example.crewstation.common.enumeration.Status;
+import com.example.crewstation.common.exception.MemberNotFoundException;
 import com.example.crewstation.common.exception.PostNotActiveException;
 import com.example.crewstation.dto.report.ReportDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
@@ -28,7 +30,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @LogStatus
-    public void report(ReportDTO reportDTO) {
+    public void report(ReportDTO reportDTO, CustomUserDetails userDetails) {
+
         boolean isExist = postDAO.isActivePost(reportDTO.getPostId());
         log.info("{}",isExist);
         log.info("{}",reportDTO.toString());
@@ -36,6 +39,10 @@ public class ReportServiceImpl implements ReportService {
         if(!isExist){
             throw new PostNotActiveException("이미 삭제된 상품입니다.");
         }
+        if(userDetails !=null){
+            throw new MemberNotFoundException("로그인 후 사용 가능");
+        }
+        reportDTO.setMemberId(userDetails.getId());
         reportDAO.saveReport(reportDTO);
 
         reportDAO.saveReportPost(toReportPostVO(reportDTO));
@@ -44,7 +51,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @LogStatus
-    public void reportReply(ReportDTO reportDTO) {
+    public void reportReply(ReportDTO reportDTO,CustomUserDetails userDetails) {
+
         boolean isExist = postDAO.isActivePost(reportDTO.getPostId());
         log.info("{}",isExist);
         log.info("{}",reportDTO.toString());
@@ -52,6 +60,10 @@ public class ReportServiceImpl implements ReportService {
         if(!isExist){
             throw new PostNotActiveException("이미 삭제된 다이어리입니다.");
         }
+        if(userDetails == null){
+            throw new MemberNotFoundException("로그인 후 사용 가능");
+        }
+        reportDTO.setMemberId(userDetails.getId());
         reportDAO.saveReport(reportDTO);
         reportDAO.saveReportReply(toReportReplyVO(reportDTO));
     }

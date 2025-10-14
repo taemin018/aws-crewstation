@@ -1339,3 +1339,7 @@ div.modify-container{
     justify-content: center;
     padding: 10px;
 }
+
+footer{
+    /*margin-top: 300px !important;*/
+}

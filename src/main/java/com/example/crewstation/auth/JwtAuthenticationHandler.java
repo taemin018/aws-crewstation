@@ -18,8 +18,12 @@ public class JwtAuthenticationHandler implements AuthenticationEntryPoint {
         log.error("AuthenticationEntryPoint Exception: {}", authException.getMessage());
         if(request.getRequestURI().startsWith("/api/")){
 //            REST 요청인 경우
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-
+            log.error("AuthenticationEntryPoint Exception: {}", authException.getMessage());
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("로그인 후 사용 가능");
+            response.getWriter().flush();
         }else{
             if (request.getRequestURI().startsWith("/mobile/")) {
                 response.sendRedirect("/mobile/login");

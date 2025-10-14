@@ -2,6 +2,7 @@ package com.example.crewstation.controller.admin;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.notice.NoticeDetailVO;
+import com.example.crewstation.domain.payment.PaymentVO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;

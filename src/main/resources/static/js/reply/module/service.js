@@ -80,15 +80,16 @@ const replyService = (() => {
             body: JSON.stringify(report),
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            redirect: 'manual'
         });
         if (response.ok) {
             console.log("기프트 존재")
         } else if (response.status === 404) {
             console.log("기프트 없음")
         } else {
-            const error = await response.text()
-            console.log(error);
+            // const error = await response.text()
+            console.log(response);
         }
         message = await response.text();
         return {message: message, status: response.status}

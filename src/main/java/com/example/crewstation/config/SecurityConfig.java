@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/admin/login",
+                                "/api/payment",
                                 "/api/auth/**",
                                 "/api/admin/auth/**",
                                 "/member/join",
@@ -79,7 +80,6 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/",
-                                "/api/likes/**",
                                 "/diaries",
                                 "/diaries/detail/**",
                                 "/api/diaries",
@@ -96,6 +96,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/diaries",
                                 "/diaries/write",
+                                "/api/likes/**",
+                                "/api/report/**",
                                 "/diaries/{postId:\\d+}",
                                 "/api/diaries",
                                 "/api/likes/**",
