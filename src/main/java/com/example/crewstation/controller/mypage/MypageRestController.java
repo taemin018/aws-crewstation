@@ -28,34 +28,34 @@ public class MypageRestController {
     private final PurchaseService purchaseService;
 
     // 구매 상세
-//    @GetMapping("/purchase-detail/{postId}")
-//    public ResponseEntity<PurchaseDetailDTO> getOrderDetail(@PathVariable Long postId) {
-//        Optional<PurchaseDetailDTO> orderDetailOpt = purchaseService.getPurchaseDetail(postId);
-//
-//        if (orderDetailOpt.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        return ResponseEntity.ok(orderDetailOpt.get());
-//    }
-//
-//    // 결제 상태 업데이트
-//    @PutMapping("/purchase-detail/{purchaseId}/status")
-//    public ResponseEntity<Void> updatePaymentStatus(
-//            @PathVariable Long purchaseId,
-//            @RequestParam PaymentPhase paymentPhase) {
-//
-//        Optional<PurchaseDetailDTO> orderOpt = purchaseService.getPurchaseDetail(purchaseId);
-//
-//        if (orderOpt.isEmpty()) {
-//            log.warn("Order not found: {}", purchaseId);
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        PurchaseDetailDTO order = orderOpt.get();
-//        purchaseService.updatePaymentStatus(order.getPurchaseId(), paymentPhase);
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/purchase-detail/{postId}")
+    public ResponseEntity<PurchaseDetailDTO> getOrderDetail(@PathVariable Long postId) {
+        Optional<PurchaseDetailDTO> orderDetailOpt = purchaseService.getPurchaseDetail(postId);
+
+        if (orderDetailOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(orderDetailOpt.get());
+    }
+
+    // 결제 상태 업데이트
+    @PutMapping("/purchase-detail/{purchaseId}/status")
+    public ResponseEntity<Void> updatePaymentStatus(
+            @PathVariable Long purchaseId,
+            @RequestParam PaymentPhase paymentPhase) {
+
+        Optional<PurchaseDetailDTO> orderOpt = purchaseService.getPurchaseDetail(purchaseId);
+
+        if (orderOpt.isEmpty()) {
+            log.warn("Order not found: {}", purchaseId);
+            return ResponseEntity.notFound().build();
+        }
+
+        PurchaseDetailDTO order = orderOpt.get();
+        purchaseService.updatePaymentStatus(order.getPurchaseId(), paymentPhase);
+        return ResponseEntity.ok().build();
+    }
 
 //  판매 내역 목록 조회
     @GetMapping("/list")
