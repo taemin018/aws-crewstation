@@ -56,11 +56,13 @@ public class SecurityConfig {
 //                세션 정책을 무상태(stateless) 로 설정, 서버에 세션을 저장하지 않기 때문
 //                상태 존재: 서버가 클라이언트의 상태를 기억하는 경우
 //                상태 없음: 서버가 클라이언트의 상태를 저장하지 않는 경우
-//                JWT 기반 인증은 무상태(stateless) 인증 방식
+//                JWT 기반 인증은 무상태(stateless) 인증 방식ß
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/admin/login",
                                 "/api/auth/**",
+                                "/api/admin/auth/**",
                                 "/member/join",
                                 "/member/login",
                                 "/member/sns/join",
