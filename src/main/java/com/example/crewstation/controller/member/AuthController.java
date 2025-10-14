@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -44,8 +43,8 @@ AuthController implements AuthControllerDocs{
                     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberDTO.getMemberEmail(), memberDTO.getMemberPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String accessToken = jwtTokenProvider.createAccessToken(((UserDetails) authentication.getPrincipal()).getUsername());
-            String refreshToken = jwtTokenProvider.createRefreshToken(((UserDetails) authentication.getPrincipal()).getUsername());
+            String accessToken = jwtTokenProvider.createAccessToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
+            String refreshToken = jwtTokenProvider.createRefreshToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
 
             Map<String, String> tokens = new HashMap<>();
             tokens.put("accessToken", accessToken);
@@ -119,10 +118,10 @@ AuthController implements AuthControllerDocs{
         }
 
         CustomUserDetails customUserDetails = (CustomUserDetails) jwtTokenProvider.getAuthentication(refreshToken).getPrincipal();
-        String accessToken = jwtTokenProvider.createAccessToken(customUserDetails.getUsername());
+        String accessToken = jwtTokenProvider.createAccessToken(customUserDetails.getUserEmail());
 
         jwtTokenProvider.deleteRefreshToken(username);
-        jwtTokenProvider.createRefreshToken(customUserDetails.getUsername());
+        jwtTokenProvider.createRefreshToken(customUserDetails.getUserEmail());
 
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("accessToken", accessToken);
