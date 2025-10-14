@@ -32,21 +32,21 @@ values ('test1', 1),
        ('test14', 1);
 
 insert into tbl_post_section (post_content, post_id)
-values ('test1', 1),
-       ('test2', 2),
-       ('test3', 3),
-       ('test4', 4),
-       ('test5', 5),
-       ('test6', 6),
-       ('test7', 7),
-       ('test8', 8),
-       ('test9', 9),
-       ('test10', 10),
-       ('test11', 11),
-       ('test12', 12),
-       ('test13', 13),
-       ('test14', 14);
-
+values ('test1', 33),
+       ('test2', 34),
+       ('test3', 35),
+       ('test4', 36),
+       ('test5', 37),
+       ('test6', 38),
+       ('test7', 39),
+       ('test8', 40),
+       ('test9', 41),
+       ('test10', 42),
+       ('test11', 43),
+       ('test12', 44),
+       ('test13', 45),
+       ('test14', 46);
+select * from tbl_post;
 insert into tbl_file(file_origin_name, file_path, file_name)
 values ('origin1', 'path1', 'name1'),
        ('origin2', 'path2', 'name2'),
@@ -81,20 +81,20 @@ values (1, 1, 'main'),
 
 insert into tbl_purchase (post_id, purchase_limit_time, purchase_product_count, purchase_country,
                           purchase_product_price, purchase_delivery_method)
-values (1, 24, 10, '호주', 10000, 'direct'),
-       (2, 24, 10, '미국', 10000, 'parcel'),
-       (3, 24, 10, '한국', 10000, 'direct'),
-       (4, 24, 10, '일본', 10000, 'parcel'),
-       (5, 24, 10, '필리핀', 10000, 'direct'),
-       (6, 24, 10, '캐나다', 10000, 'parcel'),
-       (7, 24, 10, '보라카이', 10000, 'direct'),
-       (8, 24, 10, '화와이', 10000, 'parcel'),
-       (9, 24, 10, '런던', 10000, 'direct'),
-       (10, 24, 10, '영국', 10000, 'parcel'),
-       (11, 24, 10, '중국', 10000, 'direct'),
-       (12, 24, 10, '대만', 10000, 'parcel'),
-       (13, 24, 10, '홍콩', 10000, 'direct'),
-       (14, 24, 10, '러시아', 10000, 'parcel');
+values (33, 24, 10, '호주', 10000, 'direct'),
+       (34, 24, 10, '미국', 10000, 'parcel'),
+       (35, 24, 10, '한국', 10000, 'direct'),
+       (36, 24, 10, '일본', 10000, 'parcel'),
+       (37, 24, 10, '필리핀', 10000, 'direct'),
+       (38, 24, 10, '캐나다', 10000, 'parcel'),
+       (39, 24, 10, '보라카이', 10000, 'direct'),
+       (40, 24, 10, '화와이', 10000, 'parcel'),
+       (41, 24, 10, '런던', 10000, 'direct'),
+       (42, 24, 10, '영국', 10000, 'parcel'),
+       (43, 24, 10, '중국', 10000, 'direct'),
+       (44, 24, 10, '대만', 10000, 'parcel'),
+       (45, 24, 10, '홍콩', 10000, 'direct'),
+       (46, 24, 10, '러시아', 10000, 'parcel');
 set timezone = 'Asia/Seoul';
 select now();
 

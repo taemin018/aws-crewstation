@@ -63,11 +63,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ReportPostDTO getReportDiaryDetail(Long reportId) {
-        return reportDAO.findReportDiaryDetail(reportId);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void hidePost(Long postId) {
         log.info("게시글 숨김 postId={}", postId);

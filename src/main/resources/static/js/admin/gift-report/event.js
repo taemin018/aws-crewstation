@@ -1,3 +1,40 @@
+// 무한 스크롤
+let page = 1;
+let checkScroll = true;
+let hasMore = true;
+
+const loadReportGiftList = async (page = 1) => {
+    // console.log("페이지: ", page);
+
+    const reports = await reportService.getReports(page);
+    // console.log("불러온 결과", reports);
+
+    giftReportLayout.showReportGiftList(reports);
+
+    hasMore = reports.length > 0;
+};
+
+loadReportGiftList(page);
+
+const scrollContainer = document.querySelector("#bootpay-main");
+
+scrollContainer.addEventListener("scroll", async () => {
+    const scrollTop = scrollContainer.scrollTop;
+    const clientHeight = scrollContainer.clientHeight;
+    const scrollHeight = scrollContainer.scrollHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+        if (checkScroll && hasMore) {
+            checkScroll = false;
+            await loadReportGiftList(++page);
+            setTimeout(() => {
+                if (hasMore) checkScroll = true;
+            }, 800);
+        }
+    }
+});
+
+
 // =============== 사이드바 ===============
 (() => {
     const side = document.querySelector("#bootpay-side");
@@ -40,7 +77,7 @@
                     panel.classList.add("show");
                     panel.style.display = "block";
                     btn.classList.add("current");
-                    btn.closest("li")?.classList.add("open");
+                    btn.closest("li").classList.add("open");
                 }
             }
         );
@@ -62,7 +99,6 @@
     side.addEventListener("click", (e) => {
         const subLink = e.target.closest(".menu-sub-list .boot-link");
         if (subLink && side.contains(subLink)) {
-            e.preventDefault();
             const ul = subLink.closest(".menu-sub-list");
             ul.querySelectorAll(".boot-link.active").forEach((a) =>
                 a.classList.remove("active")
@@ -81,7 +117,6 @@
 
         const btnTop = e.target.closest(".menu-item > .menu-btn");
         if (!btnTop || !side.contains(btnTop)) return;
-        e.preventDefault();
 
         const panel = btnTop.nextElementSibling;
         const hasPane = panel && panel.classList.contains("menu-sub-list");
@@ -94,7 +129,7 @@
             panel.classList.add("show");
             panel.style.display = "block";
             btnTop.classList.add("current");
-            btnTop.closest("li")?.classList.add("open");
+            btnTop.closest("li").classList.add("open");
         }
     });
 })();
@@ -117,7 +152,6 @@
     };
 
     btn.addEventListener("click", (e) => {
-        e.preventDefault();
         toggle();
     });
 
@@ -150,24 +184,24 @@
         currentRow = row;
 
         const title =
-            row.querySelector(".post-title")?.textContent.trim() ?? "-";
+            row.querySelector(".post-title").textContent.trim() ?? "-";
         const author =
-            row.querySelector(".post-meta b")?.textContent.trim() ?? "-";
+            row.querySelector(".post-meta b").textContent.trim() ?? "-";
         const postIdText =
             row
                 .querySelector(".post-meta .meta:last-child")
-                ?.textContent.trim() ?? "postId: -";
+                .textContent.trim() ?? "postId: -";
         const postId = postIdText.replace(/^postId:\s*/i, "") || "-";
         const reason =
-            row.querySelector(".reason-badge")?.textContent.trim() ?? "-";
+            row.querySelector(".reason-badge").textContent.trim() ?? "-";
         const reporterName =
-            row.querySelector("td:nth-child(3) b")?.textContent.trim() ?? "-";
+            row.querySelector("td:nth-child(3) b").textContent.trim() ?? "-";
         const reporterEmail =
             row
                 .querySelector("td:nth-child(3) .text-muted")
-                ?.textContent.trim() ?? "-";
+                .textContent.trim() ?? "-";
         const reportedAt =
-            row.querySelector("td:nth-child(4)")?.textContent.trim() ?? "-";
+            row.querySelector("td:nth-child(4)").textContent.trim() ?? "-";
         const badgeInRow = row.querySelector(".approval-status");
 
         // 데이터 바인딩
@@ -212,55 +246,58 @@
         });
     };
 
-    // 모달 닫기
-    const closeModal = () => {
-        modal.classList.remove("show");
-        document.body.classList.remove("modal-open");
-        setTimeout(() => {
-            modal.style.display = "none";
-        }, 120);
-    };
-
-    // 상세보기 버튼 -> 모달 오픈
-    viewBtns.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            const row = e.currentTarget.closest("tr");
-            if (!row) return;
-            openModalFromRow(row);
-        });
+    document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".action-btn.view");
+        if (!btn) return;
+        const row = btn.closest("tr");
+        if (!row) return;
+        openModalFromRow(row);
     });
 
-    // 닫기 버튼들
-    closeBtns.forEach((b) => b.addEventListener("click", closeModal));
-
-    // 오버레이 클릭 닫기
     modal.addEventListener("click", (e) => {
         if (e.target === modal) closeModal();
     });
 
-    // 처리/반려 버튼 -> 테이블 갱신 후 닫기
-    const approveBtn = modal.querySelector(".btn-approve");
-    const rejectBtn = modal.querySelector(".btn-reject");
+    const closeModal = () => {
+        modal.classList.remove("show");
+        document.body.classList.remove("modal-open");
+        setTimeout(() => (modal.style.display = "none"), 120);
+    };
 
+    closeBtns.forEach((b) => b.addEventListener("click", closeModal));
+
+    // 처리 버튼
+    const approveBtn = modal.querySelector(".btn-approve");
     approveBtn &&
-        approveBtn.addEventListener("click", () => {
-            if (!currentRow) return;
-            const badge = currentRow.querySelector(".approval-status");
-            if (!badge) return;
+    approveBtn.addEventListener("click", async () => {
+        if (!currentRow) return;
+
+        const reportId = currentRow.dataset.reportId;
+        const postIdText = currentRow.querySelector(".post-meta .meta:last-child").textContent.trim() ?? "";
+        const postId = postIdText.replace(/^postId:\s*/i, "");
+        const hidePost = modal.querySelector(".cb-hide-post").checked || false;
+
+        const ok = await reportService.processReport(reportId, postId, hidePost);
+        if (!ok) {
+            alert("신고 처리에 실패했습니다.");
+            return;
+        }
+
+        // 테이블 배지
+        const badge = currentRow.querySelector(".approval-status");
+        if (badge) {
             badge.textContent = "처리완료";
             badge.classList.remove("status-pending", "status-rejected");
             badge.classList.add("status-resolved");
-            closeModal();
-        });
+        }
 
-    rejectBtn &&
-        rejectBtn.addEventListener("click", () => {
-            if (!currentRow) return;
-            const badge = currentRow.querySelector(".approval-status");
-            if (!badge) return;
-            badge.textContent = "반려";
-            badge.classList.remove("status-pending", "status-resolved");
-            badge.classList.add("status-rejected");
-            closeModal();
-        });
+        // 모달 배지
+        const badgeInModal = modal.querySelector('[data-bind="statusBadge"]');
+        if (badgeInModal) {
+            badgeInModal.className = "status-badge status-resolved";
+            badgeInModal.textContent = "처리완료";
+        }
+
+        closeModal();
+    });
 })();
