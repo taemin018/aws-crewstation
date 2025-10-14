@@ -7,7 +7,9 @@ import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.dto.notice.NoticeCriteriaDTO;
 import com.example.crewstation.dto.notice.NoticeWriteRequest;
+import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
+import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.service.banner.BannerService;
 import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
@@ -38,6 +40,8 @@ public class AdminRestController {
     private final NoticeDetailService noticeDetailService;
     private final ReportService reportService;
     private final GiftService giftService;
+    private final PaymentStatusDAO paymentStatusDAO;
+    private final PaymentService paymentService;
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -133,10 +137,13 @@ public class AdminRestController {
     }
 
     //    결제 목록
-//    @GetMapping("/payment")
-//    public ResponseEntity<PaymentVO> getPayment(@RequestParam(defaultValue = "1") int page) {
-//        int safePage = Math.max(1, page);
-//    }
+    @GetMapping("/payment")
+    public ResponseEntity<?> getPayment(@RequestParam(defaultValue = "1") int page) {
+        int safePage = Math.max(1, page);
+        List<PaymentCriteriaDTO> paymentList = paymentService.selectPayment(safePage);
+
+        return ResponseEntity.ok(paymentList);
+    }
 
 
 }
