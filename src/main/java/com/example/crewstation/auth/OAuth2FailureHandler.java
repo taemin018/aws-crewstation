@@ -23,9 +23,9 @@ public class OAuth2FailureHandler implements AuthenticationFailureHandler {
         boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
 
         if (isMobile) {
-            response.sendRedirect("/member/mobile/login");
+            response.sendRedirect("/mobile/login");
         } else {
-            response.sendRedirect("/member/web/login");
+            response.sendRedirect("/member/login");
         }
     }
 }

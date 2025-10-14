@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -59,7 +60,60 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/**").permitAll()
+                                "/api/auth/**",
+                                "/member/join",
+                                "/member/login",
+                                "/member/sns/join",
+                                "/mobile/join",
+                                "/mobile/login",
+                                "/mobile/sns/join",
+                                "/member/forgot-password",
+                                "api/member/**",
+                                "/member/reset-password-success",
+                                "/mobile/reset-password-success",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/",
+                                "/api/likes/**",
+                                "/diaries",
+                                "/diaries/write",
+                                "/diaries/detail/**",
+                                "/diaries/**",
+                                "/api/diaries",
+                                "/api/replies/**",
+                                "/gifts",
+                                "/gifts/detail/**",
+                                "/gifts/write",
+                                "/gifts/**",
+                                "/api/gifts")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/diaries",
+                                "/diaries/write",
+                                "/diaries/detail/**",
+                                "/diaries/{postId:\\d+}",
+                                "/api/diaries",
+                                "/api/likes/**",
+                                "/api/replies/{postId:\\d+}",
+                                "/gifts",
+                                "/gifts/detail/{postId:\\d+}",
+                                "/gifts/write",
+                                "/gifts/{postId:\\d+}",
+                                "/api/gifts")
+                        .authenticated()
+                        .requestMatchers(HttpMethod.GET,
+                                "/diaries/delete/{postId:\\d+}",
+                                "/gifts/delete/{postId:\\d+}")
+                        .authenticated()
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/replies")
+                        .authenticated()
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/replies")
+                        .authenticated()
                         .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
