@@ -75,7 +75,7 @@ const replyService = (() => {
         let status = null;
         let message = null;
         let result = null;
-        const response = await fetch("/api/post/report/replies", {
+        const response = await fetch("/api/report/replies", {
             method: 'POST',
             body: JSON.stringify(report),
             headers: {

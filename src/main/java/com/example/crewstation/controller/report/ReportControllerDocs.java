@@ -1,19 +1,17 @@
-package com.example.crewstation.controller.post;
+package com.example.crewstation.controller.report;
 
 import com.example.crewstation.auth.CustomUserDetails;
-import com.example.crewstation.dto.like.LikeDTO;
 import com.example.crewstation.dto.report.ReportDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 // http://localhost:10000/swagger-ui/index.html
-@Tag(name = "Post", description = "Post API")
-public interface PostControllerDocs {
+@Tag(name = "Report", description = "Report API")
+public interface ReportControllerDocs {
     @Operation(summary = "게시글 신고",
     description = "게시글 본문 내용 신고하기",
     parameters = {

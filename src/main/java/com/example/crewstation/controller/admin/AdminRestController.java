@@ -2,7 +2,6 @@ package com.example.crewstation.controller.admin;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.notice.NoticeDetailVO;
-import com.example.crewstation.domain.notice.NoticeVO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
@@ -13,7 +12,6 @@ import com.example.crewstation.service.gift.GiftService;
 import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
 import com.example.crewstation.service.notice.NoticeService;
-import com.example.crewstation.service.post.PostService;
 import com.example.crewstation.service.report.ReportService;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +34,6 @@ public class AdminRestController {
     private final MemberService memberService;
     private final NoticeService noticeService;
     private final NoticeDetailService noticeDetailService;
-    private final PostService postService;
     private final ReportService reportService;
     private final GiftService giftService;
 
@@ -91,7 +88,7 @@ public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails
     @GetMapping("/diaries")
     public ResponseEntity<?> getReportDiaryList(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
-        List<ReportPostDTO> reports = postService.getReportDiaries(safePage);
+        List<ReportPostDTO> reports = reportService.getReportDiaries(safePage);
         return ResponseEntity.ok(reports);
     }
 
@@ -102,7 +99,7 @@ public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails
         log.info("다이어리 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
         if (hidePost && postId != null) {
-            postService.hidePost(postId);
+            reportService.hidePost(postId);
         }
 
         reportService.resolveReport(reportId);
@@ -125,7 +122,7 @@ public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails
         log.info("기프트 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
         if (hidePost && postId != null) {
-            postService.hidePost(postId);
+            reportService.hidePost(postId);
         }
 
         reportService.resolveReport(reportId);
