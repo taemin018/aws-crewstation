@@ -1,6 +1,6 @@
 const diaryReportLayout = (() => {
     const diaryReport = document.querySelector(".table-reports tbody");
-    const showReportDiaryLst = (reportDiary) => {
+    const showReportDiaryList = (reportDiary) => {
         reportDiary.forEach((diary) => {
             const reportTr = document.createElement("tr");
             reportTr.dataset.reportId = diary.reportId;
@@ -48,5 +48,5 @@ const diaryReportLayout = (() => {
         })
     }
 
-    return { showReportDiaryLst: showReportDiaryLst };
+    return { showReportDiaryList: showReportDiaryList };
 })();

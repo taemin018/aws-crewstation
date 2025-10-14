@@ -18,9 +18,6 @@ public interface PostService {
 //    관리자 다이어리 신고 목록
     public List<ReportPostDTO> getReportDiaries(int page);
 
-//    관리자 다이어리 신고 상세
-    public ReportPostDTO getReportDiaryDetail(Long reportId);
-
 //    게시글 숨김
     public void hidePost(Long postId);
 

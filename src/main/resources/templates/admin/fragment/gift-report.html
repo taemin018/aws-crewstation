@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/admin/sidebar.css">
     <link rel="stylesheet" href="/css/admin/diary-report.css">
     <link rel="stylesheet" href="/css/admin/font.css">
-    <link rel="shortcut icon" href="../../../static/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 </head>
 <body>
@@ -56,12 +56,12 @@
                         <li class="menu menu-item d-flex flex-column">
                             <!-- 클릭 이벤트 -->
                             <!-- 회원 목록 클릭 시 collipse 열고 닫기 이벤트 -->
-                            <a class="menu-btn d-flex w-100 " data-toggle="collapse" >
+                            <a class="menu-btn d-flex w-100 active current" data-toggle="collapse" >
                                 <span class="menu-name">신고</span>
                                 <div class="icon-wrapper flex-grow-1 text-right">
                                 </div>
                             </a>
-                            <ul class="menu-sub-list collapse" >
+                            <ul class="menu-sub-list collapse show" >
                                 <li class="submenu menu-item ">
                                     <a class="boot-link " data-param="0">
                                         
@@ -183,61 +183,7 @@
                                     </thead>
                                   
                                     <tbody>
-                                      <!-- 신고 내역 1 -->
-                                      <tr data-status="PENDING">
-                                        <td class="td-post">
-                                          <div class="post-title">에펠탑 열쇠고리</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48321</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-danger">욕설이나 비방이 심해요</span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@gmail.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 20:59:36</td>
-                                  
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                          
-                                          
-                                      </tr>
-                                  
-                                      <!-- 신고 내역 2 -->
-                                      <tr data-status="RESOLVED">
-                                        <td class="td-post">
-                                          <div class="post-title">몽골 모자</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48377</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-danger">이 글로 도배가 돼있어요</span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@naver.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 21:10:22</td>
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                      </tr>
-                                      
+                                      <!-- 기프트 신고 목록 -->
                                     </tbody>
                                   </table>
                                   
@@ -301,14 +247,11 @@
                                       <!-- 관리 -->
                                       <div class="admin-actions">
                                         <label><input type="checkbox" class="cb-hide-post"> 게시글 숨김</label>
-                                        <label><input type="checkbox" class="cb-block-author"> 작성자 제한(일시)</label>
-                                        <label><input type="checkbox" class="cb-warn"> 경고 발송</label>
                                       </div>
                                     </div>
                               
                                     <div class="modal-footer report-footer">
                                         <button class="btn outline btn-approve">처리</button>
-                                        <button class="btn primary btn-reject">반려</button>
                                         <button class="btn soft btn-close">닫기</button>
                                       </div>
                                       
@@ -325,7 +268,7 @@
     </div>
 </div>
 </body>
-<script src="/static/js/admin/gift-report/module/layout.js"></script>
-<script src="/static/js/admin/gift-report/module/service.js"></script>
-<script src="/static/js/admin/gift-report/event.js"></script>
+<script src="/js/admin/gift-report/module/layout.js"></script>
+<script src="/js/admin/gift-report/module/service.js"></script>
+<script src="/js/admin/gift-report/event.js"></script>
 </html>
