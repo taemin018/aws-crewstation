@@ -159,7 +159,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    @LogReturnStatus
+//    @LogReturnStatus
     public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails) {
         DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
         Search newSearch = new Search();
@@ -182,7 +182,10 @@ public class DiaryServiceImpl implements DiaryService {
             }
             if (customUserDetails != null) {
                 diary.setUserId(customUserDetails.getId());
+                log.info("아이ㅣㄷ:{}", customUserDetails.getId());
                 diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));
+                log.info("{}::::",diary);
+                log.info(":::::::{}",likeDAO.isLikeByPostIdAndMemberId(diary));
             }
 //            diary.setUserId(1L); // 임시
 //            diary.setLikeId(likeDAO.isLikeByPostIdAndMemberId(diary));

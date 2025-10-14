@@ -21,7 +21,7 @@ const diaryDetailService = (() => {
         let status = null;
         let message = null;
         let result = null;
-        const response = await fetch("/api/post/report", {
+        const response = await fetch("/api/report", {
             method: 'POST',
             body: JSON.stringify(report),
             headers: {
