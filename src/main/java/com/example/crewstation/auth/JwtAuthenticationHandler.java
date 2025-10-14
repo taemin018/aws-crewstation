@@ -21,8 +21,13 @@ public class JwtAuthenticationHandler implements AuthenticationEntryPoint {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 
         }else{
+            if (request.getRequestURI().startsWith("/mobile/")) {
+                response.sendRedirect("/mobile/login");
+            } else {
+
 //            일반 웹 요청인 경우
-            response.sendRedirect("/member/web/login");
+                response.sendRedirect("/member/login");
+            }
         }
     }
 }

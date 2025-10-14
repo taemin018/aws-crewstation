@@ -16,7 +16,7 @@ purchases.forEach((purchase) => {
 
     let text = title.innerText;
 
-    if (text === "승락대기") {
+    if (text === "수락대기") {
         request++;
     } else if (text === "결제완료") {
         paymentOk++;

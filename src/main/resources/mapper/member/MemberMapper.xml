@@ -84,6 +84,7 @@
         select tm.id as id,
                tm.member_name,
                tm.member_email,
+               tm.member_social_email,
                tm.social_img_url,
                vfmf.file_path
         from tbl_member tm left outer join view_file_member_file vfmf on tm.id = vfmf.member_id and member_status = 'active' and member_role = 'member'
@@ -157,6 +158,8 @@
         from tbl_member tm
         where tm.id = #{memberId}
     </select>
+
+
 
     <!-- 나의 판매내역 목록 조회 -->
     <select id="selectMySaleList">

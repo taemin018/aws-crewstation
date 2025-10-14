@@ -17,6 +17,10 @@ import com.example.crewstation.service.notice.NoticeDetailService;
 import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.payment.PaymentService;
 import com.example.crewstation.service.post.PostService;
+import com.example.crewstation.service.gift.GiftService;
+import com.example.crewstation.service.member.MemberService;
+import com.example.crewstation.service.notice.NoticeDetailService;
+import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.report.ReportService;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +43,10 @@ public class AdminRestController {
     private final MemberService memberService;
     private final NoticeService noticeService;
     private final NoticeDetailService noticeDetailService;
-    private final PostService postService;
     private final ReportService reportService;
     private final BannerService bannerService;
     private final PaymentService paymentService;
+    private final GiftService giftService;
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -95,25 +99,41 @@ public class AdminRestController {
     @GetMapping("/diaries")
     public ResponseEntity<?> getReportDiaryList(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
-        List<ReportPostDTO> reports = postService.getReportDiaries(safePage);
+        List<ReportPostDTO> reports = reportService.getReportDiaries(safePage);
         return ResponseEntity.ok(reports);
     }
 
-//    다이어리 신고 상세
-    @GetMapping("/diary/{reportId}")
-    public ResponseEntity<ReportPostDTO> getReportDiaryDetail(@PathVariable Long reportId) {
-        ReportPostDTO detail = postService.getReportDiaryDetail(reportId);
-        return ResponseEntity.ok(detail);
-    }
-
-//    신고 처리
+//    다이어리 신고 처리
     @PostMapping("/diary/{reportId}/process")
-    public ResponseEntity<Void> processReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
+    public ResponseEntity<?> processDiaryReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 
-        log.info("신고 처리 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
+        log.info("다이어리 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
         if (hidePost && postId != null) {
-            postService.hidePost(postId);
+            reportService.hidePost(postId);
+        }
+
+        reportService.resolveReport(reportId);
+
+        return ResponseEntity.ok().build();
+    }
+
+//    기프트 신고 목록
+    @GetMapping("/gifts")
+    public ResponseEntity<?> getReportGiftList(@RequestParam(defaultValue = "1") int page) {
+        int safePage = Math.max(1, page);
+        List<ReportPostDTO> reports = giftService.getReportGifts(safePage);
+        return ResponseEntity.ok(reports);
+    }
+
+//    기프트 신고 처리
+    @PostMapping("/gift/{reportId}/process")
+    public ResponseEntity<?> processGiftReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
+
+        log.info("기프트 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
+
+        if (hidePost && postId != null) {
+            reportService.hidePost(postId);
         }
 
         reportService.resolveReport(reportId);

@@ -81,9 +81,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
 
             if (isMobile) {
-                path = "/member/mobile/sns/join";
+                path = "/mobile/sns/join";
             } else {
-                path = "/member/web/sns/join";
+                path = "/member/sns/join";
             }
         }
 

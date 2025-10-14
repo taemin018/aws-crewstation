@@ -72,6 +72,7 @@ if (userSection) userSection.classList.add('hidden');
 
 // 로그인 정보 불러오기
 memberService.info(async (member) => {
+    console.log(member)
     if (!member) {
         // 비로그인 상태 유지
         if (loginSection) loginSection.classList.remove('hidden');
@@ -88,7 +89,7 @@ memberService.info(async (member) => {
         profileImg.src =
             member.filePath && member.filePath.trim() !== ''
                 ? member.filePath
-                : '/images/default-profile.png';
+                : 'https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c';
     }
 
     // 이름 or 이메일 표시

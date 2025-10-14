@@ -23,7 +23,7 @@ public class JwtAuthorizationHandler implements AccessDeniedHandler {
 
         }else{
 //            일반 웹 요청인 경우
-            response.sendRedirect("/member/web/login");
+            response.sendRedirect("/member/login");
         }
     }
 }

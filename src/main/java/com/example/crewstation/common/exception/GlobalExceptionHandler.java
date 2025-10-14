@@ -18,9 +18,9 @@ public class GlobalExceptionHandler {
         boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
 
         if (isMobile) {
-            return new RedirectView("/member/mobile/login");
+            return new RedirectView("/mobile/login");
         } else {
-            return new RedirectView("/member/web/login");
+            return new RedirectView("/member/login");
         }
     }
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({MemberNotFoundException.class})
     public RedirectView handleMemberNotFoundException(MemberNotFoundException e){
-        return new RedirectView("/member/web/login");
+        return new RedirectView("/member/login");
     }
 
     @ExceptionHandler(MemberLoginFailException.class)
@@ -48,9 +48,9 @@ public class GlobalExceptionHandler {
         boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
 
         if (isMobile) {
-            return new RedirectView("/member/mobile/login");
+            return new RedirectView("/mobile/login");
         } else {
-            return new RedirectView("/member/web/login");
+            return new RedirectView("/member/login");
         }
     }
 }
