@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/admin/login",
                                 "/api/payment",
+                                "/error",
                                 "/api/auth/**",
                                 "/api/admin/auth/**",
                                 "/member/join",
@@ -71,7 +72,7 @@ public class SecurityConfig {
                                 "/mobile/login",
                                 "/mobile/sns/join",
                                 "/member/forgot-password",
-                                "api/member/**",
+                                "/api/member/**",
                                 "/member/reset-password-success",
                                 "/mobile/reset-password-success",
                                 "/swagger-ui/**",
