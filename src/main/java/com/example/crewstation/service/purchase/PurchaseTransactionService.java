@@ -34,7 +34,7 @@ public class PurchaseTransactionService {
         PurchaseDTO purchaseDTO = purchaseDAO.findByPostId(id).orElseThrow(PurchaseNotFoundException::new);
         purchaseDAO.increaseReadCount(id);
         purchaseDTO.setPurchaseProductPrice(PriceUtils.formatMoney(purchaseDTO.getPrice()));
-        purchaseDTO.setLimitDateTime(DateUtils.calcLimitDateTime(purchaseDTO.getUpdatedDatetime(), purchaseDTO.getPurchaseLimitTime()));
+        purchaseDTO.setLimitDateTime(DateUtils.calcLimitDateTime(purchaseDTO.getCreatedDatetime(), purchaseDTO.getPurchaseLimitTime()));
         purchaseRedisTemplate.opsForValue().set("purchase::purchases_" + id, purchaseDTO, Duration.ofMinutes(10));
         List<SectionDTO> sections = sectionDAO.findSectionsByPostId(id);
         if(purchaseDTO.getFilePath() != null){

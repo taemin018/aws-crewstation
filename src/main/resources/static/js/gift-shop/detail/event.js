@@ -402,6 +402,7 @@ window.addEventListener("scroll", () => {
 
 // 마감 시각 표시
 function startCountdown() {
+    console.log(123)
     const timer = document.querySelector(
         ".product-limit-timer-time"
     );
@@ -412,7 +413,6 @@ function startCountdown() {
     function updateTimer() {
         const now = new Date();
         const diff = endTime - now;
-
         if (diff <= 0) {
             timer.textContent = "마감";
             return;

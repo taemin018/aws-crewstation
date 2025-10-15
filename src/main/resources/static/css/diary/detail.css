@@ -130,6 +130,7 @@ input, textarea, select {
 /* 나의 다이어리 상세 */
 
 .content-container {
+    z-index: 0;
     width: 100%;
     height: 100vh;
 }
