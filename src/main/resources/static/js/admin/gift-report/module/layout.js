@@ -1,10 +1,10 @@
 const giftReportLayout = (() => {
     const section = document.getElementById('section-gift-report');
-    const tbody = section ? section.querySelector('.table-reports tbody') : null;
+    const giftReport = section ? section.querySelector('.table-reports tbody') : null;
 
-    const showReportGiftList = (list = []) => {
-        if (!tbody) return;
-        list.forEach((gift) => {
+    const showReportGiftList = (reportGift = []) => {
+        if (!giftReport) return;
+        reportGift.forEach((gift) => {
             const tr = document.createElement('tr');
             tr.dataset.reportId = gift.reportId;
             tr.dataset.status = gift.processStatus || 'PENDING';
@@ -37,7 +37,7 @@ const giftReportLayout = (() => {
           </button>
         </td>
       `;
-            tbody.appendChild(tr);
+            giftReport.appendChild(tr);
         });
     };
 
