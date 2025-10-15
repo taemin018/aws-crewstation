@@ -6,6 +6,7 @@ import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.util.Criteria;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -14,7 +15,12 @@ public interface PaymentService {
 
     public void completePayment(Long purchaseId, PaymentDTO paymentDTO);
 
-    public void selectPayment(int page);
+    public List<PaymentCriteriaDTO> selectPayment(int page);
+
+    public PaymentCriteriaDTO getPaymentDetail(Long id);
+
+
+
 
     default GuestVO toVO(PaymentStatusDTO  paymentStatusDTO) {
         return GuestVO.builder()

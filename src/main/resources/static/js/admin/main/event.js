@@ -26,7 +26,8 @@ function showSection(name) {
         'member'      : window.memberInit,
         'notice'      : window.noticeInit,
         'diary-report': window.diaryReportInit,
-        'gift-report' : window.giftReportInit
+        'gift-report' : window.giftReportInit,
+        payment       : window.paymentInit,
     };
 
     const init = initMap[name];
@@ -171,7 +172,7 @@ function showSection(name) {
 
         btn.addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation(); // 문서 클릭 핸들러보다 우선
+            e.stopPropagation();
             toggle();
         });
 
