@@ -16,7 +16,8 @@ public class PaymentDTO {
     private Long memberId;
     private Long purchaseId;
     private String receiptId;
-    private Integer amount;
+    private Long paymentStatusId;
+    private Integer paymentAmount;
     private String createdDatetime;
     private String updatedDatetime;
 }

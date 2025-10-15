@@ -28,7 +28,6 @@ public class PaymentRestController {
             if(userDetails != null){
                 paymentStatusDTO.setMemberId(userDetails.getId());
             }
-//            paymentStatusDTO.setMemberId(1L);
             Map<String, Object> message = paymentService.requestPayment(paymentStatusDTO);
             return ResponseEntity.ok().body(message);
         }catch (PostNotFoundException e){
@@ -41,6 +40,7 @@ public class PaymentRestController {
     @PostMapping("/complete")
     public ResponseEntity<String> completePayment(@RequestBody PaymentDTO paymentDTO) {
         paymentService.completePayment(paymentDTO.getPurchaseId(), paymentDTO);
+        log.info("💳 [PaymentRestController] 결제 요청 수신: {}", paymentDTO);
         return ResponseEntity.ok("결제가 완료되었습니다.");
     }
 }

@@ -5,12 +5,18 @@
     <!-- 결제 내역 저장 -->
     <insert id="insertPayment">
         INSERT INTO tbl_payment (
-            member_id,
+            payment_status_id,
             receipt_id,
             payment_amount,
             created_datetime,
-            updated_datetime)
-        VALUES (#{memberId},#{receiptId},#{amount},NOW(),NOW())
+            updated_datetime
+        ) VALUES (
+                     #{paymentStatusId},
+                     #{receiptId},
+                     #{paymentAmount},
+                     NOW(),
+                     NOW()
+                 )
     </insert>
     
 </mapper>
