@@ -52,7 +52,7 @@ window.giftReportInit = async function () {
         const postId = postIdText.replace(/^postId:\s*/i, '') || '-';
         const reason = row.querySelector('.reason-badge').textContent.trim() ?? '-';
         const reporterName = row.querySelector('td:nth-child(3) b').textContent.trim() ?? '-';
-        const reporterEmail = row.querySelector('td:nth-child(3) .text-muted')?.textContent.trim() ?? '-';
+        const reporterEmail = row.querySelector('td:nth-child(3) .text-muted').textContent.trim() ?? '-';
         const reportedAt = row.querySelector('td:nth-child(4)').textContent.trim() ?? '-';
         const badgeInRow = row.querySelector('.approval-status');
 
