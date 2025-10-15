@@ -59,8 +59,8 @@ public class PaymentServiceImpl implements PaymentService {
             MemberDTO memberDTO = new MemberDTO();
             memberDAO.saveGuest(memberDTO);
             paymentStatusDTO.setMemberId(memberDTO.getId());
-//            code = smsService.send(paymentStatusDTO.getMemberPhone());
-            code ="1234123412";
+            code = smsService.send(paymentStatusDTO.getMemberPhone());
+//            code ="1234123412";
             paymentStatusDTO.setGuestOrderNumber(code);
             GuestVO vo = toVO(paymentStatusDTO);
             log.info("vo={}", vo.toString());
