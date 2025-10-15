@@ -46,14 +46,14 @@ window.giftReportInit = async function () {
 
     const open = (row) => {
         currentRow = row;
-        const title = row.querySelector('.post-title')?.textContent.trim() ?? '-';
-        const author = row.querySelector('.post-meta b')?.textContent.trim() ?? '-';
-        const postIdText = row.querySelector('.post-meta .meta:last-child')?.textContent.trim() ?? 'postId: -';
+        const title = row.querySelector('.post-title').textContent.trim() ?? '-';
+        const author = row.querySelector('.post-meta b').textContent.trim() ?? '-';
+        const postIdText = row.querySelector('.post-meta .meta:last-child').textContent.trim() ?? 'postId: -';
         const postId = postIdText.replace(/^postId:\s*/i, '') || '-';
-        const reason = row.querySelector('.reason-badge')?.textContent.trim() ?? '-';
-        const reporterName = row.querySelector('td:nth-child(3) b')?.textContent.trim() ?? '-';
-        const reporterEmail = row.querySelector('td:nth-child(3) .text-muted')?.textContent.trim() ?? '-';
-        const reportedAt = row.querySelector('td:nth-child(4)')?.textContent.trim() ?? '-';
+        const reason = row.querySelector('.reason-badge').textContent.trim() ?? '-';
+        const reporterName = row.querySelector('td:nth-child(3) b').textContent.trim() ?? '-';
+        const reporterEmail = row.querySelector('td:nth-child(3) .text-muted').textContent.trim() ?? '-';
+        const reportedAt = row.querySelector('td:nth-child(4)').textContent.trim() ?? '-';
         const badgeInRow = row.querySelector('.approval-status');
 
         bind('title', title);
@@ -67,7 +67,7 @@ window.giftReportInit = async function () {
         const badgeInModal = modal.querySelector('[data-bind="statusBadge"]');
         if (badgeInModal) {
             badgeInModal.className = 'status-badge';
-            if (badgeInRow?.classList.contains('status-resolved')) {
+            if (badgeInRow.classList.contains('status-resolved')) {
                 badgeInModal.classList.add('status-resolved'); badgeInModal.textContent = '처리완료';
             } else {
                 badgeInModal.classList.add('status-pending');  badgeInModal.textContent = '대기중';
@@ -101,9 +101,9 @@ window.giftReportInit = async function () {
     approveBtn?.addEventListener('click', async () => {
         if (!currentRow) return;
         const reportId = currentRow.dataset.reportId;
-        const postIdText = currentRow.querySelector('.post-meta .meta:last-child')?.textContent.trim() ?? '';
+        const postIdText = currentRow.querySelector('.post-meta .meta:last-child').textContent.trim() ?? '';
         const postId = postIdText.replace(/^postId:\s*/i, '');
-        const hidePost = modal.querySelector('.cb-hide-post')?.checked || false;
+        const hidePost = modal.querySelector('.cb-hide-post').checked || false;
 
         const ok = await giftReportService.processReport(reportId, postId, hidePost);
         if (!ok) { alert('신고 처리에 실패했습니다.'); return; }
