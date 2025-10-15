@@ -93,7 +93,8 @@ public class SecurityConfig {
                                 "/ask/register",
                                 "/notice/notice",
                                 "/notice/notice-detail",
-                                "guest/order-detail")
+                                "guest/order-detail",
+                                "/api/guest/order-detail/{guestOrderNumber:\\d+}")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/diaries",

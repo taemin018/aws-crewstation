@@ -15,6 +15,23 @@ const memberService = (() => {
 
         return await response.json();
     }
+    //
+    // const guestLogin = async (member) => {
+    //     const response = await fetch('/api/auth/guest-login', {
+    //         method: 'POST',
+    //         body: JSON.stringify(member),
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     });
+    //
+    //     if (!response.ok) {
+    //         const errorText = await response.text();
+    //         throw new Error(errorText || "Fetch error");
+    //     }
+    //
+    //     return await response.json();
+    // }
 
     const refresh = async () => {
         const response = await fetch('/api/auth/refresh', {
