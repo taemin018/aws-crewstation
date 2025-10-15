@@ -1,7 +1,8 @@
-const giftReportLayout = (() => {
-    const section = document.getElementById('section-gift-report');
-    const giftReport = section ? section.querySelector('.table-reports tbody') : null;
 
+const section = document.getElementById('section-gift-report');
+const giftReport = section ? section.querySelector('.table-reports tbody') : null;
+
+const giftReportLayout = (() => {
     const showReportGiftList = (reportGift = []) => {
         if (!giftReport) return;
         reportGift.forEach((gift) => {
