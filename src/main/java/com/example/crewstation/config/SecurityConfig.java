@@ -91,7 +91,8 @@ public class SecurityConfig {
                                 "/search",
                                 "/ask/register",
                                 "/notice/notice",
-                                "/notice/notice-detail")
+                                "/notice/notice-detail",
+                                "/guest/order-detail")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/diaries",
