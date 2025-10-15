@@ -29,9 +29,11 @@ public class GiftTransactionService {
         gifts.forEach(gift -> {
             String filePath = gift.getFilePath();
             String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
-
+            if(gift.getMemberFilePath() != null){
+                gift.setMemberFilePath(s3Service.getPreSignedUrl(gift.getMemberFilePath(), Duration.ofMinutes(5)));
+            }
             gift.setRelativeDate(DateUtils.toRelativeTime(gift.getCreatedDatetime()));
-
+            gift.setLimitDateTime(DateUtils.calcLimitDateTime(gift.getCreatedDatetime(),gift.getPurchaseLimitTime()));
             log.info("Gift ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
                     gift, filePath, presignedUrl);
 

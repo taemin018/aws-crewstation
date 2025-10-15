@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of="id")
 public class GiftDTO {
     private Long postId;
+    private String limitDateTime;
     private String postTitle;
     private String purchaseCountry;
     private String purchaseDeliveryMethod;
@@ -26,6 +27,7 @@ public class GiftDTO {
     private String filePath;
     private String fileName;
     private String memberName;
+    private String memberFilePath;
     private Integer chemistryScore;
     private String socialImgUrl;
     private String relativeDate;

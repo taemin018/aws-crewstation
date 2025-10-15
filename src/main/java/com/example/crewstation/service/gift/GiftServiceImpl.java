@@ -2,7 +2,6 @@ package com.example.crewstation.service.gift;
 
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.Status;
-import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.gift.GiftCriteriaDTO;
 import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
@@ -13,6 +12,8 @@ import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -47,24 +48,39 @@ public class GiftServiceImpl implements GiftService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<GiftDTO> getGift(int limit) {
-        List<GiftDTO> gifts = (List<GiftDTO>) redisTemplate.opsForValue().get("gifts");
+        log.info("기프트 목록 입니다.:{}",redisTemplate.opsForValue().get("gifts"));
+        Object obj = redisTemplate.opsForValue().get("gifts");
+        log.info("오브젝트 확인:::::{}",obj);
+        List<GiftDTO> gifts = null;
+        if (obj != null) {
+            ObjectMapper mapper = new ObjectMapper();
+             gifts = mapper.convertValue(
+                    obj,
+                    new TypeReference<List<GiftDTO>>() {}
+            );
+        }
+//        List<GiftDTO> gifts = (List<GiftDTO>) redisTemplate.opsForValue().get("gifts");
         if (gifts != null) {
             gifts.forEach(gift -> {
                 String filePath = gift.getFilePath();
-                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
-
-
-                log.info("Gift ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
-                        gift, filePath, presignedUrl);
-                gift.setFilePath(s3Service.getPreSignedUrl(gift.getFilePath(),
-                        Duration.ofMinutes(5)));
+                log.info("filePath 검사:{}",filePath);
+//                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+//                if(gift.getMemberFilePath() != null){
+//                    gift.setMemberFilePath(s3Service.getPreSignedUrl(gift.getMemberFilePath(), Duration.ofMinutes(5)));
+//                }
+//
+//                log.info("Gift ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+//                        gift, filePath, presignedUrl);
+//                gift.setFilePath(presignedUrl);
 
             });
+//            ObjectMapper mapper = new ObjectMapper();
+//            obj = mapper.convertValue(gifts, Object.class);
             redisTemplate.opsForValue().set("gifts", gifts, Duration.ofMinutes(5));
             return gifts;
 
         }
-
+//    return null;
         return giftTransactionService.getMainGifts(limit);
 
     }

@@ -64,8 +64,8 @@ public class SmsService {
             log.error("Failed to send sms messag", e);
             throw new SmsSendFailException("SMS 전송 실패했습니다.");
         }
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        log.info("Sending sms message to phone number " + response);
+//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+//        log.info("Sending sms message to phone number " + response);
         return code;
     }
 }
