@@ -29,7 +29,7 @@ function startCountdown() {
         function updateTimer() {
             const now = new Date();
             const diff = endTime - now;
-
+            console.log(diff);
             if (diff <= 0) {
                 timer.textContent = "마감";
                 return;

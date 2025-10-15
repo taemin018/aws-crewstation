@@ -49,17 +49,19 @@ public class PaymentServiceImpl implements PaymentService {
         if(!isExist){
             throw new PostNotActiveException("이미 삭제된 상품입니다.");
         }
-        code = smsService.send(paymentStatusDTO.getMemberPhone());
+
         if(paymentStatusDTO.isGuest()){
 //            멤버랑 게스트에 값 넣어주기
             MemberDTO memberDTO = new MemberDTO();
             memberDAO.saveGuest(memberDTO);
             paymentStatusDTO.setMemberId(memberDTO.getId());
+            code = smsService.send(paymentStatusDTO.getMemberPhone());
             paymentStatusDTO.setGuestOrderNumber(code);
             GuestVO vo = toVO(paymentStatusDTO);
             log.info("vo={}", vo.toString());
             guestDAO.save(vo);
-        }else if( paymentStatusDTO.getMemberId() == null){
+
+        }else if(paymentStatusDTO.getMemberId() == null){
             message = "비회원입니다.";
             return Map.of("guest" ,true,"message",message);
         }

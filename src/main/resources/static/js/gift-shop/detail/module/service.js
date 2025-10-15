@@ -39,6 +39,7 @@ const purchaseDetailService = (() => {
         if (response.ok) {
             result = await response.json();
             message = result.message;
+            console.log(message)
             isGuest = result.guest;
             console.log("기프트 존재")
         } else if (response.status === 404) {
