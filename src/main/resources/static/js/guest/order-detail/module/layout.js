@@ -149,7 +149,7 @@ const orderLayout = (() => {
                 <h1 class="header-title"><span>결제 정보</span></h1>
             </section>
             
-            <a href="/post/${order.postId}" class="product-wrapper">
+            <a href="/gifts/detail/${order.postId}" class="product-wrapper">
                 <img src="${order.mainImage || '/images/gift-shop-post-img3.png'}" alt="">
                 <div class="purchase-info">
                     <span class="badge-list-container">${order.purchaseCountry}</span>
