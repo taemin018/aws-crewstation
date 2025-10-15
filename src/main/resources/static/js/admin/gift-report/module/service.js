@@ -14,7 +14,8 @@ const giftReportService = (() => {
         if (hidePost) params.append("hidePost", hidePost);
 
         const res = await fetch(`/api/admin/gift/${reportId}/process?${params.toString()}`, {
-            method: "POST"
+            method: "POST",
+            credentials: 'include',
         });
 
         if (!res.ok) {

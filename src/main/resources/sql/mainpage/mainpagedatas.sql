@@ -1222,3 +1222,16 @@ FROM view_report_post_report r
          JOIN view_post_purchase p ON p.id = r.post_id
 ORDER BY r.created_datetime DESC
 LIMIT 10;
+
+insert into tbl_file(file_origin_name, file_path, file_name, file_size)
+values ('banner1.jpg','2025/10/15/wsadasadasadasdb.jpeg','wsadasadasadasdb.jpeg',1000),
+       ('banner2.jpg','2025/10/15/snansasndadn_asd.jpeg','snansasndadn_asd.jpeg',1000),
+       ('banner3.jpg','2025/10/15/wsadasadaasdm.jpeg','wsadasadaasdm.jpeg',1000),
+       ('banner4.jpg','2025/10/15/wsadasadasadassnsasdb.jpeg','wsadasadasadassnsasdb.jpeg',1000),
+       ('banner5.jpg','2025/10/15/wsadasadas12392asdb.jpeg','wsadasadas12392asdb.jpeg',1000);
+
+insert into tbl_banner(banner_order)
+values (1),(2),(3),(4),(5);
+
+insert into tbl_banner_file(file_id, banner_id)
+values (98,1),(99,2),(100,3),(101,4),(102,5);
