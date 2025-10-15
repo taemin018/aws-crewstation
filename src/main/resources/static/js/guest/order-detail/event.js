@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                             purchaseId: order.purchaseId,
                                             guestOrderNumber: order.guestOrderNumber,
                                             receiptId: response.data.receipt_id,
-                                            amount: response.data.price,
+                                            paymentAmount: response.data.price,
                                             method: response.data.method,
                                             status: "success",
                                             memberId: order.buyerMemberId

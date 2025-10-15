@@ -86,6 +86,19 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void completePayment(Long purchaseId, PaymentDTO paymentDTO) {
 
+        // 1결제 상태 조회
+        PaymentStatusDTO status = paymentStatusDAO.findByPurchaseId(purchaseId);
+        if (status == null) {
+            throw new IllegalStateException("결제 상태 정보가 없습니다. purchaseId=" + purchaseId);
+        }
+
+        paymentDTO.setPaymentStatusId(status.getId());
+
+        // 필수 값 검증
+        if (paymentDTO.getPaymentAmount() == null || paymentDTO.getReceiptId() == null) {
+            throw new IllegalArgumentException("결제 금액 또는 영수증 ID가 누락되었습니다.");
+        }
+
         // 결제 내역 저장
         paymentDAO.insertPayment(paymentDTO);
 

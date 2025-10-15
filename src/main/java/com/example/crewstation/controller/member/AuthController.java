@@ -61,6 +61,33 @@ AuthController implements AuthControllerDocs{
         }
     }
 
+    //   guest 로그인
+    @PostMapping("guest-login")
+    @LogReturnStatus
+    public ResponseEntity<?> guestLogin(@RequestBody MemberDTO memberDTO){
+        try {
+            Authentication authentication =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberDTO.getGuestOrderNumber(), memberDTO.getMemberPhone()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String accessToken = jwtTokenProvider.createAccessToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
+            String refreshToken = jwtTokenProvider.createRefreshToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
+
+            Cookie rememberEmailCookie = new Cookie("rememberEmail", memberDTO.getMemberEmail());
+
+            rememberEmailCookie.setPath("/"); // 모든 경로에서 접근 가능
+
+            return ResponseEntity.ok(tokens);
+
+        } catch(AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "로그인 실패: " + e.getMessage()));
+        }
+    }
+
     //    로그아웃
     @PostMapping("logout")
     public void logout(@CookieValue(value = "accessToken", required = false) String token) {
