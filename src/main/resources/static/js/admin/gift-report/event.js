@@ -1,4 +1,3 @@
-// 기프트 신고 - SPA 초기화
 window.giftReportInit = async function () {
     if (window.__giftReportInited) return;     // 1회만
     window.__giftReportInited = true;
