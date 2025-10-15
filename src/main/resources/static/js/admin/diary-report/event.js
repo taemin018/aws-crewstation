@@ -31,7 +31,6 @@ window.diaryReportInit = async function () {
             if (scrollTop + clientHeight >= scrollHeight - 100) {
                 if (diaryCheckScroll && diaryHasMore) {
                     diaryCheckScroll = false;
-                    // ✅ 버그 fix: ++page -> ++diaryPage
                     await loadReportDiaryList(++diaryPage);
                     setTimeout(() => {
                         if (diaryHasMore) diaryCheckScroll = true;
@@ -94,7 +93,6 @@ window.diaryReportInit = async function () {
         side.addEventListener("click", (e) => {
             const subLink = e.target.closest(".menu-sub-list .boot-link");
             if (subLink && side.contains(subLink)) {
-                // SPA 라우팅은 전역 router에서 처리 → 여기선 메뉴 UI만 유지
                 const ul = subLink.closest(".menu-sub-list");
                 ul.querySelectorAll(".boot-link.active").forEach((a) =>
                     a.classList.remove("active")
