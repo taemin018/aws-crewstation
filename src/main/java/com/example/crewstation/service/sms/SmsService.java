@@ -11,9 +11,9 @@ import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Random;
 
 @Service
@@ -53,17 +53,17 @@ public class SmsService {
         String code = createCode();
         Message message = new Message();
         message.setTo(phoneNumber);
-        message.setFrom("01031128286");
+        message.setFrom("01083688745");
         message.setText("Crew Station 주문 번호: " + code);
-//        try {
-//            SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-//            log.info("Sending sms message to phone number " + response);
-//        } catch (Exception e) {
-//            log.info("apikey {}", apiKey);
-//            log.info("apikey 길이 {}", apiKey.length());
-//            log.error("Failed to send sms messag", e);
-//            throw new SmsSendFailException("SMS 전송 실패했습니다.");
-//        }
+        try {
+            SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+            log.info("Sending sms message to phone number " + response);
+        } catch (Exception e) {
+            log.info("apikey {}", apiKey);
+            log.info("apikey 길이 {}", apiKey.length());
+            log.error("Failed to send sms messag", e);
+            throw new SmsSendFailException("SMS 전송 실패했습니다.");
+        }
 //        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 //        log.info("Sending sms message to phone number " + response);
         return code;
