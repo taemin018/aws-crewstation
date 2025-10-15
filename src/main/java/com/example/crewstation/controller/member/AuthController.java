@@ -70,8 +70,8 @@ AuthController implements AuthControllerDocs{
                     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberDTO.getGuestOrderNumber(), memberDTO.getMemberPhone()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String accessToken = jwtTokenProvider.createAccessToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
-            String refreshToken = jwtTokenProvider.createRefreshToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
+            String accessToken = jwtTokenProvider.createAccessToken(((CustomUserDetails) authentication.getPrincipal()).getGuestOrderNumber());
+            String refreshToken = jwtTokenProvider.createRefreshToken(((CustomUserDetails) authentication.getPrincipal()).getGuestOrderNumber());
 
             Map<String, String> tokens = new HashMap<>();
             tokens.put("accessToken", accessToken);

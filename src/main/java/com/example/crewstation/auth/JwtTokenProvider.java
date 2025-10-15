@@ -148,7 +148,7 @@ public class JwtTokenProvider {
                 .compact();
 
         redisTemplate.opsForValue().set(
-                REFRESH_TOKEN_PREFIX + username,
+                 username.contains("@") ? REFRESH_TOKEN_PREFIX + username : "guest_" + REFRESH_TOKEN_PREFIX + username,
                 refreshToken,
                 REFRESH_TOKEN_VALIDITY,
                 TimeUnit.MILLISECONDS
@@ -204,7 +204,7 @@ public class JwtTokenProvider {
 
 //    리프레시 토큰 삭제
     public void deleteRefreshToken(String username) {
-        log.info("{}", redisTemplate.delete(REFRESH_TOKEN_PREFIX + username));
+        log.info("{}", redisTemplate.delete(username.contains("@") ? REFRESH_TOKEN_PREFIX + username : "guest_" + REFRESH_TOKEN_PREFIX + username));
     }
 
     public void deleteRefreshToken(String username, String provider) {

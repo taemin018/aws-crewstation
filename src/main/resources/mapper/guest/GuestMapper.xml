@@ -62,4 +62,10 @@
         WHERE g.guest_order_number = #{guestOrderNumber}
     </select>
 
+    <select id="selectGuestByOrderName">
+        select id, member_id, guest_phone, guest_order_number, address_zip_code, address_detail, address
+        from tbl_guest
+        where guest_order_number = #{guestOrderNumber}
+    </select>
+
 </mapper>
