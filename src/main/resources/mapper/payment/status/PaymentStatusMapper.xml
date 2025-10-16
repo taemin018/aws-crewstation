@@ -31,9 +31,7 @@
 
     </select>
 
-    <select id="selectPayment"
-            parameterType="com.example.crewstation.util.Criteria"
-            resultType="com.example.crewstation.dto.payment.status.PaymentCriteriaDTO">
+    <select id="selectPayment">
         select
             ps.id                               as paymentId,
             ps.payment_phase                    as status,
@@ -73,9 +71,7 @@
     </select>
 
 
-    <select id="selectPaymentDetail"
-            parameterType="long"
-            resultType="com.example.crewstation.dto.payment.status.PaymentCriteriaDTO">
+    <select id="selectPaymentDetail">
         select
             ps.id                               as paymentId,
             ps.payment_phase                    as status,
