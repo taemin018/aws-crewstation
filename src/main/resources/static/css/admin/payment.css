@@ -2346,3 +2346,29 @@ element.style {
 .action-btn {
     border: 0;
 }
+
+.modal { display:none; }
+.modal.show { display:block; opacity:1; }
+.modal-backdrop { z-index: 1040; }
+.modal { z-index: 1050; }
+
+.payment-modal {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.payment-modal.show {
+    display: flex !important;
+}
+.payment-modal .modal-dialog {
+    margin: 0;
+    max-width: 880px;
+    width: 100%;
+}
+
+#payment-modal.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+}

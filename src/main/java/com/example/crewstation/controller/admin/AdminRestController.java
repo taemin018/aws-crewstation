@@ -144,7 +144,7 @@ public class AdminRestController {
         return ResponseEntity.ok(paymentList);
     }
 
-
+//  결제 목록 상세 보기
     @GetMapping("/payment/{id}")
     public ResponseEntity<PaymentCriteriaDTO> getPaymentDetail(@PathVariable Long id) {
         return ResponseEntity.ok(paymentService.getPaymentDetail(id));

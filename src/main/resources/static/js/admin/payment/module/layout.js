@@ -75,10 +75,9 @@ const paymentLayout = (() => {
     };
 
     const showPaymentDetail = (detail = {}) => {
-        const modal =
-            document.querySelector('#section-payment .payment-modal') ||
-            document.querySelector('#section-payment .member-modal');
+        const modal = document.getElementById('payment-modal');
         if (!modal) return;
+
 
         const set = (k, v) => {
             const el = modal.querySelector(`[data-bind="${k}"]`);

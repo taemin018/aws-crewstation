@@ -31,9 +31,8 @@ function showSection(name) {
     };
 
     const init = initMap[name];
-    if (typeof init === 'function' && !showSection.inited[name]) {
-        showSection.inited[name] = true;
-        init(); 
+    if (typeof init === 'function') {
+        init();
     }
 }
 
@@ -364,7 +363,7 @@ function drawPie(staticsData) {
 }
 
 
-// ===== 로그인 ,  로그아웃 =====
+// ===== 로그인 정보 표시 + 로그아웃 =====
 
 async function fetchWithRefresh(url, opts = {}) {
     let res = await fetch(url, { credentials: 'include'});
@@ -391,6 +390,7 @@ async function fetchWithRefresh(url, opts = {}) {
             avatarEl.textContent = letter || 'C';
         }
     } catch (e) {
+        // 토큰 없거나 만료면 로그인 페이지로
         window.location.href = '/admin/login';
     }
 })();

@@ -103,6 +103,8 @@
                  left join tbl_member s
                            on s.id = vpp.member_id
         where ps.id = #{id}
+        order by ps.id, p.updated_datetime desc nulls last , p.created_datetime desc nulls last
+        limit 1
     </select>
 
 
