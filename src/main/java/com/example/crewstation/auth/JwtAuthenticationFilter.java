@@ -66,23 +66,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             if(cookieRefreshToken != null) {
                 String username = jwtTokenProvider.getUserName(cookieRefreshToken);
+                String accessToken = null;
 
-                boolean checkRefreshToken = provider != null ? jwtTokenProvider.checkRefreshTokenBetweenCookieAndRedis(username, cookieRefreshToken, provider)
+                boolean checkRefreshToken = provider != null ? jwtTokenProvider.checkRefreshTokenBetweenCookieAndRedis(username, provider, cookieRefreshToken)
                         : jwtTokenProvider.checkRefreshTokenBetweenCookieAndRedis(username, cookieRefreshToken);
 
                 if (checkRefreshToken) {
                     if (jwtTokenProvider.validateToken(cookieRefreshToken)) {
                         CustomUserDetails customUserDetails = (CustomUserDetails) jwtTokenProvider.getAuthentication(cookieRefreshToken).getPrincipal();
-                        String accessToken = jwtTokenProvider.createAccessToken(customUserDetails.getUserEmail());
-                        jwtTokenProvider.createRefreshToken(customUserDetails.getUserEmail());
+                        if(username.contains("@")){
+                            accessToken = jwtTokenProvider.createAccessToken(provider == null ? customUserDetails.getUserEmail() : customUserDetails.getMemberSocialEmail());
+                            jwtTokenProvider.createRefreshToken(provider == null ? customUserDetails.getUserEmail() : customUserDetails.getMemberSocialEmail());
+                        }else{
+                            accessToken = jwtTokenProvider.createAccessToken(customUserDetails.getGuestOrderNumber());
+                            jwtTokenProvider.createRefreshToken(customUserDetails.getGuestOrderNumber());
+                        }
 
                         response.setHeader("Authorization", "Bearer " + accessToken);
                         response.sendRedirect(request.getRequestURI());
                         return;
                     }
                 }
+            }else {
+                log.warn("No token found");
             }
-            log.warn("No token found");
         }
 
 //        이 코드를 호출해서 필터 체인에 있는 다음 필터에게 요청과 응답 처리를 넘김

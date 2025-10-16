@@ -1234,4 +1234,6 @@ insert into tbl_banner(banner_order)
 values (1),(2),(3),(4),(5);
 
 insert into tbl_banner_file(file_id, banner_id)
-values (98,1),(99,2),(100,3),(101,4),(102,5);
+values (39,1),(40,2),(41,3),(42,4),(43,5);
+
+select * from tbl_file;

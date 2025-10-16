@@ -32,20 +32,18 @@ public class CustomUserDetailsService implements UserDetailsService {
             for (Cookie cookie : request.getCookies()) {
                 if("provider".equals(cookie.getName())){
                     provider = cookie.getValue();
-                } else if("guestOrderNumber".equals(cookie.getName())){
-                    orderNumber = cookie.getValue();
                 }
             }
         }
 
         if(provider == null){
 
-            if (orderNumber == null) {
+            if (username.contains("@")) {
 //        이메일로 전체 정보 조회
                 memberDTO = memberDAO.findByMemberEmail(username)
                         .orElseThrow(() -> new UsernameNotFoundException("소유자를 찾을 수 없습니다."));
             } else {
-                GuestDTO guestDTO = guestDAO.selectGuestByOrderNumber(orderNumber)
+                GuestDTO guestDTO = guestDAO.selectGuestByOrderNumber(username)
                         .orElseThrow(() -> new UsernameNotFoundException("게스트를 찾을 수 없습니다."));
                 return new CustomUserDetails(guestDTO);
 

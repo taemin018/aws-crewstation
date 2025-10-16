@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.guest.GuestMapper">
     <insert id="insert">
-        insert into tbl_guest(member_id, guest_phone, guest_order_number, address_zip_code, address_detail, address)
-        values (#{memberId},#{guestPhone},#{guestOrderNumber},#{addressZipCode},#{addressDetail},#{address})
+        insert into tbl_guest(member_id, guest_phone, guest_password, guest_order_number, address_zip_code, address_detail, address)
+        values (#{memberId},#{guestPhone}, #{guestPassword}, #{guestOrderNumber},#{addressZipCode},#{addressDetail},#{address})
     </insert>
     <select id="select">
         select id, member_id, guest_phone, guest_order_number, address_zip_code, address_detail, address
@@ -63,7 +63,7 @@
     </select>
 
     <select id="selectGuestByOrderName">
-        select id, member_id, guest_phone, guest_order_number, address_zip_code, address_detail, address
+        select id, member_id, guest_phone, guest_order_number, guest_password, address_zip_code, address_detail, address
         from tbl_guest
         where guest_order_number = #{guestOrderNumber}
     </select>

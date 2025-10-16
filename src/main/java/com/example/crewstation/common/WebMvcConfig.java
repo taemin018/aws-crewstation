@@ -14,8 +14,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new GuestInterceptor(jwtTokenProvider))
-                .excludePathPatterns("/api/guest/order-detail/**")
-                .excludePathPatterns("/guest/order-detail/**");
+                .excludePathPatterns(
+                        "/",
+                        "/api/alarms/**",
+                        "/api/auth/logout",
+                        "/api/auth/info",
+                        "/api/guest/order-detail/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/fonts/**",
+                        "/guest/order-detail",
+                        "/member/login",
+                        "/error",
+                        "/.well-known/**");
+
 
     }
 }

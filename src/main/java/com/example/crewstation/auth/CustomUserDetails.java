@@ -57,6 +57,9 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(GuestDTO guestDTO) {
         this.id = guestDTO.getId();
         this.guestOrderNumber = guestDTO.getGuestOrderNumber();
+        this.memberPhone = guestDTO.getGuestPhone();
+        this.memberPassword = guestDTO.getGuestPassword();
+        this.memberRole = MemberRole.MEMBER;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberName;
+        return guestOrderNumber != null ? guestOrderNumber : memberName;
     }
 
     public String getUserEmail () {return this.memberEmail;}
