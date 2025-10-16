@@ -171,10 +171,14 @@ window.paymentInit = async function () {
     }
 
     // 모달
+    const actionButton = document.querySelector(".action-btn");
+    actionButton.addEventListener("click", e =>{
+    })
     if (modal) {
-        let currentRow = null;
+        console.log(11111111111)
 
         const open = () => {
+            console.log(12345)
             modal.style.display = 'block';
             requestAnimationFrame(() => {
                 modal.classList.add('show');
@@ -196,6 +200,7 @@ window.paymentInit = async function () {
 
         modal.querySelectorAll('.btn-close, .close').forEach(b => b.addEventListener('click', close));
         modal.addEventListener('click', (e) => {
+            console.log(111111111)
             if (e.target === modal) close();
         });
 

@@ -55,6 +55,7 @@
             vpp.purchase_delivery_method        as deliveryType
 
         from tbl_payment_status ps
+
                  left join tbl_payment p
                            on p.payment_status_id = ps.id
                  left join view_post_purchase vpp
@@ -63,6 +64,7 @@
                            on b.id = ps.member_id
                  left join tbl_member s
                            on s.id = vpp.member_id
+
 
         limit #{rowCount} offset #{offset}
     </select>
