@@ -52,14 +52,26 @@ button.addEventListener('click', async () => {
     }
 })
 
-const guestButton = document.querySelector(".guest");
+const guestButton = document.querySelector(".login-guest-btn");
 
-guestButton.addEventListener("click", (e) => {
+guestButton.addEventListener("click", async(e) => {
+    console.log("들어옴")
     loginError.innerHTML = ``;
-    inputTags.forEach((input) => {
-        input.classList.remove("error");
+    const guestID = document.querySelector(".guest-id").value;
+    const guestPhone = document.querySelector(".guest-phone").value;
+    try {
+        const result = await memberService.guestLogin({guestOrderNumber: guestID, guestPhone: guestPhone});
+        if(result.accessToken){
+            location.href = '/guest/order-detail';
 
-    })
+        }
+    } catch (err) {
+        loginError.innerHTML = `<span>핸드폰 번호 또는 주문번호가 잘못 되었습니다.</span>`
+        inputTags.forEach((input) => {
+            input.classList.add("error");
+
+        })
+    }
 })
 
 

@@ -16,11 +16,9 @@ import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.service.sms.SmsService;
 import com.example.crewstation.util.Criteria;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final MemberDAO memberDAO;
     private final GuestDAO guestDAO;
     private final SmsService smsService;
-    private final HttpServletResponse response;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -62,14 +60,9 @@ public class PaymentServiceImpl implements PaymentService {
             code = smsService.send(paymentStatusDTO.getMemberPhone());
 //            code ="1234123412";
             paymentStatusDTO.setGuestOrderNumber(code);
+            paymentStatusDTO.setGuestPassword(passwordEncoder.encode(paymentStatusDTO.getMemberPhone()));
             GuestVO vo = toVO(paymentStatusDTO);
-            log.info("vo={}", vo.toString());
-            Cookie orderNumber = new Cookie("guestOrderNumber",code);
-            orderNumber.setHttpOnly(true);
-            orderNumber.setSecure(true);
-            orderNumber.setPath("/");
-            orderNumber.setMaxAge(2*60*60);
-            response.addCookie(orderNumber);
+
             guestDAO.save(vo);
 
         } else if (paymentStatusDTO.getMemberId() == null) {

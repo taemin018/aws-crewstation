@@ -4,6 +4,7 @@ import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.common.enumeration.Status;
+import com.example.crewstation.dto.guest.GuestDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
     private String memberPassword;
     private Status memberStatus;
     private MemberProvider memberProvider;
+    private String guestOrderNumber;
     private String socialImgUrl;
     private String memberSocialEmail;
     private String memberDescription;
@@ -43,12 +45,21 @@ public class CustomUserDetails implements UserDetails {
         this.memberPassword = memberDTO.getMemberPassword();
         this.memberStatus = memberDTO.getMemberStatus();
         this.memberProvider = memberDTO.getMemberProvider();
+        this.guestOrderNumber = memberDTO.getGuestOrderNumber();
         this.socialImgUrl = memberDTO.getSocialImgUrl();
         this.memberSocialEmail = memberDTO.getMemberSocialEmail();
         this.memberDescription = memberDTO.getMemberDescription();
         this.memberRole = memberDTO.getMemberRole();
         this.createdDatetime = memberDTO.getCreatedDatetime();
         this.updatedDatetime = memberDTO.getUpdatedDatetime();
+    }
+
+    public CustomUserDetails(GuestDTO guestDTO) {
+        this.id = guestDTO.getId();
+        this.guestOrderNumber = guestDTO.getGuestOrderNumber();
+        this.memberPhone = guestDTO.getGuestPhone();
+        this.memberPassword = guestDTO.getGuestPassword();
+        this.memberRole = MemberRole.MEMBER;
     }
 
     @Override
@@ -63,7 +74,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberName;
+        return guestOrderNumber != null ? guestOrderNumber : memberName;
     }
 
     public String getUserEmail () {return this.memberEmail;}

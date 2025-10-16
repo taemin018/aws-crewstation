@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,5 +31,9 @@ public class GuestDAO {
         return Optional.ofNullable(guestMapper.selectOrderDetails(guestOrderNumber));
     }
 
+//   게스트 주문번호 조회
+    public Optional<GuestDTO> selectGuestByOrderNumber(String guestOrderNumber) {
+        return guestMapper.selectGuestByOrderName(guestOrderNumber);
+    }
 
 }
