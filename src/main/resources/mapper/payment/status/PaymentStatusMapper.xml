@@ -33,13 +33,10 @@
 
     <select id="selectPayment">
         select
-            ps.id                               as paymentId,
-            ps.payment_phase                    as status,
+            ps.id                               as id,
+            ps.payment_phase                    as paymentPhase,
             ps.purchase_id                      as purchaseId,
             ps.member_id                        as memberId,
-
-            p.created_datetime                  as paidAt,
-            p.updated_datetime                  as updatedDatetime,
 
             to_char(p.created_datetime, 'YYYY-MM-DD HH24:MI:SS') as paidAt,
             to_char(p.updated_datetime, 'YYYY-MM-DD HH24:MI:SS') as updatedDatetime,
@@ -73,13 +70,10 @@
 
     <select id="selectPaymentDetail">
         select
-            ps.id                               as paymentId,
-            ps.payment_phase                    as status,
+            ps.id                               as id,
+            ps.payment_phase                    as paymentPhase,
             ps.purchase_id                      as purchaseId,
             ps.member_id                        as memberId,
-
-            p.created_datetime                  as paidAt,
-            p.updated_datetime                  as updatedDatetime,
 
             to_char(p.created_datetime, 'YYYY-MM-DD HH24:MI:SS') as paidAt,
             to_char(p.updated_datetime, 'YYYY-MM-DD HH24:MI:SS') as updatedDatetime,

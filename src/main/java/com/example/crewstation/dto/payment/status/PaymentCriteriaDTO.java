@@ -31,4 +31,12 @@ public class PaymentCriteriaDTO {
     private Integer amount;
     private String status;
     private String paidAt;
+    private String buyerName;
+    private String buyerPhone;
+    private String buyerEmail;
+    private String sellerName;
+    private String sellerPhone;
+    private String sellerEmail;
+    private String deliveryType;
+    private String productName;
 }

@@ -1225,13 +1225,13 @@ LIMIT 10;
 
 
 insert into tbl_payment(created_datetime, updated_datetime, payment_status_id)
-values (now(), now(), '6');
+values (now(), now(), '8');
 
 insert into tbl_payment_status(payment_phase, purchase_id, created_datetime, updated_datetime, member_id)
-values ('pending', 6,now(),now(),6);
+values ('success', 8,now(),now(),1);
 
 select * from tbl_purchase;
-
+select * from tbl_post;
 select * from tbl_payment;
-
+select * from tbl_member;
 select *from tbl_payment_status;

@@ -43,8 +43,8 @@ window.paymentInit = async function () {
 
         const trigger  = wrap.querySelector('#btn-filter-status');
         const pop      = wrap.querySelector('.bt-pop-menu');
-        const context  = pop?.querySelector('.bt-pop-menu-context');
-        const backdrop = pop?.querySelector('.bt-pop-menu-back');
+        const context  = pop.querySelector('.bt-pop-menu-context');
+        const backdrop = pop.querySelector('.bt-pop-menu-back');
         if (!trigger || !pop) return;
 
         if (!document.getElementById('payment-filter-style')) {
@@ -195,12 +195,17 @@ window.paymentInit = async function () {
         };
 
         modal.querySelectorAll('.btn-close, .close').forEach(b => b.addEventListener('click', close));
-        modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('show')) close(); });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) close();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) close();
+        });
 
         const table = section.querySelector('.table-layout');
-        if (table && !table.__paymentRowBound) {
-            table.__paymentRowBound = true;
+        if (table && !table.paymentRowBound) {
+            table.paymentRowBound = true;
 
             table.addEventListener('click', async (e) => {
                 const btn = e.target.closest('.action-btn');
@@ -241,7 +246,8 @@ window.paymentInit = async function () {
                 const id = getCurrentId();
                 if (!id) return;
                 const ok = await paymentService.processPayment(id, 'approve');
-                if (ok) close(); else alert('승인 처리 실패');
+                if (ok) close();
+                else alert('승인 처리 실패');
             });
         }
 
