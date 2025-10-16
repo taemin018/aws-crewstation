@@ -28,4 +28,7 @@ public interface PaymentStatusMapper {
 //    결제 갯수
     public int countPayment();
 
+    public PaymentCriteriaDTO selectPaymentDetail(Long paymentId);
+
+
 }

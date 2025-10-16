@@ -5,6 +5,7 @@ import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.post.section.PostSectionVO;
 import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseCriteriaDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
 import com.example.crewstation.dto.purchase.PurchaseDetailDTO;

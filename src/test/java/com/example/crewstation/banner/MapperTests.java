@@ -24,14 +24,14 @@ public class MapperTests {
         log.info("banners: {}", banners);
     }
 
-//    @Test
-//    public void insertBannerTest() {
-//        BannerDTO banner = new BannerDTO();
-//        banner.setBannerOrder(1);
-//        bannerMapper.insertBanner(banner);
-//
-//        log.info("생성된 배너 ID: {}", banner.getId());
-//    }
+    @Test
+    public void insertBannerTest() {
+        BannerDTO banner = new BannerDTO();
+        banner.setBannerOrder(1);
+        bannerMapper.insertBanner(banner);
+
+        log.info("생성된 배너 ID: {}", banner.getBannerId());
+    }
 
     @Test
     public void insertBannerFileTest() {
