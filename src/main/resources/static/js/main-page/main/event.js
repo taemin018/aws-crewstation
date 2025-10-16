@@ -7,8 +7,6 @@ const bannerCount = document.querySelector("span.banner-count");
 
 let count = 1;
 
-firstBanner.innerHTML = `<img src="../../static/images/banner1.jpg" alt="">`;
-lastBanner.innerHTML = `<img src="../../static/images/banner5.jpg" alt="">`;
 banner.appendChild(firstBanner);
 banner.prepend(lastBanner);
 

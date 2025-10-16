@@ -26,7 +26,8 @@ function showSection(name) {
         'member'      : window.memberInit,
         'notice'      : window.noticeInit,
         'diary-report': window.diaryReportInit,
-        'gift-report' : window.giftReportInit
+        'gift-report' : window.giftReportInit,
+        payment       : window.paymentInit,
     };
 
     const init = initMap[name];
@@ -171,7 +172,7 @@ function showSection(name) {
 
         btn.addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation(); // 문서 클릭 핸들러보다 우선
+            e.stopPropagation();
             toggle();
         });
 
@@ -366,10 +367,10 @@ function drawPie(staticsData) {
 // ===== 로그인 정보 표시 + 로그아웃 =====
 
 async function fetchWithRefresh(url, opts = {}) {
-    let res = await fetch(url, { credentials: 'include', ...opts });
+    let res = await fetch(url, { credentials: 'include'});
     if (res.status === 401) {
         const r = await fetch('/api/admin/auth/refresh', { method: 'GET', credentials: 'include' });
-        if (r.ok) res = await fetch(url, { credentials: 'include', ...opts });
+        if (r.ok) res = await fetch(url, { credentials: 'include'});
     }
     return res;
 }

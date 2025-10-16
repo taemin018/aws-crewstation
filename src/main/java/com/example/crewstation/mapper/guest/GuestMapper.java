@@ -5,7 +5,6 @@
     import com.example.crewstation.dto.guest.GuestOrderDetailDTO;
     import org.apache.ibatis.annotations.Mapper;
 
-    import java.util.List;
     import java.util.Optional;
 
     @Mapper
@@ -21,5 +20,9 @@
 
     //  상세조회
         public GuestOrderDetailDTO selectOrderDetails(String guestOrderNumber);
+
+
+//        주문번호로 조회
+        public Optional<GuestDTO> selectGuestByOrderName (String guestOrderName);
 
     }

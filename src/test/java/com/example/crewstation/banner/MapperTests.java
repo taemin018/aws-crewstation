@@ -30,7 +30,7 @@ public class MapperTests {
         banner.setBannerOrder(1);
         bannerMapper.insertBanner(banner);
 
-        log.info("생성된 배너 ID: {}", banner.getId());
+        log.info("생성된 배너 ID: {}", banner.getBannerId());
     }
 
     @Test

@@ -148,7 +148,7 @@ public class JwtTokenProvider {
                 .compact();
 
         redisTemplate.opsForValue().set(
-                REFRESH_TOKEN_PREFIX + username,
+                 username.contains("@") ? REFRESH_TOKEN_PREFIX + username : "guest_" + REFRESH_TOKEN_PREFIX + username,
                 refreshToken,
                 REFRESH_TOKEN_VALIDITY,
                 TimeUnit.MILLISECONDS
@@ -194,17 +194,17 @@ public class JwtTokenProvider {
 //    쿠키와 Redis에서 각 RefreshToken을 가져와서 비교
     public boolean checkRefreshTokenBetweenCookieAndRedis(String username, String cookieRefreshToken){
         String redisRefreshToken = getRefreshToken(username);
-        return redisRefreshToken.equals(redisRefreshToken);
+        return redisRefreshToken.equals(cookieRefreshToken);
     }
 
     public boolean checkRefreshTokenBetweenCookieAndRedis(String username, String provider, String cookieRefreshToken){
         String redisRefreshToken = getRefreshToken(username, provider);
-        return redisRefreshToken.equals(redisRefreshToken);
+        return redisRefreshToken.equals(cookieRefreshToken);
     }
 
 //    리프레시 토큰 삭제
     public void deleteRefreshToken(String username) {
-        log.info("{}", redisTemplate.delete(REFRESH_TOKEN_PREFIX + username));
+        log.info("{}", redisTemplate.delete((username.contains("@") ? "" : "guest_") + REFRESH_TOKEN_PREFIX + username));
     }
 
     public void deleteRefreshToken(String username, String provider) {
@@ -213,10 +213,11 @@ public class JwtTokenProvider {
 
 //    refresh token 조회
     public String getRefreshToken(String username) {
-        return (String) redisTemplate.opsForValue().get(REFRESH_TOKEN_PREFIX + username);
+        return (String) redisTemplate.opsForValue().get((username.contains("@") ? "" : "guest_") + REFRESH_TOKEN_PREFIX + username);
     }
 
     public String getRefreshToken(String username, String provider) {
+        log.info("#########: {}, {}", provider, username);
         return (String) redisTemplate.opsForValue().get(REFRESH_TOKEN_PREFIX + provider + "_" + username);
     }
 

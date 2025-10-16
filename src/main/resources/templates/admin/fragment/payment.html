@@ -1,160 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrewStation</title>
-    <link rel="stylesheet" href="/css/admin/font.css">
-    <link rel="stylesheet" href="/css/admin/payment.css">
-    <link rel="stylesheet" href="/css/admin/sidebar.css">
-    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
-
-</head>
-<body>
-    <div id="bootpay">
-        <div id="boot-notify-container"></div>
-        <div class="popup-manager" style="width: 0px;"></div>
-        <aside id="bootpay-side">
-            <div class="d-flex flex-column" id="side-wrapper">
-                <div class="side-header">
-                    <div class="app-wrapper">
-                        <div class="provider-name hover-spin">
-                            <span class="comp-provider-name">
-                                <span class="pn-name">CrewStation</span>
-                            </span>
-                        </div>
-                        <a class="app-name d-flex justify-content-between align-items-center">
-                            <span>CrewStation</span>
-                            <i class="mdi mdi-apps">
-                            </i>
-                        </a>
-                    </div>
-                </div>
-                <div class="menu-wrapper flex-grow-1">
-                    <ul class="menu-list">
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="menu-btn d-flex w-100 " data-toggle="collapse" >
-                                <span class="menu-name">HOME</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column open">
-                            <a class="menu-btn d-flex w-100" data-toggle="collapse" >
-                                <span class="menu-name">회원관리</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column open">
-                            <a class="menu-btn d-flex w-100" data-toggle="collapse" >
-                                <span class="menu-name">크루관리</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column">
-                            <!-- 클릭 이벤트 -->
-                            <!-- 회원 목록 클릭 시 collipse 열고 닫기 이벤트 -->
-                            <a class="menu-btn d-flex w-100 " data-toggle="collapse" >
-                                <span class="menu-name">신고</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                            <ul class="menu-sub-list collapse" >
-                                <li class="submenu menu-item ">
-                                    <a class="boot-link " data-param="0">
-                                        
-                                        다이어리
-                                    </a>
-                                </li>
-                                <li class="submenu menu-item ">
-                                    <a class="boot-link" data-param="0">
-                                        
-                                        기프트
-                                    </a>
-                                </li>
-                                <li class="submenu menu-item ">
-                                    <a class="boot-link " data-param="0">
-                                        
-                                        크루
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="boot-link menu-btn active">
-                                <span class="menu-name ">결제관리</span>
-                            </a>
-                            <ul class="menu-sub-list collapse " id="menu-60934308367997007c4c3d2c"></ul>
-                        </li>
-                        
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="menu-btn d-flex w-100"data-toggle="collapse">
-                                <span class="menu-name">문의</span>
-                                <div class="icon-wrapper flex-grow-1 text-right"></div>
-                            </a>  
-                        </li>
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="menu-btn d-flex w-100 "data-toggle="collapse">
-                                <span class="menu-name">배너관리</span>
-                                <div class="icon-wrapper flex-grow-1 text-right"></div>
-                            </a>  
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </aside>
-        <div id="bootpay-main" class="has-menu">
-            <div id="header-wrapper">
-                <div id="bootpay-header" class="d-flex trial-mode">
-                    <div class="flex-grow-1"></div>
-                    <div>
-                        <div class="header-menu-group d-flex">
-                            <a class="boot-link mr-3" href="">
-                                <div class="header-menu-btn " data-for="8598bfd3-1b35-4de3-a48f-9d6654dc0268" data-toggle="tooltip" data-custom-class title="공지사항">
-                                    <i class="mdi mdi-bullhorn-variant-outline">
-    
-                                    </i>
-    
-                                </div>
-                            </a>
-                            <div class="user-menu">
-                                <!-- 주석 아래에 show 유무로 메뉴가보임 -->
-                                <div id="usermenubtn"class="user-menu-wrapper d-flex align-items-center cursor-pointer" data-toggle="dropdown">
-                                    <div class="user-avatar">T</div>
-                                    <div class="user-menu-email">test@gamil.com</div>
-                                </div>
-                                <div id="usermenu" class="user-menu-content dropdown-menu dropdown-menu-right">
-                                    <ul class="menu-body list-unstyled">
-                                        <li>
-                                            <a class="boot-link d-block text-dark"href="">
-                                                <i class="mdi mdi-bell-outline mr-2 mdi-18px"></i>
-                                                회원가입
-                                                
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="d-block text-dark"href="">
-                                                <i class="mdi mdi-logout-variant mr-2 mdi-18px"></i>
-                                                로그아웃
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-    
-                        </div>
-    
-                    </div>
-    
-                </div>
-    
-            </div>
-            <div class="page wide-page receipt-index">
+<div th:fragment="payment" id="section-payment">
+<div class="page wide-page receipt-index">
                 <div class="page-header">
                     <div class="page-title">결제내역조회</div>
-                    <div class="page-subtitle">조건을 설정하여 조회할 수 있습니다</div>
+                    <div class="page-subtitle"></div>
                 </div>
                 <div class="page-body">
                     <div class="amount-section">
@@ -277,7 +125,7 @@
                                                             <li class="text-center font-weight-bold">결제상태선택</li>
                                                             <li class="list-item row mb-2">
                                                                 
-                                                                <div id="status-btn" class="col col-6">
+                                                                <div id="status-btn-2" class="col col-6">
                                                                     <button id="btn-select-all" class="btn btn-outline-default btn-sm">
                                                                         <label>
                                                                         <i class="mdi mdi-checkbox-multiple-marked mr-1">
@@ -287,7 +135,7 @@
                                                                         </label>
                                                                     </button>
                                                                 </div>
-                                                                <div id="status-btn" class="col col-6">
+                                                                <div id="status-btn-1" class="col col-6">
                                                                     <button id="btn-deselect-all" class="btn btn-outline-default btn-sm">
                                                                         <i class="mdi mdi-checkbox-multiple-marked-outline mr-1">
                                                                         </i>
@@ -301,7 +149,7 @@
                                                                         <div class="boot-check d-flex align-items-center undefined all-check-btn">
                                                                             <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
                                                                                 <label>
-                                                                                <i class="mdi mdi-check btn-status" data-target="pay-progress"">
+                                                                                <i class="mdi mdi-check btn-status" data-target="pay-progress">
                                                                                 </i>
                                                                                 </label>
                                                                             </div>
@@ -310,9 +158,7 @@
                                                                     </div>
                                                                     <div class="col-auto">
                                                                         <a class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                                            <!-- + 아이콘 클릭 이벤트 -->
-                                                                            <i class="mdi mdi-plus">
-                                                                            </i>
+
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -326,7 +172,6 @@
                                                                                     <i class="mdi mdi-check"></i>
                                                                                     </label>
                                                                                 </div>
-                                                                                <div class="boot-check-content flex-grow-1">결제대기</div>
                                                                             </div>
                                                                         </li>
                                                                         <li class="list-item ">
@@ -336,7 +181,6 @@
                                                                                     <i class="mdi mdi-check"></i>
                                                                                     </label>
                                                                                 </div>
-                                                                                <div class="boot-check-content flex-grow-1">입금/승인대기</div>
                                                                             </div>
                                                                         </li>
                                                                         <li class="list-item ">
@@ -346,7 +190,6 @@
                                                                                     <i class="mdi mdi-check"></i>
                                                                                     </label>
                                                                                 </div>
-                                                                                <div class="boot-check-content flex-grow-1">결제승인중</div>
                                                                             </div>
                                                                         </li>
                                                                         <li class="list-item ">
@@ -376,23 +219,21 @@
                                                                         <div class="boot-check d-flex align-items-center undefined all-check-btn">
                                                                             <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
                                                                                 <label>
-                                                                                <i class="mdi mdi-check btn-status" data-target="pay-fail""></i>
+                                                                                <i class="mdi mdi-check btn-status" data-target="pay-fail"></i>
                                                                                 </label>
                                                                             </div>
                                                                             <div class="boot-check-content flex-grow-1">결제실패</div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-auto">
-                                                                        <a class data-toggle="collapse" aria-expanded="false">
+                                                                        <a class="collapsed" data-toggle="collapse" aria-expanded="false">
                                                                             <label>
-                                                                            <i class="mdi mdi-plus">
-                                    
-                                                                            </i>
                                                                             </label>
                                                                         </a>
                                                                     </div>
                                                                     <div class="collapse" id="collapse_payFail">
                                                                         <ul class="sub-list-wrapper list-unstyled second">
+
                                                                             <li class="list-item ">
                                                                                 <div class="boot-check d-flex align-items-center undefined">
                                                                                     <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
@@ -400,29 +241,10 @@
                                                                                         <i class="mdi mdi-check"></i>
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div class="boot-check-content flex-grow-1">결제요청실패</div>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="list-item ">
-                                                                                <div class="boot-check d-flex align-items-center undefined">
-                                                                                    <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
-                                                                                        <label>
-                                                                                        <i class="mdi mdi-check""></i>
-                                                                                        </label>
-                                                                                    </div>
                                                                                     <div class="boot-check-content flex-grow-1">결제실패</div>
                                                                                 </div>
                                                                             </li>
-                                                                            <li class="list-item ">
-                                                                                <div class="boot-check d-flex align-items-center undefined">
-                                                                                    <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
-                                                                                        <label>
-                                                                                        <i class="mdi mdi-check""></i>
-                                                                                        </label>
-                                                                                    </div>
-                                                                                    <div class="boot-check-content flex-grow-1">결제승인실패</div>
-                                                                                </div>
-                                                                            </li>
+
                                                                             <li class="list-item ">
                                                                                 <div class="boot-check d-flex align-items-center undefined">
                                                                                     <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
@@ -430,17 +252,15 @@
                                                                                         <i class="mdi mdi-check" ></i>
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div class="boot-check-content flex-grow-1">결제승인치명적인오류</div>
                                                                                 </div>
                                                                             </li>
                                                                             <li class="list-item ">
                                                                                 <div class="boot-check d-flex align-items-center undefined">
                                                                                     <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
                                                                                         <label>
-                                                                                        <i class="mdi mdi-check""></i>
+                                                                                        <i class="mdi mdi-check"></i>
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div class="boot-check-content flex-grow-1">현금영수증발행실패</div>
                                                                                 </div>
                                                                             </li>
                                                                         </ul>
@@ -457,8 +277,6 @@
                                                                                     <div class="boot-check-content flex-grow-1">결제취소</div>
                                                                                     <div class="col-auto">
                                                                                         <a class data-toggle="collapse" aria-expanded="false">
-                                                                                            <i class="mdi mdi-plus">
-                                                                                            </i>
                                                                                         </a>
                                                                                     </div>
                                                                                 </div>
@@ -473,47 +291,18 @@
                                                                                                 <i class="mdi mdi-check optionCheck"></i>
                                                                                             </label>
                                                                                             </div>
-                                                                                            <div class="boot-check-content flex-grow-1">결제취소완료</div>
                                                                                         </div>
                                                                                     </li>
+
+
+
                                                                                     <li class="list-item ">
                                                                                         <div class="boot-check d-flex align-items-center undefined">
                                                                                             <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
                                                                                                 <label>
-                                                                                                    <i class="mdi mdi-check optionCheck"></i>
+                                                                                                    <i class="mdi mdi-check"></i>
                                                                                                 </label>
                                                                                                 </div>
-                                                                                            <div class="boot-check-content flex-grow-1">결제취소실패</div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li class="list-item ">
-                                                                                        <div class="boot-check d-flex align-items-center undefined">
-                                                                                            <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
-                                                                                                <label>
-                                                                                                    <i class="mdi mdi-check optionCheck"></i>
-                                                                                                </label>
-                                                                                                </div>
-                                                                                            <div class="boot-check-content flex-grow-1">결제취소진행중</div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li class="list-item ">
-                                                                                        <div class="boot-check d-flex align-items-center undefined">
-                                                                                            <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
-                                                                                                <label>
-                                                                                                    <i class="mdi mdi-check optionCheck"></i>
-                                                                                                </label>
-                                                                                                </div>
-                                                                                            <div class="boot-check-content flex-grow-1">현금영수증발행취소</div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    <li class="list-item ">
-                                                                                        <div class="boot-check d-flex align-items-center undefined">
-                                                                                            <div class="boot-check-box " tabindex="0" style="width: 20px; height: 20px;">
-                                                                                                <label>
-                                                                                                    <i class="mdi mdi-check""></i>
-                                                                                                </label>
-                                                                                                </div>
-                                                                                            <div class="boot-check-content flex-grow-1">현금영수증취소실패</div>
                                                                                         </div>
                                                                                     </li>
                                                                                 </ul>
@@ -568,7 +357,7 @@
                                                     <th class="platform">상세</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="payment-tbody">
                                                 <tr>
                                                     <!-- 결과가 없을 때 화면 -->
                                                     <!-- <td class="text-center" colspan="9">조회된 결제가 없습니다.</td> -->
@@ -588,8 +377,7 @@
                                                         </span>
                                                     </td>
                                                     <td class="td-method">
-                                                        <div class="pq">카카오페이</div>
-                                                        <div class="method">계좌이체</div>
+                                                        <div class="pq">토스페이</div>
                                                         <div class="api-version">
                                                             <span class="version-2">API v2</span>
                                                         </div>
@@ -610,7 +398,9 @@
                                                         </div>
                                                     </td>
                                                     <td class="td-action text-center">
-                                                        <button type="button" class="action-btn"><i class="mdi mdi-chevron-right"></i></button>
+                                                        <button type="button" class="action-btn" data-paymentid="1">
+                                                            <i class="mdi mdi-chevron-right"></i>
+                                                        </button>
                                                       </td>
                                                 </tr>
                                             </tbody>
@@ -639,7 +429,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal-title">
-                        결재 상세정보
+                        결제 상세정보
                     </div>
                     <button class="close">
                         <i class="mdi mdi-close"></i>
@@ -668,34 +458,13 @@
                                                 <div class="d-table-cell">
                                                     <table class="info-table">
                                                         <tbody>
-                                                            <tr>
-                                                                <th>상품 이름</th>
-                                                                <td>에펠탑 키링</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>상품 가격</th>
-                                                                <td>1000원</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>구매자 이름</th>
-                                                                <td>test</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>구매자 전화번호</th>
-                                                                <td>010-0000-0000</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>구매자 이메일</th>
-                                                                <td>text@naver.com</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>결제 진행 상태</th>
-                                                                <td>결제시간만료</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>결제시간</th>
-                                                                <td>07/22 11:51</td>
-                                                            </tr>
+                                                        <tr><th>상품 이름</th><td data-bind="productName">-</td></tr>
+                                                        <tr><th>상품 가격</th><td data-bind="amount">-</td></tr>
+                                                        <tr><th>구매자 이름</th><td data-bind="buyerName">-</td></tr>
+                                                        <tr><th>구매자 전화번호</th><td data-bind="buyerPhone">-</td></tr>
+                                                        <tr><th>구매자 이메일</th><td data-bind="buyerEmail">-</td></tr>
+                                                        <tr><th>결제 진행 상태</th><td data-bind="status">-</td></tr>
+                                                        <tr><th>결제시간</th><td data-bind="paidAt">-</td></tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -703,30 +472,12 @@
                                                 <div class="d-table-cell">
                                                     <table class="info-table">
                                                         <tbody>
-                                                            <tr>
-                                                                <th>판매자 이름</th>
-                                                                <td>판매자</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>판매자 전화번호</th>
-                                                                <td>010-2222-2222</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>판매자 이메일</th>
-                                                                <td>test01@gmail.com</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>판매 등록시간</th>
-                                                                <td>07/22 11:51</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>전달 방법</th>
-                                                                <td>직거래</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>주소</th>
-                                                                <td>서울시 강남구</td>
-                                                            </tr>
+                                                        <tr><th>판매자 이름</th><td data-bind="sellerName">-</td></tr>
+                                                        <tr><th>판매자 전화번호</th><td data-bind="sellerPhone">-</td></tr>
+                                                        <tr><th>판매자 이메일</th><td data-bind="sellerEmail">-</td></tr>
+                                                        <tr><th>판매 등록시간</th><td data-bind="listedAt">-</td></tr>
+                                                        <tr><th>전달 방법</th><td data-bind="deliveryType">-</td></tr>
+                                                        <tr><th>주소</th><td data-bind="address">-</td></tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -746,6 +497,3 @@
             </div>
         </div>
     </div>
-</body>
-<script src="/js/admin/payment/event.js"></script>
-</html>

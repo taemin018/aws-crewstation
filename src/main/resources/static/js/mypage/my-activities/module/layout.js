@@ -18,7 +18,7 @@ const likeLayout = (() => {
                     </div>
                 </div>
                 <div class="card-collection-item-content">
-                    <a class="card-content-link"></a>
+                    <a class="card-content-link" href="/diaries/detail/${diary.postId}"></a>
                     <div class="card-item-description">
                         <div class="card-item-description-content">
                             <span class="card-item-detail-content">
@@ -93,7 +93,7 @@ const replyLayout = (() => {
 
     const renderReplyCard = (diary) => {
         return `
-        <div class="inquiry-wrap" data-id="${diary.postId}">
+        <div class="reply-wrap" data-id="${diary.postId}">
           <img src="${diary.mainImage || '/static/images/diary-list-ex2.jpg'}" alt="">
           <article class="inquiry">
             <h1 class="inquiry-content">

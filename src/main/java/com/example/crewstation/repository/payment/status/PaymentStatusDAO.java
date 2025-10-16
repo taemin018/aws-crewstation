@@ -43,5 +43,10 @@ public class PaymentStatusDAO {
     public List<PaymentCriteriaDTO> adminPaymentList(Criteria criteria) {
         return paymentStatusMapper.selectPayment(criteria);
     }
+//결제 상세
+    public PaymentCriteriaDTO selectPaymentDetail(Long id) {
+        return paymentStatusMapper.selectPaymentDetail(id);
+    }
+
 
 }

@@ -60,8 +60,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/auth/guest-login",
                                 "/admin/login",
-                                "/api/payment/complete",
+                                "/api/payment",
                                 "/error",
                                 "/api/auth/**",
                                 "/api/admin/auth/**",

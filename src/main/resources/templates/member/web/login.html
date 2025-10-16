@@ -34,14 +34,14 @@
                             <a class="join" th:href="@{/member/join}">회원가입</a>
                         </section>
                     </form>
-                    <form action="/member/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
+                    <form class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
                         <div class="guest-id-input-wrap input-wrap">
-                            <input type="text" class="guest-id" name="guestOrderNumber" placeholder="주문번호" th:field="*{guestOrderNumber}"/>
+                            <input type="text" th:field="*{guestOrderNumber}" class="guest-id" name="guestOrderNumber" placeholder="주문번호"/>
                         </div>
                         <div class="guest-phone-input-wrap input-wrap">
-                            <input type="text" class="guest-phone" name="guestPhone" placeholder="휴대전화" th:field="*{guestPhone}"/>
+                            <input type="text" th:field="*{guestPhone}" class="guest-phone" name="guestPhone" placeholder="휴대전화"/>
                         </div>
-                        <button class="login-guest-btn login-btn">주문 조회</button>
+                        <button type="button" class="login-guest-btn login-btn">주문 조회</button>
                         <section class="login-option-action">
                             <a class="password-find" th:href="@{/member/password}">비밀번호 찾기</a>
                             <a class="join" th:href="@{/member/join}">회원가입</a>
@@ -62,11 +62,11 @@
             </div>
             <footer class="login-footer">
                 © &nbsp;
-                <a href="/">bucketplace, Co., Ltd.</a>  
+                <a href="/">bucketplace, Co., Ltd.</a>
                 . All Rights Reserved
             </footer>
         </main>
-        
+
     </div>
 </body>
 <script src="/js/member/web/login/module/service.js"></script>

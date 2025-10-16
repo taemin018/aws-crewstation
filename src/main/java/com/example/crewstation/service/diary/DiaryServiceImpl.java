@@ -109,11 +109,22 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(Long memberId, ScrollCriteria criteria) {
+    public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria) {
+        Long memberId = customUserDetails.getId();
         log.info("좋아요 다이어리 조회 - memberId={}, page={}, size={}", memberId, criteria.getPage(), criteria.getSize());
 
         // 목록 조회
         List<LikedDiaryDTO> diaries = diaryDAO.findDiariesLikedByMemberId(memberId, criteria);
+
+        // S3 이미지 URL 변환
+        diaries.forEach(diary -> {
+            if (diary.getMainImage() != null) {
+                diary.setMainImage(s3Service.getPreSignedUrl(diary.getMainImage(), Duration.ofMinutes(5)));
+            }
+            if (diary.getMemberProfileImage() != null) {
+                diary.setMemberProfileImage(s3Service.getPreSignedUrl(diary.getMemberProfileImage(), Duration.ofMinutes(5)));
+            }
+        });
 
         // 전체 개수 (hasMore 계산용)
         int totalCount = diaryDAO.countDiariesLikedByMemberId(memberId);
@@ -129,26 +140,39 @@ public class DiaryServiceImpl implements DiaryService {
 
     //  좋아요 한 다이어리 개수
     @Override
-    public int getCountDiariesLikedByMemberId(Long memberId) {
+    public int getCountDiariesLikedByMemberId(CustomUserDetails customUserDetails) {
+        Long memberId = customUserDetails.getId();
         log.info("memberId: {}", memberId);
         return diaryDAO.countDiariesLikedByMemberId(memberId);
     }
 
     //  좋아요 취소
     @Override
-    public void cancelLike(Long memberId, Long diaryId) {
+    public void cancelLike(CustomUserDetails customUserDetails, Long diaryId) {
+        Long memberId = customUserDetails.getId();
         diaryDAO.deleteLike(memberId, diaryId);
     }
 
     // 댓글 단 다이어리 목록 조회
     @Override
-    public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria) {
+    public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria) {
+        Long memberId = customUserDetails.getId();
         log.info("댓글 단 다이어리 조회 - memberId={}, page={}, size={}", memberId, criteria.getPage(), criteria.getSize());
 
         List<ReplyDiaryDTO> diaries = diaryDAO.findReplyDiariesByMemberId(memberId, criteria);
 
-        // 상대시간 변환
-        diaries.forEach(diary -> diary.setRelativeDatetime(DateUtils.toRelativeTime(diary.getCreatedDatetime())));
+        //  S3 이미지 URL 변환
+        diaries.forEach(diary -> {
+            if (diary.getMainImage() != null) {
+                diary.setMainImage(s3Service.getPreSignedUrl(diary.getMainImage(), Duration.ofMinutes(5)));
+            }
+//            if (diary.getMemberProfileImage() != null) {
+//                diary.setMemberProfileImage(s3Service.getPreSignedUrl(diary.getMemberProfileImage(), Duration.ofMinutes(5)));
+//            }
+
+            //  상대시간 변환
+            diary.setRelativeDatetime(DateUtils.toRelativeTime(diary.getCreatedDatetime()));
+        });
 
         // 전체 개수 (hasMore 계산용)
         int totalCount = diaryDAO.countReplyDiariesByMemberId(memberId);
@@ -164,7 +188,8 @@ public class DiaryServiceImpl implements DiaryService {
 
     //  내가 댓글 단 일기 개수
     @Override
-    public int getCountReplyDiariesByMemberId(Long memberId) {
+    public int getCountReplyDiariesByMemberId(CustomUserDetails customUserDetails) {
+        Long memberId = customUserDetails.getId();
         log.info("memberId: {}", memberId);
         return diaryDAO.countReplyDiariesByMemberId(memberId);
     }
