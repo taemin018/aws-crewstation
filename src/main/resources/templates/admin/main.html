@@ -13,6 +13,7 @@
 <!--    <link rel="stylesheet" href="/css/admin/banner.css">-->
     <link rel="stylesheet" href="/css/admin/main.css"/>
     <link rel="stylesheet" href="/css/admin/member.css"/>
+    <link rel="stylesheet" href="/css/admin/payment.css"/>
     <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
 </head>
@@ -65,9 +66,6 @@
                             </li>
                             <li class="submenu menu-item">
                                 <a class="boot-link" data-section="gift-report">기프트</a>
-                            </li>
-                            <li class="submenu menu-item">
-                                <a class="boot-link" data-section="crew-report">크루</a>
                             </li>
                         </ul>
                     </li>
@@ -142,6 +140,7 @@
             <div th:replace="~{admin/fragment/notificationDetail :: noticesDetail}"></div>
             <div th:replace="~{admin/fragment/diary-report :: diary-report-page}"></div>
             <div th:replace="~{admin/fragment/gift-report :: gift-report-page}"></div>
+            <div th:replace="~{admin/fragment/payment :: payment}"></div>
 
         </div>
 
@@ -168,5 +167,8 @@
 <script src="/js/admin/gift-report/module/layout.js"></script>
 <script src="/js/admin/gift-report/module/service.js"></script>
 <script src="/js/admin/gift-report/event.js"></script>
+<script src="/js/admin/payment/module/layout.js"></script>
+<script src="/js/admin/payment/module/service.js"></script>
+<script src="/js/admin/payment/event.js"></script>
 </body>
 </html>

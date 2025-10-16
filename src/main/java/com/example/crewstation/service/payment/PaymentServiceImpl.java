@@ -43,18 +43,18 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @LogReturnStatus
-    public Map<String,Object> requestPayment(PaymentStatusDTO paymentStatusDTO) {
+    public Map<String, Object> requestPayment(PaymentStatusDTO paymentStatusDTO) {
         String code = null;
         String message = null;
         boolean isExist = postDAO.isActivePost(paymentStatusDTO.getPurchaseId());
         log.info("isExist={}", isExist);
         log.info("paymentStatusDTO={}", paymentStatusDTO.toString());
 
-        if(!isExist){
+        if (!isExist) {
             throw new PostNotActiveException("이미 삭제된 상품입니다.");
         }
 
-        if(paymentStatusDTO.isGuest()){
+        if (paymentStatusDTO.isGuest()) {
 //            멤버랑 게스트에 값 넣어주기
             MemberDTO memberDTO = new MemberDTO();
             memberDAO.saveGuest(memberDTO);
@@ -72,14 +72,14 @@ public class PaymentServiceImpl implements PaymentService {
             response.addCookie(orderNumber);
             guestDAO.save(vo);
 
-        }else if(paymentStatusDTO.getMemberId() == null){
+        } else if (paymentStatusDTO.getMemberId() == null) {
             message = "비회원입니다.";
-            return Map.of("guest" ,true,"message",message);
+            return Map.of("guest", true, "message", message);
         }
         paymentStatusDAO.save(paymentStatusDTO);
         alarmDAO.savePaymentAlarm(paymentStatusDTO.getId());
         message = "판매요청 완료되었습니다.";
-        return Map.of("message",message);
+        return Map.of("message", message);
     }
 
     @Transactional
@@ -107,10 +107,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-
-
     @Override
-    public void selectPayment(int page) {
+    public List<PaymentCriteriaDTO> selectPayment(int page) {
         int total = paymentStatusDAO.countPayment();
         Criteria criteria = new Criteria(page, total, 16, 10);
 
@@ -120,8 +118,13 @@ public class PaymentServiceImpl implements PaymentService {
         paymentCriteriaDTO.setCriteria(criteria);
         paymentCriteriaDTO.setPaymentList(paymentList);
 
+        return paymentList;
 
+    }
 
+    @Override
+    public PaymentCriteriaDTO getPaymentDetail(Long id) {
+        return paymentStatusDAO.selectPaymentDetail(id);
     }
 
 

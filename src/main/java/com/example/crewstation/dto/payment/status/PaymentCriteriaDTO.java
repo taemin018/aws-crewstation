@@ -29,4 +29,6 @@ public class PaymentCriteriaDTO {
     private String updatedDatetime;
     private String receiptId;
     private Integer amount;
+    private String status;
+    private String paidAt;
 }

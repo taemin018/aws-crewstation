@@ -46,13 +46,7 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping("/payment")
-    public String goPayment(){
-        return "admin/fragment/payment";
-    }
-    @GetMapping("/gift")
-    public String goAdminGift(){
 
-        return "admin/fragment/gift-report";
-    }
+
+
 }
