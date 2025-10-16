@@ -812,9 +812,7 @@ td {
     min-width: 42px;
 }
 
-.btn:not(:disabled):not(.disabled){
-    cursor: pointer;
-}
+
 
 .boot-pop-checkbox button.boot-pop-checkbox-filter-btn {
     padding: 9px 9px 8px 15px;
@@ -2344,3 +2342,7 @@ element.style {
     max-width: 120px;
     text-align: left;
   }
+
+.action-btn {
+    border: 0;
+}
