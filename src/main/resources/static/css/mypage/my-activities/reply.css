@@ -224,7 +224,7 @@ a {
     color: rgb(47, 52, 56);
 }
 
-.sticky-container {
+.m-sticky-container {
     position: sticky;
     top: 81px;
     transition: top 0.1s;
@@ -418,7 +418,7 @@ nav {
     margin-top: 20px;
 }
 
-.inquiry-wrap {
+.reply-wrap {
     padding-top: 0px;
     padding-bottom: 417px;
     transform: translateY(0px);
@@ -426,7 +426,7 @@ nav {
     padding: 16px;
 }
 
-.inquiry-wrap > img {
+.reply-wrap > img {
     margin-left: 20px;
     width: 215px;
     height: 215px;

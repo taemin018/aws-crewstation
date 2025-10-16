@@ -26,60 +26,64 @@ public class DiaryRestController {
 
     private final DiaryService diaryService;
 
-    // 좋아요한 일기 목록 조회 (무한스크롤)
-    @GetMapping("/liked/{memberId}")
-    public ResponseEntity<LikedDiaryCriteriaDTO> getLikedDiaries(
-            @PathVariable Long memberId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+        // 좋아요한 일기 목록 조회 (무한스크롤)
+        @GetMapping("/liked")
+        public ResponseEntity<LikedDiaryCriteriaDTO> getLikedDiaries(
+                @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                @RequestParam(defaultValue = "1") int page,
+                @RequestParam(defaultValue = "10") int size) {
 
-        ScrollCriteria criteria = new ScrollCriteria(page, size);
-        LikedDiaryCriteriaDTO dto = diaryService.getDiariesLikedByMemberId(memberId, criteria);
+            ScrollCriteria criteria = new ScrollCriteria(page, size);
+            LikedDiaryCriteriaDTO dto = diaryService.getDiariesLikedByMemberId(customUserDetails, criteria);
 
-        return ResponseEntity.ok(dto);
-    }
-
-    // 좋아요한 일기 총 개수 반환
-    @GetMapping("/liked/{memberId}/count")
-    public ResponseEntity<Integer> getLikedDiaryCount(@PathVariable Long memberId) {
-        int count = diaryService.getCountDiariesLikedByMemberId(memberId);
-        return ResponseEntity.ok(count);
-    }
-
-    // 좋아요 취소
-    @DeleteMapping("/liked/{memberId}/{diaryId}")
-    public ResponseEntity<Map<String, Object>> cancelLikedDiary(
-            @PathVariable Long memberId,
-            @PathVariable Long diaryId) {
-        try {
-            diaryService.cancelLike(memberId, diaryId);
-            return ResponseEntity.ok(Map.of("success", true));
-        } catch (Exception e) {
-            log.error("좋아요 취소 실패 - memberId={}, diaryId={}", memberId, diaryId, e);
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", e.getMessage()));
+            return ResponseEntity.ok(dto);
         }
-    }
 
-    // 내가 댓글 단 다이어리 목록 (무한스크롤)
-    @GetMapping("/replies/{memberId}")
-    public ResponseEntity<ReplyDiaryCriteriaDTO> getReplyDiaries(
-            @PathVariable Long memberId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+        // 좋아요한 일기 총 개수 반환
+        @GetMapping("/liked/count")
+        public ResponseEntity<Integer> getLikedDiaryCount(
+                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        ScrollCriteria criteria = new ScrollCriteria(page, size);
-        ReplyDiaryCriteriaDTO dto = diaryService.getReplyDiariesByMemberId(memberId, criteria);
+            int count = diaryService.getCountDiariesLikedByMemberId(customUserDetails);
+            return ResponseEntity.ok(count);
+        }
 
-        return ResponseEntity.ok(dto);
-    }
+        // 좋아요 취소
+        @DeleteMapping("/liked/{diaryId}")
+        public ResponseEntity<Map<String, Object>> cancelLikedDiary(
+                @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                @PathVariable Long diaryId) {
+            try {
+                diaryService.cancelLike(customUserDetails, diaryId);
+                return ResponseEntity.ok(Map.of("success", true));
+            } catch (Exception e) {
+                log.error("좋아요 취소 실패 - diaryId={}", diaryId, e);
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", e.getMessage()));
+            }
+        }
 
-    // 댓글 단 다이어리 개수 조회
-    @GetMapping("/replies/{memberId}/count")
-    public ResponseEntity<Integer> getReplyDiaryCount(@PathVariable Long memberId) {
-        int count = diaryService.getCountReplyDiariesByMemberId(memberId);
-        return ResponseEntity.ok(count);
-    }
+        // 내가 댓글 단 다이어리 목록 (무한스크롤)
+        @GetMapping("/replies")
+        public ResponseEntity<ReplyDiaryCriteriaDTO> getReplyDiaries(
+                @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                @RequestParam(defaultValue = "1") int page,
+                @RequestParam(defaultValue = "10") int size) {
+
+            ScrollCriteria criteria = new ScrollCriteria(page, size);
+            ReplyDiaryCriteriaDTO dto = diaryService.getReplyDiariesByMemberId(customUserDetails, criteria);
+
+            return ResponseEntity.ok(dto);
+        }
+
+        // 댓글 단 다이어리 개수 조회
+        @GetMapping("/replies/count")
+        public ResponseEntity<Integer> getReplyDiaryCount(
+                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+            int count = diaryService.getCountReplyDiariesByMemberId(customUserDetails);
+            return ResponseEntity.ok(count);
+        }
 
     @GetMapping
     public ResponseEntity<DiaryCriteriaDTO> getDiaries(Search search,

@@ -28,28 +28,58 @@ public class ServiceTest {
 
     @Test
     public void testFindLikedDiaries() {
-        Long memberId = 1L;
+        MemberDTO member = new MemberDTO();
+        member.setId(1L);
+        CustomUserDetails customUserDetails = new CustomUserDetails(member);
+
         ScrollCriteria criteria = new ScrollCriteria(2, 18);
         criteria.setSize(10);
         criteria.setOffset(0);
 
-        LikedDiaryCriteriaDTO result = diaryService.getDiariesLikedByMemberId(memberId, criteria);
+        LikedDiaryCriteriaDTO result = diaryService.getDiariesLikedByMemberId(customUserDetails, criteria);
 
         List<LikedDiaryDTO> diaries = result.getLikedDiaryDTOs();
-
         log.info("조회 결과 건수 = {}", diaries.size());
         diaries.forEach(diary -> log.info("Diary: {}", diary));
     }
 
     @Test
     public void testCountLikedDiaries() {
-        Long memberId = 1L;
+        MemberDTO member = new MemberDTO();
+        member.setId(1L);
+        CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
-        int count = diaryService.getCountDiariesLikedByMemberId(memberId);
+        int count = diaryService.getCountDiariesLikedByMemberId(customUserDetails);
+
         log.info("좋아요 일기 개수 = {}", count);
         assertThat(count).isGreaterThanOrEqualTo(0);
     }
 
+    @Test
+    public void testFindReplyDiaries() {
+        MemberDTO member = new MemberDTO();
+        member.setId(1L);
+        CustomUserDetails customUserDetails = new CustomUserDetails(member);
+
+        ScrollCriteria criteria = new ScrollCriteria(1, 10);
+
+        var result = diaryService.getReplyDiariesByMemberId(customUserDetails, criteria);
+
+        log.info("댓글 단 다이어리 개수 = {}", result.getReplyDiaryDTOs().size());
+        result.getReplyDiaryDTOs().forEach(diary -> log.info("Reply Diary: {}", diary));
+    }
+
+    @Test
+    public void testCountReplyDiaries() {
+        MemberDTO member = new MemberDTO();
+        member.setId(1L);
+        CustomUserDetails customUserDetails = new CustomUserDetails(member);
+
+        int count = diaryService.getCountReplyDiariesByMemberId(customUserDetails);
+
+        log.info("댓글 단 다이어리 개수 = {}", count);
+        assertThat(count).isGreaterThanOrEqualTo(0);
+    }
 
     @Test
     public void testGetDiaries(){
