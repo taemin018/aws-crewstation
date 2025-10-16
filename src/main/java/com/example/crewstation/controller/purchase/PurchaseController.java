@@ -42,9 +42,8 @@ public class PurchaseController {
     private final AuthenticationManager authenticationManager;
     private final PurchaseListCriteriaDTO purchaseListCriteriaDTO;
 
-    @GetMapping()
-    public String list(@AuthenticationPrincipal UserDetails userDetails) {
-        log.info("userDetails {}", userDetails);
+    @GetMapping
+    public String list() {
         return "gift-shop/list";
     }
 

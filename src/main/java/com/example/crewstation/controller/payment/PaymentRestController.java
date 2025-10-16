@@ -29,6 +29,7 @@ public class PaymentRestController {
                 paymentStatusDTO.setMemberId(userDetails.getId());
             }
             Map<String, Object> message = paymentService.requestPayment(paymentStatusDTO);
+            log.info(message.toString());
             return ResponseEntity.ok().body(message);
         }catch (PostNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

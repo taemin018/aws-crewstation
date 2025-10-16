@@ -68,11 +68,13 @@
             <div class="diary-content">
                     <span class="diary-content-text">
                         <span>
-                            <div th:each="section, iterStat : ${diary.sections}"
-                                 th:id="'target' + ${iterStat.index + 1}"
-                                 class="target"
-                                 th:text="${section.postContent}">
-                            </div>
+                            <th:block th:each="section, iterStat : ${diary.sections}">
+                                <div th:id="'target' + ${iterStat.index + 1}"
+                                     class="target"
+                                     th:text="${section.postContent}">
+                                </div>
+                                <br th:if="${!iterStat.last}"/>
+                            </th:block>
                         </span>
                     </span>
             </div>
@@ -83,9 +85,7 @@
                             <div class="image-items">
                                 <div class="image-wrap" th:each="section :${diary.sections}"  th:if="${section.filePath !=null}">
                                     <div class="image">
-                                        <a href="">
                                             <img class="diary-img" th:src="@{${section.filePath}}">
-                                        </a>
                                         <div class="mention" th:each="tag :${section.tags}" th:style="'left:' + ${tag.tagLeft} +'%; top:' + ${tag.tagTop}+'%;' ">
                                             <div class="mention-container">
                                                 <button class="mention-button">
@@ -103,7 +103,7 @@
                                                             <img class="product-seller-profile-img" th:src="@{${tag.socialImgUrl}}">
                                                         </th:block>
                                                         <th:block th:if="${tag.filePath == null and tag.socialImgUrl ==null}">
-                                                            <img class="product-seller-profile-img" src="/images/air1.png">
+                                                            <img class="product-seller-profile-img" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c">
                                                         </th:block>
                                                         <span id="mention-name" th:text="${tag.memberName}"></span>
                                                     </a>

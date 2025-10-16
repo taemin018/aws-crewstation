@@ -17,9 +17,7 @@ function setupModal(modalId, openSelector, closeSelector, onClose) {
         btn.addEventListener("click", async (e) => {
             console.log(modalId);
             if (modalId === "myModal") {
-                console.log("판매 요청 들어왔고");
                 const postId = document.getElementById("postId").dataset.post;
-                console.log("회원 유저야")
                 console.log(123)
                 const {isGuest, message, status} = await purchaseDetailService.requestToSell({
                     purchaseId: postId
