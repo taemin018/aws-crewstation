@@ -1,4 +1,7 @@
 const paymentLayout = (() => {
+    const n = (v) => Number(v ?? 0).toLocaleString('ko-KR');
+    const safe = (v, def = '-') => (v === null || v === undefined || v === '') ? def : String(v);
+
     const getTbody = () => document.querySelector('#section-payment #payment-tbody');
 
     const clear = () => {
@@ -33,7 +36,7 @@ const paymentLayout = (() => {
             tr.dataset.paymentId = p.id;
 
             const statusText = safe(p.statusText ?? p.paymentPhase);
-            const timeText = safe(p.timeText ?? p.paidAt  ?? p.updatedDatetime);
+            const timeText   = safe(p.paidAt ?? p.updatedDatetime);
 
             tr.innerHTML = `
         <td class="td-name"><div class="good-name">${safe(p.productName)}</div></td>
@@ -41,8 +44,7 @@ const paymentLayout = (() => {
           ${n(p.amount)} <span class="amount-unit">원</span>
         </td>
         <td class="td-method">
-          <div class="pq">${safe(p.pgName)}</div>
-          <div class="method">${safe(p.method)}</div>
+          <div class="pq">토스페이</div>
         </td>
         <td class="td-status">
           <div class="label-form">
@@ -53,11 +55,11 @@ const paymentLayout = (() => {
         <td class="td-buyer text-center text-dark">
           <div class="buyer-wrapper">
             <div class="user-name">${safe(p.buyerName)}</div>
-            <div class="user-phone fs-1">${safe(p.buyerPhone)}</div>
           </div>
         </td>
         <td class="td-action text-center">
-          <button type="button" class="action-btn view" data-paymentid="${p.id}">
+          <button type="button" class="action-btn view" 
+          data-paymentid="${p.id}">
             <i class="mdi mdi-chevron-right"></i>
           </button>
         </td>
@@ -89,7 +91,7 @@ const paymentLayout = (() => {
         set('buyerPhone', detail.buyerPhone);
         set('buyerEmail', detail.buyerEmail);
         set('status', detail.statusText ?? detail.paymentPhase);
-        set('paidAt', detail.paidAtText ?? detail.paidAt ?? detail.createdDatetime ?? detail.updatedDatetime);
+        set('paidAt', detail.paidAt ?? detail.createdDatetime ?? detail.updatedDatetime);
 
         set('sellerName', detail.sellerName);
         set('sellerPhone', detail.sellerPhone);

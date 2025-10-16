@@ -8,8 +8,8 @@ const paymentService = (() => {
         return await res.json();
     };
 
-    const getDetail = async (paymentId) => {
-        const res = await fetchWithRefresh(`/api/admin/payment/${encodeURIComponent(paymentId)}`, {
+    const getDetail = async (Id) => {
+        const res = await fetchWithRefresh(`/api/admin/payment/${encodeURIComponent(Id)}`, {
             method: 'GET',
             credentials: 'include',
         });
