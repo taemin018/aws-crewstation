@@ -15,6 +15,7 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.dto.file.tag.ImageDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
+import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
@@ -34,6 +35,7 @@ import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,28 +78,30 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
-        List<LinkedHashMap> rawDiaries = (List<LinkedHashMap>) redisTemplate.opsForValue().get("diaries");
-
-        List<DiaryDTO> diaries = new ArrayList<>();
-        if (rawDiaries != null) {
+        List<DiaryDTO> diaries = null;
+         Object obj = redisTemplate.opsForValue().get("diaries");
+        if (obj != null) {
             ObjectMapper mapper = new ObjectMapper();
-            diaries = rawDiaries.stream()
-                    .map(map -> mapper.convertValue(map, DiaryDTO.class))
-                    .collect(Collectors.toList());
+            diaries = mapper.convertValue(
+                    obj,
+                    new TypeReference<List<DiaryDTO>>() {}
+            );
         }
 
         if (diaries != null) {
             diaries.forEach(diary -> {
                 String filePath = diary.getDiaryFilePath();
-                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
-
+//                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+//                if(diary.getMemberFilePath() != null){
+//                    diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
+//                }
                 diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
-
-                log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
-                        diary, filePath, presignedUrl);
-                diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(),
-                        Duration.ofMinutes(5)));
+//
+//                log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+//                        diary, filePath, presignedUrl);
+//                diary.setDiaryFilePath(presignedUrl);
             });
+            redisTemplate.opsForValue().set("diaries",diaries,Duration.ofMinutes(5));
             return diaries;
 
         }
@@ -166,7 +170,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-//    @LogReturnStatus
+    @LogReturnStatus
     public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails) {
         DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
         Search newSearch = new Search();

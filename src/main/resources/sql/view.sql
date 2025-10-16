@@ -71,6 +71,7 @@ from tbl_file tf
          join tbl_post_section_file tpsf on tf.id = tpsf.file_id
     );
 
+drop view view_file_post_section_file;
 
 
 create view view_post_purchase as
