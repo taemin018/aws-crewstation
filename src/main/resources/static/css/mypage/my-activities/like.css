@@ -224,7 +224,7 @@ a {
     color: rgb(47, 52, 56);
 }
 
-.sticky-container {
+.m-sticky-container {
     position: sticky;
     top: 81px;
     transition: top 0.1s;
@@ -566,4 +566,15 @@ div.card-collection-item-content:hover div.card-item-description  div.card-item-
     left: 50%;
     transform: translate(-50%, -50%); /* 정확히 가운데로 이동 */
     z-index: 9999;
+}
+
+.card-collection-item-content {
+    position: relative; /* 기준 요소 */
+}
+
+.card-content-link {
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    z-index: 10; /* 다른 내용보다 위로 */
+    cursor: pointer;
 }
