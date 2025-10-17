@@ -1,8 +1,10 @@
 package com.example.crewstation.dto.payment.status;
 
 import com.example.crewstation.common.enumeration.PaymentPhase;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,6 +23,7 @@ public class PaymentStatusDTO {
     private String addressDetail;
     private String address;
     private String guestOrderNumber;
+    private String guestPassword;
     private PaymentPhase paymentPhase;
     private String createdDatetime;
     private String updatedDatetime;

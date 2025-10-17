@@ -117,6 +117,7 @@ div.arrow-wrap:hover button.arrow-btn{
 }
 
 div.arrow-wrap{
+    z-index: 3;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -175,6 +176,7 @@ button.right-btn span::before{
 }
 
 span.banner-page{
+    z-index: 10;
     font-size: 14px;
     height: 26px;
     border-radius: 13px;

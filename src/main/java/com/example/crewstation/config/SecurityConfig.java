@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/auth/guest-login",
                                 "/admin/login",
                                 "/api/payment",
                                 "/error",
@@ -93,7 +94,7 @@ public class SecurityConfig {
                                 "/ask/register",
                                 "/notice/notice",
                                 "/notice/notice-detail",
-                                "guest/order-detail",
+                                "/guest/order-detail",
                                 "/api/guest/order-detail/{guestOrderNumber:\\d+}")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,

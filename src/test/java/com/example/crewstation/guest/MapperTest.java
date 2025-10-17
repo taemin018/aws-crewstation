@@ -50,4 +50,10 @@ public class MapperTest {
         guestMapper.select(guestDTO);
         log.info("guest {}", guestMapper.select(guestDTO));
     }
+
+    @Test
+    public void testSelectByOrderNumber() {
+
+        log.info("guest {}", guestMapper.selectGuestByOrderName("2025101515483814562"));
+    }
 }

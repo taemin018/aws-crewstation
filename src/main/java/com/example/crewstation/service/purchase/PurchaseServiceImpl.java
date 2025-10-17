@@ -10,6 +10,7 @@ import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.*;

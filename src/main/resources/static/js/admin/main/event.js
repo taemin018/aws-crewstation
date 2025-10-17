@@ -1,32 +1,42 @@
-// ===== ★ 전역 섹션 전환 함수 (SPA) =====
 function showSection(name) {
     const container = document.getElementById('page-container');
     if (!container) return;
 
-    const sections = container.querySelectorAll(':scope > div[id^="section-"]');
+    const sections = Array.from(container.children).filter(
+        el => el.id && el.id.startsWith('section-')
+    );
     const targetId = `section-${name}`;
 
     sections.forEach(sec => {
         sec.style.display = (sec.id === targetId ? 'block' : 'none');
     });
 
-    // 해시 동기화 (뒤로가기/북마크)
-    if (location.hash !== `#${name}`) history.pushState(null, '', `#${name}`);
+    if (location.hash !== `#${name}`) {
+        history.pushState(null, '', `#${name}`);
+    }
 
-    // 사이드바 active 동기화
     document.querySelectorAll('[data-section]').forEach(a => {
         a.classList.toggle('active', a.dataset.section === name);
     });
 
-    // 섹션별 최초 1회 초기화 훅 (필요한 경우만)
-    if (name === 'diary-report' && typeof window.diaryReportInit === 'function') {
-        if (!showSection.__inited) showSection.__inited = {};
-        if (!showSection.__inited[name]) {
-            showSection.__inited[name] = true;
-            window.diaryReportInit(); // 필요시 await 가능
-        }
+    if (!showSection.inited) showSection.inited = {};
+
+    const initMap = {
+        'home'        : window.mainInit,
+        'member'      : window.memberInit,
+        'notice'      : window.noticeInit,
+        'diary-report': window.diaryReportInit,
+        'gift-report' : window.giftReportInit,
+        payment       : window.paymentInit,
+    };
+
+    const init = initMap[name];
+    if (typeof init === 'function' && !showSection.inited[name]) {
+        showSection.inited[name] = true;
+        init(); 
     }
 }
+
 
 
 // =============== 사이드바 ===============
@@ -94,8 +104,8 @@ function showSection(name) {
         const subLink = e.target.closest(".menu-sub-list .boot-link");
         if (subLink && side.contains(subLink)) {
             if (subLink.dataset.section) {
-                   e.preventDefault();
-                   showSection(subLink.dataset.section);
+                e.preventDefault();
+                showSection(subLink.dataset.section);
             }
 
             const ul = subLink.closest(".menu-sub-list");
@@ -117,12 +127,12 @@ function showSection(name) {
         const btnTop = e.target.closest(".menu-item > .menu-btn");
         if (!btnTop || !side.contains(btnTop)) return;
 
-             if (btnTop.dataset.section) {
-               e.preventDefault();
-               showSection(btnTop.dataset.section);
-               return;
-             }
-         e.preventDefault();
+        if (btnTop.dataset.section) {
+            e.preventDefault();
+            showSection(btnTop.dataset.section);
+            return;
+        }
+        e.preventDefault();
 
         const panel = btnTop.nextElementSibling;
         const hasPane = panel && panel.classList.contains("menu-sub-list");
@@ -162,7 +172,7 @@ function showSection(name) {
 
         btn.addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation(); // 문서 클릭 핸들러보다 우선
+            e.stopPropagation();
             toggle();
         });
 
@@ -357,10 +367,10 @@ function drawPie(staticsData) {
 // ===== 로그인 정보 표시 + 로그아웃 =====
 
 async function fetchWithRefresh(url, opts = {}) {
-    let res = await fetch(url, { credentials: 'include', ...opts });
+    let res = await fetch(url, { credentials: 'include'});
     if (res.status === 401) {
         const r = await fetch('/api/admin/auth/refresh', { method: 'GET', credentials: 'include' });
-        if (r.ok) res = await fetch(url, { credentials: 'include', ...opts });
+        if (r.ok) res = await fetch(url, { credentials: 'include'});
     }
     return res;
 }

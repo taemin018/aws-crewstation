@@ -3,6 +3,7 @@ package com.example.crewstation.controller.member;
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.auth.JwtTokenProvider;
+import com.example.crewstation.dto.guest.GuestDTO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.service.member.MemberService;
 import jakarta.servlet.http.Cookie;
@@ -33,6 +34,7 @@ AuthController implements AuthControllerDocs{
     private final JwtTokenProvider jwtTokenProvider;
     private final HttpServletResponse response;
     private final MemberService memberService;
+    private final GuestDTO guestDTO;
 
     //    로그인
     @PostMapping("login")
@@ -64,22 +66,22 @@ AuthController implements AuthControllerDocs{
     //   guest 로그인
     @PostMapping("guest-login")
     @LogReturnStatus
-    public ResponseEntity<?> guestLogin(@RequestBody MemberDTO memberDTO){
+    public ResponseEntity<?> guestLogin(@RequestBody GuestDTO guestDTO){
         try {
             Authentication authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberDTO.getGuestOrderNumber(), memberDTO.getMemberPhone()));
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(guestDTO.getGuestOrderNumber(), guestDTO.getGuestPhone()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String accessToken = jwtTokenProvider.createAccessToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
-            String refreshToken = jwtTokenProvider.createRefreshToken(((CustomUserDetails) authentication.getPrincipal()).getUserEmail());
+            String accessToken = jwtTokenProvider.createAccessToken(((CustomUserDetails) authentication.getPrincipal()).getGuestOrderNumber());
+            String refreshToken = jwtTokenProvider.createRefreshToken(((CustomUserDetails) authentication.getPrincipal()).getGuestOrderNumber());
 
             Map<String, String> tokens = new HashMap<>();
             tokens.put("accessToken", accessToken);
             tokens.put("refreshToken", refreshToken);
 
-            Cookie rememberEmailCookie = new Cookie("rememberEmail", memberDTO.getMemberEmail());
+            Cookie rememberEmailCookie = new Cookie("rememberEmail", guestDTO.getGuestOrderNumber());
 
-            rememberEmailCookie.setPath("/"); // 모든 경로에서 접근 가능
+            rememberEmailCookie.setPath("/");
 
             return ResponseEntity.ok(tokens);
 
@@ -91,6 +93,7 @@ AuthController implements AuthControllerDocs{
     //    로그아웃
     @PostMapping("logout")
     public void logout(@CookieValue(value = "accessToken", required = false) String token) {
+        log.info(token);
         String username = jwtTokenProvider.getUserName(token);
         String provider = (String) jwtTokenProvider.getClaims(token).get("provider");
         if(provider == null){
@@ -133,6 +136,14 @@ AuthController implements AuthControllerDocs{
         roleCookie.setMaxAge(0);
 
         response.addCookie(roleCookie);
+
+        Cookie deleteProviderCookie = new Cookie("provider", null);
+        deleteProviderCookie.setHttpOnly(true);
+        deleteProviderCookie.setSecure(true);
+        deleteProviderCookie.setPath("/");
+        deleteProviderCookie.setMaxAge(0);
+
+        response.addCookie(deleteProviderCookie);
     }
 
     //    리프레시 토큰으로 엑세스 토큰 발급

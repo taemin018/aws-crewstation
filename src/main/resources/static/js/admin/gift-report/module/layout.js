@@ -1,11 +1,31 @@
-
-const section = document.getElementById('section-gift-report');
-const giftReport = section ? section.querySelector('.table-reports tbody') : null;
-
 const giftReportLayout = (() => {
-    const showReportGiftList = (reportGift = []) => {
-        if (!giftReport) return;
-        reportGift.forEach((gift) => {
+    const getTbody = () =>
+        document.querySelector('#section-gift-report .table-reports tbody');
+
+    const clear = () => {
+        const tb = getTbody();
+        if (tb) tb.innerHTML = '';
+    };
+
+    const showEmpty = () => {
+        const tb = getTbody();
+        if (!tb) return;
+        tb.innerHTML = `
+      <tr>
+        <td colspan="5" class="text-center text-muted">등록된 신고가 없습니다.</td>
+      </tr>`;
+    };
+
+    const showReportGiftList = (list = []) => {
+        const tb = getTbody();
+        if (!tb) return;
+
+        if (!Array.isArray(list) || list.length === 0) {
+            if (!tb.hasChildNodes()) showEmpty();
+            return;
+        }
+
+        list.forEach((gift) => {
             const tr = document.createElement('tr');
             tr.dataset.reportId = gift.reportId;
             tr.dataset.status = gift.processStatus || 'PENDING';
@@ -38,9 +58,9 @@ const giftReportLayout = (() => {
           </button>
         </td>
       `;
-            giftReport.appendChild(tr);
+            tb.appendChild(tr);
         });
     };
 
-    return { showReportGiftList };
+    return { clear, showEmpty, showReportGiftList };
 })();

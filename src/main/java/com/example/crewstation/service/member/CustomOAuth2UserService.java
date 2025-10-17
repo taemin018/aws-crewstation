@@ -36,7 +36,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
         String email = (String) memberAttribute.get("email");
         Optional<MemberDTO> foundMember = memberDAO.findBySnsEmail(email);
-
         if(foundMember.isEmpty()) {
 //            회원이 존재하지 않을 경우,
             memberAttribute.put("exist", false);

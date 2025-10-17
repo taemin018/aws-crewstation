@@ -6,11 +6,14 @@ import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.dto.accompany.AccompanyDTO;
 import com.example.crewstation.dto.banner.BannerDTO;
+import com.example.crewstation.dto.diary.DiaryDTO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.repository.banner.BannerDAO;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.service.s3.S3Service;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
@@ -40,19 +43,28 @@ public class BannerServiceImpl implements BannerService {
     @Transactional(rollbackFor = Exception.class)
     @LogReturnStatus
     public List<BannerDTO> getBanners(int limit) {
-        List<BannerDTO> banners = (List<BannerDTO>) redisTemplate.opsForValue().get("banners");
-        if (banners != null) {
-            banners.forEach(banner -> {
-                String filePath = banner.getFilePath();
-                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
-
-                log.info("Accompany ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
-                        banner, filePath, presignedUrl);
-                banner.setFilePath(s3Service.getPreSignedUrl(banner.getFilePath(),
-                        Duration.ofMinutes(5)));
-            });
-            return banners;
+        List<BannerDTO> banners = null;
+        Object obj = redisTemplate.opsForValue().get("banners");
+        if (obj != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            banners = mapper.convertValue(
+                    obj,
+                    new TypeReference<List<BannerDTO>>() {}
+            );
         }
+
+//        if (banners != null) {
+//            banners.forEach(banner -> {
+//                String filePath = banner.getFilePath();
+//                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+//
+//                log.info("Accompany ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+//                        banner, filePath, presignedUrl);
+//                banner.setFilePath(s3Service.getPreSignedUrl(banner.getFilePath(),
+//                        Duration.ofMinutes(5)));
+//            });
+//            return banners;
+//        }
         return bannerTransactionService.getBanners(limit);
     }
 }
