@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @ToString
 @NoArgsConstructor
 public class MyPurchaseDetailDTO {
-    // 주문(게스트) 정보
+    // 주문 정보
     private Long buyerMemberId;
     private String memberName;
     private String memberPhone;
