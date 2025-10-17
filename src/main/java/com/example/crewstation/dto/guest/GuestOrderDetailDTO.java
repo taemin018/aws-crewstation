@@ -1,6 +1,7 @@
 package com.example.crewstation.dto.guest;
 
 import com.example.crewstation.common.enumeration.DeliveryMethod;
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class GuestOrderDetailDTO {
     private String guestOrderNumber;
 
     // 결제
-    private String paymentStatus;
+    private PaymentPhase paymentStatus;
 
     // 구매(상품)
     private Long buyerMemberId;
