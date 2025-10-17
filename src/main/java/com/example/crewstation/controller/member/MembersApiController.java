@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/api/member/**")
 @RequiredArgsConstructor
 @Slf4j
-public class MembersApiController {
+public class MembersApiController implements MembersApiControllerDocs {
     //    이메일 중복 검사
     private final MemberService memberService;
     private final MailService mailService;
@@ -59,7 +59,6 @@ public class MembersApiController {
         return ResponseEntity.ok(Map.of("code", code));
     }
 
-//    로그아웃
 
     
 //  별점 등록 시 케미지수 + 상태 업데이트

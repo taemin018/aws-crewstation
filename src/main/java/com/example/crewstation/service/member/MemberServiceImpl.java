@@ -8,7 +8,6 @@ import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.*;
-import com.example.crewstation.mapper.payment.PaymentMapper;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
 import com.example.crewstation.repository.country.CountryDAO;
 import com.example.crewstation.repository.crew.CrewDAO;
