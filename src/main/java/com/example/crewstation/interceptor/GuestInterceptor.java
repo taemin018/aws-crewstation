@@ -33,6 +33,10 @@ public class GuestInterceptor implements HandlerInterceptor {
         }
 
         if (username != null) {
+            if (username.contains("@")) {
+                return true;
+            }
+
             Cookie deleteAccessCookie = new Cookie("accessToken", null);
             deleteAccessCookie.setHttpOnly(true);
             deleteAccessCookie.setSecure(true);
