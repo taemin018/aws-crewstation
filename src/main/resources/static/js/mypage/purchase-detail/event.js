@@ -1,9 +1,16 @@
 // ===================== Member Order Event =====================
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("order-detail");
+    const postId = document.body.dataset.postId;
+
+    if (!postId) {
+        console.error("postId가 없습니다. <body th:data-post-id>가 비어있습니다.");
+        container.innerHTML = "<p>주문 정보를 불러올 수 없습니다.</p>";
+        return;
+    }
 
     // 주문 상세 조회
-    orderService.getOrderDetail()
+    orderService.getOrderDetail(postId)
         .then(order => {
             console.log("회원 주문 상세:", order);
             if (!order) {
@@ -66,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         });
 
                         switch (response.event) {
-                            // Bootpay 결제 완료 시
                             case "done":
                                 console.log("Bootpay done:", response);
 
@@ -166,5 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     };
                 });
             }
+        })
+        .catch(err => {
+            console.error("❌ 주문 상세 조회 중 오류:", err);
+            container.innerHTML = "<p>주문 정보를 불러오지 못했습니다.</p>";
         });
 });

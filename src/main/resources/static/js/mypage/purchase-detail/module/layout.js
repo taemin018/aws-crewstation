@@ -95,11 +95,6 @@ const orderLayout = (() => {
     // 상세 정보 렌더링
     const renderOrderDetail = (container, order) => {
         container.innerHTML = `
-        <div class="main-title">
-            주문번호 <span class="title-section">I</span>
-            <span class="order-number">${order.purchaseId || order.postId}</span>
-        </div>
-
         <section class="header ${order.paymentPhase === "refund" ? "refund-bg" : ""}">
             <section class="header-wrapper">
                 <h1 class="header-title">

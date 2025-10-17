@@ -160,53 +160,54 @@
     <!-- 회원 주문 상세 조회 -->
     <select id="selectMemberOrderDetails">
         SELECT
-            -- 구매자 (member + address)
-            buyer.id                         AS buyer_member_id,
-            buyer.member_name                 AS member_name,
-            buyer.member_phone                AS member_phone,
-            addr.address_zip_code             AS address_zip_code,
-            addr.address                      AS address,
-            addr.address_detail               AS address_detail,
+        -- 구매자 정보
+        buyer.id                          AS buyer_member_id,
+        buyer.member_name                 AS buyer_name,
+        buyer.member_phone                AS buyer_phone,
+        addr.address_zip_code             AS address_zip_code,
+        addr.address                      AS address,
+        addr.address_detail               AS address_detail,
 
-            -- 결제
-            ps.payment_phase                  AS payment_phase,
-            ps.created_datetime               AS created_datetime,
-            ps.updated_datetime               AS updated_datetime,
+        -- 결제 상태
+        ps.payment_phase                  AS payment_phase,
+        ps.created_datetime               AS created_datetime,
+        ps.updated_datetime               AS updated_datetime,
 
-            -- 상품(게시글)
-            p.id                              AS post_id,
-            p.post_title                      AS post_title,
+        -- 게시글
+        p.id                              AS post_id,
+        p.post_title                      AS post_title,
 
-            -- 구매 정보
-            pu.post_id                        AS purchase_id,
-            pu.purchase_product_price         AS purchase_product_price,
-            pu.purchase_country               AS purchase_country,
-            pu.purchase_delivery_method       AS purchase_delivery_method,
+        -- 구매 정보
+        pu.post_id                        AS purchase_id,
+        pu.purchase_product_price         AS purchase_product_price,
+        pu.purchase_country               AS purchase_country,
+        pu.purchase_delivery_method       AS purchase_delivery_method,
 
-            -- 판매자 정보
-            seller.id                         AS seller_id,
-            seller.member_name                AS seller_name,
-            seller.member_phone               AS seller_phone,
+        -- 판매자
+        seller.id                         AS seller_id,
+        seller.member_name                AS seller_name,
+        seller.member_phone               AS seller_phone,
 
-            -- 대표 이미지
-            (
-                SELECT f2.file_path || '/' || f2.file_name
-                FROM tbl_post_section s2
-                         JOIN tbl_post_section_file sf2 ON s2.id = sf2.post_section_id
-                         JOIN tbl_file f2 ON sf2.file_id = f2.id
-                WHERE s2.post_id = p.id
-                  AND sf2.image_type = 'main'
-                LIMIT 1
-            ) AS main_image
+        -- 대표 이미지
+        (
+        SELECT f2.file_path || '/' || f2.file_name
+        FROM tbl_post_section s2
+        JOIN tbl_post_section_file sf2 ON s2.id = sf2.post_section_id
+        JOIN tbl_file f2 ON sf2.file_id = f2.id
+        WHERE s2.post_id = p.id
+        AND sf2.image_type = 'main'
+        LIMIT 1
+        ) AS main_image
 
         FROM tbl_member buyer
-                 LEFT JOIN tbl_address addr ON buyer.id = addr.member_id
-                 JOIN tbl_payment_status ps ON ps.member_id = buyer.id
-                 JOIN tbl_purchase pu ON ps.purchase_id = pu.post_id
-                 JOIN tbl_post p ON pu.post_id = p.id
-                 JOIN tbl_member seller ON p.member_id = seller.id
+        LEFT JOIN tbl_address addr ON buyer.id = addr.member_id
+        JOIN tbl_payment_status ps ON ps.member_id = buyer.id
+        JOIN tbl_purchase pu ON ps.purchase_id = pu.post_id
+        JOIN tbl_post p ON pu.post_id = p.id
+        JOIN tbl_member seller ON p.member_id = seller.id
+
         WHERE buyer.id = #{memberId}
-          AND p.id = #{postId}
+        AND p.id = #{postId}
     </select>
 
 
