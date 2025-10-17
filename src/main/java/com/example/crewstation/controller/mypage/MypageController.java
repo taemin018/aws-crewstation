@@ -63,7 +63,7 @@ public class MypageController {
 
     // 마이페이지 - 내 구매 상세
     @GetMapping("/purchase-detail")
-    public String loadMyPurchasesDetailPage() {
+    public String loadMyPurchasesDetailPage(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         log.info("마이페이지 - 구매 상세");
         return "mypage/purchase-detail";
     }

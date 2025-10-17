@@ -3,6 +3,7 @@ package com.example.crewstation.service.purchase;
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
 import com.example.crewstation.aop.aspect.annotation.LogStatus;
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.common.exception.PurchaseNotFoundException;
 import com.example.crewstation.domain.file.section.FilePostSectionVO;
@@ -10,12 +11,14 @@ import com.example.crewstation.domain.post.PostVO;
 import com.example.crewstation.domain.purchase.PurchaseVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
+import com.example.crewstation.dto.member.MyPurchaseDetailDTO;
 import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
 import com.example.crewstation.dto.purchase.*;
 import com.example.crewstation.repository.file.FileDAO;
 import com.example.crewstation.repository.file.section.FilePostSectionDAO;
+import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.purchase.PurchaseDAO;
 import com.example.crewstation.repository.section.SectionDAO;
@@ -47,6 +50,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final PostDAO postDAO;
     private final FileDAO fileDAO;
     private final FilePostSectionDAO filePostSectionDAO;
+    private final PaymentStatusDAO paymentStatusDAO;
 
     private final PurchaseTransactionService purchaseTransactionService;
     private final RedisTemplate<String, PurchaseDTO> purchaseRedisTemplate;
@@ -259,6 +263,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         return today.format(formatter);
     }
 
+//  구매내역 목록 조회
     @Override
     public PurchaseListCriteriaDTO getPurchaseListByMemberId(Long memberId, ScrollCriteria scrollcriteria, Search search) {
 
@@ -291,7 +296,34 @@ public class PurchaseServiceImpl implements PurchaseService {
         result.setScrollcriteria(scrollcriteria);
         result.setSearch(search);
 
+        log.info("result.getPurchaseListDTOs() = {}", result.getPurchaseListDTOs());
         return result;
+    }
+
+    //  나의 구매내역 상세 조회
+    @Override
+    public MyPurchaseDetailDTO getMemberOrderDetails(Long memberId, Long postId) {
+        MyPurchaseDetailDTO detail = purchaseDAO.selectMemberOrderDetails(memberId, postId);
+
+        if (detail == null) {
+            throw new RuntimeException("회원 구매내역을 찾을 수 없습니다. memberId=" + memberId + ", postId=" + postId);
+        }
+
+        // S3 프리사인 URL 변환
+        if (detail.getMainImage() != null && !detail.getMainImage().isBlank()) {
+            String preSignedUrl = s3Service.getPreSignedUrl(detail.getMainImage(), Duration.ofMinutes(5));
+            detail.setMainImage(preSignedUrl);
+        }
+
+        return detail;
+    }
+
+    //  결제 상태 업데이트 추가
+    @Override
+    @Transactional
+    public void updatePaymentStatus(Long purchaseId, PaymentPhase paymentPhase) {
+        paymentStatusDAO.updatePaymentStatus(purchaseId, paymentPhase);
+        log.info("결제 상태 업데이트 완료 → purchaseId={}, phase={}", purchaseId, paymentPhase);
     }
 
 }
