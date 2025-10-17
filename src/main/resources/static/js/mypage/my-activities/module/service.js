@@ -17,7 +17,7 @@
 
 // ===================== Reply Service =====================
 const replyService = (() => {
-    // 내가 댓글 단 일기 목록 조회 (로그인 정보에서 member 자동 인식)
+    // 내가 댓글 단 일기 목록 조회
     const getReplyDiaries = async (page = 1, size = 10) => {
         try {
             const response = await fetch(`/api/diaries/replies?page=${page}&size=${size}`);
@@ -34,7 +34,7 @@ const replyService = (() => {
         try {
             const response = await fetch(`/api/diaries/replies/count`);
             if (!response.ok) throw new Error(`Error: ${response.status}`);
-            return await response.json(); // int
+            return await response.json();
         } catch (error) {
             console.error("getReplyDiaryCount Error:", error);
             return 0;

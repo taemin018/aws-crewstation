@@ -6,11 +6,13 @@ import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.mapper.payment.status.PaymentStatusMapper;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Repository
@@ -35,15 +37,15 @@ public class PaymentStatusDAO {
     }
 
 //    결제 목록 갯수
-    public int countPayment(){
-        return paymentStatusMapper.countPayment();
+    public int countPayment(Search search){
+        return paymentStatusMapper.countPayment(search);
     }
 
 //    결제 목록
-    public List<PaymentCriteriaDTO> adminPaymentList(Criteria criteria) {
-        return paymentStatusMapper.selectPayment(criteria);
+    public List<PaymentCriteriaDTO> adminPaymentList(Search search, Criteria criteria) {
+        return paymentStatusMapper.selectPayment(search, criteria);
     }
-//결제 상세
+//      결제 상세
     public PaymentCriteriaDTO selectPaymentDetail(Long id) {
         return paymentStatusMapper.selectPaymentDetail(id);
     }

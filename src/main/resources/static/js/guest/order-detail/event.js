@@ -2,10 +2,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("order-detail");
 
-    const guestOrderNumber = "2025101509400022222"; // TODO: 토큰에서 가져오기
-
     // 주문 상세 조회
-    orderService.getOrderDetail(guestOrderNumber)
+    orderService.getOrderDetail()
         .then(order => {
             console.log("주문 상세:", order);
             if (!order) {
@@ -26,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (cancelBtn && cancelBtn.classList.contains("active")) {
                 cancelBtn.addEventListener("click", () => {
                     if (confirm("정말 주문을 취소하시겠습니까?")) {
-                        orderService.cancelOrder(guestOrderNumber)
+                        orderService.cancelOrder()
                             .then(() => {
                                 orderLayout.updateOrderStatus("주문 취소");
                                 orderLayout.showToast("주문이 취소되었습니다.", true);
@@ -126,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (receiveBtn && receiveBtn.classList.contains("active")) {
                 receiveBtn.addEventListener("click", () => {
                     if (confirm("상품을 수령 완료 처리하시겠습니까?")) {
-                        orderService.completeReceive(guestOrderNumber)
+                        orderService.completeReceive()
                             .then(() => {
                                 orderLayout.updateOrderStatus("수령 완료");
                                 orderLayout.showToast("수령 확인이 완료되었습니다.", true);
