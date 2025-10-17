@@ -2,50 +2,69 @@ const paymentLayout = (() => {
     const n = (v) => Number(v ?? 0).toLocaleString('ko-KR');
     const safe = (v, def = '-') => (v === null || v === undefined || v === '') ? def : String(v);
 
-    const getTbody = () => document.querySelector('#section-payment #payment-tbody');
+    const $section = () => document.querySelector('#section-payment');
+    const $tbody   = () => $section()?.querySelector('#payment-tbody');
+    const $count   = () => $section()?.querySelector('.receipt-count .count-amount');
 
     const clear = () => {
-        const tb = getTbody();
+        const tb = $tbody();
         if (tb) tb.innerHTML = '';
+        const cnt = $count();
+        if (cnt) cnt.textContent = '0';
     };
 
     const showEmpty = () => {
-        const tb = getTbody();
+        const tb = $tbody();
         if (!tb) return;
-        tb.innerHTML = `<tr><td colspan="7" class="text-center text-muted">조회된 결제가 없습니다.</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">조회된 결제가 없습니다.</td></tr>`;
+        const cnt = $count();
+        if (cnt) cnt.textContent = '0';
     };
 
-    const normalizeList = (raw) => {
-        if (raw && Array.isArray(raw.content)) return raw.content;
-        if (Array.isArray(raw)) return raw;
-        return [];
+    // 배열 또는 {content, totalCount} 모두 지원
+    const normalizeList = (raw) => Array.isArray(raw) ? raw : (raw?.content || []);
+    const getTotalCount = (raw, list) => {
+        if (typeof raw?.totalCount === 'number') return raw.totalCount;
+        return list.length;
     };
 
-    const showPayments = (listRaw = []) => {
-        const tb = getTbody();
+    const toPhaseKo = (phase) => {
+        const s = String(phase ?? '').toUpperCase();
+        if (s.includes('PROGRESS')) return '결제진행중';
+        if (s.includes('SUCCESS'))  return '결제완료';
+        if (s.includes('CANCEL'))   return '결제취소';
+        return phase ?? '-';
+    };
+
+    const showPayments = (raw = []) => {
+        const tb = $tbody();
         if (!tb) return;
 
-        const list = normalizeList(listRaw);
+        const list = normalizeList(raw);
+        // 🔁 덮어쓰기 모드
+        tb.innerHTML = '';
+
         if (!list.length) {
-            if (!tb.hasChildNodes()) showEmpty();
+            showEmpty();
             return;
         }
+
+        const frag = document.createDocumentFragment();
 
         list.forEach((p) => {
             const tr = document.createElement('tr');
             tr.dataset.paymentId = p.id;
 
-            const statusText = safe(p.statusText ?? p.paymentPhase);
+            const statusText = safe(p.statusText ?? toPhaseKo(p.paymentPhase));
             const timeText   = safe(p.paidAt ?? p.updatedDatetime);
+            const methodText = safe(p.paymentMethod ?? p.deliveryType);
 
             tr.innerHTML = `
         <td class="td-name"><div class="good-name">${safe(p.productName)}</div></td>
         <td class="td-amount text-right pr-4 font-weight-bold">
           ${n(p.amount)} <span class="amount-unit">원</span>
         </td>
-        <td class="td-method">
-          <div class="pq">토스페이</div>
-        </td>
+        <td class="td-method"><div class="pq">${methodText}</div></td>
         <td class="td-status">
           <div class="label-form">
             <span class="badge-label text-nowrap text-dark approval-status">${statusText}</span>
@@ -58,26 +77,24 @@ const paymentLayout = (() => {
           </div>
         </td>
         <td class="td-action text-center">
-          <button type="button" class="action-btn view" 
-          data-paymentid="${p.id}">
+          <button type="button" class="action-btn view" data-paymentid="${p.id}">
             <i class="mdi mdi-chevron-right"></i>
           </button>
         </td>
       `;
-            tb.appendChild(tr);
+            frag.appendChild(tr);
         });
 
-        const cnt = document.querySelector('#section-payment .receipt-count .count-amount');
-        if (cnt) {
-            const current = Number(cnt.textContent.replace(/\D/g, '') || 0);
-            cnt.textContent = String(current + list.length);
-        }
+        tb.appendChild(frag);
+
+        // 🔢 건수는 누적이 아니라 set
+        const cnt = $count();
+        if (cnt) cnt.textContent = String(getTotalCount(raw, list));
     };
 
     const showPaymentDetail = (detail = {}) => {
         const modal = document.getElementById('payment-modal');
         if (!modal) return;
-
 
         const set = (k, v) => {
             const el = modal.querySelector(`[data-bind="${k}"]`);
@@ -89,7 +106,7 @@ const paymentLayout = (() => {
         set('buyerName', detail.buyerName);
         set('buyerPhone', detail.buyerPhone);
         set('buyerEmail', detail.buyerEmail);
-        set('status', detail.statusText ?? detail.paymentPhase);
+        set('status', detail.statusText ?? toPhaseKo(detail.paymentPhase));
         set('paidAt', detail.paidAt ?? detail.createdDatetime ?? detail.updatedDatetime);
 
         set('sellerName', detail.sellerName);

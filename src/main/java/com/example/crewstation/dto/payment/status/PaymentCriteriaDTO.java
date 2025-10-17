@@ -28,7 +28,7 @@ public class PaymentCriteriaDTO {
     private String createdDatetime;
     private String updatedDatetime;
     private String receiptId;
-    private Integer amount;
+    private int amount;
     private String status;
     private String paidAt;
     private String buyerName;
@@ -39,4 +39,5 @@ public class PaymentCriteriaDTO {
     private String sellerEmail;
     private String deliveryType;
     private String productName;
+    private long totalCount;
 }
