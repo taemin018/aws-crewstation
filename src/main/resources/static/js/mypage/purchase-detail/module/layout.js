@@ -122,8 +122,8 @@ const orderLayout = (() => {
                 <h1 class="header-title"><span>결제 정보</span></h1>
             </section>
             
-            <a href="/post/${order.postId}" class="product-wrapper">
-                <img src="${order.filePath || '/images/gift-shop-post-img3.png'}" alt="상품 이미지">
+            <a href="/gifts/detail/${order.postId}" class="product-wrapper">
+                <img src="${order.mainImage}" alt="상품 이미지">
                 <div class="purchase-info">
                     <p class="info-title">${order.postTitle}</p>
                     <span class="badge-list-container amount">수량</span>
@@ -143,9 +143,9 @@ const orderLayout = (() => {
 
             <div class="info-container">
                 <h2 class="address-wrap">구매자 정보</h2>
-                <div class="buyer-info-category"><span class="buyer-info">구매자명</span>${order.buyerName}</div>
-                <div class="buyer-info-category"><span class="buyer-info">주소</span>${order.buyerAddress || ""} ${order.buyerAddressDetail || ""}</div>
-                <div class="buyer-info-category"><span class="buyer-info">전화번호</span>${formatPhone(order.buyerPhone)}</div>
+                <div class="buyer-info-category"><span class="buyer-info">구매자명</span>${order.memberName}</div>
+                <div class="buyer-info-category"><span class="buyer-info">주소</span>${order.address || ""} ${order.addressDetail || ""}</div>
+                <div class="buyer-info-category"><span class="buyer-info">전화번호</span>${formatPhone(order.memberPhone)}</div>
             </div>
         </div>
     `;
