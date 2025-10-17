@@ -30,6 +30,7 @@ public interface PaymentStatusMapper {
 //    결제 갯수
     public int countPayment(@Param("search") Search search);
 
+//    관리자 상세
     public PaymentCriteriaDTO selectPaymentDetail(Long paymentId);
 
 
