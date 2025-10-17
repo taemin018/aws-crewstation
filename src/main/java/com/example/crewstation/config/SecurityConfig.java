@@ -85,9 +85,9 @@ public class SecurityConfig {
                                 "/diaries",
                                 "/diaries/detail/**",
                                 "/api/diaries",
-                                "/api/replies/**",
+                                "/api/replies/{postId:\\d+}",
                                 "/gifts",
-                                "/gifts/detail/**",
+                                "/gifts/detail/{postId:\\d+}",
                                 "/api/gifts",
                                 "/company",
                                 "/search",
@@ -98,25 +98,20 @@ public class SecurityConfig {
                                 "/api/guest/order-detail/{guestOrderNumber:\\d+}")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,
-                                "/diaries",
                                 "/diaries/write",
                                 "/api/likes/**",
                                 "/api/report/**",
                                 "/diaries/{postId:\\d+}",
-                                "/api/diaries",
-                                "/api/likes/**",
-                                "/api/replies/{postId:\\d+}",
-                                "/gifts",
-                                "/gifts/detail/{postId:\\d+}",
                                 "/gifts/write",
-                                "/gifts/{postId:\\d+}",
-                                "/api/gifts")
+                                "/gifts/{postId:\\d+}")
                         .authenticated()
                         .requestMatchers(HttpMethod.GET,
                                 "/diaries/write",
                                 "/gifts/write",
                                 "/diaries/delete/{postId:\\d+}",
-                                "/gifts/delete/{postId:\\d+}")
+                                "/gifts/delete/{postId:\\d+}",
+                                "/gifts/{postId:\\d+}",
+                                "/diaries/{postId:\\d+}")
                         .authenticated()
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/replies")
