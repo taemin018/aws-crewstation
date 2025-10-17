@@ -3,8 +3,8 @@ const paymentService = (() => {
         const { categories = [], category = "", keyword = "" } = opt || {};
         const qs = new URLSearchParams();
         qs.set("page", String(page));
-        if (categories.length) qs.set("categories", categories.join(",")); // 다중
-        else if (category)    qs.set("category", category);                // 단일
+        if (categories.length) qs.set("categories", categories.join(","));
+        else if (category)    qs.set("category", category);
         if (keyword)          qs.set("keyword", keyword);
 
         const res = await fetchWithRefresh(`/api/admin/payment?${qs.toString()}`, {

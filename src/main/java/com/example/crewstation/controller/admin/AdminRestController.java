@@ -48,6 +48,11 @@ public class AdminRestController {
     private final PaymentService paymentService;
     private final PaymentDAO paymentDAO;
     private final PaymentStatusDAO paymentStatusDAO;
+    private static final Map<String, String> PHASE_MAP = Map.of(
+            "PAY_PROGRESS", "PENDING",
+            "PAY_SUCCESS",  "SUCCESS",
+            "PAY_CANCEL",   "REFUND"
+    );
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -157,6 +162,7 @@ public class AdminRestController {
             List<String> cats = Arrays.stream(categories.split(","))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
+                    .map(s -> PHASE_MAP.getOrDefault(s, s.toUpperCase()))
                     .collect(Collectors.toList());
 
             if (cats.size() == 3) {
