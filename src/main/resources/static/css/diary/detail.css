@@ -1021,7 +1021,7 @@ input, textarea, select {
     box-sizing: border-box;
 }
 
-.sticky-container {
+.sticky-container-btn {
     position: sticky;
     top: 183.5px;
     transition: top 0.1s;
