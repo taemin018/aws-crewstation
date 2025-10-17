@@ -1,4 +1,3 @@
-// event.js
 window.paymentInit = async function () {
     if (window.paymentInited) return;
     window.paymentInited = true;
@@ -10,20 +9,18 @@ window.paymentInit = async function () {
         document.querySelector(".payment-modal") ||
         section.querySelector(".payment-modal");
 
-    // ==== 상태(다중) / 검색어 상태 ====
     const STATUS_MAP = {
-        "pay-progress": "PAY_PROGRESS",
-        "pay-success":  "PAY_SUCCESS",
-        "pay-cancel":   "PAY_CANCEL",
+        "pay-progress": "PENDING",
+        "pay-success":  "SUCCESS",
+        "pay-cancel":   "REFUND",
     };
 
     const state = {
         page: 1,
-        categories: [],   // 예: ["PAY_PROGRESS","PAY_CANCEL"]
+        categories: [],
         keyword: "",
     };
 
-    // "결제완료" 아이콘에 누락된 data-target 보정
     (function ensureSuccessIconMeta() {
         const successItem = Array
             .from(section.querySelectorAll(".boot-check"))
@@ -36,7 +33,6 @@ window.paymentInit = async function () {
         }
     })();
 
-    // 유틸
     const getKeyword = () =>
         section.querySelector(".filter-search input.form-control")?.value?.trim() || "";
 
@@ -101,49 +97,12 @@ window.paymentInit = async function () {
         if (!btnOpen || !pop || !ctx || pop._bound) return;
         pop._bound = true;
 
-        // ---- 체크박스 시각 토글 유틸 ----
         const setCheckedForIcon = (icon, on) => {
             if (!icon) return;
             icon.classList.toggle("is-checked", on);
             const box = icon.closest(".boot-check-box");
             if (box) box.classList.toggle("is-checked", on); // 파란 배경/테두리
         };
-
-    // ===== 결제상태 선택 드롭다운 =====
-        const wrap = section.querySelector('#filter-status');
-        if (!wrap) return;
-
-        const trigger  = wrap.querySelector('#btn-filter-status');
-        const pop      = wrap.querySelector('.bt-pop-menu');
-        const context  = pop.querySelector('.bt-pop-menu-context');
-        const backdrop = pop.querySelector('.bt-pop-menu-back');
-        if (!trigger || !pop) return;
-
-        if (!document.getElementById('payment-filter-style')) {
-            const style = document.createElement('style');
-            style.id = 'payment-filter-style';
-            style.textContent = `
-      .boot-check-box.checked i.mdi-check { display: inline-block !important; }
-      .boot-check-box:not(.checked) i.mdi-check { display: none !important; }
-    `;
-            document.head.appendChild(style);
-        }
-
-        pop.style.position = 'absolute';
-        pop.style.zIndex   = '2000';
-        pop.style.display  = 'none';
-        if (context)  context.style.display  = 'block';
-        if (backdrop) backdrop.style.display = 'none';
-
-        const show = () => {
-            pop.style.display = 'block';
-            pop.classList.add('show');
-            context?.classList.add('show');
-            if (backdrop) {
-                backdrop.classList.add('show');
-                backdrop.style.display = 'block';
-            }
-
 
         const toggleCheckedForIcon = (icon) => {
             const now = !icon.classList.contains("is-checked");
@@ -154,7 +113,6 @@ window.paymentInit = async function () {
             back?.classList.add("show");
             ctx.classList.add("show");
 
-            // 버튼 바로 아래 고정
             const hostRect = btnOpen.getBoundingClientRect();
             ctx.style.position = "fixed";
             ctx.style.top = `${hostRect.bottom + 8}px`;
@@ -173,7 +131,6 @@ window.paymentInit = async function () {
             ctx.classList.contains("show") ? closePop() : openPop();
         });
 
-        // 내부 클릭 시 닫히지 않게
         ctx.addEventListener("click", (e) => e.stopPropagation());
         back?.addEventListener("click", (e) => { e.stopPropagation(); closePop(); });
 
@@ -182,7 +139,6 @@ window.paymentInit = async function () {
             if (ctx.classList.contains("show")) closePop();
         });
 
-        // ---- 상태 아이템(아이콘/박스/텍스트)을 모두 클릭 타깃으로 위임 처리 ----
         ctx.addEventListener("click", (e) => {
             const icon = e.target.closest(".btn-status"); // <i ... class="btn-status">
             const item = e.target.closest(".boot-check"); // 라인 전체
@@ -296,17 +252,6 @@ window.paymentInit = async function () {
 
         // 상세보기 버튼
         const table = section.querySelector("table");
-
-        modal.querySelectorAll('.btn-close, .close').forEach(b => b.addEventListener('click', close));
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) close();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('show')) close();
-        });
-
-        const table = section.querySelector('.table-layout');
         if (table && !table.paymentRowBound) {
             table.paymentRowBound = true;
 
@@ -337,7 +282,6 @@ window.paymentInit = async function () {
             });
         }
 
-        // (승인/취소 버튼 이벤트는 유지)
         const approveBtn   = modal.querySelector(".btn-approve");
         const cancelBtn    = modal.querySelector(".btn-cancel");
 
@@ -352,18 +296,6 @@ window.paymentInit = async function () {
             if (ok) close();
             else alert("승인 처리 실패");
         });
-
-            section.querySelector('tr[data-payment-id].current')?.dataset.paymentId;
-
-        if (approveBtn) {
-            approveBtn.addEventListener('click', async () => {
-                const id = getCurrentId();
-                if (!id) return;
-                const ok = await paymentService.processPayment(id, 'approve');
-                if (ok) close();
-                else alert('승인 처리 실패');
-            });
-        }
 
         cancelBtn?.addEventListener("click", async () => {
             const id = getCurrentId();
