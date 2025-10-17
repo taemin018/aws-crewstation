@@ -34,14 +34,14 @@
                             <a class="join" th:href="@{/mobile/join}">회원가입</a>
                         </section>
                     </form>
-                    <form action="/mobile/login" method="post" class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
+                    <form class="guest-login" name="guest" style="display: none;" th:object="${guestDTO}" >
                         <div class="guest-id-input-wrap input-wrap">
                             <input type="text" class="guest-id" name="guestOrderNumber" placeholder="임시 아이디" th:field="*{guestOrderNumber}"/>
                         </div>
                         <div class="guest-phone-input-wrap input-wrap">
                             <input type="text" class="guest-phone" name="guestPhone" placeholder="휴대전화" th:field="*{guestPhone}"/>
                         </div>
-                        <button class="login-guest-btn login-btn">로그인</button>
+                        <button type="button" class="login-guest-btn login-btn">로그인</button>
                         <section class="login-option-action">
                             <a class="password-find" th:href="@{/mobile/forgot-password}">비밀번호 찾기</a>
                             <a class="join" th:href="@{/mobile/join}">회원가입</a>

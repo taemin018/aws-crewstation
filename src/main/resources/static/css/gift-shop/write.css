@@ -220,9 +220,6 @@
   background: #f7f8fa;
   border-radius: 4px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
   .cover-img-label {

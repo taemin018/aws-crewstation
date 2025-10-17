@@ -11,7 +11,7 @@ const replyLayout = (() => {
             }else if(reply.socialImgUrl){
                 src=reply.socialImgUrl;
             }else{
-                src= "/images/lock.png"
+                src= "https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c"
             }
             if(reply.writer){
                 checkUser =`
@@ -58,7 +58,7 @@ const replyLayout = (() => {
 
         text = ``;
         let criteria = repliesCriteria.criteria;
-        console.log(criteria)
+        if(!criteria.total) return;
         if(criteria.hasPreviousPage){
             text = `<button class="number-button prev-next-button active" data-page="${criteria.startPage - 1}" class="paging">
     <span class="prev-next prev"></span>

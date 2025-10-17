@@ -51,6 +51,8 @@ replyWriteBtn.addEventListener("click",async (e)=>{
     const {status}=await replyService.write({"postId":postId,"replyContent":replyInput.value})
     if(status ===404){
         location.href = "/diaries"
+    }else if(status===401 || status === 403){
+        toastModal(message);
     }
     const repliesCriteria = await replyService.getList(postId,replyLayout.showList,1);
     document.querySelector("span.total").textContent = repliesCriteria.criteria.total;

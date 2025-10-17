@@ -2346,3 +2346,206 @@ element.style {
 .action-btn {
     border: 0;
 }
+
+.modal { display:none; }
+.modal.show { display:block; opacity:1; }
+.modal-backdrop { z-index: 1040; }
+.modal { z-index: 1050; }
+
+.payment-modal {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.payment-modal.show {
+    display: flex !important;
+}
+.payment-modal .modal-dialog {
+    margin: 0;
+    max-width: 880px;
+    width: 100%;
+}
+
+#payment-modal.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+}
+.filter-status { position: relative; }
+.status-popover { display:none; position:absolute; z-index:20; top:42px; left:0; }
+.status-popover.show { display:block; }
+.status-popover-backdrop { position:fixed; inset:0; }
+.status-popover-panel {
+    width:280px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,.08);
+    padding:12px;
+}
+.status-popover-header { font-weight:600; margin-bottom:8px; }
+.status-popover-actions { display:flex; gap:8px; margin-bottom:8px; }
+.status-item { display:flex; align-items:center; gap:8px; padding:6px 4px; }
+.status-popover-footer { margin-top:8px; }
+
+/* 버튼 옆 팝업 기준점 */
+#filter-status .boot-pop-checkbox { position: relative; }
+
+/* back 레이어는 화면 전체를 덮어야 밖을 클릭해 닫힘 */
+#filter-status .bt-pop-menu .bt-pop-menu-back {
+    position: fixed;
+    inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+    z-index: 98;
+    display: none;
+}
+#filter-status .bt-pop-menu .bt-pop-menu-back.show { display: block; }
+
+/* 접힌 상태(기본) */
+#filter-status .bt-pop-menu .bt-pop-menu-context {
+    position: absolute;
+    top: calc(100% + 8px); /* 버튼 아래로 */
+    left: 0;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: all 120ms ease-out;
+    z-index: 100;
+}
+
+/* 펼친 상태(열림) — 핵심 */
+#filter-status .bt-pop-menu .bt-pop-menu-context.show {
+    height: auto !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    transform: scale(1) translateZ(0) !important;
+    visibility: visible !important;
+}
+
+/* 팝업 컨텐츠 박스는 그대로 사용 */
+#filter-status .boot-pop-checkbox .bt-pop-menu-context ul.list-wrapper {
+    width: 240px;
+    background: #fff;
+    border: 1px solid #ededed;
+    border-radius: 6px;
+    box-shadow: 0 22px 22px rgba(11,37,75,.04),
+    0 14px 14px rgba(11,37,75,.06),
+    0  4px  4px rgba(11,37,75,.04),
+    0  2px  2px rgba(11,37,75,.08),
+    0  0   0 1px rgba(11,37,75,.08);
+    padding: 10px 14px;
+}
+
+/* 혹시 상위가 잘라먹으면 */
+.page, .page-body, .table-layout, .filter-section { overflow: visible; }
+
+
+/* 버튼을 기준점으로 절대배치 */
+#filter-status .boot-pop-checkbox { position: relative; }
+
+/* 팝업 컨테이너: 버튼 바로 아래, 한 덩어리 카드 */
+#filter-status .bt-pop-menu {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    right: auto !important;
+    z-index: 3000;
+}
+
+/* 카드 자체를 context에 지정(ul 테두리/그림자 제거) */
+#filter-status .bt-pop-menu .bt-pop-menu-context {
+    position: static !important;     /* relative/absolute 주지 않음 */
+    display: none;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    padding: 12px;
+    width: 260px;
+    opacity: 1;            /* 접히는 효과 제거 */
+    height: auto;          /* 접힘 방지 */
+    overflow: visible;
+    transform: none;       /* 날아오는 효과 제거 */
+}
+
+#filter-status .bt-pop-menu .bt-pop-menu-context.show { display: block; }
+
+/* ul을 카드의 내부 섹션처럼 */
+#filter-status .boot-pop-checkbox .bt-pop-menu-context ul.list-wrapper{
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    width: 100%;
+    background: transparent;
+    margin: 0;
+}
+
+/* '확인' 버튼을 카드 하단에 붙여 한 덩어리로 보이게 */
+#filter-status .status-popover-footer{
+    padding-top: 8px;
+    border-top: 1px solid #f0f2f4;
+}
+#filter-status #btn-apply-status{
+    width: 100%;
+    height: 36px;
+    border-radius: 8px;
+}
+
+/* 체크박스 시각 스타일 */
+.boot-check .boot-check-box{
+    width: 20px; height: 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #fff;
+    position: relative;
+    margin-right: 8px;
+}
+.boot-check .boot-check-box i{
+    opacity: 0;            /* 기본은 보이지 않음 */
+    transition: opacity .12s ease;
+    color: #fff;
+}
+/* 체크됐을 때 박스/체크 보이기 */
+.boot-check .boot-check-box.is-checked{
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+.boot-check .boot-check-box.is-checked i{
+    opacity: 1;
+}
+
+/* 팝업 바깥 클릭 닫기를 위한 백그라운드(화면 전체) */
+#filter-status .bt-pop-menu .bt-pop-menu-back{
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 2999;
+}
+#filter-status .bt-pop-menu .bt-pop-menu-back.show{ display:block; }
+
+/* 상위가 잘라먹지 않게 */
+.page, .page-body, .table-layout, .filter-section{ overflow: visible; }
+/* 체크된 박스 내부의 체크 마크 스타일 */
+.boot-check .boot-check-box.is-checked i {
+    opacity: 1;
+    color: #fff !important;   /* ← 이 줄 추가! 흰색 체크 마크 */
+    font-size: 14px;
+}
+
+/* 체크박스 기본 */
+.boot-check .boot-check-box i{
+    display: block !important;     /* 라이브러리의 display:none 무력화 */
+    opacity: 0;                    /* 기본은 안 보이게 */
+    color: #fff;                   /* 체크 마크 색 */
+    font-size: 14px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 체크됐을 때 박스/체크 마크 */
+.boot-check .boot-check-box.is-checked{
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+.boot-check .boot-check-box.is-checked i{
+    opacity: 1 !important;         /* 꼭 보이게 */
+}
+

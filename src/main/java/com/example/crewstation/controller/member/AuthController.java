@@ -34,7 +34,6 @@ AuthController implements AuthControllerDocs{
     private final JwtTokenProvider jwtTokenProvider;
     private final HttpServletResponse response;
     private final MemberService memberService;
-    private final GuestDTO guestDTO;
 
     //    로그인
     @PostMapping("login")

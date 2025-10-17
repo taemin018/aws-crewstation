@@ -1234,6 +1234,20 @@ select * from tbl_post;
 select * from tbl_payment;
 select * from tbl_member;
 select *from tbl_payment_status;
+
+
+-- ps.id 기준으로 결제 행이 2개 이상인 status 찾기
+SELECT payment_status_id, COUNT(*)
+FROM tbl_payment
+GROUP BY payment_status_id
+HAVING COUNT(*) > 1;
+
+-- 문제 되는 id 하나 골라 상세 보기
+SELECT *
+FROM tbl_payment
+WHERE payment_status_id = 8
+ORDER BY updated_datetime DESC;
+
 insert into tbl_file(file_origin_name, file_path, file_name, file_size)
 values ('banner1.jpg','2025/10/15/wsadasadasadasdb.jpeg','wsadasadasadasdb.jpeg',1000),
        ('banner2.jpg','2025/10/15/snansasndadn_asd.jpeg','snansasndadn_asd.jpeg',1000),
