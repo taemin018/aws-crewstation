@@ -264,41 +264,57 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
 //  구매내역 목록 조회
-    @Override
-    public PurchaseListCriteriaDTO getPurchaseListByMemberId(Long memberId, ScrollCriteria scrollcriteria, Search search) {
+//  구매내역 목록 조회
+@Override
+public PurchaseListCriteriaDTO getPurchaseListByMemberId(Long memberId, ScrollCriteria scrollcriteria, Search search) {
 
-        List<PurchaseListDTO> list = purchaseDAO.selectPurchaseList(memberId, scrollcriteria, search);
-        int total = purchaseDAO.selectTotalCount(memberId, search);
-        scrollcriteria.setTotal(total);
+    List<PurchaseListDTO> list = purchaseDAO.selectPurchaseList(memberId, scrollcriteria, search);
+    int total = purchaseDAO.selectTotalCount(memberId, search);
+    scrollcriteria.setTotal(total);
 
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
-        list.forEach(dto -> {
-            try {
-                if (dto.getCreatedDatetime() != null && !dto.getCreatedDatetime().isEmpty()) {
-                    dto.setCreatedDatetime(
-                            LocalDate.parse(dto.getCreatedDatetime(), inputFormatter).format(outputFormatter)
-                    );
-                }
-                if (dto.getUpdatedDatetime() != null && !dto.getUpdatedDatetime().isEmpty()) {
-                    dto.setUpdatedDatetime(
-                            LocalDate.parse(dto.getUpdatedDatetime(), inputFormatter).format(outputFormatter)
-                    );
-                }
-            } catch (Exception e) {
-                log.warn("Date format error: {}", e.getMessage());
+    list.forEach(dto -> {
+        try {
+            //
+            if (dto.getCreatedDatetime() != null && !dto.getCreatedDatetime().isEmpty()) {
+                String created = dto.getCreatedDatetime().split("\\.")[0];
+                dto.setCreatedDatetime(
+                        LocalDate.parse(created, inputFormatter).format(outputFormatter)
+                );
             }
-        });
+            if (dto.getUpdatedDatetime() != null && !dto.getUpdatedDatetime().isEmpty()) {
+                String updated = dto.getUpdatedDatetime().split("\\.")[0];
+                dto.setUpdatedDatetime(
+                        LocalDate.parse(updated, inputFormatter).format(outputFormatter)
+                );
+            }
 
-        PurchaseListCriteriaDTO result = new PurchaseListCriteriaDTO();
-        result.setPurchaseListDTOs(list);
-        result.setScrollcriteria(scrollcriteria);
-        result.setSearch(search);
+            //
+            log.info("Before S3 convert filePath={}", dto.getFilePath());
 
-        log.info("result.getPurchaseListDTOs() = {}", result.getPurchaseListDTOs());
-        return result;
-    }
+            //
+            if (dto.getFilePath() != null && !dto.getFilePath().isBlank()) {
+                String preSignedUrl = s3Service.getPreSignedUrl(dto.getFilePath(), Duration.ofMinutes(5));
+                log.info("After S3 convert preSignedUrl={}", preSignedUrl); // 변환 결과 확인
+                dto.setFilePath(preSignedUrl);
+            }
+
+        } catch (Exception e) {
+            log.warn("Date format error: {}", e.getMessage());
+        }
+    });
+
+    PurchaseListCriteriaDTO result = new PurchaseListCriteriaDTO();
+    result.setPurchaseListDTOs(list);
+    result.setScrollcriteria(scrollcriteria);
+    result.setSearch(search);
+
+    log.info("result.getPurchaseListDTOs() = {}", result.getPurchaseListDTOs());
+    return result;
+}
+
 
     //  나의 구매내역 상세 조회
     @Override

@@ -13,8 +13,8 @@ VALUES
 
 INSERT INTO tbl_payment_status (purchase_id, member_id, payment_phase, created_datetime, updated_datetime)
 VALUES
-    (15, 1, 'request', NOW(), NOW()),
-    (16, 1, 'pending', NOW(), NOW());
+    (15, 8, 'request', NOW(), NOW()),
+    (16, 8, 'pending', NOW(), NOW());
 
 INSERT INTO tbl_post_section (post_id)
 VALUES
@@ -25,6 +25,10 @@ SELECT tps.payment_phase, tps.*, vpp.id
 FROM tbl_payment_status tps
          JOIN view_post_purchase vpp ON tps.purchase_id = vpp.id
 WHERE tps.member_id = 8;
+
+
+TRUNCATE TABLE tbl_payment_status CASCADE;
+SELECT id, member_name, member_phone FROM tbl_member WHERE id = 8;
 
 
 
