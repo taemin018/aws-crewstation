@@ -33,12 +33,18 @@ const modalImg = document.querySelector(".img-modal img");
 const closeBtn = document.querySelector(".img-close-button");
 
 targets.forEach((target, i) => {
-    target.addEventListener("click", () => {
-        console.log("클릭이벤트")
+    if(images[i]){
+        console.log(i)
         const imgSrc = images[i].getAttribute("src");
-        modalImg.setAttribute("src", imgSrc);
-        modal.style.display = "flex";
-    });
+        target.addEventListener("click", () => {
+            console.log("클릭이벤트")
+            modalImg.setAttribute("src", imgSrc);
+            modal.style.display = "flex";
+        });
+    }else{
+        target.style.cursor = "unset";
+    }
+
 });
 
 // 닫기 버튼

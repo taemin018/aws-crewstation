@@ -203,5 +203,5 @@ logoutLink.addEventListener("click", async (e) => {
     location.href = "/member/login";
 });
 
-getComputedStyle(document.querySelector('.btn-click-slide-container')).zIndex
-getComputedStyle(document.querySelector('.banner-wrap')).zIndex
+// getComputedStyle(document.querySelector('.btn-click-slide-container')).zIndex
+// getComputedStyle(document.querySelector('.banner-wrap')).zIndex
