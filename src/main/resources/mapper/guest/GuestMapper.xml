@@ -22,43 +22,48 @@
 
     <!-- 게스트 주문 상세 조회 -->
     <select id="selectOrderDetails">
-        SELECT g.id                           AS guestId,
-               g.guest_phone                  AS guestPhone,
-               g.address_zip_code             AS guestZipCode,
-               g.address                      AS guestAddress,
-               g.address_detail               AS guestAddressDetail,
-               g.guest_order_number           AS guestOrderNumber,
+        SELECT
+            g.id                            AS guest_id,
+            guest.member_name               AS guest_name,
+            g.guest_phone                   AS guest_phone,
+            g.address_zip_code              AS address_zip_code,
+            g.address                       AS guest_address,
+            g.address_detail                AS guest_address_detail,
+            g.guest_order_number            AS guest_order_number,
 
-               ps.payment_phase               AS paymentStatus,
+            ps.payment_phase                AS payment_phase,
+            ps.created_datetime             AS created_datetime,
+            ps.updated_datetime             AS updated_datetime,
 
-               ps.created_datetime AS createdDatetime,
-               ps.updated_datetime AS updatedDatetime,
+            p.id                            AS post_id,
+            p.post_title                    AS post_title,
 
-               p.id                           AS postId,
-               p.post_title                   AS postTitle,
+            pu.post_id                      AS purchase_id,
+            pu.purchase_product_price       AS purchase_product_price,
+            pu.purchase_country             AS purchase_country,
+            pu.purchase_delivery_method     AS purchase_delivery_method,
 
-               pu.post_id AS purchaseId,
-               pu.purchase_product_price      AS purchaseProductPrice,
-               pu.purchase_country            AS purchaseCountry,
-               pu.purchase_delivery_method    AS purchaseDeliveryMethod,
+            seller.id                       AS seller_id,
+            seller.member_name              AS seller_name,
+            seller.member_phone             AS seller_phone,
+            guest.id                        AS buyer_member_id,
 
-               seller.id                      AS sellerId,
-               seller.member_name             AS sellerName,
-               seller.member_phone            AS sellerPhone,
-               guest.id                       AS buyerMemberId,
-               guest.member_name              AS guestName,
+            (
+                SELECT f2.file_path || '/' || f2.file_name
+                FROM tbl_post_section s2
+                         JOIN tbl_post_section_file sf2 ON s2.id = sf2.post_section_id
+                         JOIN tbl_file f2 ON sf2.file_id = f2.id
+                WHERE s2.post_id = p.id
+                  AND sf2.image_type = 'main'
+                LIMIT 1
+            ) AS main_image
 
-               f.file_path || '/' || f.file_name AS mainImage
         FROM tbl_guest g
-                 JOIN tbl_payment_status ps       ON ps.member_id = g.member_id
-                 JOIN tbl_purchase pu             ON ps.purchase_id = pu.post_id
-                 JOIN tbl_post p                  ON pu.post_id = p.id
-                 JOIN tbl_member seller           ON p.member_id = seller.id
-                 JOIN tbl_member guest            ON g.member_id = guest.id
-                 LEFT JOIN tbl_post_section s     ON
-                     p.id = s.post_id
-                 LEFT JOIN tbl_post_section_file sf ON s.id = sf.post_section_id AND sf.image_type = 'main'
-                 LEFT JOIN tbl_file f             ON sf.file_id = f.id
+                 JOIN tbl_payment_status ps ON ps.member_id = g.member_id
+                 JOIN tbl_purchase pu ON ps.purchase_id = pu.post_id
+                 JOIN tbl_post p ON pu.post_id = p.id
+                 JOIN tbl_member seller ON p.member_id = seller.id
+                 JOIN tbl_member guest ON g.member_id = guest.id
         WHERE g.guest_order_number = #{guestOrderNumber}
     </select>
 

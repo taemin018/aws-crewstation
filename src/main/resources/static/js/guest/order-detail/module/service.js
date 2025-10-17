@@ -2,9 +2,9 @@
 const orderService = (() => {
 
     // 주문 상세 조회
-    const getOrderDetail = async (guestOrderNumber) => {
+    const getOrderDetail = async () => {
         try {
-            const res = await fetch(`/api/guest/order-detail/${guestOrderNumber}`);
+            const res = await fetch(`/api/guest/order-detail`);
             if (!res.ok) throw new Error("주문 상세 조회 실패");
             return await res.json();
         } catch (err) {
@@ -14,22 +14,22 @@ const orderService = (() => {
     };
 
     // 주문 취소
-    const cancelOrder = async (guestOrderNumber) => {
-        const res = await fetch(`/api/guest/order/${guestOrderNumber}/status?paymentPhase=REFUND`, { method: "PUT" });
+    const cancelOrder = async () => {
+        const res = await fetch(`/api/guest/order/status?paymentPhase=REFUND`, { method: "PUT" });
         if (!res.ok) throw new Error("주문 취소 실패");
         return await res.text();
     };
 
     // 결제하기
-    const payOrder = async (guestOrderNumber) => {
-        const res = await fetch(`/api/guest/order/${guestOrderNumber}/status?paymentPhase=SUCCESS`, { method: "PUT" });
+    const payOrder = async () => {
+        const res = await fetch(`/api/guest/order/status?paymentPhase=SUCCESS`, { method: "PUT" });
         if (!res.ok) throw new Error("결제 실패");
         return await res.text();
     };
 
     // 수령 완료
-    const completeReceive = async (guestOrderNumber) => {
-        const res = await fetch(`/api/guest/order/${guestOrderNumber}/status?paymentPhase=RECEIVED`, { method: "PUT" });
+    const completeReceive = async () => {
+        const res = await fetch(`/api/guest/order/status?paymentPhase=RECEIVED`, { method: "PUT" });
         if (!res.ok) throw new Error("수령 완료 실패");
         return await res.text();
     };

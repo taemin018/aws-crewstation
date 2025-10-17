@@ -1,5 +1,6 @@
 package com.example.crewstation.controller.guest;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.dto.diary.LikedDiaryCriteriaDTO;
 import com.example.crewstation.dto.diary.ReplyDiaryCriteriaDTO;
@@ -10,6 +11,7 @@ import com.example.crewstation.util.ScrollCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,19 +26,25 @@ public class GuestRestController {
     private final GuestService guestService;
 
     // 주문번호로 단건 조회
-    @GetMapping("/order-detail/{guestOrderNumber}")
-    public ResponseEntity<GuestOrderDetailDTO> getOrderDetail(@PathVariable String guestOrderNumber) {
+    @GetMapping("/order-detail")
+    public ResponseEntity<GuestOrderDetailDTO> getOrderDetail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        String guestOrderNumber = customUserDetails.getGuestOrderNumber();
+        log.info("GET /order-detail called by guestOrderNumber={}", guestOrderNumber);
+
         GuestOrderDetailDTO orderDetail = guestService.getOrderDetail(guestOrderNumber);
         return ResponseEntity.ok(orderDetail);
     }
 
     // 결제 상태 업데이트
-    @PutMapping("/order/{guestOrderNumber}/status")
+    @PutMapping("/order/status")
     public ResponseEntity<Void> updatePaymentStatus(
-            @PathVariable String guestOrderNumber,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam PaymentPhase paymentPhase) {
 
-        log.info("PUT /order/{}/status called with phase={}", guestOrderNumber, paymentPhase);
+        String guestOrderNumber = customUserDetails.getGuestOrderNumber();
+        log.info("PUT /order/status called by guestOrderNumber={}, phase={}", guestOrderNumber, paymentPhase);
 
         GuestOrderDetailDTO order = guestService.getOrderDetail(guestOrderNumber);
         if (order == null) {
