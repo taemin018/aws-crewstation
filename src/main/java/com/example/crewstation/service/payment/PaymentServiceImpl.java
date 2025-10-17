@@ -16,6 +16,7 @@ import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.service.sms.SmsService;
 import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,18 +102,18 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public List<PaymentCriteriaDTO> selectPayment(int page) {
-        int total = paymentStatusDAO.countPayment();
+    public List<PaymentCriteriaDTO> selectPayment(Search search, int size) {
+        int total = paymentStatusDAO.countPayment(search);
+        int page  = Math.max(1, search.getPage());
         Criteria criteria = new Criteria(page, total, 16, 10);
+        return paymentStatusDAO.adminPaymentList(search, criteria);
 
-        List<PaymentCriteriaDTO> paymentList = paymentStatusDAO.adminPaymentList(criteria);
 
-        PaymentCriteriaDTO paymentCriteriaDTO = new PaymentCriteriaDTO();
-        paymentCriteriaDTO.setCriteria(criteria);
-        paymentCriteriaDTO.setPaymentList(paymentList);
+    }
 
-        return paymentList;
-
+    @Override
+    public int countPayment(Search search) {
+        return paymentStatusDAO.countPayment(search);
     }
 
     @Override
