@@ -64,7 +64,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/ask/register",
                         "/notice/notice",
                         "/notice/notice-detail",
-                        "/api/guest/order-detail/{guestOrderNumber:\\d+}");
+                        "/api/guest/order-detail/{guestOrderNumber:\\d+}",
+                        "/api/guest/order/status/**");
 
         registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
                 .addPathPatterns("/member/login",
