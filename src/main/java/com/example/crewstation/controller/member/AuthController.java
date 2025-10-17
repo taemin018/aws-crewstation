@@ -136,6 +136,14 @@ AuthController implements AuthControllerDocs{
         roleCookie.setMaxAge(0);
 
         response.addCookie(roleCookie);
+
+        Cookie deleteProviderCookie = new Cookie("provider", null);
+        deleteProviderCookie.setHttpOnly(true);
+        deleteProviderCookie.setSecure(true);
+        deleteProviderCookie.setPath("/");
+        deleteProviderCookie.setMaxAge(0);
+
+        response.addCookie(deleteProviderCookie);
     }
 
     //    리프레시 토큰으로 엑세스 토큰 발급
