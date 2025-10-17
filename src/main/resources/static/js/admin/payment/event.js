@@ -1,218 +1,267 @@
 window.paymentInit = async function () {
     if (window.paymentInited) return;
     window.paymentInited = true;
-    const section = document.getElementById('section-payment');
+
+    const section = document.getElementById("section-payment");
     if (!section) return;
 
+    
     const modal =
-        section.querySelector('.payment-modal') ||
-        section.querySelector('.member-modal') ||
-        document.querySelector('#section-payment .payment-modal') ||
-        document.querySelector('#section-payment .member-modal') ||
-        document.querySelector('.payment-modal') ||
-        document.querySelector('.member-modal');
+        document.querySelector(".payment-modal") ||
+        section.querySelector(".payment-modal");
 
-    if (!modal) {
-        console.warn('[payment] modal element not found (모달 바인딩은 스킵)');
-    }
+    const STATUS_MAP = {
+        "pay-progress": "PENDING",
+        "pay-success":  "SUCCESS",
+        "pay-cancel":   "REFUND",
+    };
 
-    let page = 1;
-    let hasMore = true;
+    const state = {
+        page: 1,
+        categories: [],
+        keyword: "",
+    };
+
+    (function ensureSuccessIconMeta() {
+        const successItem = Array
+            .from(section.querySelectorAll(".boot-check"))
+            .find(el => el.querySelector(".boot-check-content")?.textContent.trim() === "결제완료");
+        if (!successItem) return;
+        const icon = successItem.querySelector("i.mdi");
+        if (icon) {
+            icon.classList.add("btn-status");
+            if (!icon.dataset.target) icon.dataset.target = "pay-success";
+        }
+    })();
+
+    const getKeyword = () =>
+        section.querySelector(".filter-search input.form-control")?.value?.trim() || "";
+
+    const getSelectedTargets = () =>
+        Array.from(section.querySelectorAll(".btn-status.is-checked"))
+            .map(i => i.dataset.target)
+            .filter(Boolean);
+
+    const getSelectedCategories = () =>
+        getSelectedTargets().map(t => STATUS_MAP[t]).filter(Boolean);
+
+    // ==== 목록 로드 ====
     let isLoading = false;
+    let hasMore = true;
 
     const loadList = async (p = 1) => {
         if (isLoading) return;
         isLoading = true;
         try {
-            const list = await paymentService.getPayments(p); // /api/admin/payment?page=p
-            console.log('[payment] list len:', Array.isArray(list) ? list.length : (list?.content?.length || 0));
+            state.page = p;
+            state.keyword = getKeyword();
+
+            const list = await paymentService.getPayments(p, {
+                categories: state.categories,
+                keyword: state.keyword,
+            });
+
+            console.log(
+                "[payment] list len:",
+                Array.isArray(list) ? list.length : list?.content?.length || 0
+            );
+
             paymentLayout.showPayments(list);
 
-            const arr = Array.isArray(list) ? list : (list?.content || []);
+            const arr = Array.isArray(list) ? list : list?.content || [];
             hasMore = Array.isArray(arr) && arr.length > 0;
         } catch (e) {
-            console.error('결제 목록 로드 실패:', e);
+            console.error("결제 목록 로드 실패:", e);
+            const tbody = section.querySelector("#payment-tbody");
+            if (tbody) {
+                tbody.innerHTML =
+                    `<tr><td colspan="7" class="text-center text-danger py-4">결제 목록을 불러오지 못했습니다.</td></tr>`;
+            }
         } finally {
             isLoading = false;
         }
     };
 
-    // ===== 결제상태 선택 드롭다운 =====
-        const wrap = section.querySelector('#filter-status');
-        if (!wrap) return;
+    paymentLayout.clear();
+    await loadList(1);
 
-        const trigger  = wrap.querySelector('#btn-filter-status');
-        const pop      = wrap.querySelector('.bt-pop-menu');
-        const context  = pop.querySelector('.bt-pop-menu-context');
-        const backdrop = pop.querySelector('.bt-pop-menu-back');
-        if (!trigger || !pop) return;
+    // ==== 상태 팝업 ====
+    (function bindStatusPopup() {
+        const btnOpen  = section.querySelector("#btn-filter-status");
+        const pop      = section.querySelector("#filter-status .bt-pop-menu");
+        const back     = pop?.querySelector(".bt-pop-menu-back");
+        const ctx      = pop?.querySelector(".bt-pop-menu-context"); // 컨텐츠 래퍼
+        const btnAll   = section.querySelector("#btn-select-all");
+        const btnNone  = section.querySelector("#btn-deselect-all");
+        const btnApply = section.querySelector("#btn-apply-status");
 
-        if (!document.getElementById('payment-filter-style')) {
-            const style = document.createElement('style');
-            style.id = 'payment-filter-style';
-            style.textContent = `
-      .boot-check-box.checked i.mdi-check { display: inline-block !important; }
-      .boot-check-box:not(.checked) i.mdi-check { display: none !important; }
-    `;
-            document.head.appendChild(style);
-        }
+        if (!btnOpen || !pop || !ctx || pop._bound) return;
+        pop._bound = true;
 
-        pop.style.position = 'absolute';
-        pop.style.zIndex   = '2000';
-        pop.style.display  = 'none';
-        if (context)  context.style.display  = 'block';
-        if (backdrop) backdrop.style.display = 'none';
-
-        const show = () => {
-            pop.style.display = 'block';
-            pop.classList.add('show');
-            context?.classList.add('show');
-            if (backdrop) {
-                backdrop.classList.add('show');
-                backdrop.style.display = 'block';
-            }
-
-            trigger.setAttribute('aria-expanded', 'true');
-        };
-        const hide = () => {
-            pop.classList.remove('show');
-            context?.classList.remove('show');
-            if (backdrop) {
-                backdrop.classList.remove('show');
-                backdrop.style.display = 'none';
-            }
-
-            pop.style.display = 'none';
-            trigger.setAttribute('aria-expanded', 'false');
+        const setCheckedForIcon = (icon, on) => {
+            if (!icon) return;
+            icon.classList.toggle("is-checked", on);
+            const box = icon.closest(".boot-check-box");
+            if (box) box.classList.toggle("is-checked", on); // 파란 배경/테두리
         };
 
-        const toggle = () => (pop.style.display === 'none' ? show() : hide());
+        const toggleCheckedForIcon = (icon) => {
+            const now = !icon.classList.contains("is-checked");
+            setCheckedForIcon(icon, now);
+        };
 
-        trigger.addEventListener('click', (e) => {
+        const openPop = () => {
+            back?.classList.add("show");
+            ctx.classList.add("show");
+
+            const hostRect = btnOpen.getBoundingClientRect();
+            ctx.style.position = "fixed";
+            ctx.style.top = `${hostRect.bottom + 8}px`;
+            ctx.style.left = `${hostRect.left}px`;
+            ctx.style.zIndex = "3000";
+        };
+
+        const closePop = () => {
+            ctx.classList.remove("show");
+            back?.classList.remove("show");
+        };
+
+        btnOpen.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            toggle();
+            ctx.classList.contains("show") ? closePop() : openPop();
         });
 
-        pop.addEventListener('click', (e) => { e.stopPropagation(); });
-        document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) hide(); }, true);
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+        ctx.addEventListener("click", (e) => e.stopPropagation());
+        back?.addEventListener("click", (e) => { e.stopPropagation(); closePop(); });
 
-        const listRoot = context || pop;
-        listRoot.querySelectorAll('.boot-check').forEach(item => {
-            const box  = item.querySelector('.boot-check-box');
-            if (!box) return;
-            const isChecked = box.classList.contains('checked') || item.dataset.checked === '1';
-            box.classList.toggle('checked', isChecked);
-            item.dataset.checked = isChecked ? '1' : '0';
-            item.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+        // 바깥 클릭 시 닫기
+        document.addEventListener("click", () => {
+            if (ctx.classList.contains("show")) closePop();
         });
 
-        listRoot.addEventListener('click', (e) => {
-            const item = e.target.closest('.boot-check');
-            if (!item || !listRoot.contains(item)) return;
+        ctx.addEventListener("click", (e) => {
+            const icon = e.target.closest(".btn-status"); // <i ... class="btn-status">
+            const item = e.target.closest(".boot-check"); // 라인 전체
+            if (!icon && !item) return;
 
-            const box = item.querySelector('.boot-check-box');
-            if (!box) return;
-
-            const isChecked = !box.classList.contains('checked');
-            box.classList.toggle('checked', isChecked);
-            item.dataset.checked = isChecked ? '1' : '0';
-            item.setAttribute('aria-checked', isChecked ? 'true' : 'false');
-        });
-
-        //  전체선택 / 선택취소
-        const btnSelectAll   = wrap.querySelector('#btn-select-all');
-        const btnDeselectAll = wrap.querySelector('#btn-deselect-all');
-
-        const setAll = (checked) => {
-            listRoot.querySelectorAll('.boot-check').forEach(item => {
-                const box = item.querySelector('.boot-check-box');
-                if (!box) return;
-                box.classList.toggle('checked', checked);
-                item.dataset.checked = checked ? '1' : '0';
-                item.setAttribute('aria-checked', checked ? 'true' : 'false');
-            });
-        };
-
-        if (btnSelectAll)   btnSelectAll.addEventListener('click', (e) => {
             e.preventDefault();
-            setAll(true);
+            e.stopPropagation();
+
+            const targetIcon =
+                icon ||
+                item.querySelector(".btn-status"); // 라인 클릭 시 내부 아이콘 찾기
+
+            if (targetIcon) toggleCheckedForIcon(targetIcon);
         });
 
-        if (btnDeselectAll) btnDeselectAll.addEventListener('click', (e) => { e.preventDefault(); setAll(false); });
+        // 키보드 접근성 (Space/Enter)
+        ctx.addEventListener("keydown", (e) => {
+            if (!(e.key === " " || e.key === "Enter")) return;
+            const item = e.target.closest(".boot-check");
+            if (!item) return;
+            const icon = item.querySelector(".btn-status");
+            if (!icon) return;
 
+            e.preventDefault();
+            toggleCheckedForIcon(icon);
+        });
 
-    paymentLayout.clear();
-    const cnt = section.querySelector('.receipt-count .count-amount');
-    if (cnt) cnt.textContent = '0';
-    await loadList(page);
+        // 전체선택
+        btnAll?.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            section.querySelectorAll(".btn-status").forEach((i) => setCheckedForIcon(i, true));
+        });
 
-    // 무한 스크롤
-    const container = document.querySelector('#bootpay-main');
-    const onScroll = async (scroller) => {
-        const scrollTop = scroller === window ? window.scrollY : scroller.scrollTop;
-        const clientHeight = scroller === window ? window.innerHeight : scroller.clientHeight;
-        const scrollHeight = scroller === window ? document.documentElement.scrollHeight : scroller.scrollHeight;
+        // 선택취소
+        btnNone?.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            section.querySelectorAll(".btn-status").forEach((i) => setCheckedForIcon(i, false));
+        });
 
-        if (scrollTop + clientHeight >= scrollHeight - 120) {
-            if (!isLoading && hasMore) {
-                await loadList(++page);
+        // 확인
+        btnApply?.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const cats = Array
+                .from(section.querySelectorAll(".btn-status.is-checked"))
+                .map(i => STATUS_MAP[i.dataset.target])
+                .filter(Boolean);
+
+            if (!cats.length) {
+                alert("최소 1개 이상 선택하세요.");
+                return;
             }
-        }
-    };
 
-    if (container && !container.paymentScrollBound) {
-        container.paymentScrollBound = true;
-        container.addEventListener('scroll', () => onScroll(container));
-    } else if (!window.paymentScrollBound) {
-        window.paymentScrollBound = true;
-        window.addEventListener('scroll', () => onScroll(window));
-    }
+            state.categories = cats;
+            closePop();
+            await loadList(1);
+        });
+    })();
 
-    // 모달
+    // ==== 검색 버튼/엔터 ====
+    (function bindSearch() {
+        const input = section.querySelector(".filter-search input.form-control");
+        const btn   = section.querySelector(".filter-search .btn-search");
+
+        btn?.addEventListener("click", (e) => {
+            e.preventDefault();
+            loadList(1);
+        });
+
+        input?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") loadList(1);
+        });
+    })();
+
+    // ==== 상세 모달 열기/닫기 + 상세조회 ====
     if (modal) {
         let currentRow = null;
 
         const open = () => {
-            modal.style.display = 'block';
+            modal.style.display = "block";
             requestAnimationFrame(() => {
-                modal.classList.add('show');
-                modal.style.background = 'rgba(0,0,0,.5)';
-                document.body.classList.add('modal-open');
+                modal.classList.add("show");
+                modal.style.background = "rgba(0,0,0,0.4)";
+                document.body.classList.add("modal-open");
             });
         };
 
         const close = () => {
-            modal.classList.remove('show');
-            document.body.classList.remove('modal-open');
-            setTimeout(() => { modal.style.display = 'none'; }, 100);
+            modal.classList.remove("show");
+            document.body.classList.remove("modal-open");
+            setTimeout(() => (modal.style.display = "none"), 100);
             delete modal.dataset.paymentId;
             if (currentRow) {
-                currentRow.classList.remove('current');
+                currentRow.classList.remove("current");
                 currentRow = null;
             }
         };
 
-        modal.querySelectorAll('.btn-close, .close').forEach(b => b.addEventListener('click', close));
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) close();
+        // 닫기 버튼 및 바깥 영역
+        modal.querySelectorAll(".btn-close, .close")
+            .forEach((btn) => btn.addEventListener("click", close));
+
+        modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal.classList.contains("show")) close();
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('show')) close();
-        });
-
-        const table = section.querySelector('.table-layout');
+        // 상세보기 버튼
+        const table = section.querySelector("table");
         if (table && !table.paymentRowBound) {
             table.paymentRowBound = true;
 
-            table.addEventListener('click', async (e) => {
-                const btn = e.target.closest('.action-btn');
+            table.addEventListener("click", async (e) => {
+                const btn = e.target.closest(".action-btn, .btn-detail");
                 if (!btn) return;
 
-                const row = btn.closest('tr');
-                const id = btn.dataset.paymentid || row?.dataset.paymentId;
+                const row = btn.closest("tr");
+                const id  = btn.dataset.paymentid || row?.dataset.paymentId;
                 if (!id) return;
 
                 try {
@@ -220,50 +269,55 @@ window.paymentInit = async function () {
                     paymentLayout.showPaymentDetail(detail);
 
                     modal.dataset.paymentId = id;
-
-                    if (currentRow) currentRow.classList.remove('current');
+                    if (currentRow) currentRow.classList.remove("current");
                     if (row) {
-                        row.classList.add('current');
+                        row.classList.add("current");
                         currentRow = row;
                     }
 
                     open();
                 } catch (err) {
-                    console.error('결제 상세 조회 실패:', err);
-                    alert('상세 조회에 실패했습니다.');
+                    console.error("결제 상세 조회 실패:", err);
+                    alert("상세 조회에 실패했습니다.");
                 }
             });
         }
 
-        const approveBtn = modal.querySelector('.btn-approve');
-        const cancelBtn  = modal.querySelector('.btn-cancel');
+        const approveBtn   = modal.querySelector(".btn-approve");
+        const cancelBtn    = modal.querySelector(".btn-cancel");
+
         const getCurrentId = () =>
             modal.dataset.paymentId ||
-            section.querySelector('tr[data-payment-id].current')?.dataset.paymentId;
+            section.querySelector("tr[data-payment-id].current")?.dataset.paymentId;
 
-        if (approveBtn) {
-            approveBtn.addEventListener('click', async () => {
-                const id = getCurrentId();
-                if (!id) return;
-                const ok = await paymentService.processPayment(id, 'approve');
-                if (ok) close();
-                else alert('승인 처리 실패');
-            });
-        }
+        approveBtn?.addEventListener("click", async () => {
+            const id = getCurrentId();
+            if (!id) return;
+            const ok = await paymentService.processPayment(id, "approve");
+            if (ok) close();
+            else alert("승인 처리 실패");
+        });
 
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', async () => {
-                const id = getCurrentId();
-                if (!id) return;
-                const ok = await paymentService.processPayment(id, 'cancel');
-                if (ok) close(); else alert('취소 처리 실패');
-            });
-        }
+        cancelBtn?.addEventListener("click", async () => {
+            const id = getCurrentId();
+            if (!id) return;
+            const ok = await paymentService.processPayment(id, "cancel");
+            if (ok) close();
+            else alert("취소 처리 실패");
+        });
+    } else {
+        const waitModal = setInterval(() => {
+            const modalCheck = document.querySelector(".payment-modal");
+            if (modalCheck) {
+                clearInterval(waitModal);
+                window.paymentInit();
+            }
+        }, 700);
     }
 };
 
-window.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('section-payment') && typeof window.paymentInit === 'function') {
+window.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("section-payment") && typeof window.paymentInit === "function") {
         window.paymentInit();
     }
 });
