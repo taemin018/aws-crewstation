@@ -14,7 +14,6 @@ public class GuestInterceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
 
     public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
-        log.info(req.getRequestURI() + "4382947893279847328974932789437892");
         String username = null;
         String accessToken = null;
 
@@ -33,10 +32,10 @@ public class GuestInterceptor implements HandlerInterceptor {
         }
 
         if (username != null) {
-            if (username.contains("@")) {
+            if(username.contains("@")){
                 return true;
             }
-
+            log.info("dwqdqwfqfqdff");
             Cookie deleteAccessCookie = new Cookie("accessToken", null);
             deleteAccessCookie.setHttpOnly(true);
             deleteAccessCookie.setSecure(true);

@@ -16,6 +16,7 @@ public class PaymentPhaseHandler implements TypeHandler<PaymentPhase> {
     @Override
     public PaymentPhase getResult(ResultSet rs, String columnName) throws SQLException {
         return switch (rs.getString(columnName)){
+            case "request" -> PaymentPhase.REQUEST;
             case "pending" -> PaymentPhase.PENDING;
             case "refund" -> PaymentPhase.REFUND;
             case "success" -> PaymentPhase.SUCCESS;
@@ -28,6 +29,7 @@ public class PaymentPhaseHandler implements TypeHandler<PaymentPhase> {
     @Override
     public PaymentPhase getResult(ResultSet rs, int columnIndex) throws SQLException {
         return switch (rs.getString(columnIndex)){
+            case "request" -> PaymentPhase.REQUEST;
             case "pending" -> PaymentPhase.PENDING;
             case "refund" -> PaymentPhase.REFUND;
             case "success" -> PaymentPhase.SUCCESS;
@@ -40,6 +42,7 @@ public class PaymentPhaseHandler implements TypeHandler<PaymentPhase> {
     @Override
     public PaymentPhase getResult(CallableStatement cs, int columnIndex) throws SQLException {
         return switch (cs.getString(columnIndex)){
+            case "request" -> PaymentPhase.REQUEST;
             case "pending" -> PaymentPhase.PENDING;
             case "refund" -> PaymentPhase.REFUND;
             case "success" -> PaymentPhase.SUCCESS;
