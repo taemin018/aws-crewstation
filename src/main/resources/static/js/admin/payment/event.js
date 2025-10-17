@@ -5,6 +5,7 @@ window.paymentInit = async function () {
     const section = document.getElementById("section-payment");
     if (!section) return;
 
+    
     const modal =
         document.querySelector(".payment-modal") ||
         section.querySelector(".payment-modal");
