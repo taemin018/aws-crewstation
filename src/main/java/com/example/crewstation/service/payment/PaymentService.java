@@ -4,7 +4,8 @@ import com.example.crewstation.domain.guest.GuestVO;
 import com.example.crewstation.dto.payment.PaymentDTO;
 import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
-
+import com.example.crewstation.util.Criteria;
+import com.example.crewstation.util.Search;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,9 @@ public interface PaymentService {
 
     public void completePayment(Long purchaseId, PaymentDTO paymentDTO);
 
-    public List<PaymentCriteriaDTO> selectPayment(int page);
+    public List<PaymentCriteriaDTO> selectPayment(Search search, int size);
+
+    public int countPayment(Search search);
 
     public PaymentCriteriaDTO getPaymentDetail(Long id);
 

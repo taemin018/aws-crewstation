@@ -10,6 +10,7 @@ import com.example.crewstation.dto.notice.NoticeCriteriaDTO;
 import com.example.crewstation.dto.notice.NoticeWriteRequest;
 import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
+import com.example.crewstation.repository.payment.PaymentDAO;
 import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
 import com.example.crewstation.service.banner.BannerService;
 import com.example.crewstation.service.member.MemberService;
@@ -18,6 +19,7 @@ import com.example.crewstation.service.notice.NoticeService;
 import com.example.crewstation.service.payment.PaymentService;
 import com.example.crewstation.service.gift.GiftService;
 import com.example.crewstation.service.report.ReportService;
+import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +28,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -42,6 +46,8 @@ public class AdminRestController {
     private final ReportService reportService;
     private final GiftService giftService;
     private final PaymentService paymentService;
+    private final PaymentDAO paymentDAO;
+    private final PaymentStatusDAO paymentStatusDAO;
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -138,13 +144,35 @@ public class AdminRestController {
     
     //    결제 목록
     @GetMapping("/payment")
-    public ResponseEntity<?> getPayment(@RequestParam(defaultValue = "1") int page) {
-        int safePage = Math.max(1, page);
-        List<PaymentCriteriaDTO> paymentList = paymentService.selectPayment(safePage);
-        return ResponseEntity.ok(paymentList);
+    public ResponseEntity<?> getPayment(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) String categories,
+            @RequestParam(required = false) String keyword) {
+
+        Search search = new Search();
+        search.setPage(Math.max(1, page));
+        if (keyword != null) search.setKeyword(keyword);
+
+        if (categories != null && !categories.isBlank()) {
+            List<String> cats = Arrays.stream(categories.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
+
+            if (cats.size() == 3) {
+                search.setCategories(null);
+            } else {
+                search.setCategories(cats);
+            }
+        }
+
+        int size = 16;
+        List<PaymentCriteriaDTO> list = paymentService.selectPayment(search, size);
+        return ResponseEntity.ok(list);
     }
 
 
+    //  결제 목록 상세 보기
     @GetMapping("/payment/{id}")
     public ResponseEntity<PaymentCriteriaDTO> getPaymentDetail(@PathVariable Long id) {
         return ResponseEntity.ok(paymentService.getPaymentDetail(id));

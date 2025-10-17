@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -14,5 +15,6 @@ public class Search {
     private String keyword;
     private int page;
     private String orderType;
+    private List<String> categories;
 
 }

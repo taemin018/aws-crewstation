@@ -31,9 +31,8 @@ function showSection(name) {
     };
 
     const init = initMap[name];
-    if (typeof init === 'function' && !showSection.inited[name]) {
-        showSection.inited[name] = true;
-        init(); 
+    if (typeof init === 'function') {
+        init();
     }
 }
 
