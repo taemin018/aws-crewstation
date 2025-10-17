@@ -29,21 +29,21 @@ import java.util.stream.Collectors;
 public interface DiaryService {
 
     // 특정 회원이 좋아요한 일기 목록 조회
-    public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(Long memberId, ScrollCriteria criteria);
+    public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria);
 
     // 특정 회원이 좋아요한 일기 수 조회
-    public int getCountDiariesLikedByMemberId(Long memberId);
+    public int getCountDiariesLikedByMemberId(CustomUserDetails customUserDetails);
 
     //  좋아요 취소
-    public void cancelLike (Long memberId, Long diaryId);
+    public void cancelLike (CustomUserDetails customUserDetails, Long diaryId);
 
     //    다이어리 목록 조회
     public List<DiaryDTO> selectDiaryList(@Param("limit") int limit);
     //    내가 댓글 쓴 일기 조회
-    public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria);
+    public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria);
 
     //  내가 답글 단 일기 개수 조회
-    public int getCountReplyDiariesByMemberId (Long memberId);
+    public int getCountReplyDiariesByMemberId (CustomUserDetails customUserDetails);
 
 
 //    다이어리 목록들 가져오기(다이어리 서비스 쪽)

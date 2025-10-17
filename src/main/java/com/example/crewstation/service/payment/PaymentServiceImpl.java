@@ -19,6 +19,7 @@ import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final MemberDAO memberDAO;
     private final GuestDAO guestDAO;
     private final SmsService smsService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -57,9 +59,11 @@ public class PaymentServiceImpl implements PaymentService {
             memberDAO.saveGuest(memberDTO);
             paymentStatusDTO.setMemberId(memberDTO.getId());
             code = smsService.send(paymentStatusDTO.getMemberPhone());
+//            code ="1234123412";
             paymentStatusDTO.setGuestOrderNumber(code);
+            paymentStatusDTO.setGuestPassword(passwordEncoder.encode(paymentStatusDTO.getMemberPhone()));
             GuestVO vo = toVO(paymentStatusDTO);
-            log.info("vo={}", vo.toString());
+
             guestDAO.save(vo);
 
         } else if (paymentStatusDTO.getMemberId() == null) {

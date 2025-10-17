@@ -109,6 +109,42 @@ window.paymentInit = async function () {
             if (box) box.classList.toggle("is-checked", on); // 파란 배경/테두리
         };
 
+    // ===== 결제상태 선택 드롭다운 =====
+        const wrap = section.querySelector('#filter-status');
+        if (!wrap) return;
+
+        const trigger  = wrap.querySelector('#btn-filter-status');
+        const pop      = wrap.querySelector('.bt-pop-menu');
+        const context  = pop.querySelector('.bt-pop-menu-context');
+        const backdrop = pop.querySelector('.bt-pop-menu-back');
+        if (!trigger || !pop) return;
+
+        if (!document.getElementById('payment-filter-style')) {
+            const style = document.createElement('style');
+            style.id = 'payment-filter-style';
+            style.textContent = `
+      .boot-check-box.checked i.mdi-check { display: inline-block !important; }
+      .boot-check-box:not(.checked) i.mdi-check { display: none !important; }
+    `;
+            document.head.appendChild(style);
+        }
+
+        pop.style.position = 'absolute';
+        pop.style.zIndex   = '2000';
+        pop.style.display  = 'none';
+        if (context)  context.style.display  = 'block';
+        if (backdrop) backdrop.style.display = 'none';
+
+        const show = () => {
+            pop.style.display = 'block';
+            pop.classList.add('show');
+            context?.classList.add('show');
+            if (backdrop) {
+                backdrop.classList.add('show');
+                backdrop.style.display = 'block';
+            }
+
+
         const toggleCheckedForIcon = (icon) => {
             const now = !icon.classList.contains("is-checked");
             setCheckedForIcon(icon, now);
@@ -260,6 +296,17 @@ window.paymentInit = async function () {
 
         // 상세보기 버튼
         const table = section.querySelector("table");
+
+        modal.querySelectorAll('.btn-close, .close').forEach(b => b.addEventListener('click', close));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) close();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) close();
+        });
+
+        const table = section.querySelector('.table-layout');
         if (table && !table.paymentRowBound) {
             table.paymentRowBound = true;
 
@@ -305,6 +352,18 @@ window.paymentInit = async function () {
             if (ok) close();
             else alert("승인 처리 실패");
         });
+
+            section.querySelector('tr[data-payment-id].current')?.dataset.paymentId;
+
+        if (approveBtn) {
+            approveBtn.addEventListener('click', async () => {
+                const id = getCurrentId();
+                if (!id) return;
+                const ok = await paymentService.processPayment(id, 'approve');
+                if (ok) close();
+                else alert('승인 처리 실패');
+            });
+        }
 
         cancelBtn?.addEventListener("click", async () => {
             const id = getCurrentId();

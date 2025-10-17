@@ -6,3 +6,4 @@
         constraint fk_post_section_post foreign key (post_id)
             references tbl_post (id)
     );
+

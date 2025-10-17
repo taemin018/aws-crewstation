@@ -27,7 +27,7 @@
         tm.member_description,
         tm.social_img_url,
         tps.post_content,
-        vfmf.file_path,
+        vfmf.file_path as member_file_path,
         tc.crew_name,
         tc.id as crew_id
         from tbl_member tm

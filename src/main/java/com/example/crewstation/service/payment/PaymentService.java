@@ -6,10 +6,8 @@ import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
-
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public interface PaymentService {
     public Map<String, Object> requestPayment(PaymentStatusDTO paymentStatusDTO);
@@ -29,6 +27,7 @@ public interface PaymentService {
         return GuestVO.builder()
                 .memberId(paymentStatusDTO.getMemberId())
                 .guestPhone(paymentStatusDTO.getMemberPhone())
+                .guestPassword(paymentStatusDTO.getGuestPassword())
                 .guestOrderNumber(paymentStatusDTO.getGuestOrderNumber())
                 .addressDetail(paymentStatusDTO.getAddressDetail())
                 .address(paymentStatusDTO.getAddress())

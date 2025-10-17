@@ -15,6 +15,7 @@ import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.section.FilePostSectionDTO;
 import com.example.crewstation.dto.file.tag.ImageDTO;
 import com.example.crewstation.dto.file.tag.PostDiaryDetailTagDTO;
+import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.dto.post.PostDTO;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import com.example.crewstation.dto.post.section.SectionDTO;
@@ -34,6 +35,7 @@ import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
 import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,28 +78,30 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<DiaryDTO> selectDiaryList(int limit) {
-        List<LinkedHashMap> rawDiaries = (List<LinkedHashMap>) redisTemplate.opsForValue().get("diaries");
-
-        List<DiaryDTO> diaries = new ArrayList<>();
-        if (rawDiaries != null) {
+        List<DiaryDTO> diaries = null;
+         Object obj = redisTemplate.opsForValue().get("diaries");
+        if (obj != null) {
             ObjectMapper mapper = new ObjectMapper();
-            diaries = rawDiaries.stream()
-                    .map(map -> mapper.convertValue(map, DiaryDTO.class))
-                    .collect(Collectors.toList());
+            diaries = mapper.convertValue(
+                    obj,
+                    new TypeReference<List<DiaryDTO>>() {}
+            );
         }
 
         if (diaries != null) {
             diaries.forEach(diary -> {
                 String filePath = diary.getDiaryFilePath();
-                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
-
+//                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+//                if(diary.getMemberFilePath() != null){
+//                    diary.setMemberFilePath(s3Service.getPreSignedUrl(diary.getMemberFilePath(), Duration.ofMinutes(5)));
+//                }
                 diary.setFileCount(sectionDAO.findSectionFileCount(diary.getPostId()));
-
-                log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
-                        diary, filePath, presignedUrl);
-                diary.setDiaryFilePath(s3Service.getPreSignedUrl(diary.getDiaryFilePath(),
-                        Duration.ofMinutes(5)));
+//
+//                log.info("Diary ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+//                        diary, filePath, presignedUrl);
+//                diary.setDiaryFilePath(presignedUrl);
             });
+            redisTemplate.opsForValue().set("diaries",diaries,Duration.ofMinutes(5));
             return diaries;
 
         }
@@ -105,11 +109,22 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(Long memberId, ScrollCriteria criteria) {
+    public LikedDiaryCriteriaDTO getDiariesLikedByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria) {
+        Long memberId = customUserDetails.getId();
         log.info("좋아요 다이어리 조회 - memberId={}, page={}, size={}", memberId, criteria.getPage(), criteria.getSize());
 
         // 목록 조회
         List<LikedDiaryDTO> diaries = diaryDAO.findDiariesLikedByMemberId(memberId, criteria);
+
+        // S3 이미지 URL 변환
+        diaries.forEach(diary -> {
+            if (diary.getMainImage() != null) {
+                diary.setMainImage(s3Service.getPreSignedUrl(diary.getMainImage(), Duration.ofMinutes(5)));
+            }
+            if (diary.getMemberProfileImage() != null) {
+                diary.setMemberProfileImage(s3Service.getPreSignedUrl(diary.getMemberProfileImage(), Duration.ofMinutes(5)));
+            }
+        });
 
         // 전체 개수 (hasMore 계산용)
         int totalCount = diaryDAO.countDiariesLikedByMemberId(memberId);
@@ -125,26 +140,39 @@ public class DiaryServiceImpl implements DiaryService {
 
     //  좋아요 한 다이어리 개수
     @Override
-    public int getCountDiariesLikedByMemberId(Long memberId) {
+    public int getCountDiariesLikedByMemberId(CustomUserDetails customUserDetails) {
+        Long memberId = customUserDetails.getId();
         log.info("memberId: {}", memberId);
         return diaryDAO.countDiariesLikedByMemberId(memberId);
     }
 
     //  좋아요 취소
     @Override
-    public void cancelLike(Long memberId, Long diaryId) {
+    public void cancelLike(CustomUserDetails customUserDetails, Long diaryId) {
+        Long memberId = customUserDetails.getId();
         diaryDAO.deleteLike(memberId, diaryId);
     }
 
     // 댓글 단 다이어리 목록 조회
     @Override
-    public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(Long memberId, ScrollCriteria criteria) {
+    public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria) {
+        Long memberId = customUserDetails.getId();
         log.info("댓글 단 다이어리 조회 - memberId={}, page={}, size={}", memberId, criteria.getPage(), criteria.getSize());
 
         List<ReplyDiaryDTO> diaries = diaryDAO.findReplyDiariesByMemberId(memberId, criteria);
 
-        // 상대시간 변환
-        diaries.forEach(diary -> diary.setRelativeDatetime(DateUtils.toRelativeTime(diary.getCreatedDatetime())));
+        //  S3 이미지 URL 변환
+        diaries.forEach(diary -> {
+            if (diary.getMainImage() != null) {
+                diary.setMainImage(s3Service.getPreSignedUrl(diary.getMainImage(), Duration.ofMinutes(5)));
+            }
+//            if (diary.getMemberProfileImage() != null) {
+//                diary.setMemberProfileImage(s3Service.getPreSignedUrl(diary.getMemberProfileImage(), Duration.ofMinutes(5)));
+//            }
+
+            //  상대시간 변환
+            diary.setRelativeDatetime(DateUtils.toRelativeTime(diary.getCreatedDatetime()));
+        });
 
         // 전체 개수 (hasMore 계산용)
         int totalCount = diaryDAO.countReplyDiariesByMemberId(memberId);
@@ -160,13 +188,14 @@ public class DiaryServiceImpl implements DiaryService {
 
     //  내가 댓글 단 일기 개수
     @Override
-    public int getCountReplyDiariesByMemberId(Long memberId) {
+    public int getCountReplyDiariesByMemberId(CustomUserDetails customUserDetails) {
+        Long memberId = customUserDetails.getId();
         log.info("memberId: {}", memberId);
         return diaryDAO.countReplyDiariesByMemberId(memberId);
     }
 
     @Override
-//    @LogReturnStatus
+    @LogReturnStatus
     public DiaryCriteriaDTO getDiaries(Search search, CustomUserDetails customUserDetails) {
         DiaryCriteriaDTO dto = new DiaryCriteriaDTO();
         Search newSearch = new Search();

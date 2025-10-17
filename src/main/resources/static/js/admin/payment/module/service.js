@@ -19,6 +19,7 @@ const paymentService = (() => {
         const res = await fetchWithRefresh(`/api/admin/payment/${encodeURIComponent(id)}`, {
             method: "GET",
             credentials: "include",
+
         });
         if (!res.ok) throw new Error("결제 상세 로드 실패");
         return await res.json();

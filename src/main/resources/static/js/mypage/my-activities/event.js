@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const profileWrap = document.querySelector(".profile-wrap");
     const tagNames = document.querySelectorAll(".tag-name");
-    const memberId = 1; // 로그인 사용자 (임시)
-    const PROFILE_EDIT_URL = "/mypage/mypage/modify";
+    const PROFILE_EDIT_URL = "/mypage/modify";
 
     // 공통 상태값
     let replyPage = 1;
@@ -18,13 +17,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (a) a.href = PROFILE_EDIT_URL;
 
         try {
-            const member = await memberService.getProfile(memberId);
-            if (member) {
-                const imgEl = profileWrap.querySelector(".profile-img");
-                const nameEl = profileWrap.querySelector(".profile-name");
-                if (imgEl) imgEl.src = member.socialImgUrl || "/images/crew-station-icon-profile.png";
-                if (nameEl) nameEl.textContent = member.memberName || "";
-            }
+            await memberService.info(async (member) => {
+                if (member) {
+                    const imgEl = profileWrap.querySelector(".profile-img");
+                    const nameEl = profileWrap.querySelector(".profile-name");
+                    if (imgEl) imgEl.src = member.socialImgUrl || "/images/crew-station-icon-profile.png";
+                    if (nameEl) nameEl.textContent = member.memberName || "";
+                }
+            });
         } catch (e) {
             console.error("프로필 불러오기 실패:", e);
         }
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const loading = document.getElementById("loading");
         if (loading) loading.style.display = "block";
 
-        const result = await replyService.getReplyDiaries(memberId, page, 8);
+        const result = await replyService.getReplyDiaries(page, 8);
         const diaries = result.replyDiaryDTOs || [];
 
         if (page === 1) {
@@ -48,11 +48,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // 댓글 개수 갱신
-        const replyCount = await replyService.getReplyDiaryCount(memberId);
+        const replyCount = await replyService.getReplyDiaryCount();
         if (tagNames.length > 0) tagNames[0].textContent = `댓글(${replyCount})`;
 
         setTimeout(() => { if (loading) loading.style.display = "none"; }, 1000);
-
         return result.criteria;
     }
 
@@ -64,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const loading = document.getElementById("loading");
         if (loading) loading.style.display = "block";
 
-        const result = await likeService.getLikedDiaries(memberId, page, 8);
+        const result = await likeService.getLikedDiaries(page, 8);
         const diaries = result.likedDiaryDTOs || [];
 
         if (page === 1) {
@@ -74,27 +73,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // 좋아요 개수 갱신
-        const likeCount = await likeService.getLikedDiaryCount(memberId);
+        const likeCount = await likeService.getLikedDiaryCount();
         if (tagNames.length > 1) tagNames[1].textContent = `좋아요(${likeCount})`;
 
         setTimeout(() => { if (loading) loading.style.display = "none"; }, 1000);
-
         return result.criteria;
     }
 
     // ===================== 탭 전환 =====================
     document.querySelectorAll('.nav-button').forEach(btn => {
         btn.addEventListener('click', async function() {
-            // 버튼 active 전환
             document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
 
-            // 섹션 active 전환
             document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
             const targetSection = document.getElementById(this.dataset.target);
             targetSection.classList.add('active');
 
-            // 컨테이너 초기화 + 데이터 로드
             if (this.dataset.target === "reply-section") {
                 document.querySelector("#liked-diary-list").innerHTML = "";
                 activeTab = "reply";
@@ -136,18 +131,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             const diaryId = likeBtn.dataset.id;
             if (!confirm("좋아요를 취소하시겠습니까?")) return;
 
-            const result = await likeService.cancelLike(memberId, diaryId);
+            const result = await likeService.cancelLike(diaryId);
             if (result.success) {
                 const card = likeBtn.closest(".card-feed-item-wrap");
                 if (card) card.remove();
 
-                // 뒤에 남은 데이터 있으면 한 장 더 불러오기
                 if (likeCriteria?.hasMore) {
                     likeCriteria = await loadLikedList(++likePage);
                 }
 
-                // 좋아요 개수 갱신
-                const count = await likeService.getLikedDiaryCount(memberId);
+                const count = await likeService.getLikedDiaryCount();
                 if (tagNames.length > 1) tagNames[1].textContent = `좋아요(${count})`;
             } else {
                 alert("좋아요 취소 실패: " + result.message);
@@ -157,6 +150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ===================== 초기 로딩 =====================
     replyCriteria = await loadReplyList(replyPage);
-    const likeCount = await likeService.getLikedDiaryCount(memberId);
+    const likeCount = await likeService.getLikedDiaryCount();
     if (tagNames.length > 1) tagNames[1].textContent = `좋아요(${likeCount})`;
 });

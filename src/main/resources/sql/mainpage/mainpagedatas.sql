@@ -1223,7 +1223,6 @@ FROM view_report_post_report r
 ORDER BY r.created_datetime DESC
 LIMIT 10;
 
-
 insert into tbl_payment(created_datetime, updated_datetime, payment_status_id)
 values (now(), now(), '8');
 
@@ -1236,6 +1235,7 @@ select * from tbl_payment;
 select * from tbl_member;
 select *from tbl_payment_status;
 
+
 -- ps.id 기준으로 결제 행이 2개 이상인 status 찾기
 SELECT payment_status_id, COUNT(*)
 FROM tbl_payment
@@ -1247,3 +1247,16 @@ SELECT *
 FROM tbl_payment
 WHERE payment_status_id = 8
 ORDER BY updated_datetime DESC;
+
+insert into tbl_file(file_origin_name, file_path, file_name, file_size)
+values ('banner1.jpg','2025/10/15/wsadasadasadasdb.jpeg','wsadasadasadasdb.jpeg',1000),
+       ('banner2.jpg','2025/10/15/snansasndadn_asd.jpeg','snansasndadn_asd.jpeg',1000),
+       ('banner3.jpg','2025/10/15/wsadasadaasdm.jpeg','wsadasadaasdm.jpeg',1000),
+       ('banner4.jpg','2025/10/15/wsadasadasadassnsasdb.jpeg','wsadasadasadassnsasdb.jpeg',1000),
+       ('banner5.jpg','2025/10/15/wsadasadas12392asdb.jpeg','wsadasadas12392asdb.jpeg',1000);
+
+insert into tbl_banner(banner_order)
+values (1),(2),(3),(4),(5);
+
+insert into tbl_banner_file(file_id, banner_id)
+values (98,1),(99,2),(100,3),(101,4),(102,5);

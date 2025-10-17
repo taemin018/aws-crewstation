@@ -5,6 +5,7 @@ const paymentLayout = (() => {
     const $section = () => document.querySelector('#section-payment');
     const $tbody   = () => $section()?.querySelector('#payment-tbody');
     const $count   = () => $section()?.querySelector('.receipt-count .count-amount');
+    const getTbody = () => document.querySelector('#section-payment #payment-tbody');
 
     const clear = () => {
         const tb = $tbody();
@@ -65,6 +66,9 @@ const paymentLayout = (() => {
           ${n(p.amount)} <span class="amount-unit">원</span>
         </td>
         <td class="td-method"><div class="pq">${methodText}</div></td>
+        <td class="td-method">
+          <div class="pq">토스페이</div>
+        </td>
         <td class="td-status">
           <div class="label-form">
             <span class="badge-label text-nowrap text-dark approval-status">${statusText}</span>
@@ -77,7 +81,8 @@ const paymentLayout = (() => {
           </div>
         </td>
         <td class="td-action text-center">
-          <button type="button" class="action-btn view" data-paymentid="${p.id}">
+          <button type="button" class="action-btn view" 
+          data-paymentid="${p.id}">
             <i class="mdi mdi-chevron-right"></i>
           </button>
         </td>
@@ -87,7 +92,6 @@ const paymentLayout = (() => {
 
         tb.appendChild(frag);
 
-        // 🔢 건수는 누적이 아니라 set
         const cnt = $count();
         if (cnt) cnt.textContent = String(getTotalCount(raw, list));
     };
@@ -106,7 +110,6 @@ const paymentLayout = (() => {
         set('buyerName', detail.buyerName);
         set('buyerPhone', detail.buyerPhone);
         set('buyerEmail', detail.buyerEmail);
-        set('status', detail.statusText ?? toPhaseKo(detail.paymentPhase));
         set('paidAt', detail.paidAt ?? detail.createdDatetime ?? detail.updatedDatetime);
 
         set('sellerName', detail.sellerName);

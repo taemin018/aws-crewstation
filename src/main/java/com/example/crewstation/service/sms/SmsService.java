@@ -1,13 +1,17 @@
 package com.example.crewstation.service.sms;
 
+import com.example.crewstation.common.exception.SmsSendFailException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import retrofit2.http.HEAD;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,7 +67,6 @@ public class SmsService {
 //        }
 //        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 //        log.info("Sending sms message to phone number " + response);
-        log.info(code);
         return code;
     }
 }

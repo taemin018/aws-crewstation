@@ -14,6 +14,7 @@ public class GuestVO extends Period {
     private Long id;
     private Long memberId;
     private String guestPhone;
+    private String guestPassword;
     private String guestOrderNumber;
     private String addressZipCode;
     private String addressDetail;
