@@ -366,13 +366,19 @@ function drawPie(staticsData) {
 
 // ===== 로그인 정보 표시 + 로그아웃 =====
 
-async function fetchWithRefresh(url, opts = {}) {
-    let res = await fetch(url, { credentials: 'include'});
-    if (res.status === 401) {
-        const r = await fetch('/api/admin/auth/refresh', { method: 'GET', credentials: 'include' });
-        if (r.ok) res = await fetch(url, { credentials: 'include'});
-    }
-    return res;
+async function fetchWithRefresh(url, options = {}) {
+    const opts = { credentials: 'include', ...options };
+    let res = await fetch(url, opts);
+    if (res.status !== 401) return res;
+
+    const refresh = await fetch('/api/admin/auth/refresh', {
+        method: 'GET',
+        credentials: 'include',
+    });
+
+    if (!refresh.ok) return res;
+    
+    return fetch(url, opts);
 }
 
 (async () => {
