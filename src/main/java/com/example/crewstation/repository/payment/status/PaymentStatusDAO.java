@@ -50,5 +50,9 @@ public class PaymentStatusDAO {
         return paymentStatusMapper.selectPaymentDetail(id);
     }
 
+//    결제 승인/취소 금액 합계
+    public Map<String, Object> selectPaymentSummary(Search search) {
+        return paymentStatusMapper.selectPaymentSummary(search);
+    }
 
 }
