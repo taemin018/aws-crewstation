@@ -1,130 +1,134 @@
-const menubtn1 = document.getElementById("menubtn1");
-const sublist1 = document.getElementById("sublist1");
-const menubtn2 = document.getElementById("menubtn2");
-const sublist2 = document.getElementById("sublist2");
-const menubtn3 = document.getElementById("menubtn3");
-const sublist3 = document.getElementById("sublist3");
-const menubtn4 = document.getElementById("menubtn4");
-const sublist4 = document.getElementById("sublist4");
-const submenus = document.querySelectorAll(".boot-link");
-const btnfilterstatus = document.getElementById("btn-filter-status");
-const allchecked1 = document.getElementById("allchecked1");
-const allflasechecked1 = document.getElementById("allflasechecked1");
-const allchecked2 = document.getElementById("allchecked2");
-const allflasechecked2 = document.getElementById("allflasechecked2");
-const checkboxactive1 = document.getElementById("checkboxactive1");
-const checkboxactive2 = document.getElementById("checkboxactive2");
-const bootpopbtn1 = document.getElementById("btn-filter-pm");
-const popmenubt1 = document.getElementById("pop-menu-bt1");
-const popmenubt2 = document.getElementById("pop-menu-bt2");
-const modalclose = document.getElementById("close");
-const body = document.getElementById("body");
-const modal = document.getElementById("modal");
-const modalopen = document.getElementById("modal-open");
-const usermenubtn = document.getElementById("usermenubtn");
-const usermenu = document.getElementById("usermenu");
-const checkBtn = document.querySelector(".btn-outline-primary");
+// ===== 문의 관리 Event / Init =====
+window.inquireInit = async function () {
+    if (window._inquireInited) return;
+    window._inquireInited = true;
 
-// 체크박스 토글
-if (checkboxactive1) {
-    checkboxactive1.addEventListener("click", () => {
-        checkboxactive1.classList.toggle("active");
-    });
-}
-if (checkboxactive2) {
-    checkboxactive2.addEventListener("click", () => {
-        checkboxactive2.classList.toggle("active");
-    });
-}
+    const section = document.getElementById('section-inquiry');
+    if (!section) return;
 
-// 전체 선택 / 해제
-if (allchecked1) {
-    allchecked1.addEventListener("click", () => {
-        checkboxactive1?.classList.add("active");
-        checkboxactive2?.classList.add("active");
-    });
-}
-if (allflasechecked1) {
-    allflasechecked1.addEventListener("click", () => {
-        checkboxactive1?.classList.remove("active");
-        checkboxactive2?.classList.remove("active");
-    });
-}
+    const modal = document.getElementById('modal');
+    const btnClose = modal?.querySelector('#close');
+    const btnReply = modal?.querySelector('.modal-footer .btn-close');
+    const replyInput = modal?.querySelector('.payment-info input');
 
-// 필터 팝업 토글
-if (btnfilterstatus && popmenubt2) {
-    btnfilterstatus.addEventListener("click", () => {
-        popmenubt2.classList.toggle("show");
-    });
-}
+    const searchInput = section.querySelector('.filter-search input');
+    const searchBtn   = section.querySelector('.filter-search .btn-search');
 
-// 확인 버튼
-if (checkBtn) {
-    checkBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        popmenubt2.classList.remove("show");
-    });
-}
+    // 필터 팝업(답변상태)
+    const filterBtn   = section.querySelector('#btn-filter-status');
+    const filterPopup = section.querySelector('#pop-menu-bt2');
+    const chkAns      = section.querySelector('#checkboxactive1'); // 답변완료
+    const chkUnAns    = section.querySelector('#checkboxactive2'); // 미답변
+    const btnAll      = section.querySelector('#allchecked1');
+    const btnNone     = section.querySelector('#allflasechecked1');
+    const btnApply    = filterPopup?.querySelector('.btn.btn-outline-primary.btn-sm');
 
-// 모달 열기/닫기
-(() => {
-    const modal = document.getElementById("modal");
-    if (!modal) return;
+    const tbody = section.querySelector('table tbody');
 
-    const body = document.body;
+    const state = { keyword: '', category: '' }; // category: '', 'ANSWERED', 'UNANSWERED'
 
-    // 열기 트리거: #modal-open 이 있으면 사용, 없으면 .action-btn 도 허용(선택)
-    const openers = document.querySelectorAll("#modal-open, .action-btn");
-
-    // 닫기 트리거
-    const closer = document.getElementById("close");
-    const footerClose = modal.querySelector(".btn-close"); // "답변하기" 버튼이 닫기가 아니면 삭제해도 됨
-
-    const openModal = () => {
-        modal.style.display = "block";
-        // 다음 프레임에서 show 붙여 트랜지션 자연스럽게
-        requestAnimationFrame(() => {
-            modal.classList.add("show");
-            modal.style.background = "rgba(0,0,0,0.5)";
-            body.classList.add("modal-open");
-        });
+    const calcCategory = () => {
+        const a = chkAns?.classList.contains('active');
+        const u = chkUnAns?.classList.contains('active');
+        if (a && !u) state.category = 'ANSWERED';
+        else if (!a && u) state.category = 'UNANSWERED';
+        else state.category = '';
     };
 
-    const closeModal = () => {
-        modal.classList.remove("show");
-        body.classList.remove("modal-open");
-        setTimeout(() => {
-            modal.style.display = "none";
-            modal.style.background = "";
-        }, 150);
+    const loadList = async () => {
+        try {
+            const list = await inquireService.getList({
+                keyword: state.keyword,
+                category: state.category
+            });
+            inquireLayout.showList(list);
+        } catch (e) {
+            console.error(e);
+            inquireLayout.showEmpty();
+        }
     };
 
-    // 열기
-    openers.forEach((el) =>
-        el?.addEventListener("click", (e) => {
-            e.preventDefault();
-            openModal();
-        })
-    );
+    // 초기 데이터
+    await loadList();
 
-    // 닫기 (X 버튼 / 푸터 버튼)
-    closer?.addEventListener("click", (e) => {
+    // ===== 검색 =====
+    searchBtn?.addEventListener('click', async (e) => {
         e.preventDefault();
-        closeModal();
+        state.keyword = (searchInput?.value || '').trim();
+        await loadList();
     });
-    footerClose?.addEventListener("click", (e) => {
+    searchInput?.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+            state.keyword = (searchInput.value || '').trim();
+            await loadList();
+        }
+    });
+
+    // ===== 필터 팝업 토글 =====
+    filterBtn?.addEventListener('click', (e) => {
         e.preventDefault();
-        closeModal();
+        if (!filterPopup) return;
+        filterPopup.classList.toggle('show');
+    });
+    btnAll?.addEventListener('click', (e) => {
+        e.preventDefault();
+        chkAns?.classList.add('active'); chkUnAns?.classList.add('active');
+    });
+    btnNone?.addEventListener('click', (e) => {
+        e.preventDefault();
+        chkAns?.classList.remove('active'); chkUnAns?.classList.remove('active');
+    });
+    chkAns?.addEventListener('click', () => chkAns.classList.toggle('active'));
+    chkUnAns?.addEventListener('click', () => chkUnAns.classList.toggle('active'));
+    btnApply?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        calcCategory();
+        filterPopup?.classList.remove('show');
+        await loadList();
     });
 
-    // 오버레이 클릭으로 닫기
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeModal();
+    // ===== 목록 상세(모달) =====
+    tbody?.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.action-btn.view, .td-action .action-btn');
+        if (!btn) return;
+        const id = btn.dataset.id || btn.closest('tr')?.dataset.id;
+        if (!id) return;
+        try {
+            const dto = await inquireService.getDetail(id);
+            inquireLayout.showDetail(dto);
+            inquireLayout.openModal();
+        } catch (err) {
+            console.error('문의 상세 조회 실패', err);
+            alert('상세 조회에 실패했습니다.');
+        }
     });
 
-    // ESC 로 닫기
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modal.classList.contains("show"))
-            closeModal();
+    // 모달 닫기
+    btnClose?.addEventListener('click', (e) => {
+        e.preventDefault(); inquireLayout.closeModal();
     });
-})();
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) inquireLayout.closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal?.classList.contains('show')) inquireLayout.closeModal();
+    });
+
+    // 답변 등록
+    btnReply?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const id  = modal?.dataset.inquiryId;
+        const txt = (replyInput?.value || '').trim();
+        if (!id) { alert('유효하지 않은 문의입니다.'); return; }
+        if (!txt) { alert('답변 내용을 입력해 주세요.'); return; }
+
+        try {
+            await inquireService.postReply(id, txt);
+            inquireLayout.closeModal();
+            await loadList(); // 카운트/상태 갱신
+        } catch (err) {
+            console.error('답변 등록 실패', err);
+            alert('답변 등록에 실패했습니다.');
+        }
+    });
+};

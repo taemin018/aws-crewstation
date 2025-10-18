@@ -13,13 +13,36 @@ window.paymentInit = async function () {
     const STATUS_MAP = {
         "pay-progress": "PENDING",
         "pay-success":  "SUCCESS",
-        "pay-cancel":   "REFUND",
+        "pay-cancel":   "PENDING",
     };
 
     const state = {
         page: 1,
         categories: [],
         keyword: "",
+    };
+
+    // 상단 결제 승인/취소 금액
+    const loadSummary = async () => {
+        try {
+            const data = await paymentService.getSummary({
+                categories: state.categories,
+                keyword: getKeyword(),
+            });
+            const approvedEl = section.querySelector(".amount-section .revenue-box .span-amount");
+            const canceledEl = section.querySelector(".amount-section .cancel-box .span-amount");
+            if (approvedEl)
+                approvedEl.textContent = Number(data.approvedAmount ?? 0).toLocaleString("ko-KR");
+            if (canceledEl)
+                 if (canceledEl) {
+                        const canceledOrPending = Number(
+                            (data.canceledAmount ?? data.pendingAmount ?? 0)
+                         );
+                     canceledEl.textContent = canceledOrPending.toLocaleString("ko-KR");
+                 }
+        } catch (e) {
+            console.error("합계 로드 실패:", e);
+        }
     };
 
     (function ensureSuccessIconMeta() {
@@ -75,7 +98,8 @@ window.paymentInit = async function () {
             const tbody = section.querySelector("#payment-tbody");
             if (tbody) {
                 tbody.innerHTML =
-                    `<tr><td colspan="7" class="text-center text-danger py-4">결제 목록을 불러오지 못했습니다.</td></tr>`;
+                    `<tr><td colspan="8" class="text-center text-danger py-4">결제 목록을 불러오지 못했습니다.</td></tr>`;
+
             }
         } finally {
             isLoading = false;
@@ -83,7 +107,12 @@ window.paymentInit = async function () {
     };
 
     paymentLayout.clear();
-    await loadList(1);
+    if (!paymentService || typeof paymentService.getSummary !== 'function') {
+        console.error('[summary] paymentService.getSummary 없음!');
+    } else {
+        console.log('[summary] call #init', { cats: state.categories, kw: getKeyword() });
+    }
+    await Promise.all([loadList(1), loadSummary()]);
 
     // ==== 상태 팝업 ====
     (function bindStatusPopup() {
@@ -102,7 +131,7 @@ window.paymentInit = async function () {
             if (!icon) return;
             icon.classList.toggle("is-checked", on);
             const box = icon.closest(".boot-check-box");
-            if (box) box.classList.toggle("is-checked", on); // 파란 배경/테두리
+            if (box) box.classList.toggle("is-checked", on); //
         };
 
         const toggleCheckedForIcon = (icon) => {
@@ -141,8 +170,8 @@ window.paymentInit = async function () {
         });
 
         ctx.addEventListener("click", (e) => {
-            const icon = e.target.closest(".btn-status"); // <i ... class="btn-status">
-            const item = e.target.closest(".boot-check"); // 라인 전체
+            const icon = e.target.closest(".btn-status");
+            const item = e.target.closest(".boot-check");
             if (!icon && !item) return;
 
             e.preventDefault();
@@ -150,7 +179,7 @@ window.paymentInit = async function () {
 
             const targetIcon =
                 icon ||
-                item.querySelector(".btn-status"); // 라인 클릭 시 내부 아이콘 찾기
+                item.querySelector(".btn-status");
 
             if (targetIcon) toggleCheckedForIcon(targetIcon);
         });
@@ -198,7 +227,8 @@ window.paymentInit = async function () {
 
             state.categories = cats;
             closePop();
-            await loadList(1);
+
+            await Promise.all([loadList(1), loadSummary()]);
         });
     })();
 
@@ -209,11 +239,11 @@ window.paymentInit = async function () {
 
         btn?.addEventListener("click", (e) => {
             e.preventDefault();
-            loadList(1);
+            Promise.all([loadList(1), loadSummary()]);
         });
 
         input?.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") loadList(1);
+            if (e.key === "Enter") Promise.all([loadList(1), loadSummary()]);
         });
     })();
 
