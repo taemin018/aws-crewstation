@@ -2,9 +2,9 @@ function showSection(name) {
     const container = document.getElementById('page-container');
     if (!container) return;
 
-    const sections = Array.from(container.children).filter(
-        el => el.id && el.id.startsWith('section-')
-    );
+     const sections = Array.from(
+           container.querySelectorAll('[id^="section-"]')
+         );
     const targetId = `section-${name}`;
 
     sections.forEach(sec => {
@@ -28,6 +28,7 @@ function showSection(name) {
         'diary-report': window.diaryReportInit,
         'gift-report' : window.giftReportInit,
         payment       : window.paymentInit,
+        inquiry     : window.inquireInit,
     };
 
     const init = initMap[name];
