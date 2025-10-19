@@ -3,6 +3,7 @@ package com.example.crewstation.controller.admin;
 import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.domain.notice.NoticeDetailVO;
 import com.example.crewstation.domain.payment.PaymentVO;
+import com.example.crewstation.dto.ask.AskDTO;
 import com.example.crewstation.dto.member.MemberAdminStatics;
 import com.example.crewstation.dto.member.MemberCriteriaDTO;
 import com.example.crewstation.dto.member.MemberDTO;
@@ -12,6 +13,7 @@ import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.repository.payment.PaymentDAO;
 import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
+import com.example.crewstation.service.ask.adminAsk.AdminAskService;
 import com.example.crewstation.service.banner.BannerService;
 import com.example.crewstation.service.member.MemberService;
 import com.example.crewstation.service.notice.NoticeDetailService;
@@ -38,7 +40,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminRestController {
+public class AdminRestController implements AdminRestControllerDocs{
 
     private final MemberService memberService;
     private final NoticeService noticeService;
@@ -48,6 +50,7 @@ public class AdminRestController {
     private final PaymentService paymentService;
     private final PaymentDAO paymentDAO;
     private final PaymentStatusDAO paymentStatusDAO;
+    private final AdminAskService adminAskService;
     private static final Map<String, String> PHASE_MAP = Map.of(
             "PAY_PROGRESS", "PENDING",
             "PAY_SUCCESS",  "SUCCESS",
@@ -103,7 +106,7 @@ public class AdminRestController {
 
     //    다이어리 신고 목록
     @GetMapping("/diaries")
-    public ResponseEntity<?> getReportDiaryList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<List<ReportPostDTO>> getReportDiaryList(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
         List<ReportPostDTO> reports = reportService.getReportDiaries(safePage);
         return ResponseEntity.ok(reports);
@@ -111,7 +114,7 @@ public class AdminRestController {
 
     //    다이어리 신고 처리
     @PostMapping("/diary/{reportId}/process")
-    public ResponseEntity<?> processDiaryReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
+    public ResponseEntity<ReportPostDTO> processDiaryReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 
         log.info("다이어리 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
@@ -126,7 +129,7 @@ public class AdminRestController {
 
     //    기프트 신고 목록
     @GetMapping("/gifts")
-    public ResponseEntity<?> getReportGiftList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<List<ReportPostDTO>> getReportGiftList(@RequestParam(defaultValue = "1") int page) {
         int safePage = Math.max(1, page);
         List<ReportPostDTO> reports = giftService.getReportGifts(safePage);
         return ResponseEntity.ok(reports);
@@ -134,7 +137,7 @@ public class AdminRestController {
 
     //    기프트 신고 처리
     @PostMapping("/gift/{reportId}/process")
-    public ResponseEntity<?> processGiftReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
+    public ResponseEntity<ReportPostDTO> processGiftReport(@PathVariable Long reportId, @RequestParam(required = false) Long postId, @RequestParam(defaultValue = "false") boolean hidePost) {
 
         log.info("기프트 신고 reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
 
@@ -171,7 +174,6 @@ public class AdminRestController {
                 search.setCategories(cats);
             }
         }
-
         int size = 16;
         List<PaymentCriteriaDTO> list = paymentService.selectPayment(search, size);
         return ResponseEntity.ok(list);
@@ -182,6 +184,70 @@ public class AdminRestController {
     @GetMapping("/payment/{id}")
     public ResponseEntity<PaymentCriteriaDTO> getPaymentDetail(@PathVariable Long id) {
         return ResponseEntity.ok(paymentService.getPaymentDetail(id));
+    }
+
+//    걀제 승인/취소 금액
+    @GetMapping("/payment/summary")
+    public ResponseEntity<Map<String, Object>> getPaymentSummary(
+            @RequestParam(required = false) String categories,
+            @RequestParam(required = false) String keyword) {
+
+        Search search = new Search();
+        if (keyword != null && !keyword.isBlank()) search.setKeyword(keyword);
+
+        if (categories != null && !categories.isBlank()) {
+            List<String> cats = Arrays.stream(categories.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(String::toUpperCase)
+                    .collect(Collectors.toList());
+            if (cats.size() >= 3) search.setCategories(null);
+            else search.setCategories(cats);
+        }
+
+        log.info("summary search={}", search);
+
+        return ResponseEntity.ok(paymentService.getPaymentSummary(search));
+    }
+
+    @GetMapping("/inquiries")
+    public ResponseEntity<List<AskDTO>> getInquiryList(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category) {
+
+        Search search = new Search();
+        if (keyword != null && !keyword.isBlank()) search.setKeyword(keyword);
+        if (category != null && !category.isBlank()) search.setCategory(category);
+
+        List<AskDTO> list = adminAskService.getInquiryList(search);
+        return ResponseEntity.ok(list);
+    }
+
+    // 문의 상세 조회
+    @GetMapping("/inquiries/{id}")
+    public ResponseEntity<AskDTO> getInquiryDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(adminAskService.getInquiryDetail(id));
+    }
+
+    // 문의 답변 등록
+    @PostMapping("/inquiries/{id}/reply")
+    public ResponseEntity<Void> registerReply(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body,
+            @AuthenticationPrincipal CustomUserDetails admin
+    ) {
+        String replyContent = body.getOrDefault("replyContent", "").trim();
+        if (replyContent.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        AskDTO dto = new AskDTO();
+        dto.setId(id);
+        dto.setMemberId(admin.getId());
+        dto.setReplyContent(replyContent);
+
+        adminAskService.registerReply(dto);
+        return ResponseEntity.ok().build();
     }
 
 

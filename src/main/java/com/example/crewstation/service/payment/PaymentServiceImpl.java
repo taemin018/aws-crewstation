@@ -121,5 +121,15 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentStatusDAO.selectPaymentDetail(id);
     }
 
+    @Override
+    public Map<String, Object> getPaymentSummary(Search search) {
+        Map<String, Object> raw = paymentStatusDAO.selectPaymentSummary(search);
+        long approved = ((Number) raw.getOrDefault("approvedAmount", 0L)).longValue();
+        long canceled = ((Number) raw.getOrDefault("canceledAmount", 0L)).longValue();
+
+        return Map.of("approvedAmount", approved, "canceledAmount", canceled);
+
+    }
+
 
 }

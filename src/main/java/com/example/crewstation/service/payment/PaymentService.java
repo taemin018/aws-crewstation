@@ -20,6 +20,8 @@ public interface PaymentService {
 
     public PaymentCriteriaDTO getPaymentDetail(Long id);
 
+    public Map<String, Object> getPaymentSummary(Search search);
+
 
 
 

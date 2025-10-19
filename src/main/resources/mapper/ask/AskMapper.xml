@@ -15,4 +15,59 @@
         delete from tbl_inquiry
         where id = #{id}
     </delete>
+
+    <select id="selectInquiryList">
+        select
+        i.id,
+        i.inquiry_title as inquiryTitle,
+        i.inquiry_content as inquiryContent,
+        m.member_name as memberName,
+        i.created_datetime as createdDatetime,
+        r.created_datetime as replyDatetime,
+        case when r.id is not null then 'ANSWERED' else 'UNANSWERED' end as inquiryStatus
+        from tbl_inquiry i
+        join tbl_member m on m.id = i.member_id
+        left join tbl_inquiry_reply r on r.inquiry_id = i.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (
+                i.inquiry_title ilike concat('%', #{keyword}, '%')
+                or i.inquiry_content ilike concat('%', #{keyword}, '%')
+                or m.member_name ilike concat('%', #{keyword}, '%')
+                )
+            </if>
+
+            <if test="category != null and category != ''">
+                <choose>
+                    <when test="category == 'ANSWERED'">and r.id is not null</when>
+                    <when test="category == 'UNANSWERED'">and r.id is null</when>
+                </choose>
+            </if>
+        </where>
+        order by i.created_datetime desc
+    </select>
+
+
+    <select id="selectInquiryById">
+        select
+            i.id,
+            i.inquiry_title as inquiryTitle,
+            i.inquiry_content as inquiryContent,
+            i.member_id as memberId,
+            m.member_name as memberName,
+            i.created_datetime as createdDatetime,
+            r.id as replyId,
+            r.inquiry_reply_content as replyContent,
+            r.created_datetime as replyDatetime
+        from tbl_inquiry i
+                 join tbl_member m on m.id = i.member_id
+                 left join tbl_inquiry_reply r on r.inquiry_id = i.id
+        where i.id = #{id}
+    </select>
+
+    <insert id="insertReply" parameterType="com.example.crewstation.dto.ask.AskDTO">
+        insert into tbl_inquiry_reply (inquiry_reply_content, member_id, inquiry_id)
+        values (#{replyContent}, #{memberId}, #{id})
+    </insert>
+
 </mapper>
