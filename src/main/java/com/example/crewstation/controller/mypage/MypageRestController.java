@@ -66,15 +66,15 @@ public class MypageRestController {
 
 
     //   판매 상태 업데이트
-    @PutMapping("/status/{paymentStatusId}")
+    @PutMapping("/status/{postId}")
     public ResponseEntity<Void> updateSaleStatus(
-            @PathVariable Long paymentStatusId,
+            @PathVariable Long postId,
             @RequestParam String paymentPhase,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         Long memberId = customUserDetails.getId(); // 로그인 사용자 정보
         log.info("PUT /api/mypage/sale/status/{} by memberId={} with phase={}",
-                paymentStatusId, memberId, paymentPhase);
+                postId, memberId, paymentPhase);
 
         // TODO: 서비스 로직 추가
         // memberService.updateSaleStatus(memberId, postId, PaymentPhase.valueOf(paymentPhase));
