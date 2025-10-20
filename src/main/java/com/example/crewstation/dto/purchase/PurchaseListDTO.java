@@ -34,10 +34,6 @@ public class PurchaseListDTO {
         return formatDateString(createdDatetime);
     }
 
-    public String getFormattedUpdatedDatetime() {
-        return formatDateString(updatedDatetime);
-    }
-
     private String formatDateString(String datetime) {
         if (datetime == null || datetime.isBlank()) return "";
         try {

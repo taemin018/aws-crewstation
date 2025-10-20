@@ -7,6 +7,7 @@ import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.file.FileDTO;
 import com.example.crewstation.dto.file.member.MemberFileDTO;
 import com.example.crewstation.dto.member.*;
+import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.Search;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,7 +48,7 @@ public interface MemberService {
     public MemberDTO getMemberDetail(Long memberId);
 
 //  나의 판매내역 목록
-    public List<MySaleListDTO> getMySaleList(Long memberId);
+    public MySaleListCriteriaDTO getSaleListByMemberId(Long memberId, Criteria criteria, Search search);
 
 //    관리자 회원 통계 자료
     public MemberAdminStatics getStatics();

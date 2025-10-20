@@ -64,21 +64,6 @@ public class MypageRestController {
         return ResponseEntity.ok().build();
     }
 
-//  판매 내역 목록 조회
-    @GetMapping("/list")
-    public ResponseEntity<List<MySaleListDTO>> getMySaleList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        Long memberId = customUserDetails.getId();
-        List<MySaleListDTO> saleList = memberService.getMySaleList(memberId);
-
-        if (saleList == null || saleList.isEmpty()) {
-            log.info("No sale list found for memberId={}", memberId);
-            return ResponseEntity.noContent().build();
-        }
-
-        log.info("Found {} sale items for memberId={}", saleList.size(), memberId);
-        return ResponseEntity.ok(saleList);
-    }
 
     //   판매 상태 업데이트
     @PutMapping("/status/{postId}")
