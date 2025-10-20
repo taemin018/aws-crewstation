@@ -1,5 +1,6 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.domain.address.AddressVO;
 import com.example.crewstation.domain.file.FileVO;
 import com.example.crewstation.domain.file.member.MemberFileVO;
@@ -55,6 +56,8 @@ public interface MemberService {
 
 //    관리자 등록
     public void joinAdmin(MemberDTO memberDTO);
+
+    public void updateSaleStatus(Long memberId, Long paymentStatusId, PaymentPhase paymentPhase);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()

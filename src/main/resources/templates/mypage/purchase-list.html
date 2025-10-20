@@ -80,6 +80,7 @@
                         <ul class="order">
                             <li>
                                 <div class="order-card">
+                                    <div class="cancel-overlay" th:if="${#strings.equalsIgnoreCase(purchase.status, 'REFUND')}"></div>
                                     <div class="order-title">
                                         <div class="order-title-inner">
                                             <p>

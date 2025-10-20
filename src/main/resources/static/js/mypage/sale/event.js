@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function goSearch() {
         const keyword = searchInput.value.trim();
-        const baseUrl = "/mypage/purchase-list";
+        const baseUrl = "/mypage/sale-list";
         const params = new URLSearchParams();
 
         if (keyword) params.append("keyword", keyword);
@@ -28,4 +28,52 @@ document.addEventListener("DOMContentLoaded", () => {
             goSearch();
         }
     });
+
+    document.querySelectorAll('.purchase-cancel').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const paymentStatusId = this.dataset.paymentStatusId;
+            if (confirm("정말 이 판매 요청을 거절하시겠습니까?")) {
+                updateSaleStatus(paymentStatusId, 'REFUND');
+            }
+        });
+    });
+
+    document.querySelectorAll('.accept').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const paymentStatusId = this.dataset.paymentStatusId;
+            if (confirm("이 판매 요청을 수락하시겠습니까?")) {
+                updateSaleStatus(paymentStatusId, 'PENDING');
+            }
+        });
+    });
+
+    // 상태 업데이트 함수
+    function updateSaleStatus(paymentStatusId, newStatus) {
+        if (!paymentStatusId) return;
+
+        fetch(`/api/mypage/status/${paymentStatusId}?paymentPhase=${newStatus}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                paymentStatusId: paymentStatusId,
+                status: newStatus
+            })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('상태 변경 실패');
+                return res.text();
+            })
+            .then(() => {
+                alert('성공적으로 반영되었습니다.');
+                location.reload();
+            })
+            .catch(err => {
+                console.error(err);
+                alert('오류가 발생했습니다.');
+            });
+    }
 });
