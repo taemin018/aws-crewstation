@@ -1,5 +1,4 @@
-// ===== 문의 관리 Event / Init =====
-window.inquireInit = async function () {
+window.inquiryInit = async function () {
     if (window._inquireInited) return;
     window._inquireInited = true;
 
