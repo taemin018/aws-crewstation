@@ -300,11 +300,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     //  나의 구매내역 상세 조회
     @Override
-    public MyPurchaseDetailDTO getMemberOrderDetails(Long memberId, Long postId) {
-        MyPurchaseDetailDTO detail = purchaseDAO.selectMemberOrderDetails(memberId, postId);
+    public MyPurchaseDetailDTO getMemberOrderDetails(Long memberId, Long paymentStatusId) {
+        MyPurchaseDetailDTO detail = purchaseDAO.selectMemberOrderDetails(memberId, paymentStatusId);
 
         if (detail == null) {
-            throw new RuntimeException("회원 구매내역을 찾을 수 없습니다. memberId=" + memberId + ", postId=" + postId);
+            throw new RuntimeException("회원 구매내역을 찾을 수 없습니다. memberId=" + memberId + ", paymentStatusId=" + paymentStatusId);
         }
 
         // S3 프리사인 URL 변환
@@ -319,9 +319,9 @@ public class PurchaseServiceImpl implements PurchaseService {
     //  결제 상태 업데이트 추가
     @Override
     @Transactional
-    public void updatePaymentStatus(Long purchaseId, PaymentPhase paymentPhase) {
-        paymentStatusDAO.updatePaymentStatus(purchaseId, paymentPhase);
-        log.info("결제 상태 업데이트 완료 → purchaseId={}, phase={}", purchaseId, paymentPhase);
+    public void updatePaymentStatus(Long paymentStatusId, PaymentPhase paymentPhase) {
+        paymentStatusDAO.updatePaymentStatus(paymentStatusId, paymentPhase);
+        log.info("결제 상태 업데이트 완료 -> paymentStatusId={}, phase={}", paymentStatusId, paymentPhase);
     }
 
 }

@@ -25,18 +25,18 @@ public class MypageRestController {
     private final PurchaseService purchaseService;
 
     // 구매 상세 조회
-    @GetMapping("/purchase-detail/{postId}")
+    @GetMapping("/purchase-detail/{paymentStatusId}")
     public ResponseEntity<MyPurchaseDetailDTO> getPurchaseDetail(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long postId) {
+            @PathVariable Long paymentStatusId) {
 
         Long memberId = customUserDetails.getId();
-        log.info("GET /purchase-detail called by memberId={}, postId={}", memberId, postId);
+        log.info("GET /purchase-detail called by memberId={}, paymentStatusId={}", memberId, paymentStatusId);
 
-        MyPurchaseDetailDTO orderDetail = purchaseService.getMemberOrderDetails(memberId, postId);
+        MyPurchaseDetailDTO orderDetail = purchaseService.getMemberOrderDetails(memberId, paymentStatusId);
 
         if (orderDetail == null) {
-            log.warn("Order not found for memberId={}, postId={}", memberId, postId);
+            log.warn("Order not found for memberId={}, paymentStatusId={}", memberId, paymentStatusId);
             return ResponseEntity.notFound().build();
         }
 
@@ -44,23 +44,24 @@ public class MypageRestController {
     }
 
     // 결제 상태 업데이트
-    @PutMapping("/purchase-detail/{purchaseId}/status")
+    @PutMapping("/purchase-detail/{paymentStatusId}/status")
     public ResponseEntity<Void> updatePaymentStatus(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long purchaseId,
+            @PathVariable Long paymentStatusId,
             @RequestParam PaymentPhase paymentPhase) {
 
         Long memberId = customUserDetails.getId();
-        log.info("PUT /purchase-detail/{}/status called by memberId={}, phase={}", purchaseId, memberId, paymentPhase);
+        log.info("PUT /purchase-detail/{}/status called by memberId={}, phase={}", paymentStatusId, memberId, paymentPhase);
 
-        MyPurchaseDetailDTO order = purchaseService.getMemberOrderDetails(memberId, purchaseId);
+        MyPurchaseDetailDTO order = purchaseService.getMemberOrderDetails(memberId, paymentStatusId);
         if (order == null) {
-            log.warn("Order not found for memberId={}, purchaseId={}", memberId, purchaseId);
+            log.warn("Order not found for memberId={}, paymentStatusId={}", memberId, paymentStatusId);
             return ResponseEntity.notFound().build();
         }
 
-        purchaseService.updatePaymentStatus(order.getPurchaseId(), paymentPhase);
-        log.info("Payment status updated for purchaseId={}, newStatus={}", order.getPurchaseId(), paymentPhase);
+        purchaseService.updatePaymentStatus(paymentStatusId, paymentPhase);
+        log.info("Payment status updated for paymentStatusId={}, newStatus={}", paymentStatusId, paymentPhase);
+
         return ResponseEntity.ok().build();
     }
 
@@ -69,7 +70,7 @@ public class MypageRestController {
     @PutMapping("/status/{postId}")
     public ResponseEntity<Void> updateSaleStatus(
             @PathVariable Long postId,
-            @RequestParam String paymentPhase,
+            @RequestParam PaymentPhase paymentPhase,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         Long memberId = customUserDetails.getId(); // 로그인 사용자 정보

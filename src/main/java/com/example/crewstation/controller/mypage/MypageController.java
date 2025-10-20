@@ -65,9 +65,9 @@ public class MypageController {
     }
 
     // 마이페이지 - 구매 상세 페이지
-    @GetMapping("/purchase-detail/{postId}")
-    public String loadMyPurchaseDetailPage(@PathVariable("postId") Long postId, Model model) {
-        model.addAttribute("postId", postId);
+    @GetMapping("/purchase-detail/{paymentStatusId}")
+    public String loadMyPurchaseDetailPage(@PathVariable("paymentStatusId") Long paymentStatusId, Model model) {
+        model.addAttribute("paymentStatusId", paymentStatusId);
         return "mypage/purchase-detail";
     }
 
