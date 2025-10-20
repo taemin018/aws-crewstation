@@ -5,7 +5,7 @@ window.paymentInit = async function () {
     const section = document.getElementById("section-payment");
     if (!section) return;
 
-    
+
     const modal =
         document.querySelector(".payment-modal") ||
         section.querySelector(".payment-modal");
@@ -34,12 +34,12 @@ window.paymentInit = async function () {
             if (approvedEl)
                 approvedEl.textContent = Number(data.approvedAmount ?? 0).toLocaleString("ko-KR");
             if (canceledEl)
-                 if (canceledEl) {
-                        const canceledOrPending = Number(
-                            (data.canceledAmount ?? data.pendingAmount ?? 0)
-                         );
-                     canceledEl.textContent = canceledOrPending.toLocaleString("ko-KR");
-                 }
+                if (canceledEl) {
+                    const canceledOrPending = Number(
+                        (data.canceledAmount ?? data.pendingAmount ?? 0)
+                    );
+                    canceledEl.textContent = canceledOrPending.toLocaleString("ko-KR");
+                }
         } catch (e) {
             console.error("합계 로드 실패:", e);
         }
@@ -247,7 +247,7 @@ window.paymentInit = async function () {
         });
     })();
 
-    // ==== 상세 모달 열기/닫기 + 상세조회 ====
+    // ==== 상세 모달 열기/닫기 , 상세조회 ====
     if (modal) {
         let currentRow = null;
 
