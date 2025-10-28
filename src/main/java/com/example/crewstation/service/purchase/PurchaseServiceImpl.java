@@ -54,6 +54,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private final PurchaseTransactionService purchaseTransactionService;
     private final RedisTemplate<String, PurchaseDTO> purchaseRedisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     @LogReturnStatus
@@ -99,7 +100,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 ////        purchaseDTO.setSections(sections);
 //        return purchaseDTO;
 //    }
-
+    @Override
+    @LogReturnStatus
     public PurchaseDTO getPurchase(Long id) {
         // 캐시 먼저 확인
         log.info(":::::::::::::::{}",purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + id));
@@ -167,11 +169,15 @@ public class PurchaseServiceImpl implements PurchaseService {
             }
 
         });
+        if(redisTemplate.opsForValue().get("gifts") !=null){
+            redisTemplate.delete("gifts");
+        }
+
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CachePut(value = "purchases", key = "'purchases_' + #purchaseDTO.postId")
+//    @CachePut(value = "purchases", key = "'purchases_' + #purchaseDTO.postId")
     @LogReturnStatus
     public PurchaseDTO update(PurchaseDTO purchaseDTO, Long[] deleteFiles, List<MultipartFile> multipartFiles) {
         FileDTO fileDTO = new FileDTO();
@@ -246,14 +252,26 @@ public class PurchaseServiceImpl implements PurchaseService {
             sectionDAO.update(toPostSectionVO(purchaseDTO));
         }
 
-
+        if(purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + purchaseDTO.getPostId()) !=null){
+            purchaseRedisTemplate.delete("purchase::purchases_" + purchaseDTO.getPostId());
+        }
+        if(redisTemplate.opsForValue().get("gifts") !=null){
+            redisTemplate.delete("gifts");
+        }
         return purchaseDTO;
     }
 
     @Override
-    @CacheEvict(value = "purchases", key = "'purchases_' + #id")
+//    @CacheEvict(value = "purchases", key = "'purchases_' + #id")
     public void softDelete(Long id) {
         postDAO.updatePostStatus(id);
+        if(purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + id) !=null){
+            purchaseRedisTemplate.delete("purchase::purchases_" + id);
+        }
+        if(redisTemplate.opsForValue().get("gifts") !=null){
+            redisTemplate.delete("gifts");
+        }
+
     }
 
 

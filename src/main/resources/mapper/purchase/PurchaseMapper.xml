@@ -76,7 +76,7 @@
                  left outer join view_file_member_file vfmf on tm.id = vfmf.member_id
                  join view_post_purchase vpp on tm.id = vpp.member_id and vpp.id = #{postId}
                  join tbl_address ta on tm.id = ta.member_id
-        where vpp.post_status = 'active'
+        where vpp.post_status = 'active' and vpp.created_datetime + (vpp.purchase_limit_time || 'hour')::interval > now()
     </select>
 
     <update id="updateReadCount">
@@ -205,4 +205,15 @@
         <include refid="purchaseSearch"/>
     </select>
 
+    <update id="updatePurchaseProductCount">
+        update tbl_purchase
+        set purchase_product_count = purchase_product_count + #{count}
+        where post_id = #{postId} and purchase_product_count > 0
+    </update>
+
+    <select id="selectPurchaseProductCount">
+        select purchase_product_count
+        from tbl_purchase
+        where post_id = #{postId}
+    </select>
 </mapper>

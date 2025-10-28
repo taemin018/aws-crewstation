@@ -18,8 +18,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
-        log.info("잡혔다!!!---------------------------------------------");
         registry.addInterceptor(new GuestInterceptor(jwtTokenProvider))
                 .excludePathPatterns(
                         "/",
@@ -54,6 +52,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/diaries/detail/**",
+                        "/member/profile/**",
                         "/api/diaries",
                         "/api/replies/{postId:\\d+}",
                         "/gifts",

@@ -1,83 +1,48 @@
 const bannerService = (() => {
+    const showList = async (callback) => {
+        const res = await fetch("/api/admin/banner");
+        const data = await res.json();
 
-    const request = async (url, options = {}) => {
-        const response = await fetch(url, {
-            credentials: 'include',
-            ...options,
-        });
+        const items = data.map(data => ({
+            id:  data.bannerId ?? data.id ?? data.fileId ?? "",
+            url: data.url ?? data.presignedUrl ?? data.path ?? (typeof data === "string" ? data : "")
+        }));
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || `Fetch error: ${response.status}`);
-        }
-
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-            return await response.json();
-        } else {
-            return await response.text();
-        }
+        console.log("items =", items);
+        callback?.(items);
     };
 
-    //  배너 목록 조회
-    const getBanners = async (limit = 10) => {
-        return await request(`/api/admin/banner?limit=${limit}`, {
-            method: 'GET'
-        });
-    };
-
-    //  배너 등록
-    const insertBanner = async (bannerDTO, files = []) => {
+    const insert = async (file) => {
         const formData = new FormData();
+        formData.append("files", file );
 
-        if (bannerDTO.bannerOrder !== undefined)
-            formData.append('bannerOrder', bannerDTO.bannerOrder);
-        if (bannerDTO.title)
-            formData.append('title', bannerDTO.title);
-        if (bannerDTO.linkUrl)
-            formData.append('linkUrl', bannerDTO.linkUrl);
+        const response = await fetch("/api/admin/banner", {
+            method : 'POST',
+            body : formData,
 
-        // 파일 추가
-        if (files && files.length > 0) {
-            files.forEach(file => formData.append('files', file));
-        }
-
-        await request('/api/admin/banner', {
-            method: 'POST',
-            body: formData
         });
-    };
 
-    //  배너 수정 (교체, 순서 변경, 파일 삭제)
-    const updateBanner = async (bannerId, bannerDTO = {}, files = [], deleteFiles = []) => {
-        const formData = new FormData();
-
-        if (bannerDTO.bannerOrder !== undefined)
-            formData.append('bannerOrder', bannerDTO.bannerOrder);
-        if (bannerDTO.title)
-            formData.append('title', bannerDTO.title);
-        if (bannerDTO.linkUrl)
-            formData.append('linkUrl', bannerDTO.linkUrl);
-
-        if (deleteFiles && deleteFiles.length > 0) {
-            deleteFiles.forEach(id => formData.append('deleteFiles', id));
+        if (response.ok) {
+            console.log("업로드 성공");
         }
 
-        if (files && files.length > 0) {
-            files.forEach(file => formData.append('files', file));
-        }
+    }
 
-        await request(`/api/admin/banner/${bannerId}`, {
-            method: 'PUT',
-            body: formData
-        });
-    };
 
     const deleteBanner = async (bannerId) => {
-        await request(`/api/admin/banner/${bannerId}`, {
-            method: 'DELETE'
+        const response = await fetch(`/api/admin/banner/${bannerId}`, {
+           method : "DELETE",
         });
-    };
 
-    return {getBanners, insertBanner, updateBanner, deleteBanner};
+        if (response.ok) {
+            console.log("배너 삭제완료");
+        } else {
+            console.log("배너 삭제실패");
+        }
+
+    }
+
+    return {showList: showList, insert: insert, deleteBanner: deleteBanner}
+
 })();
+

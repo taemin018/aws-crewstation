@@ -34,7 +34,7 @@ public interface MemberMapper {
     public void insertGuest(MemberDTO memberDTO);
 
 //  멤버 프로필 조회용
-    public Optional<MemberProfileDTO> selectProfileById(@Param("memberId") Long memberId);
+    public Optional<MemberDTO> selectProfileById(@Param("memberId") Long memberId);
 
 //    비밀번호 업데이트
     public void updatePassword(@Param("memberEmail") String memberEmail,@Param("memberPassword") String memberPassword);
@@ -59,12 +59,18 @@ public interface MemberMapper {
                                             @Param("criteria") Criteria criteria,
                                             @Param("search") Search search);
 
+//  나의 판매내역 상세 조회
+    public MySaleDetailDTO selectSellerOrderDetails(
+            @Param("sellerId") Long sellerId,
+            @Param("paymentStatusId") Long paymentStatusId
+    );
+
     // 전체 개수 조회 (페이징)
     public int selectSaleTotalCount(@Param("memberId") Long memberId,
                                     @Param("search") Search search);
 
 //  나의 구매내역 상세
-    public List<MyPurchaseDetailDTO>  selectMyPurchaseDetail(@Param("purchaseId") Long purchaseId);
+    public List<MyPurchaseDetailDTO>  selectMyPurchaseDetail(Long purchaseId);
 
 //    월별 가입자 수
     public List<MemberStatics> selectMonthlyJoin();
@@ -77,6 +83,23 @@ public interface MemberMapper {
 
 //    관리자 등록
     public void insertAdmin(MemberDTO memberDTO);
+
+
+    //  내 정보 수정 정보조회
+    public ModifyDTO selectMyInfo(Long memberId);
+
+    // 내 정보 수정 업데이트
+    public void updateMember(MemberVO memberVO);
+
+    //    id로 멤버 조회
+    public MemberDTO selectMemberById(Long memberId);
+
+    //    마이페이지에서 프로필 조회용
+    public MemberProfileDTO selectMyPageProfileById(Long memberId);
+
+    //  탈퇴하기
+    public void updateMemberStatusInactive(Long memberId);
+
 
 }
 

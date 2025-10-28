@@ -1,9 +1,11 @@
 package com.example.crewstation.controller.payment;
 
 import com.example.crewstation.auth.CustomUserDetails;
+import com.example.crewstation.common.exception.CannotDecreaseBelowZeroException;
 import com.example.crewstation.common.exception.PostNotFoundException;
 import com.example.crewstation.common.exception.SmsSendFailException;
 import com.example.crewstation.dto.payment.PaymentDTO;
+import com.example.crewstation.dto.payment.PaymentResponseDTO;
 import com.example.crewstation.dto.payment.status.PaymentStatusDTO;
 import com.example.crewstation.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +24,21 @@ import java.util.Map;
 public class PaymentRestController {
     private final PaymentService paymentService;
 
-    @PostMapping
-    public ResponseEntity<?> requestPayment(@RequestBody PaymentStatusDTO paymentStatusDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PostMapping("{purchaseId}")
+    public ResponseEntity<PaymentResponseDTO> requestPayment(@PathVariable Long purchaseId,@RequestBody(required = false) PaymentStatusDTO paymentStatusDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try{
-            if(userDetails != null){
-                paymentStatusDTO.setMemberId(userDetails.getId());
-            }
-            Map<String, Object> message = paymentService.requestPayment(paymentStatusDTO);
+
+            PaymentResponseDTO message = paymentService.requestPayment(purchaseId, paymentStatusDTO, userDetails);
             log.info(message.toString());
             return ResponseEntity.ok().body(message);
         }catch (PostNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (SmsSendFailException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            PaymentResponseDTO error = new PaymentResponseDTO();
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }catch (SmsSendFailException | CannotDecreaseBelowZeroException e){
+            PaymentResponseDTO error = new PaymentResponseDTO();
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
 

@@ -178,7 +178,7 @@ html{
 .name {
     font-size: 14px;
     line-height: 18px;
-    color: rgb(130, 140, 148);
+    color: rgb(90, 90, 90);
     font-weight: 500;
     margin-bottom: 8px;
     position: relative;
@@ -228,22 +228,29 @@ html{
 
 .email {
     display: flex;
+    color: rgb(90, 90, 90);
     flex-direction: column;
+    cursor: default;
     gap: 8px;
     width: 100%;
+
 }
 
 .email-input {
     width: 100%;
     padding: 0px;
+    caret-color: transparent; /* 깜빡이는 입력 커서 숨김 */
+    pointer-events: none;     /* 마우스 클릭/입력 불가 */
+    user-select: none;
 }
 
 .email-label {
     font-size: 14px;
     line-height: 18px;
-    color: rgb(130, 140, 148);
+    color: rgb(90, 90, 90);
     font-weight: 500;
     margin-bottom: 8px;
+    cursor: default;
     position: relative;
     display: block;
 }
@@ -262,7 +269,8 @@ html{
     align-items: center;
     line-height: 0;
     box-sizing: border-box;
-    border: 1px solid rgb(219, 219, 219);
+    background-color: rgb(247, 249, 250);
+    border: 1px solid rgb(230, 230, 230);
     border-radius: 4px;
     height: 40px;
     padding: 0px 14px;
@@ -306,7 +314,7 @@ html{
 .phone {
     font-size: 14px;
     line-height: 18px;
-    color: rgb(130, 140, 148);
+    color: rgb(90, 90, 90);
     font-weight: 500;
     margin-bottom: 8px;
     position: relative;
@@ -442,7 +450,7 @@ div.phone-input{
 .birth {
     font-size: 14px;
     line-height: 18px;
-    color: rgb(130, 140, 148);
+    color: rgb(90, 90, 90);
     font-weight: 500;
     margin-bottom: 8px;
     position: relative;
@@ -477,6 +485,10 @@ div.phone-input{
     height: 40px;
     padding: 0px 14px;
     width: 100%;
+    background-color: rgb(247, 249, 250);
+    caret-color: transparent; /* 깜빡이는 입력 커서 숨김 */
+    pointer-events: none;     /* 마우스 클릭/입력 불가 */
+    user-select: none;
 }
 
 .birth-name {
@@ -777,7 +789,7 @@ input.address-detail {
 .puls {
     font-size: 14px;
     line-height: 18px;
-    color: rgb(130, 140, 148);
+    color: rgb(90, 90, 90);
     font-weight: 500;
     margin-bottom: 8px;
     position: relative;
@@ -790,7 +802,7 @@ input.address-detail {
     cursor: pointer;
     font-size: 14px;
     line-height: 18px;
-    color: rgb(130, 140, 148);
+    color: rgb(90, 90, 90);
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -815,4 +827,123 @@ input.address-detail {
     text-align: center;
     color: rgb(255, 255, 255);
     font-weight: 700;
+}
+
+/* ===== 모달 기본 설정 ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+    z-index: 1000;
+
+    /* 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== 모달 내용 ===== */
+.modal-content {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
+    width: 340px;
+    text-align: center;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.modal-content p {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* ===== 버튼 ===== */
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.modal-buttons a,
+.modal-buttons button {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.modal-buttons .confirm {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.modal-buttons .confirm:hover {
+    background-color: #c0392b;
+}
+
+.modal-buttons .cancel {
+    background-color: #ddd;
+    color: #333;
+}
+
+.modal-buttons .cancel:hover {
+    background-color: #bbb;
+}
+
+/* ===== 애니메이션 ===== */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 버튼 기본 스타일 제거 */
+button.delete-link {
+    all: unset; /* 🔥 버튼의 기본 스타일 전부 제거 */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.modal-content p {
+    line-height: 1.6; /* 기본 1.2~1.4 → 살짝 넓게 */
+}
+
+.modal-buttons .confirm {
+    display: flex;                /* flex 박스 */
+    justify-content: center;      /* 가로 가운데 정렬 */
+    align-items: center;          /* 세로 가운데 정렬 */
+    background-color: #e74c3c;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 10px 0;
+    flex: 1;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.modal-buttons .confirm:hover {
+    background-color: #c0392b;
 }

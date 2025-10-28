@@ -38,7 +38,7 @@ public interface DiaryService {
     public void cancelLike (CustomUserDetails customUserDetails, Long diaryId);
 
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList(@Param("limit") int limit);
+    public List<DiaryDTO> selectDiaryList(Long memberId ,int limit);
     //    내가 댓글 쓴 일기 조회
     public ReplyDiaryCriteriaDTO getReplyDiariesByMemberId(CustomUserDetails customUserDetails, ScrollCriteria criteria);
 
@@ -60,7 +60,15 @@ public interface DiaryService {
     public DiaryDetailDTO getDiary(Long postId,CustomUserDetails customUserDetails);
 
 //    다이어리 공개 비공개 변경
-    public String changeSecret(DiaryDTO diaryDTO);
+    public String changeSecret(Long diaryId, boolean check);
+//    memberId로 다이어리  조회
+    public List<DiaryDTO> findDiaryById(Long diaryId);
+
+    // 나의 다이어리 목록 조회
+    public MyDiaryCriteriaDTO getMyDiaryListByCriteria(CustomUserDetails customUserDetails, ScrollCriteria criteria);
+
+    // 나의 다이어리 총 개수
+    public int getCountMyDiariesByMemberId(CustomUserDetails customUserDetails);
 
 
     public void deleteDiary(Long postId);

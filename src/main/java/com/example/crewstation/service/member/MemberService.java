@@ -1,5 +1,6 @@
 package com.example.crewstation.service.member;
 
+import com.example.crewstation.auth.CustomUserDetails;
 import com.example.crewstation.common.enumeration.PaymentPhase;
 import com.example.crewstation.domain.address.AddressVO;
 import com.example.crewstation.domain.file.FileVO;
@@ -32,7 +33,7 @@ public interface MemberService {
     public void joinSns(MemberDTO memberDTO, MultipartFile multipartFile);
 
 //  멤버 프로필 조회
-    public Optional<MemberProfileDTO> getMemberProfile(Long memberId);
+    public Optional<MemberDTO> getMemberProfile(Long memberId);
 
 //  비밀번호 변경
     public void resetPassword(String memberEmail, String memberPassword);
@@ -51,13 +52,33 @@ public interface MemberService {
 //  나의 판매내역 목록
     public MySaleListCriteriaDTO getSaleListByMemberId(Long memberId, Criteria criteria, Search search);
 
+//   나의 판매내역 상세 조회
+    public MySaleDetailDTO getSellerOrderDetails(Long sellerId, Long paymentStatusId);
+
 //    관리자 회원 통계 자료
     public MemberAdminStatics getStatics();
 
 //    관리자 등록
     public void joinAdmin(MemberDTO memberDTO);
 
+
+//  판매 상태 업데이트
     public void updateSaleStatus(Long memberId, Long paymentStatusId, PaymentPhase paymentPhase);
+
+//  내 정보 수정 정보조회
+    public ModifyDTO getMemberInfo(CustomUserDetails customUserDetails);
+
+//  내 정보 수정 업데이트
+    public void updateMyInfo(ModifyDTO modifyDTO,MultipartFile multipartFile);
+
+//    id로 멤버 조회
+    public MemberDTO getProfileMember(Long memberId);
+
+//  마이페이지에서 내 프로필 조회용
+    public MemberProfileDTO getMyPageProfile(CustomUserDetails customUserDetails);
+
+    // 회원 비활성화 처리
+    public void deactivateMember(Long memberId);
 
     default MemberVO toVO(MemberDTO memberDTO) {
         return MemberVO.builder()
@@ -109,6 +130,15 @@ public interface MemberService {
         return MemberFileVO.builder()
                 .fileId(memberfileDTO.getFileId())
                 .memberId(memberfileDTO.getMemberId())
+                .build();
+    }
+
+    default MemberVO toVO(ModifyDTO modifyDTO) {
+        return MemberVO.builder()
+                .id(modifyDTO.getMemberId())
+                .memberEmail(modifyDTO.getMemberEmail())
+                .memberPhone(modifyDTO.getMemberPhone())
+                .memberSocialUrl(modifyDTO.getMemberSocialUrl())
                 .build();
     }
 }

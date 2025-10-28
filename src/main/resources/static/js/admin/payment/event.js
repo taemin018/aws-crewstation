@@ -66,7 +66,6 @@ window.paymentInit = async function () {
                     canceledEl.textContent = canceledOrPending.toLocaleString("ko-KR");
                 }
         } catch (e) {
-            console.error("합계 로드 실패:", e);
         }
     };
 
@@ -98,17 +97,12 @@ window.paymentInit = async function () {
                 keyword: state.keyword,
             });
 
-            console.log(
-                "[payment] list len:",
-                Array.isArray(list) ? list.length : list?.content?.length || 0
-            );
 
             paymentLayout.showPayments(list);
 
             const arr = Array.isArray(list) ? list : list?.content || [];
             hasMore = Array.isArray(arr) && arr.length > 0;
         } catch (e) {
-            console.error("결제 목록 로드 실패:", e);
             const tbody = section.querySelector("#payment-tbody");
             if (tbody) {
                 tbody.innerHTML =
@@ -330,7 +324,6 @@ window.paymentInit = async function () {
 
                     open();
                 } catch (err) {
-                    console.error("결제 상세 조회 실패:", err);
                     alert("상세 조회에 실패했습니다.");
                 }
             });

@@ -54,8 +54,16 @@ button.addEventListener('click', async () => {
 
 const guestButton = document.querySelector(".login-guest-btn");
 
+// window.onpageshow = async function(event){
+//     if(event.persisted || (window.performance && window.performance.navigation.type == 2)){
+memberService.resetCookies();
+    // }
+// }
+
+
 guestButton.addEventListener("click", async(e) => {
     console.log("들어옴")
+
     loginError.innerHTML = ``;
     const guestID = document.querySelector(".guest-id").value;
     const guestPhone = document.querySelector(".guest-phone").value;
@@ -81,18 +89,18 @@ guestButton.addEventListener("click", async(e) => {
 // 카카오 로그인
 const kakaoLoginButton = document.querySelector(".kakao");
 kakaoLoginButton.addEventListener("click", (e) => {
-    window.location.href = "/oauth2/authorization/kakao";
+    window.location.href = "http://localhost:10000/oauth2/authorization/kakao";
 });
 
 // 네이버 로그인
 const naverLoginButton = document.querySelector(".naver");
 naverLoginButton.addEventListener("click", (e) => {
-    window.location.href = "/oauth2/authorization/naver";
+    window.location.href = "http://localhost:10000/oauth2/authorization/naver";
 });
 
 // 구글 로그인
 const googleLoginButton = document.querySelector(".google");
 googleLoginButton.addEventListener("click", (e) => {
-    window.location.href = "/oauth2/authorization/google";
+    window.location.href = "http://localhost:10000/oauth2/authorization/google";
 });
 
