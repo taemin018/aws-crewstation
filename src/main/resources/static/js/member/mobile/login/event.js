@@ -80,7 +80,7 @@ guestButton.addEventListener("click", async(e) => {
 // 카카오 로그인
 const kakaoLoginButton = document.querySelector(".kakao");
 kakaoLoginButton.addEventListener("click", (e) => {
-    window.location.href = "/oauth2/authorization/kakao";
+    window.location.href = "/oauth2/authorization/kakao"; 
 });
 
 // 네이버 로그인
