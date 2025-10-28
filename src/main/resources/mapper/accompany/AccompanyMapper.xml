@@ -11,7 +11,7 @@
                 OR c.crew_name     ILIKE '%' || #{search.keyword} || '%'
                 OR vpc.country_name ILIKE '%' || #{search.keyword} || '%'
                 )
-            </if>
+            </if> 
         </where>
     </sql>
 
