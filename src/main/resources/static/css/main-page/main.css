@@ -1271,7 +1271,7 @@ span.writer-name{
     color: #424242;
     font-weight: 500;
     display: block;
-    width: 53px;
+    /*width: 53px;*/
 }
 
 div.card-collection-item-content{
