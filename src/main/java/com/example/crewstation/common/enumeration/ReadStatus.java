@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum ReadStatus {
-    READ("active"), UNREAD("inactive");
+    READ("read"), UNREAD("unread");
 
     private final String value;
     private static final Map<String, ReadStatus> READ_STATUS_MAP =
