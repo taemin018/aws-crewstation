@@ -2,13 +2,12 @@ const memberService = (() => {
     const safeJson = async (res) => {
         if (res.status === 204) return null;
         const text = await res.text();
-        // console.log('[DEBUG]', res.status, text); // 필요시 해제
         return text ? JSON.parse(text) : null;
     };
 
     const getMembers = async (callback, page = 1, keyword = "", extra = {}) => {
         const res = await fetch(`/api/admin/members`, {
-            method: "POST",
+            method: "GET",
             credentials: "same-origin",
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({ page, keyword, ...extra }),
