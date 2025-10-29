@@ -8,7 +8,7 @@ const memberService = (() => {
     const getMembers = async (callback, page = 1, keyword = "", extra = {}) => {
         const res = await fetch(`/api/admin/members`, {
             method: "POST",
-            credentials: "same-origin",
+            credentials: "include",
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({ page, keyword, ...extra }),
         });
