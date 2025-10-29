@@ -9,14 +9,20 @@ const memberService = (() => {
         const res = await fetch(`/api/admin/members`, {
             method: "POST",
             credentials: "include",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
             body: JSON.stringify({ page, keyword, ...extra }),
         });
+
         if (!res.ok) throw new Error(`회원 목록 조회 실패 (${res.status})`);
-        const data = await safeJson(res);
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
         callback && callback(data);
         return data;
     };
+
 
     const getDetailMember = async (callback, memberId) => {
         const res = await fetch(`/api/admin/members/${memberId}`, {
