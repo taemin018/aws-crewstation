@@ -63,8 +63,9 @@
         }
     });
 
-    //  초기 로딩
     document.addEventListener("DOMContentLoaded", () => {
-        showMembers(1, "");
+        setTimeout(() => {
+            showMembers(1, ""); // 👈 이 부분이 원래 빠져있었음
+        }, 400);
     });
 })();
