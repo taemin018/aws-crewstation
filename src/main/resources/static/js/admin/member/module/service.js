@@ -27,7 +27,7 @@ const memberService = (() => {
     const getDetailMember = async (callback, memberId) => {
         const res = await fetch(`/api/admin/members/${memberId}`, {
             method: "GET",
-            credentials: "same-origin",
+            credentials: "include",
             headers: { "Accept": "application/json" },
         });
         if (!res.ok) throw new Error(`회원 상세 조회 실패 (${res.status})`);
