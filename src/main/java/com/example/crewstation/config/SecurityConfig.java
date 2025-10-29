@@ -69,6 +69,7 @@ public class SecurityConfig {
                                 "/notice/detail/**",
                                 "/api/auth/guest-login",
                                 "/admin/login",
+                                "/api/admin**",
                                 "/api/payment/{purchaseId:\\d+}",
                                 "/error",
                                 "/api/auth/**",
