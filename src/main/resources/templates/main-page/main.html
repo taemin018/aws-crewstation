@@ -185,9 +185,7 @@
                                         <div class="card-collection-item-img">
                                             <div class="card-item-img">
                                                 <img th:src="@{${diary.diaryFilePath}}" alt="" class="image">
-                                                <!-- <div class="diary-card-title">
-                                                    <div>오늘의 여행일지</div>
-                                                </div> -->
+
                                                 <div class="diary-img-count" th:text="${'+' + diary.fileCount}">+</div>
                                                 <a class="card-content-link" th:href="@{/diaries/detail/{postId}(postId=${diary.postId})}"></a>
                                             </div>
