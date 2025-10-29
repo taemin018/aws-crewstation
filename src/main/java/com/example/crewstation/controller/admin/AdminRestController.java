@@ -154,7 +154,7 @@ public class AdminRestController implements AdminRestControllerDocs{
 
         return ResponseEntity.ok().build();
     }
-    
+
     //    결제 목록
     @GetMapping("/payment")
     public ResponseEntity<?> getPayment(
@@ -191,7 +191,7 @@ public class AdminRestController implements AdminRestControllerDocs{
         return ResponseEntity.ok(paymentService.getPaymentDetail(id));
     }
 
-//    걀제 승인/취소 금액
+    //    걀제 승인/취소 금액
     @GetMapping("/payment/summary")
     public ResponseEntity<Map<String, Object>> getPaymentSummary(
             @RequestParam(required = false) String categories,
@@ -261,8 +261,8 @@ public class AdminRestController implements AdminRestControllerDocs{
 
     @PostMapping("/banner")
     public ResponseEntity<?> insertBanner(@AuthenticationPrincipal CustomUserDetails admin,
-                                             @ModelAttribute BannerDTO bannerDTO,
-                                             @RequestParam(value = "files", required = false) List<MultipartFile> files) {
+                                          @ModelAttribute BannerDTO bannerDTO,
+                                          @RequestParam(value = "files", required = false) List<MultipartFile> files) {
         if (bannerDTO.getBannerOrder() == 0 && admin != null) {
             bannerDTO.setBannerOrder(Math.toIntExact(admin.getId()));
         }
@@ -286,14 +286,14 @@ public class AdminRestController implements AdminRestControllerDocs{
         return ResponseEntity.ok().build();
     }
 
-//    관리자 동행 신고 목록
+    //    관리자 동행 신고 목록
     @GetMapping("/accompanies")
     public ResponseEntity<List<ReportPostDTO>> getAccompanies(Search search) {
         List<ReportPostDTO> reports = reportService.getReportAccompanies(search);
         return ResponseEntity.ok(reports);
     }
 
-//    관리자 동행신고 처리
+    //    관리자 동행신고 처리
     @PostMapping("/accompanies/{reportId}/process")
     public ResponseEntity<List<ReportPostDTO>> getAccompanies(@PathVariable Long reportId,
                                                               @RequestParam(required = false) Long postId,
