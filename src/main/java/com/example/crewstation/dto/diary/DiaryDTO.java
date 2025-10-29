@@ -24,6 +24,7 @@ public class DiaryDTO {
     private String memberFilePath;
     private String diaryFilePath;
     private Long memberId;
+    private Long userId;
     private Long diaryPathId;
     private String socialImgUrl;
     private String memberName;
