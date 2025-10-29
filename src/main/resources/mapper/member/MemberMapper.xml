@@ -124,16 +124,15 @@
         tm.chemistry_score
         from tbl_member tm
         <where>
-            <if test="search.keyword != null || search.keyword != ''">
-                (tm.member_name ilike '%' || #{search.keyword} || '%'
-                or tm.member_email ilike '%' || #{search.keyword} || '%')
+            <if test="keyword != null and keyword != ''">
+                (tm.member_name ilike '%' || #{keyword} || '%'
+                or tm.member_email ilike '%' || #{keyword} || '%')
             </if>
         </where>
         order by tm.id desc
         limit #{limit} offset #{offset}
-
-
     </select>
+
 
     <select id="countAdminMembers">
         select count(*)

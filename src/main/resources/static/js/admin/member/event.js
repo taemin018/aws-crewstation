@@ -65,7 +65,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
-            showMembers(1, ""); // 👈 이 부분이 원래 빠져있었음
+            showMembers(1, "");
         }, 400);
     });
 })();
