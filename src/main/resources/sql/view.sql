@@ -144,7 +144,7 @@ select id,
        post_id
 from tbl_report tr
          join tbl_post_report tpr on tr.id = tpr.report_id
-    );
+);
 
 
 
