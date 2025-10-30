@@ -236,7 +236,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberCriteriaDTO getMembers(Search search) {
         log.info("getMembers: {}", search);
-        int page = Optional.ofNullable(search.getPage()).orElse(1);
+        int page = 1;
         int size = 10;
         int offset = (page - 1) * size;
 

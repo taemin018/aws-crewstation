@@ -4,6 +4,7 @@ import com.example.crewstation.common.enumeration.AccompanyStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+@Component
 public class Search {
     private String category;
     private String keyword;

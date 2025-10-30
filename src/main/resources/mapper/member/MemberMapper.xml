@@ -133,6 +133,9 @@
         </where>
 
         order by tm.id desc
+        limit #{limit} offset #{offset}
+
+
     </select>
 
     <select id="countAdminMembers">
