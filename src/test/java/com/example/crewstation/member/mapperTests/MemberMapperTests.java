@@ -6,6 +6,7 @@ import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.MemberDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
+import com.example.crewstation.util.Search;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,12 @@ public class MemberMapperTests {
     public void testSelectSearchMember(){
         List<MemberDTO> test = memberMapper.selectSearchMember("test");
         test.stream().map(MemberDTO::toString).forEach(log::info);
+    }
+
+    @Test
+    public void testAdminMember(){
+        Search search = new Search();
+        List<MemberDTO> list = memberMapper.findAdminMembers(search, 1,1);
+        log.info("list = {}", list);
     }
 }
