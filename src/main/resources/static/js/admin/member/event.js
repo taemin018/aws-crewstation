@@ -64,8 +64,6 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(() => {
-            showMembers(1, "");
-        }, 400);
+
     });
 })();
