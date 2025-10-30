@@ -126,11 +126,12 @@
         from tbl_member tm
 
         <where>
-            <if test="search.keyword != null and search.keyword != ''">
+        <if test="search != null">
+            <if test="search.keyword != null and search.keyword != ">
                 (tm.member_name ilike '%' || #{search.keyword} || '%'
                 or tm.member_email ilike '%' || #{search.keyword} || '%')
             </if>
-
+        </if>
         </where>
 
         order by tm.id desc
