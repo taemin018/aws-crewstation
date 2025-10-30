@@ -64,7 +64,7 @@ public class AdminRestController implements AdminRestControllerDocs{
 
     //    관리자 회원 목록
     @GetMapping("/members")
-    public ResponseEntity<MemberCriteriaDTO> getMembers(@ModelAttribute Search search) {
+    public ResponseEntity<MemberDTO> getMembers(@ModelAttribute Search search) {
         return ResponseEntity.ok(memberService.getMembers(search));
     }
 
