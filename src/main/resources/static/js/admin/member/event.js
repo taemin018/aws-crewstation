@@ -64,6 +64,6 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-
+            showMembers(1, "");
     });
 })();
