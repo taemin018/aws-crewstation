@@ -122,21 +122,22 @@
         tm.created_datetime,
         tm.updated_datetime,
         tm.chemistry_score
-
         from tbl_member tm
-
         <where>
-            <if test="search.keyword != null and search.keyword != ''">
-                (tm.member_name ilike '%' || #{search.keyword} || '%'
-                or tm.member_email ilike '%' || #{search.keyword} || '%')
-            </if>
+            <choose>
+                <when test="search.keyword != null and search.keyword.trim() != ''">
+                    (tm.member_name ilike concat('%', #{search.keyword}, '%')
+                    or tm.member_email ilike concat('%', #{search.keyword}, '%'))
+                </when>
+                <otherwise>
+                    1=1
+                </otherwise>
+            </choose>
         </where>
-
         order by tm.id desc
         limit #{limit} offset #{offset}
-
-
     </select>
+
 
     <select id="countAdminMembers">
         select count(*)
