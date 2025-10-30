@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class NotFoundError implements ErrorController {
     @GetMapping
     public String error() {
-        return "/error/404";
+        return "error/404";
     }
 }
