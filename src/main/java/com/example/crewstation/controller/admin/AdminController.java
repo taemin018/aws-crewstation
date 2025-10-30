@@ -1,5 +1,6 @@
 package com.example.crewstation.controller.admin;
 
+import com.example.crewstation.common.enumeration.Gender;
 import com.example.crewstation.common.enumeration.MemberRole;
 import com.example.crewstation.dto.banner.BannerDTO;
 import com.example.crewstation.dto.crew.CrewDTO;
@@ -34,6 +35,10 @@ public class AdminController {
 
     @PostMapping("/join")
     public RedirectView adminJoin(@ModelAttribute("memberDTO") MemberDTO memberDTO) {
+        if (memberDTO.getMemberGender() == null || memberDTO.getMemberGender().toString().isBlank()) {
+            memberDTO.setMemberGender(Gender.MALE);
+        }
+
         memberDTO.setMemberRole(MemberRole.ADMIN);
         memberService.joinAdmin(memberDTO);
 
