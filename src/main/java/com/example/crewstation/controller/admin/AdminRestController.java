@@ -91,6 +91,7 @@ public class AdminRestController implements AdminRestControllerDocs{
         return ResponseEntity.ok(noticeService.getAdminNotices(safePage));
     }
 
+
     //    공지사항 작성
     @PostMapping("/notices")
     public ResponseEntity<?> createNotice(@AuthenticationPrincipal CustomUserDetails admin,
