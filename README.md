@@ -4,7 +4,6 @@
 
 - EC2 배포하기
 
----
 <br>
 
 ## 🔧 AWS 설정
@@ -24,7 +23,7 @@
 <img width="1083" height="305" alt="스크린샷 2025-11-05 오후 10 28 29" src="https://github.com/user-attachments/assets/b4eb06d0-6204-4223-924d-563ffb88b1a3" />
 
 - 윈도우의 경우 PuTTy를 활용해서 원격접속을 하고 맥의 경우는 iterm의 Profile을 통해서 원격접속을 한다.
-- 
+  
 <img width="439" height="35" alt="스크린샷 2025-11-05 오후 10 31 56" src="https://github.com/user-attachments/assets/6001149b-4af3-4cb4-87e3-104cd5ecb2fc" />
 
 
